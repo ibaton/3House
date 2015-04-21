@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    tools:deviceIds="wear_square">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="center"
+        android:background="@color/wear_logo_background"
+        android:id="@+id/imageView"
+        android:layout_weight="1"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/btn_voice"
+        android:background="@color/colorPrimary"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/action_voice"
+        android:layout_weight="1" />
+</LinearLayout>

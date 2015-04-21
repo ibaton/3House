@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <ImageButton
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        android:id="@+id/btn_up"
+        android:src="@drawable/cell_up"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_weight="1" />
+
+    <ImageButton
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        android:id="@+id/btn_cancel"
+        android:src="@drawable/cancel"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_weight="1" />
+
+    <ImageButton
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
+        android:id="@+id/btn_down"
+        android:src="@drawable/cell_down"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_weight="1" />
+
+</LinearLayout>

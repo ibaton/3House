@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/item_spacing_half"
+    android:paddingTop="0dp"
+    android:paddingLeft="@dimen/item_spacing_half"
+    android:paddingRight="@dimen/item_spacing_half">
+
+    <SeekBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/seekbar_widget_width"
+        android:id="@+id/skb_dim"
+        android:layout_weight="1"
+        android:max="100"
+        android:indeterminate="false"/>
+</FrameLayout>

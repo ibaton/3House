@@ -1,0 +1,27 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/btn_open_sitemap"
+    android:background="@drawable/widget_background">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView2"
+        android:layout_alignRight="@+id/textView2"
+        android:layout_alignEnd="@+id/textView2"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:text="Sitemap"
+            android:id="@+id/lbl_sitemap_name"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </LinearLayout>
+</FrameLayout>

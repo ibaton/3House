@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DarkActionbar" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
+        <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
+        <item name="android:colorControlNormal">@color/abc_primary_text_material_light</item>
+        <item name="android:actionModeBackground">@color/colorPrimaryDark</item>
+    </style>
+</resources>

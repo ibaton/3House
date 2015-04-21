@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lou_btn_holder"
+        android:layout_weight="1">
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="@dimen/controller_button_space"
+        android:layout_height="match_parent"
+        android:id="@+id/btn_add_column"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/add_row" />
+</LinearLayout>

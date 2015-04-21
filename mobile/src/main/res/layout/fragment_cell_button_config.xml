@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="treehou.se.habit.ui.control.config.CellButtonConfigFragment">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/item_elevation"
+                card_view:cardBackgroundColor="@color/item_background">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:padding="@dimen/default_item_padding">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="@string/item_type"
+                            android:id="@+id/hdr_item_type" />
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/spr_items"
+                            android:spinnerMode="dialog"
+                            android:entries="@array/empty"
+                            android:layout_gravity="center_horizontal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="@string/image"
+                            android:id="@+id/hdr_icon" />
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/spr_icons"
+                            android:entries="@array/empty"
+                            android:layout_gravity="center_horizontal"
+                            android:spinnerMode="dropdown" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="@string/command"
+                            android:id="@+id/hdr_command"/>
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/txt_command"
+                            android:layout_gravity="center_horizontal"
+                            android:visibility="gone"
+                            android:inputType="text"/>
+                    </LinearLayout>
+
+                    <ToggleButton
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:id="@+id/tgl_on_off"
+                        android:layout_gravity="center_horizontal"
+                        android:checked="false" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/img_widget_icon_holder"
+            android:background="@color/image_background"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:minHeight="50dp"
+                android:padding="@dimen/short_space"
+                android:id="@+id/img_widget_icon"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_marginRight="@dimen/item_spacing"
+            android:layout_marginLeft="@dimen/short_space"
+            android:paddingTop="@dimen/widget_default_padding_vertical"
+            android:paddingBottom="@dimen/widget_default_padding_vertical"
+            android:paddingRight="@dimen/widget_default_padding_vertical">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/WidgetText"
+                    android:text=""
+                    android:autoLink="web|email|phone"
+                    android:id="@+id/lbl_widget_name" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lbl_value"
+                    style="@style/WidgetSubText"
+                    android:visibility="visible"
+                    android:layout_marginLeft="@dimen/item_spacing"
+                    android:text=""
+                    android:autoLink="web|email|phone"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/lou_widget_details">
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lou_widget_holder">
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/btn_next_page"
+            android:paddingLeft="@dimen/large_spacing"
+            android:paddingRight="@dimen/large_spacing"
+            android:paddingTop="@dimen/large_spacing_half"
+            android:paddingBottom="@dimen/large_spacing_half"
+            android:visibility="visible"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/next_page"/>
+    </LinearLayout>
+</FrameLayout>

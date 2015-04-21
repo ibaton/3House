@@ -1,0 +1,1 @@
+ALTER TABLE NumberCells ADD COLUMN Item INTEGER;

@@ -1,0 +1,189 @@
+package treehou.se.habit.ui.widgets.factories;
+
+import android.content.Context;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import treehou.se.habit.R;
+import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.core.LinkedPage;
+import treehou.se.habit.core.Widget;
+import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.ui.Util;
+import treehou.se.habit.ui.widgets.WidgetFactory;
+
+/**
+ * Created by ibaton on 2014-10-19.
+ */
+public class FrameBuilder implements IWidgetBuilder {
+
+    private static final String TAG = "FrameBuilder";
+
+    @Override
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, Widget widget, Widget parent) {
+        return FrameHolder.create(widgetFactory, widget);
+    }
+
+    public static class FrameHolder extends WidgetFactory.WidgetHolder {
+
+        private Context context;
+        private View rootView;
+
+        private TextView lblName;
+        private View titleHolder;
+        private WidgetFactory widgetFactory;
+        private LinearLayout subView;
+        private boolean showLabel = true;
+
+        private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
+        private Widget widget;
+        private List<Widget> widgets = new ArrayList<>();
+
+        public static FrameHolder create(WidgetFactory factory, Widget widget){
+
+            View rootView = factory.getInflater().inflate(R.layout.widget_frame, null);
+            TextView lblTitle = (TextView) rootView.findViewById(R.id.lbl_widget_name);
+            View lblTitleHolder = rootView.findViewById(R.id.lbl_widget_name_holder);
+            LinearLayout louWidgetHolder = (LinearLayout) rootView.findViewById(R.id.lou_widget_frame_holder);
+
+            return new FrameHolder(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
+        }
+
+        private FrameHolder(Context context, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, Widget widget, WidgetFactory factory) {
+            super(view);
+
+            Log.d(TAG, "Crating frame " + widget.getLabel());
+
+            this.context = context;
+            widgetFactory = factory;
+
+            rootView = view;
+            this.lblName = lblName;
+
+            lblName.setText(widget.getLabel());
+
+            this.titleHolder = titleHolder;
+            if (widget.getLabel() == null || "".equals(widget.getLabel().trim())) {
+                titleHolder.setVisibility(View.GONE);
+            }
+
+            subView = louWidgetHolder;
+
+            update(widget);
+        }
+
+        @Override
+        public void update(final Widget widget) {
+
+            if(widget == null){
+                return;
+            }
+
+            Log.d(TAG, "update " + widget.getLabel());
+            final WidgetSettings settings = WidgetSettings.loadGlobal(context);
+
+            if(widget.getLabel() != null) {
+                setName(widget.getLabel());
+            }
+
+            float percentage = Util.toPercentage(settings.getTextSize());
+            lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, lblName.getTextSize() * percentage);
+            setName(widget.getLabel());
+
+            this.widget = widget;
+            updateWidgets(widget.getWidget());
+        }
+
+        private synchronized void updateWidgets(List<Widget> pageWidgets){
+
+            Log.d(TAG, "frame widgets update " + pageWidgets.size() + " : " + widgets.size());
+            boolean invalidate = pageWidgets.size() != widgets.size();
+            if(!invalidate){
+                for(int i=0; i < widgets.size(); i++) {
+                    Widget currentWidget = widgets.get(i);
+                    Widget newWidget = pageWidgets.get(i);
+
+                    if(currentWidget.needUpdate(newWidget)){
+                        invalidate = true;
+                        break;
+                    }
+                }
+            }
+
+            if(invalidate) {
+                Log.d(TAG, "Invalidating frame widgets " + pageWidgets.size() + " : " + widgets.size());
+
+                widgetHolders.clear();
+                subView.removeAllViews();
+
+                for (Widget widget : pageWidgets) {
+                    try {
+                        WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, this.widget);
+                        widgetHolders.add(result);
+                        subView.addView(result.getView());
+                    }catch (Exception e){
+                        Log.w(TAG, "Invalidate widget failed " + e);
+                    }
+                }
+                widgets.clear();
+                widgets.addAll(pageWidgets);
+            }
+            else {
+                Log.d(TAG, "updating widgets");
+                for (int i=0; i < widgetHolders.size(); i++) {
+                    try {
+                        WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
+                        Widget newWidget = pageWidgets.get(i);
+                        holder.update(newWidget);
+                    }catch (Exception e){
+                        Log.w(TAG, "Update widget failed " + e);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Set name of widget
+         *
+         * @param showLabel
+         */
+        private void setShowLabel(boolean showLabel){
+
+            if(this.showLabel != showLabel) {
+                this.showLabel = showLabel;
+
+                titleHolder.setVisibility(showLabel ? View.VISIBLE : View.GONE);
+            }
+        }
+
+        private void setName(String title){
+            lblName.setText(title);
+        }
+
+        /**
+         * Get previously stored widget.
+         *
+         * @return widget
+         */
+        protected Widget getWidget(){
+            return widget;
+        }
+
+        public LinearLayout getSubView() {
+            return subView;
+        }
+    }
+}

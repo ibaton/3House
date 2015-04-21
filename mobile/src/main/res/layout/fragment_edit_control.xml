@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="treehou.se.habit.ui.EditControlFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/viw_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorPrimaryDark"
+            android:id="@+id/lou_title_holder"
+            android:padding="10dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/controller_name"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:id="@+id/txt_name"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/color"
+                android:id="@+id/btn_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/lou_btn_holder"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/controller_button_space"
+                android:id="@+id/btn_add_row"
+                android:padding="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/add_row"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:layout_width="@dimen/controller_button_space"
+                android:layout_height="@dimen/controller_button_space"></FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

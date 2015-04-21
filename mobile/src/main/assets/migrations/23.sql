@@ -1,0 +1,1 @@
+ALTER TABLE Cells ADD COLUMN label TEXT;

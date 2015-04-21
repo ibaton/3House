@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_weight="4"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_weight="1">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spr_controller"
+                android:spinnerMode="dropdown" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show Name"
+                android:id="@+id/cbx_show_title"
+                android:checked="false" />
+        </LinearLayout>
+    </ScrollView>
+
+    <com.cengalabs.flatui.views.FlatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:text="@string/add_widget"
+        android:id="@+id/add_button"
+        flatui:fl_theme="@array/custom_theme"
+        flatui:fl_textAppearance="fl_dark"
+        flatui:fl_blockButtonEffectHeight="3dp"
+        flatui:fl_fontFamily="roboto"
+        flatui:fl_touchEffect="fl_ripple"
+        flatui:fl_fontWeight="light"
+        flatui:fl_fontExtension="ttf"
+        flatui:fl_borderWidth="2dp"
+        flatui:fl_cornerRadius="0dp"
+        flatui:fl_size="20dp"
+        android:layout_weight="1" />
+</LinearLayout>

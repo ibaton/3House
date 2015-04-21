@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+
+    <color name="frame">#ffa5a5a5</color>
+    <color name="colorPrimary">#ff79bb52</color>
+    <color name="colorPrimaryDark">#ff589E2E</color>
+    <color name="colorAccent">#FFA4DD83</color>
+
+    <color name="navigationBarColor">#55000000</color>
+
+    //Used for flat ui
+    <color name="colorPrimaryLighter">#ff93e364</color>
+    <color name="colorPrimaryDarker">#ff182a0c</color>
+
+    <color name="colorValueItem">#FFFDB996</color>
+
+    <!--<color name="background">#ff515151</color>-->
+    <color name="background">#ffdcdcdc</color>
+
+    <color name="item_background">#ffffffff</color>
+    <color name="item_background_boder">#ff424242</color>
+
+    <color name="item_homescreen_background">#1a000000</color>
+    <color name="item_homescreen_background_boder">#20000000</color>
+
+    <color name="image_border">#ee000000</color>
+    <color name="image_background">#ffc6c6c6</color>
+
+    <color name="drawer">#ffffffff</color>
+    <color name="drawer_text">@color/text_dark</color>
+
+    <color name="text">#ffc6c6c6</color>
+    <color name="text_dark">#ff222222</color>
+
+    <color name="frame_header">#ff686868</color>
+    <color name="frame_header_background">#fff3f3f3</color>
+
+    <color name="transparent_dark">#22000000</color>
+
+    <color name="load">#ff81817d</color>
+    <color name="red">#ffFF0000</color>
+    <color name="blue">#ff0000FF</color>
+
+    <color name="wear_logo_background">#ff424242</color>
+</resources>

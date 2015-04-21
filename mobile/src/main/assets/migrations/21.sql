@@ -1,0 +1,1 @@
+ALTER TABLE Controllers ADD COLUMN color INTEGER;

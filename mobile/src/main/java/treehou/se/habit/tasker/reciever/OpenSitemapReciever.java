@@ -1,0 +1,66 @@
+package treehou.se.habit.tasker.reciever;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+
+import treehou.se.habit.MainActivity;
+import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.SitemapDB;
+import treehou.se.habit.tasker.boundle.CommandBoundleManager;
+import treehou.se.habit.tasker.boundle.OpenSitemapBoundleManager;
+
+/**
+ * Created by ibaton on 2015-03-08.
+ */
+public class OpenSitemapReciever implements IFireReciever {
+
+    public static final String TAG = "OpenSitemapReciever";
+
+    public static final int TYPE = OpenSitemapBoundleManager.TYPE_COMMAND;
+
+    public static final String BUNDLE_EXTRA_SITEMAP = "treehou.se.habit.extra.SITEMAP";
+
+    public boolean isBundleValid(Bundle bundle) {
+        if (null == bundle) {
+            Log.e(TAG, "Bundle cant be null");
+            return false;
+        }
+
+        if (!bundle.containsKey(BUNDLE_EXTRA_SITEMAP)) {
+            Log.e(TAG, String.format("bundle must contain extra %s", BUNDLE_EXTRA_SITEMAP));
+            return false;
+        }
+
+        if (2 != bundle.keySet().size()) {
+            Log.e(TAG, String.format("bundle must contain 2 keys, but currently contains %d keys: %s", bundle.keySet().size(), bundle.keySet()));
+            return false;
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean fire(Context context, Bundle bundle) {
+
+        if (isBundleValid(bundle)) {
+            SitemapDB sitemap = SitemapDB.load(SitemapDB.class, bundle.getLong(BUNDLE_EXTRA_SITEMAP));
+            Log.d(TAG, "Open sitemap.");
+            if(sitemap != null){
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra(MainActivity.EXTRA_SHOW_SITEMAP, sitemap.getId());
+                context.startActivity(intent);
+            }
+        }else {
+            Log.d(TAG, "Boundle not valid.");
+        }
+
+        return false;
+    }
+}

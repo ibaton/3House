@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="treehou.se.habit.ui.ColorpickerActivity$PlaceholderFragment"
+    android:orientation="vertical"
+    android:id="@+id/lou_color_picker">
+
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.larswerkman.holocolorpicker.ColorPicker"
+        android:id="@+id/pcr_color"
+        app:color_wheel_thickness="30dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal" />
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        class="com.larswerkman.holocolorpicker.SaturationBar"
+        app:bar_thickness="30dp"
+        app:bar_pointer_radius="10dp"
+        app:bar_pointer_halo_radius="15dp"
+        android:id="@+id/bar_saturation"
+        android:layout_gravity="center_horizontal" />
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        class="com.larswerkman.holocolorpicker.OpacityBar"
+        app:bar_thickness="30dp"
+        app:bar_pointer_radius="10dp"
+        app:bar_pointer_halo_radius="15dp"
+        android:id="@+id/bar_opacity" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:id="@+id/btn_save"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1" />
+</LinearLayout>

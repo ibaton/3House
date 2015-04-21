@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="treehou.se.habit" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <permission
+        android:name="com.example.treehou.se.habit.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+
+    <application
+        android:name=".HabitApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="treestore26.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="28" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.ColorpickerActivity"
+            android:label="@string/title_activity_colorpicker" >
+        </activity>
+        <activity
+            android:name=".ui.control.config.ColorpickerActivity"
+            android:label="@string/title_activity_colorpicker" >
+        </activity>
+
+        <service android:name=".gcm.GcmIntentService" />
+
+        <activity android:name=".ui.homescreen.VoiceControlWidgetConfigureActivity" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".ui.homescreen.VoiceControlWidget"
+            android:label="3Hou.se Voice" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/voice_control_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".ui.homescreen.VoiceService"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name=".ui.homescreen.ControllerWidget"
+            android:label="3Hou.se controller" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="treehou.se.UPDATE_WIDGET" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/controller_widget_info" />
+        </receiver>
+
+        <activity android:name=".ui.homescreen.ControllerWidgetConfigureActivity" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".ui.control.CommandService"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="se.treehou.habit" />
+                <category android:name="org.openhab.habdroid" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="7286412f1c2639ecb43859159a7768c678d36a3e" />
+
+        <activity
+            android:name=".ui.control.SliderActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/title_activity_slider"
+            android:launchMode="singleTask"
+            android:taskAffinity="treehou.se.habit.ui.control"
+            android:theme="@style/TransparentTheme" >
+        </activity>
+        <activity
+            android:name=".tasker.TaskerInitActivity"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="ExportedActivity" >
+
+            <!-- this Intent filter allows the plug-in to be discovered by Locale -->
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".tasker.reciever.FireReceiver"
+            android:exported="true"
+            android:process=":background"
+            tools:ignore="ExportedReceiver" >
+
+            <!-- this Intent filter allows the plug-in to discovered by Locale -->
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.wear.ListenerService" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".service.wear.VoiceActionService"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name=".ui.homescreen.SitemapWidget"
+            android:label="3Hou.se Sitemap" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/sitemap_widget_info" />
+        </receiver>
+
+        <activity android:name=".ui.homescreen.SitemapWidgetConfigureActivity" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

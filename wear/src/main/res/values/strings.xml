@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">3Hou.se</string>
+    <string name="hello_round">Hello Round test World!</string>
+    <string name="hello_square">Hello Square World!</string>
+    <string name="start_command">home</string>
+
+</resources>

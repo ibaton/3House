@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="treehou.se.habit.tasker.items.SwitchActionFragment"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView8"
+        android:layout_weight="3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical"
+            tools:context="treehou.se.habit.ui.control.config.ControllCellFragment">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/item_elevation"
+                android:layout_marginBottom="@dimen/item_margin"
+                card_view:cardBackgroundColor="@color/item_background">
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/item" />
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spr_items"
+                        android:spinnerMode="dropdown"
+                        android:entries="@array/empty"
+                        android:layout_gravity="center_horizontal" />
+
+                    <ToggleButton
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:id="@+id/tgl_on_off"
+                        android:layout_gravity="center_horizontal"
+                        android:checked="false" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/lou_config_container"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.cengalabs.flatui.views.FlatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:text="@string/save"
+        android:id="@+id/btn_save"
+        flatui:fl_theme="@array/custom_theme"
+        flatui:fl_textAppearance="fl_dark"
+        flatui:fl_blockButtonEffectHeight="3dp"
+        flatui:fl_fontFamily="roboto"
+        flatui:fl_touchEffect="fl_ripple"
+        flatui:fl_fontWeight="light"
+        flatui:fl_fontExtension="ttf"
+        flatui:fl_borderWidth="2dp"
+        flatui:fl_cornerRadius="0dp"
+        flatui:fl_size="20dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

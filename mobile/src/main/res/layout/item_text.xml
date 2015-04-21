@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/MenuItemSubText"
+    android:text=""
+    android:id="@+id/lbl_text"
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="15dp"/>
+    <!--android:background="@color/item_background"-->

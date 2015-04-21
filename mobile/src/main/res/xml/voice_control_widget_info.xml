@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:updatePeriodMillis="86400000"
+    android:previewImage="@drawable/ic_launcher"
+    android:initialLayout="@layout/voice_control_widget"
+    android:configure="treehou.se.habit.ui.homescreen.VoiceControlWidgetConfigureActivity"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"
+    android:initialKeyguardLayout="@layout/voice_control_widget">
+</appwidget-provider>

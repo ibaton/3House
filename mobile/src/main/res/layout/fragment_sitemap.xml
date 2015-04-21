@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.view.ViewPager
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/pgr_sitemap"
+    tools:context="treehou.se.habit.ui.SitemapFragment">
+
+    <android.support.v4.view.PagerTitleStrip
+        android:id="@+id/pager_title_strip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@color/colorPrimaryDark"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp" />
+</android.support.v4.view.ViewPager>
