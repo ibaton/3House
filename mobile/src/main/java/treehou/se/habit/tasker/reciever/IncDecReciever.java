@@ -36,7 +36,7 @@ public class IncDecReciever implements IFireReciever {
         }
 
         if (5 != bundle.keySet().size()) {
-            Log.e(TAG, String.format("bundle must contain 3 keys, but currently contains %d keys: %s", bundle.keySet().size(), bundle.keySet()));
+            Log.e(TAG, String.format("bundle must contain 5 keys, but currently contains %d keys: %s", bundle.keySet().size(), bundle.keySet()));
             return false;
         }
 

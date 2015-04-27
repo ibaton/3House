@@ -122,6 +122,7 @@ public class IncDecActionFragment extends Fragment {
 
         final Intent resultIntent = new Intent();
 
+        // TODO Should probably add use the inc/dec command when it comes to dimmer item
         try {
             int value = Integer.parseInt(txtValue.getText().toString());
             int min = Integer.parseInt(txtMin.getText().toString());

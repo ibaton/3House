@@ -165,7 +165,7 @@ public class CellIncDecConfigFragment extends Fragment {
 
         List<Item> tempItems = new ArrayList<>();
         for(Item item : items){
-            if(item.getType().equals(Item.TYPE_NUMBER)){
+            if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }
         }

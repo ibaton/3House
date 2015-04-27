@@ -145,7 +145,7 @@ public class Communicator {
             public void onSuccess(Item newItem) {
                 Log.d(TAG, "Item state " + newItem.getState() + " " + newItem.getType());
                 String state = newItem.getState();
-                if(Item.TYPE_NUMBER.equals(newItem.getType())){
+                if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.getType())){
                     if(Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)){
                         if(value > 0){
                             command(server, newItem, String.valueOf(scrubNumberValue(min+value, min, max)));

@@ -51,5 +51,6 @@ public class Constants {
     public static final Set<String> SUPPORT_INC_DEC = new HashSet<>();
     static {
         SUPPORT_INC_DEC.add(Item.TYPE_NUMBER);
+        SUPPORT_INC_DEC.add(Item.TYPE_DIMMER);
     }
 }
