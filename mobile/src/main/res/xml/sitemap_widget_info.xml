@@ -8,4 +8,5 @@
     android:configure="treehou.se.habit.ui.homescreen.SitemapWidgetConfigureActivity"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:initialKeyguardLayout="@layout/sitemap_widget"></appwidget-provider>
+    android:initialKeyguardLayout="@layout/sitemap_widget">
+</appwidget-provider>

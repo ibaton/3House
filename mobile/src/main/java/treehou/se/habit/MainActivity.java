@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity
             List<Server> servers = Server.getServers();
             if(servers.size() <= 0) {
                 fragmentManager.beginTransaction()
+                        .replace(R.id.page_container, ServersFragment.newInstance())
+                        .addToBackStack(null)
+                        .commit();
+                fragmentManager.beginTransaction()
                         .replace(R.id.page_container, SetupServerFragment.newInstance())
                         .addToBackStack(null)
                         .commit();

@@ -62,6 +62,11 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".ui.homescreen.VoiceService"
+            android:exported="false" >
+        </service>
+
         <receiver
             android:name=".ui.homescreen.VoiceControlWidget"
             android:label="3Hou.se Voice" >
@@ -73,11 +78,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/voice_control_widget_info" />
         </receiver>
-
-        <service
-            android:name=".ui.homescreen.VoiceService"
-            android:exported="false" >
-        </service>
 
         <receiver
             android:name=".ui.homescreen.ControllerWidget"
@@ -92,6 +92,18 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/controller_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".ui.homescreen.SitemapWidget"
+            android:label="3Hou.se Sitemap" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/sitemap_widget_info" />
         </receiver>
 
         <activity android:name=".ui.homescreen.ControllerWidgetConfigureActivity" >
@@ -165,18 +177,6 @@
             android:name=".service.wear.VoiceActionService"
             android:exported="false" >
         </service>
-
-        <receiver
-            android:name=".ui.homescreen.SitemapWidget"
-            android:label="3Hou.se Sitemap" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/sitemap_widget_info" />
-        </receiver>
 
         <activity android:name=".ui.homescreen.SitemapWidgetConfigureActivity" >
             <intent-filter>

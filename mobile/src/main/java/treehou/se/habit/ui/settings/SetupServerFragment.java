@@ -4,15 +4,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import java.net.URL;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.Server;
@@ -30,6 +25,8 @@ public class SetupServerFragment extends Fragment {
     private EditText txtPassword;
 
     private Server server;
+
+    private Button btnBack;
 
     public static SetupServerFragment newInstance() {
         return new SetupServerFragment();
@@ -73,6 +70,14 @@ public class SetupServerFragment extends Fragment {
         txtRemoteUrl = (EditText) rootView.findViewById(R.id.txt_server_remote);
         txtUsername = (EditText) rootView.findViewById(R.id.txt_username);
         txtPassword = (EditText) rootView.findViewById(R.id.txt_password);
+        btnBack = (Button) rootView.findViewById(R.id.btn_back);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
 
         return rootView;
     }

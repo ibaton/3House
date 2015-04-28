@@ -96,4 +96,5 @@
     <string name="percentage">Percentage</string>
     <string name="value">Value</string>
     <string name="min">Min</string>
+    <string name="back">Back</string>
 </resources>

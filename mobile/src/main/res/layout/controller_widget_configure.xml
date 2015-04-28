@@ -20,18 +20,19 @@
             android:padding="16dp"
             android:layout_weight="1">
 
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spr_controller"
                 android:spinnerMode="dropdown" />
 
-            <CheckBox
+            <android.support.v7.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Show Name"
                 android:id="@+id/cbx_show_title"
                 android:checked="false" />
+
         </LinearLayout>
     </ScrollView>
 

@@ -32,6 +32,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
 
     public View build(final Context context, Controller controller, final Cell cell){
         Log.d(TAG, "Build: Button");
+
         final IncDecCell buttonCell = cell.incDecCell();
 
         LayoutInflater inflater = LayoutInflater.from(context);
