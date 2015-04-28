@@ -25,8 +25,6 @@ import org.atmosphere.wasync.Function;
 import org.atmosphere.wasync.OptionsBuilder;
 import org.atmosphere.wasync.RequestBuilder;
 import org.atmosphere.wasync.Socket;
-import org.atmosphere.wasync.impl.DefaultOptions;
-import org.atmosphere.wasync.impl.DefaultOptionsBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -141,8 +139,7 @@ public class PageFragment extends Fragment {
             );
 
             Client client = ClientFactory.getDefault().newClient();
-            OptionsBuilder<DefaultOptions, DefaultOptionsBuilder> optBuilder =
-                    client.newOptionsBuilder().runtime(asyncHttpClient);
+            OptionsBuilder optBuilder = client.newOptionsBuilder().runtime(asyncHttpClient);
 
             UUID atmosphereId = UUID.randomUUID();
 
@@ -165,8 +162,7 @@ public class PageFragment extends Fragment {
                     @Override
                     public LinkedPage decode(Event e, String s) {
                         Gson gson = Util.createGsonBuilder();
-                        LinkedPage page = gson.fromJson(s, LinkedPage.class);
-                        return page;
+                        return gson.fromJson(s, LinkedPage.class);
                     }
                 })
                 .transport(org.atmosphere.wasync.Request.TRANSPORT.LONG_POLLING);                    // Fallback to Long-Polling

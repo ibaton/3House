@@ -153,7 +153,6 @@ public class ServersFragment extends Fragment  {
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Server server = serversAdapter.getItem(position);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.page_container, SetupServerFragment.newInstance(server))
                             .addToBackStack(null)
@@ -169,7 +168,6 @@ public class ServersFragment extends Fragment  {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        Server server = serversAdapter.getItem(position);
                                         serversAdapter.removeItem(position);
                                         server.delete();
                                         break;
