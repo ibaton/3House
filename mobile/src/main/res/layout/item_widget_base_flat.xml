@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/WidgetText"
@@ -50,7 +50,7 @@
                     android:autoLink="web|email|phone"
                     android:id="@+id/lbl_widget_name" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/lbl_value"

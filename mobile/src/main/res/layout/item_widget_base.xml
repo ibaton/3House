@@ -43,7 +43,7 @@
                 android:paddingBottom="@dimen/widget_default_padding_vertical"
                 android:paddingRight="@dimen/widget_default_padding_vertical">
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/WidgetText"
@@ -51,7 +51,7 @@
                     android:text=""
                     android:id="@+id/lbl_widget_name"/>
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/lbl_value"
