@@ -4,7 +4,7 @@ package treehou.se.habit.ui.settings.subsettings;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +45,7 @@ public class SitemapFragment extends Fragment implements SitemapSelectorFragment
 
         View rootView = inflater.inflate(R.layout.fragment_settings_sitemaps, container, false);
 
-        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(R.string.sitemaps);
 
         btnDefaultSitemap = (Button) rootView.findViewById(R.id.btnSetDefaultSitemap);

@@ -5,13 +5,10 @@ package treehou.se.habit.ui;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +24,6 @@ import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
 import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
 import treehou.se.habit.ui.control.builders.SliderCellBuilder;
 import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
-import treehou.se.habit.ui.control.config.cells.DefaultConfigCellBuilder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +37,7 @@ public class ControlFragment extends Fragment {
     public static final String ARG_ID = "ARG_ID";
 
     private LinearLayout louController;
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
 
     private Controller controller;
     private CellFactory<Integer> cellFactory;
@@ -89,7 +85,7 @@ public class ControlFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_contoll, container, false);
 
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
 
         View viwBackground = rootView.findViewById(R.id.viw_background);
         View titleHolder = rootView.findViewById(R.id.lou_title_holder);

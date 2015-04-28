@@ -4,7 +4,7 @@ package treehou.se.habit.ui.settings.subsettings;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +44,7 @@ public class NotificationsFragment extends Fragment {
 
         final NotificationSettings settings = NotificationSettings.loadGlobal(getActivity());
 
-        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(R.string.settings_notification);
 
         CheckBox cbxNotificationToSpeech = (CheckBox) rootView.findViewById(R.id.cbx_notification_to_speech);

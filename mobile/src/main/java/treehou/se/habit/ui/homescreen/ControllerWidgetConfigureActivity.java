@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -19,7 +20,7 @@ import treehou.se.habit.core.controller.Controller;
 /**
  * The configuration screen for the {@link ControllerWidget ControllerWidget} AppWidget.
  */
-public class ControllerWidgetConfigureActivity extends Activity {
+public class ControllerWidgetConfigureActivity extends AppCompatActivity {
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final String PREFS_NAME = "treehou.se.habit.ui.homescreen.ControllerWidget";

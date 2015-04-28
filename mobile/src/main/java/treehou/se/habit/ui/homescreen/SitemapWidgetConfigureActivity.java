@@ -6,24 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.ui.SitemapSelectorFragment;
@@ -31,7 +17,7 @@ import treehou.se.habit.ui.SitemapSelectorFragment;
 /**
  * The configuration screen for the {@link SitemapWidget SitemapWidget} AppWidget.
  */
-public class SitemapWidgetConfigureActivity extends ActionBarActivity implements SitemapSelectorFragment.OnSitemapSelectListener {
+public class SitemapWidgetConfigureActivity extends AppCompatActivity implements SitemapSelectorFragment.OnSitemapSelectListener {
 
     private static final String TAG = "SitemapWidgetConfigure";
     private static final String VOLLEY_TAG_SITEMAPS = "SitemapListFragmentSitemaps2";

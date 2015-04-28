@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.Util;
 import treehou.se.habit.core.Widget;
 
-public class ColorpickerActivity extends FragmentActivity {
+public class ColorpickerActivity extends AppCompatActivity {
 
     public static final String EXTRA_SERVER = "EXTRA_SERVER";
     public static final String EXTRA_WIDGET = "EXTRA_SITEMAP";

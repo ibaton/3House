@@ -3,6 +3,7 @@ package treehou.se.habit.ui;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,7 @@ import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Util;
 import treehou.se.habit.core.Widget;
 
-public class ColorpickerActivity extends FragmentActivity {
+public class ColorpickerActivity extends AppCompatActivity {
 
     public static final String EXTRA_SERVER = "EXTRA_SERVER";
     public static final String EXTRA_WIDGET = "EXTRA_SITEMAP";

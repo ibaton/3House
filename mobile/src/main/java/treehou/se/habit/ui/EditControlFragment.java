@@ -9,7 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,6 @@ import treehou.se.habit.core.controller.CellRow;
 import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 import treehou.se.habit.ui.control.CellFactory;
-import treehou.se.habit.ui.control.config.CellIncDecConfigFragment;
 import treehou.se.habit.ui.control.config.ControllCellFragment;
 import treehou.se.habit.ui.control.config.cells.ButtonConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.ColorConfigCellBuilder;
@@ -59,7 +58,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     private Controller controller;
 
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
 
     private CellFactory<Integer> cellFactory;
 
@@ -78,7 +77,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity = (ActionBarActivity) getActivity();
+        activity = (AppCompatActivity) getActivity();
 
         cellFactory = new CellFactory<>();
         cellFactory.setDefaultBuilder(new DefaultConfigCellBuilder());
