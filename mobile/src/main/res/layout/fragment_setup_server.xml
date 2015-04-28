@@ -32,72 +32,72 @@
                     android:padding="10dp">
 
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/MenuItemText"
                         android:text="@string/server_name"
                         android:id="@+id/hdr_server_name"/>
 
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txt_server_name" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/MenuItemText"
                         android:text="@string/openhab_server"
                         android:id="@+id/hdr_openhab_server" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/server_local"
                         android:id="@+id/hdr_server_local"/>
 
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txt_server_local"/>
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/server_remote"
                         android:id="@+id/hdr_server_remote"/>
 
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txt_server_remote" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/MenuItemText"
                         android:text="@string/account"
                         android:id="@+id/hdr_openhab_account"/>
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/username"
                         android:id="@+id/hdr_username"/>
 
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txt_username"/>
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/password"
                         android:id="@+id/hdr_password"/>
 
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
