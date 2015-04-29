@@ -79,7 +79,9 @@ public class SitemapListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sitemaplist, container, false);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(R.string.sitemaps);
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.sitemaps);
+        }
 
         RecyclerView mListView = (RecyclerView) view.findViewById(R.id.list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
@@ -103,6 +105,12 @@ public class SitemapListFragment extends Fragment {
         }
     }
 
+    /**
+     * Request and load sitemaps for server.
+     * Prioritize sitemaps on local network.
+     *
+     * @param server
+     */
     private void requestSitemap(final Server server){
 
         mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
@@ -112,14 +120,19 @@ public class SitemapListFragment extends Fragment {
             public void onSuccess(List<Sitemap> sitemaps) {
                 for (Sitemap sitemap : sitemaps) {
                     sitemap.setServer(server);
-                    if(!mSitemapAdapter.contains(sitemap)){
+                    if (!mSitemapAdapter.contains(sitemap)) {
                         mSitemapAdapter.add(sitemap);
-                    } else if(sitemap.isLocal()){
+                    }
+                    // Prioritize sitemap on local sitemap if found.
+                    else if (sitemap.isLocal()) {
                         mSitemapAdapter.remove(sitemap);
                         mSitemapAdapter.add(sitemap);
                     }
 
-                    if(showSitemap != null && showSitemap.getServer().equals(sitemap.getServer()) && showSitemap.getName().equals(sitemap.getName())) {
+                    if (showSitemap != null &&
+                            showSitemap.getServer().equals(sitemap.getServer()) &&
+                            showSitemap.getName().equals(sitemap.getName())) {
+
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.page_container, SitemapFragment.newInstance(sitemap), SitemapFragment.TAG_SITEMAP_FRAGMENT)
@@ -134,9 +147,9 @@ public class SitemapListFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
-                if(message == null){
+                if (message == null) {
                     Log.w(TAG, "No server to connect to");
-                }else {
+                } else {
                     Log.w(TAG, "Failed to connect to server " + message + " " + server.getUrl());
                 }
 
@@ -152,8 +165,7 @@ public class SitemapListFragment extends Fragment {
         communicator.cancelRequest(VOLLEY_TAG_SITEMAPS);
     }
 
-    class SitemapItem{
-
+    private class SitemapItem{
         public static final int STATE_SUCCESS = 0;
         public static final int STATE_LOADING = 1;
         public static final int STATE_ERROR = 2;
@@ -172,7 +184,7 @@ public class SitemapListFragment extends Fragment {
         }
     }
 
-    class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>{
+    private class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>{
 
         private Map<Server, SitemapItem> items = new HashMap<>();
 
@@ -232,7 +244,7 @@ public class SitemapListFragment extends Fragment {
                 View itemView = inflater.inflate(R.layout.item_sitemap_load, null);
                 return new SitemapLoadHolder(itemView);
             }else {
-                View serverLoadFail = inflater.inflate(R.layout.item_sitemap_failed,null);
+                View serverLoadFail = inflater.inflate(R.layout.item_sitemap_failed, null);
                 return new SitemapErrorHolder(serverLoadFail);
             }
         }
@@ -354,7 +366,6 @@ public class SitemapListFragment extends Fragment {
 
             int count = getItemCount();
             item.addItem(sitemap);
-            Log.d(TAG, "Added sitemap " + sitemap.getServer().getName() + " " + sitemap.getName() + " precount: " + count + " postcount: " + getItemCount() + " items: " + items.size());
 
             notifyDataSetChanged();
         }
