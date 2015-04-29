@@ -34,7 +34,7 @@
                         android:layout_height="fill_parent"
                         android:padding="10dp">
 
-                        <Spinner
+                        <android.support.v7.widget.AppCompatSpinner
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/spr_items"
@@ -47,13 +47,13 @@
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent">
 
-                            <TextView
+                            <android.support.v7.widget.AppCompatTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="@string/color"/>
 
-                            <Button
+                            <android.support.v7.widget.AppCompatButton
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/pick_color"

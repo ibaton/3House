@@ -11,7 +11,7 @@
     android:id="@+id/lou_color_picker"
     android:background="#FFFFFF">
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuItemText"

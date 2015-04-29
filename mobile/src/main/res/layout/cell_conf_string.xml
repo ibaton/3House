@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
         android:id="@+id/lbl_string"
         android:layout_gravity="center_horizontal" />
+
 </LinearLayout>

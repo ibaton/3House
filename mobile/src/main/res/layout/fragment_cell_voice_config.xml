@@ -17,13 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:padding="@dimen/default_item_padding">
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spr_items"
                 android:layout_gravity="center_horizontal" />
 
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spr_icons"

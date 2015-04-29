@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,7 @@ import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.SliderCell;
 
-public class SliderActivity extends ActionBarActivity {
+public class SliderActivity extends AppCompatActivity {
     public static final String TAG = "SliderActivity";
 
     public static final String ACTION_NUMBER = "active";
