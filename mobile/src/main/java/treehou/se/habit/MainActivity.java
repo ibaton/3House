@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {
+
+            // Load server setup server fragment if no server found
             List<Server> servers = Server.getServers();
             if(servers.size() <= 0) {
                 fragmentManager.beginTransaction()
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity
                         .addToBackStack(null)
                         .commit();
             }else {
+                // Load default sitemap if any
                 long showSitemap = getIntent().getLongExtra(EXTRA_SHOW_SITEMAP, -1);
                 SitemapDB defaultSitemap = PrefSettings.instance(this).getDefaultSitemap();
                 if(savedInstanceState == null && showSitemap >= 0) {
@@ -130,7 +133,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentByTag(SitemapFragment.TAG_SITEMAP_FRAGMENT) != null){
             SitemapFragment sitemapFragment = (SitemapFragment) fragmentManager.findFragmentByTag(SitemapFragment.TAG_SITEMAP_FRAGMENT);
