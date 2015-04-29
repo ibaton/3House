@@ -5,14 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
 
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import treehou.se.habit.R;
@@ -74,7 +72,6 @@ public class AboutFragment extends Fragment {
         mAdapter.setItemClickListener(new ImageItemAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int id) {
-                Fragment fragment = null;
                 switch (id) {
                     case ITEM_FEEDBACK:
                         Intent mailIntent = new Intent(Intent.ACTION_SENDTO);
@@ -89,18 +86,13 @@ public class AboutFragment extends Fragment {
                         startActivity(communityIntent);
                         break;
                 }
-
-                if (fragment != null) {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.page_container, fragment)
-                            .addToBackStack(null)
-                            .commit();
-                }
             }
         });
 
-        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(R.string.about);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.about);
+        }
 
         return view;
     }
