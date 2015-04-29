@@ -85,7 +85,9 @@ public class SitemapFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(sitemap.getName());
+        if(actionBar != null) {
+            actionBar.setTitle(sitemap.getName());
+        }
     }
 
     @Override
@@ -95,7 +97,7 @@ public class SitemapFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sitemap, container, false);
 
-        sitemapAdapter = new SitemapAdapter(sitemap.getServer(), this, getActivity().getSupportFragmentManager(), pages);
+        sitemapAdapter = new SitemapAdapter(sitemap.getServer(), getActivity().getSupportFragmentManager(), pages);
         pgrSitemap = (ViewPager) rootView.findViewById(R.id.pgr_sitemap);
         pgrSitemap.setAdapter(sitemapAdapter);
         pgrSitemap.setOnPageChangeListener(pagerChangeListener);
@@ -140,8 +142,8 @@ public class SitemapFragment extends Fragment {
             if(state == ViewPager.SCROLL_STATE_IDLE){
                 while(pages.size() > index+1) {
                     pages.remove(pages.size()-1);
+                    sitemapAdapter.notifyDataSetChanged();
                 }
-                sitemapAdapter.notifyDataSetChanged();
             }
         }
     };
@@ -150,8 +152,8 @@ public class SitemapFragment extends Fragment {
      * Add and move to page in view pager.
      * @param page the page to add to pager
      */
-    public void addPage(LinkedPage page){
-        Log.d(TAG,"Add page4 " + page.getLink());
+    public void addPage(LinkedPage page) {
+        Log.d(TAG, "Add page4 " + page.getLink());
         pages.add(page);
         sitemapAdapter.notifyDataSetChanged();
         pgrSitemap.setCurrentItem(pages.size() - 1, true);

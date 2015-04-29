@@ -41,6 +41,7 @@ import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Util;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.ThreadPool;
 
 public class PageFragment extends Fragment {
 
@@ -51,7 +52,6 @@ public class PageFragment extends Fragment {
     private static final String ARG_PAGE    = "ARG_PAGE";
     private static final String ARG_SERVER  = "ARG_SERVER";
 
-    private SitemapFragment mSitemapFragment;
     private Server server;
     private LinkedPage mPage;
 
@@ -66,12 +66,11 @@ public class PageFragment extends Fragment {
     /**
      * Creates a new instane of the page.
      *
-     * @param sitemapFragment
      * @param server the server to connect to
      * @param page the page to visualise
      * @return
      */
-    public static PageFragment newInstance(SitemapFragment sitemapFragment, Server server, LinkedPage page) {
+    public static PageFragment newInstance(Server server, LinkedPage page) {
         Gson gson = Util.createGsonBuilder();
 
         Bundle args = new Bundle();
@@ -80,9 +79,6 @@ public class PageFragment extends Fragment {
 
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
-        fragment.setSitemapFragment(sitemapFragment);
-
-        Log.d(TAG, "Initialized " + page.getLink());
 
         return fragment;
     }
@@ -206,10 +202,15 @@ public class PageFragment extends Fragment {
         communicator.requestPage(PAGE_REQUEST_TAG, server, mPage.getLink(),
                 new Response.Listener<LinkedPage>() {
                     @Override
-                    public void onResponse(LinkedPage response) {
+                    public void onResponse(final LinkedPage response) {
                         //TODO update instead of reset.
                         Log.d(TAG, "Received update " + response.getWidget().size() + " widgets from  " + mPage.getLink());
-                        updatePage(response);
+                        ThreadPool.instance().submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                updatePage(response);
+                            }
+                        });
                     }
                 },
                 new Response.ErrorListener() {
@@ -236,39 +237,38 @@ public class PageFragment extends Fragment {
         mPage = page;
         widgetFactory = new WidgetFactory(getActivity(), server, page);
 
+        final List<Widget> pageWidgets = page.getWidget();
+        boolean invalidate = pageWidgets.size() != widgets.size();
+        if(!invalidate){
+            for(int i=0; i < widgets.size(); i++) {
+                Widget currentWidget = widgets.get(i);
+                Widget newWidget = pageWidgets.get(i);
+
+                if(currentWidget.needUpdate(newWidget)){
+                    Log.d(TAG, "Widget " + currentWidget.getType() + " " + currentWidget.getLabel() + " needs update");
+                    invalidate = true;
+                    break;
+                }
+            }
+        }
+
+        final boolean invalidateWidgets = invalidate;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                List<Widget> pageWidgets = page.getWidget();
-
-                boolean invalidate = pageWidgets.size() != widgets.size();
-                if(!invalidate){
-                    for(int i=0; i < widgets.size(); i++) {
-                        Widget currentWidget = widgets.get(i);
-                        Widget newWidget = pageWidgets.get(i);
-
-                        if(currentWidget.needUpdate(newWidget)){
-                            invalidate = true;
-                            break;
-                        }
-                    }
-                }
-
-                if(invalidate) {
+                if(invalidateWidgets) {
                     Log.d(TAG, "Invalidating widgets " + pageWidgets.size() + " : " + widgets.size());
 
                     widgetHolders.clear();
                     louFragments.removeAllViews();
-                    List<Widget> tWidgets = new ArrayList<>(widgets);
 
-                    Log.d(TAG, "Added page views to " + page.getTitle() + " " + tWidgets.size());
                     for (Widget widget : pageWidgets) {
                         WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
                         widgetHolders.add(result);
                         louFragments.addView(result.getView());
                     }
                     widgets.clear();
-                    widgets.addAll(page.getWidget());
+                    widgets.addAll(pageWidgets);
                 }
                 else {
                     Log.d(TAG, "updating widgets");
@@ -291,9 +291,5 @@ public class PageFragment extends Fragment {
 
         Communicator communicator = Communicator.instance(getActivity());
         communicator.cancelRequest(PAGE_REQUEST_TAG);
-    }
-
-    public void setSitemapFragment(SitemapFragment sitemapFragment) {
-        mSitemapFragment = sitemapFragment;
     }
 }

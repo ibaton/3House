@@ -15,20 +15,18 @@ import treehou.se.habit.core.Server;
 public class SitemapAdapter extends FragmentStatePagerAdapter {
 
     private List<LinkedPage> mPages;
-    private SitemapFragment mSitemapFragment;
     private Server mServer;
 
-    public SitemapAdapter(Server server, SitemapFragment sitemapFragment, FragmentManager fragmentManager, List<LinkedPage> pages){
+    public SitemapAdapter(Server server, FragmentManager fragmentManager, List<LinkedPage> pages){
         super(fragmentManager);
 
-        mSitemapFragment = sitemapFragment;
         mPages = pages;
         mServer = server;
     }
 
     @Override
     public Fragment getItem(int i) {
-        return PageFragment.newInstance(mSitemapFragment, mServer, mPages.get(i));
+        return PageFragment.newInstance(mServer, mPages.get(i));
     }
 
     @Override
