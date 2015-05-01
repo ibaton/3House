@@ -65,6 +65,7 @@ public class BaseBuilder {
         View rootView;
         View baseDataHolder;
         TextView lblName;
+        TextView lblValue;
         View iconHolder;
         ImageView imgIcon;
         ImageButton btnNextPage;
@@ -90,7 +91,23 @@ public class BaseBuilder {
                 rootView = holderView;
             }
 
-            return new BaseBuilderHolder(factory.getContext(), rootView, widget, factory);
+            BaseBuilderHolder holder = new BaseBuilderHolder(factory.getContext(), rootView, widget, factory);
+
+            final WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            float percentage = Util.toPercentage(settings.getTextSize());
+
+            holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
+            holder.lblValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * holder.lblValue.getTextSize());
+
+            // Set size of icon
+            float imageSizePercentage = Util.toPercentage(settings.getIconSize());
+            ViewGroup.LayoutParams layoutParams = holder.imgIcon.getLayoutParams();
+            layoutParams.width = (int) (((float) layoutParams.width) * imageSizePercentage);
+            holder.imgIcon.setLayoutParams(layoutParams);
+
+            holder.update(widget);
+
+            return holder;
         }
 
         BaseBuilderHolder(Context context, View view, Widget widget, WidgetFactory factory) {
@@ -103,11 +120,10 @@ public class BaseBuilder {
             baseDataHolder = rootView.findViewById(R.id.lou_base_data_holder);
             iconHolder = rootView.findViewById(R.id.img_widget_icon_holder);
             lblName = (TextView) rootView.findViewById(R.id.lbl_widget_name);
+            lblValue = (TextView) rootView.findViewById(R.id.lbl_value);
             imgIcon = (ImageView) rootView.findViewById(R.id.img_widget_icon);
             btnNextPage = (ImageButton) rootView.findViewById(R.id.btn_next_page);
             subView = (LinearLayout) rootView.findViewById(R.id.lou_widget_holder);
-
-            update(widget);
         }
 
         @Override
@@ -118,18 +134,12 @@ public class BaseBuilder {
             }
 
             Log.d(TAG, "update " + widget.getLabel());
-            final WidgetSettings settings = WidgetSettings.loadGlobal(context);
 
             setName(widget.getLabel());
 
             String[] splitString = widget.getLabel().split("\\[|\\]");
 
-            float percentage = Util.toPercentage(settings.getTextSize());
-            lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, lblName.getTextSize() * percentage);
-
             if (splitString.length > 1 && splitString[1].trim().length() > 0) {
-                TextView lblValue = (TextView) rootView.findViewById(R.id.lbl_value);
-                lblValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * lblValue.getTextSize());
                 lblValue.setText(splitString[1]);
                 lblValue.setVisibility(View.VISIBLE);
             }
@@ -234,12 +244,6 @@ public class BaseBuilder {
 
             if (widget.getIconPath() != null) {
                 iconHolder.setVisibility(View.VISIBLE);
-
-                // Set size of icon
-                float imageSizePercentage = Util.toPercentage(settings.getIconSize());
-                ViewGroup.LayoutParams layoutParams = imgIcon.getLayoutParams();
-                layoutParams.width = (int) (((float) layoutParams.width) * imageSizePercentage);
-                imgIcon.setLayoutParams(layoutParams);
 
                 try {
                     Log.d(TAG, "widget.getIconPath " + widget.getIconPath() + " : " + widgetFactory.getPage().getBaseUrl());

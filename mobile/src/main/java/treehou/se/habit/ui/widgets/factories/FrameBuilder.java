@@ -59,7 +59,16 @@ public class FrameBuilder implements IWidgetBuilder {
             View lblTitleHolder = rootView.findViewById(R.id.lbl_widget_name_holder);
             LinearLayout louWidgetHolder = (LinearLayout) rootView.findViewById(R.id.lou_widget_frame_holder);
 
-            return new FrameHolder(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
+            FrameHolder holder = new FrameHolder(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
+
+            Log.d(TAG, "update " + widget.getLabel());
+            final WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            float percentage = Util.toPercentage(settings.getTextSize());
+            holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
+
+            holder.update(widget);
+
+            return holder;
         }
 
         private FrameHolder(Context context, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, Widget widget, WidgetFactory factory) {
@@ -81,8 +90,6 @@ public class FrameBuilder implements IWidgetBuilder {
             }
 
             subView = louWidgetHolder;
-
-            update(widget);
         }
 
         @Override
@@ -92,15 +99,10 @@ public class FrameBuilder implements IWidgetBuilder {
                 return;
             }
 
-            Log.d(TAG, "update " + widget.getLabel());
-            final WidgetSettings settings = WidgetSettings.loadGlobal(context);
-
             if(widget.getLabel() != null) {
                 setName(widget.getLabel());
             }
 
-            float percentage = Util.toPercentage(settings.getTextSize());
-            lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, lblName.getTextSize() * percentage);
             setName(widget.getLabel());
 
             this.widget = widget;
