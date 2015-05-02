@@ -89,8 +89,7 @@ public class SliderBuilder implements IWidgetBuilder {
                         try {
                             Communicator communicator = Communicator.instance(factory.getContext());
                             communicator.command(factory.getServer(), widget.getItem(), String.valueOf(skbDim.getProgress()));
-                        } catch (Exception e) {
-                        }
+                        } catch (Exception e) {}
                     }
                 }
             });

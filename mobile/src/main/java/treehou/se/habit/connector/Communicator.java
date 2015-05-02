@@ -10,13 +10,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.LruCache;
@@ -24,17 +24,12 @@ import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import retrofit.RetrofitError;
-import treehou.se.habit.*;
 import treehou.se.habit.connector.requests.GsonRequest;
 import treehou.se.habit.core.Item;
 import treehou.se.habit.core.LinkedPage;
@@ -145,21 +140,21 @@ public class Communicator {
             public void onSuccess(Item newItem) {
                 Log.d(TAG, "Item state " + newItem.getState() + " " + newItem.getType());
                 String state = newItem.getState();
-                if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.getType())){
-                    if(Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)){
-                        if(value > 0){
-                            command(server, newItem, String.valueOf(scrubNumberValue(min+value, min, max)));
+                if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.getType())) {
+                    if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
+                        if (value > 0) {
+                            command(server, newItem, String.valueOf(scrubNumberValue(min + value, min, max)));
                         }
-                    }else if(Constants.COMMAND_ON.equals(state)){
-                        if(value < 0){
-                            command(server, newItem, String.valueOf(scrubNumberValue(max+value, min, max)));
+                    } else if (Constants.COMMAND_ON.equals(state)) {
+                        if (value < 0) {
+                            command(server, newItem, String.valueOf(scrubNumberValue(max + value, min, max)));
                         }
-                    }else {
-                        try{
-                            int itemVal = scrubNumberValue(Integer.parseInt(newItem.getState())+value, min, max);
+                    } else {
+                        try {
+                            int itemVal = scrubNumberValue(Integer.parseInt(newItem.getState()) + value, min, max);
                             Log.e(TAG, "Sending command " + itemVal + " value " + value);
                             command(server, newItem, String.valueOf(itemVal));
-                        }catch (NumberFormatException e){
+                        } catch (NumberFormatException e) {
                             Log.e(TAG, "Could not parse state " + newItem.getState(), e);
                             return;
                         }
@@ -180,9 +175,26 @@ public class Communicator {
             return requestLoaders.get(server);
         }
 
+        OkHttpClient httpClient = TrustModifier.createAcceptAllClient();
+        httpClient.interceptors().add(new Interceptor() {
+            @Override
+            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+
+                com.squareup.okhttp.Request.Builder newRequest = chain.request().newBuilder();
+                if(!TextUtils.isEmpty(server.getUsername()) && !TextUtils.isEmpty(server.getPassword())) {
+                    newRequest.addHeader("Authorization", ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
+                }
+
+                return chain.proceed(newRequest.build());
+            }
+        });
 
         Picasso.Builder builder = new Picasso.Builder(context);
-        builder.downloader(new OkHttpDownloader(TrustModifier.createAcceptAllClient()) {
+        builder.downloader(new OkHttpDownloader(httpClient));
+
+        //, TrustModifier.createAcceptAllClient()
+
+        /*builder.downloader(new OkHttpDownloader(TrustModifier.createAcceptAllClient()) {
             @Override
             protected HttpURLConnection openConnection(Uri uri) throws IOException {
                 Log.d(TAG, "onBitmapLoaded openConnection " + uri);
@@ -194,7 +206,12 @@ public class Communicator {
 
                 return connection;
             }
-        });
+
+            @Override
+            public Response load(Uri uri, int networkPolicy) throws IOException {
+                return super.load(uri, networkPolicy);
+            }
+        });*/
         builder.memoryCache(new LruCache(context));
         final Picasso picasso = builder.build();
 
@@ -212,7 +229,6 @@ public class Communicator {
      * @param useCache set if cache should be used.
      */
     public void loadImage(final Server server, final URL imageUrl, final ImageView imageView, boolean useCache){
-
         Log.d(TAG, "onBitmapLoaded image start " + imageUrl.toString());
         final Callback callback = new Callback() {
             @Override
@@ -235,18 +251,10 @@ public class Communicator {
         };
 
         Picasso picasso = buildPicasso(context, server);
-        if(!useCache){
-            picasso.load(imageUrl.toString())
-                .skipMemoryCache()
-                .noFade()
-                .placeholder(imageView.getDrawable())
-                .into(imageView, callback); // problem when saving null image
-        }else {
-            picasso.load(imageUrl.toString())
-                .noFade()
-                .placeholder(imageView.getDrawable())
-                .into(imageView, callback); // problem when saving null image
-        }
+        picasso.load(imageUrl.toString())
+            .noFade()
+            .placeholder(imageView.getDrawable())
+            .into(imageView, callback); // problem when saving null image
     }
 
     /**

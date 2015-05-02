@@ -240,11 +240,9 @@ public class BaseBuilder {
         }
 
         private void loadIcon(Widget widget) {
-            final WidgetSettings settings = WidgetSettings.loadGlobal(widgetFactory.getContext());
-
             if (widget.getIconPath() != null) {
                 iconHolder.setVisibility(View.VISIBLE);
-
+                imgIcon.setVisibility(View.GONE);
                 try {
                     Log.d(TAG, "widget.getIconPath " + widget.getIconPath() + " : " + widgetFactory.getPage().getBaseUrl());
                     URL imageUrl = new URL(widgetFactory.getPage().getBaseUrl() + widget.getIconPath());
@@ -255,7 +253,7 @@ public class BaseBuilder {
                     e.printStackTrace();
                 }
             } else {
-                iconHolder.setVisibility(View.GONE);
+                imgIcon.setVisibility(View.GONE);
                 if (widget.getLabel() == null || "".equals(widget.getLabel().trim())) {
                     baseDataHolder.setVisibility(View.GONE);
                 }

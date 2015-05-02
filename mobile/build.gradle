@@ -74,10 +74,10 @@ dependencies {
     compile 'com.github.eluleci:flatui:3.0.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.picasso:picasso:2.3.4'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile ('com.ning:async-http-client:1.9.11')
-    compile ('org.atmosphere:wasync:2.0.0') {
+    compile ('org.atmosphere:wasync:2.1.1') {
         exclude group: 'com.ning', module: 'async-http-client'
     }
 
