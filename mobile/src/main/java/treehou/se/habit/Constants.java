@@ -40,8 +40,8 @@ public class Constants {
 
     public static final Set<String> SUPPORT_SWITCH = new HashSet<>();
     static {
-        SUPPORT_SWITCH.add(Item.TYPE_SWITCH);
         SUPPORT_SWITCH.add(Item.TYPE_GROUP);
+        SUPPORT_SWITCH.add(Item.TYPE_SWITCH);
         SUPPORT_SWITCH.add(Item.TYPE_STRING);
         SUPPORT_SWITCH.add(Item.TYPE_NUMBER);
         SUPPORT_SWITCH.add(Item.TYPE_CONTACT);
@@ -50,6 +50,7 @@ public class Constants {
 
     public static final Set<String> SUPPORT_INC_DEC = new HashSet<>();
     static {
+        SUPPORT_SWITCH.add(Item.TYPE_GROUP);
         SUPPORT_INC_DEC.add(Item.TYPE_NUMBER);
         SUPPORT_INC_DEC.add(Item.TYPE_DIMMER);
     }
