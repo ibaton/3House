@@ -25,7 +25,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme.Base" >
         <meta-data
             android:name="AA_DB_NAME"
             android:value="treestore26.db" />
@@ -145,7 +145,7 @@
             android:exported="true"
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.Base"
             android:uiOptions="splitActionBarWhenNarrow"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="ExportedActivity" >

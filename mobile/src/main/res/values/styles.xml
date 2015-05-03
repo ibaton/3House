@@ -1,14 +1,5 @@
 <resources>
 
-
-    <!--<style name="MyActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/primary_color</item>
-    </style>-->
-
-    <!-- parent="android:Theme.Holo.Light.DarkActionBar" -->
-    <!-- Base application theme. parent="android:Theme.Holo.Light.DarkActionBar"-->
-
     <style name="DarkActionbar" parent="Theme.AppCompat">
         <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
         <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>

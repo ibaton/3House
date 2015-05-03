@@ -13,7 +13,6 @@
 
         <item name="windowActionModeOverlay">false</item>
 
-        <!--<item name="android:fontFamily" >sans-serif-medium</item>-->
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
     </style>
 </resources>
