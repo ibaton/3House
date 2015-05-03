@@ -2,7 +2,6 @@ package treehou.se.habit.core.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;

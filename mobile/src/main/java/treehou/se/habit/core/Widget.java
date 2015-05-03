@@ -2,7 +2,6 @@ package treehou.se.habit.core;
 
 import android.util.Log;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;

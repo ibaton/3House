@@ -11,11 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import treehou.se.habit.R;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.ui.dialog.WidgetSettingsDialogFragment;
 import treehou.se.habit.ui.widgets.factories.ChartBuilder;
 import treehou.se.habit.ui.widgets.factories.ColorpickerBuilder;
 import treehou.se.habit.ui.widgets.factories.FrameBuilder;
@@ -31,9 +29,6 @@ import treehou.se.habit.ui.widgets.factories.TextBuilder;
 import treehou.se.habit.ui.widgets.factories.VideoBuilder;
 import treehou.se.habit.ui.widgets.factories.WebBuilder;
 
-/**
- * Created by ibaton on 2014-09-28.
- */
 public class WidgetFactory {
 
     private static final String TAG = "WidgetFactory";
@@ -158,21 +153,4 @@ public class WidgetFactory {
             return parent;
         }
     }
-
-    View.OnLongClickListener dialogItemListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            WidgetSettingsDialogFragment widgetSettingsDialogFragment = new WidgetSettingsDialogFragment();
-            widgetSettingsDialogFragment.show(context.getSupportFragmentManager(), "settings");
-            widgetSettingsDialogFragment.setOnItemSelectedListener(new WidgetSettingsDialogFragment.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(int itemId) {
-                if(WidgetSettingsDialogFragment.ITEM_CUSTOM == itemId){
-
-                }
-                }
-            });
-            return true;
-        }
-    };
 }

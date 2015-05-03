@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
-import com.mattyork.colours.Colour;
-
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.Server;

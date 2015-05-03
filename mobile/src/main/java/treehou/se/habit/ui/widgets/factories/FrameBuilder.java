@@ -3,31 +3,20 @@ package treehou.se.habit.ui.widgets.factories;
 import android.content.Context;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.settings.WidgetSettings;
 import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
 public class FrameBuilder implements IWidgetBuilder {
 
     private static final String TAG = "FrameBuilder";

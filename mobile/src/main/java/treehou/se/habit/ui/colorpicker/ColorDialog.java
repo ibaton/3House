@@ -1,11 +1,9 @@
 package treehou.se.habit.ui.colorpicker;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,9 +20,6 @@ import java.util.List;
 
 import treehou.se.habit.R;
 
-/**
- * Created by ibaton on 2015-02-22.
- */
 public class ColorDialog extends DialogFragment {
 
     public static final String EXTRA_COLOR = "color";

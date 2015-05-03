@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;

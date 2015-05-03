@@ -58,7 +58,7 @@
 
             <FrameLayout
                 android:layout_width="@dimen/controller_button_space"
-                android:layout_height="@dimen/controller_button_space"></FrameLayout>
+                android:layout_height="@dimen/controller_button_space"/>
         </LinearLayout>
     </LinearLayout>
 

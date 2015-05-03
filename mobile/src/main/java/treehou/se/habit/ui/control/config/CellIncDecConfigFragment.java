@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +20,12 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.IncDecCell;
-import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.ui.control.Icon;
 import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellIncDecConfigFragment extends Fragment {
 
-    private static final String TAG = "CellSwitchConfigFragment";
+    private static final String TAG = "CellIncDecConfigFragment";
     private static String ARG_CELL_ID = "ARG_CELL_ID";
 
     private Cell cell;

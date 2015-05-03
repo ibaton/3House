@@ -5,13 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import treehou.se.habit.core.Item;
-import treehou.se.habit.tasker.reciever.CommandReciever;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.IncDecReciever;
 
-/**
- * Created by ibaton on 2015-03-08.
- */
 public class IncDecBoundleManager {
 
     public static final String TAG = "IncDecBoundleManager";

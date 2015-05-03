@@ -39,7 +39,9 @@ public class ColorConfigCellBuilder implements CellFactory.CellBuilder {
         }
         Icon icon = Util.getIcon(context, colorCell.getIcon());
         ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon);
-        imgIcon.setImageResource(icon.getResource());
+        if(icon != null) {
+            imgIcon.setImageResource(icon.getResource());
+        }
         imgIcon.getBackground().setColorFilter(cell.getColor(), PorterDuff.Mode.MULTIPLY);
 
         return cellView;

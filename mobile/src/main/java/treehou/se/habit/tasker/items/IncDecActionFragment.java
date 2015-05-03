@@ -13,17 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
-import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 
 public class IncDecActionFragment extends Fragment {

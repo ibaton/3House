@@ -3,7 +3,6 @@ package treehou.se.habit.ui.control.config;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.Item;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 import treehou.se.habit.ui.control.config.cells.CellColorConfigFragment;
@@ -28,7 +24,6 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     public static final int REQUEST_COLOR = 3001;
 
     private Button btnPicker;
-    //private TextView txtLabel;
 
     private ArrayAdapter mTypeAdapter;
     private Cell cell;

@@ -97,12 +97,6 @@ public class CellButtonConfigFragment extends Fragment {
                     } else if (item.getType().equals(Item.TYPE_NUMBER)) {
                         txtCommand.setVisibility(View.VISIBLE);
                         txtCommand.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        try{
-                            Integer.parseInt(txtCommand.getText().toString());
-                        }catch (NumberFormatException e){
-                            txtCommand.setText("");
-                        }
-
                         tglOnOff.setVisibility(View.GONE);
                     } else if (item.getType().equals(Item.TYPE_CONTACT)) {
                         txtCommand.setVisibility(View.GONE);

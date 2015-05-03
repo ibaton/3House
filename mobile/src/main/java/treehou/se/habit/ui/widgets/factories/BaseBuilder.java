@@ -25,9 +25,6 @@ import treehou.se.habit.core.settings.WidgetSettings;
 import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
 public class BaseBuilder {
 
     private static final String TAG = "BaseBuilder";

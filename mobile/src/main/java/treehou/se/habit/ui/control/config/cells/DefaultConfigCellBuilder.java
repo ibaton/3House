@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
@@ -14,9 +13,6 @@ import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class DefaultConfigCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, Controller controller, Cell cell){

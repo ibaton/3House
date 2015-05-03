@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ColorPickerPreference extends DialogPreference {
 
     public static final int DEFAULT_COLOR = Color.WHITE;
@@ -39,7 +41,7 @@ public class ColorPickerPreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(View view) {
+    protected void onBindDialogView(@NotNull View view) {
         super.onBindDialogView(view);
         colorPickerView.setColor(selectedColor);
     }

@@ -2,15 +2,11 @@ package treehou.se.habit.connector;
 
 import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
 
 import java.util.Random;
 
 import treehou.se.habit.core.Widget;
 
-/**
- * Created by ibaton on 2014-10-18.
- */
 public class ConnectorUtil {
 
     private static final String TAG = "ConnectorUtil";

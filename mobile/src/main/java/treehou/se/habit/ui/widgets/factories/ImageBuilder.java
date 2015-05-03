@@ -2,11 +2,7 @@ package treehou.se.habit.ui.widgets.factories;
 
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,9 +13,6 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
 public class ImageBuilder implements IWidgetBuilder {
 
     @Override

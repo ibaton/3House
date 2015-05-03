@@ -9,7 +9,6 @@ import android.util.Log;
 import java.util.List;
 
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.Server;
 
 public class VoiceService extends IntentService {

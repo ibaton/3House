@@ -1,12 +1,8 @@
 package treehou.se.habit.tasker.boundle;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
-import treehou.se.habit.core.Item;
 import treehou.se.habit.core.db.SitemapDB;
-import treehou.se.habit.tasker.reciever.CommandReciever;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.OpenSitemapReciever;
 

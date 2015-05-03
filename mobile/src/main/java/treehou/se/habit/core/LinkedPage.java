@@ -2,7 +2,6 @@ package treehou.se.habit.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLStreamHandler;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,14 +3,10 @@ package treehou.se.habit.tasker.reciever;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 
 import treehou.se.habit.MainActivity;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
 import treehou.se.habit.core.db.SitemapDB;
-import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 import treehou.se.habit.tasker.boundle.OpenSitemapBoundleManager;
 
 /**

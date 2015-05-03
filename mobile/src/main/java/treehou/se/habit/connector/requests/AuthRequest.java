@@ -10,7 +10,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 

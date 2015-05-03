@@ -3,7 +3,6 @@ package treehou.se.habit.ui.homescreen;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.widget.RemoteViews;
 

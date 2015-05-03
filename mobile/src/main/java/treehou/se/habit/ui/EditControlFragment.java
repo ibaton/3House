@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,6 +57,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     private View titleHolder;
     private View viwBackground;
 
+    private ActionBar actionBar;
+
     private Controller controller;
 
     private AppCompatActivity activity;
@@ -97,6 +100,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_control, container, false);
+
+        actionBar = activity.getSupportActionBar();
 
         titleHolder = rootView.findViewById(R.id.lou_title_holder);
 
@@ -223,7 +228,9 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity.getWindow().setStatusBarColor(pallete[0]);
             activity.getWindow().setNavigationBarColor(pallete[0]);
-            activity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(pallete[0]));
+            if(actionBar != null) {
+                actionBar.setBackgroundDrawable(new ColorDrawable(pallete[0]));
+            }
         }
 
         redrawController();
@@ -235,7 +242,9 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity.getWindow().setStatusBarColor(activity.getResources().getColor(R.color.colorPrimaryDark));
             activity.getWindow().setNavigationBarColor(activity.getResources().getColor(R.color.navigationBarColor));
-            activity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.colorPrimary)));
+            if(actionBar != null) {
+                actionBar.setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.colorPrimary)));
+            }
         }
 
         super.onDestroyView();

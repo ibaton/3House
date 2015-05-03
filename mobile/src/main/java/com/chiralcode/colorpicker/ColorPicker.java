@@ -39,6 +39,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ColorPicker extends View {
 
     /**
@@ -292,7 +294,7 @@ public class ColorPicker extends View {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NotNull MotionEvent event) {
         int action = event.getAction();
         switch (action) {
         case MotionEvent.ACTION_DOWN:

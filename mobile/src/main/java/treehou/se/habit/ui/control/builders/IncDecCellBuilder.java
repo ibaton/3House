@@ -13,7 +13,6 @@ import android.widget.RemoteViews;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.ButtonCell;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.core.controller.IncDecCell;

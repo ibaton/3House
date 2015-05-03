@@ -1,7 +1,5 @@
 package treehou.se.habit.core;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -12,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
 * Created by ibaton on 2014-10-18.

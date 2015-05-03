@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import treehou.se.habit.R;
 
 import treehou.se.habit.connector.Communicator;
@@ -86,7 +86,7 @@ public class SitemapListFragment extends Fragment {
         RecyclerView mListView = (RecyclerView) view.findViewById(R.id.list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         mListView.setLayoutManager(gridLayoutManager);
-        mListView.setItemAnimator(new SlideInLeftAnimator());
+        mListView.setItemAnimator(new DefaultItemAnimator());
 
         mListView.setAdapter(mSitemapAdapter);
 

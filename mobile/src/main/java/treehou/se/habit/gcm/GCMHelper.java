@@ -6,11 +6,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-
-import treehou.se.habit.Constants;
-
 /**
  * Created by ibaton on 2015-01-11.
  */

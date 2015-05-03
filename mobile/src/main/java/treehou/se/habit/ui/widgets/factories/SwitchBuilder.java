@@ -1,29 +1,20 @@
 package treehou.se.habit.ui.widgets.factories;
 
-import android.content.Context;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.ConnectorUtil;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.Item;
 import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.settings.WidgetSettings;
 import treehou.se.habit.ui.Util;

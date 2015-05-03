@@ -1,8 +1,8 @@
 package treehou.se.habit.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.Server;
@@ -60,7 +59,7 @@ public class SitemapSelectorFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
 
         mListView.setLayoutManager(gridLayoutManager);
-        mListView.setItemAnimator(new SlideInLeftAnimator());
+        mListView.setItemAnimator(new DefaultItemAnimator());
 
         mListView.setAdapter(mSitemapAdapter);
 

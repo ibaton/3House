@@ -6,12 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.ButtonCell;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.Controller;
@@ -20,9 +17,6 @@ import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
 import treehou.se.habit.ui.control.Icon;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SwitchConfigCellBuilder";

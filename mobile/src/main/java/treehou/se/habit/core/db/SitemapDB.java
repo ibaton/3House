@@ -6,12 +6,8 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import java.util.List;
-
-import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.Widget;
 
 /**
  * Created by ibaton on 2014-09-10.

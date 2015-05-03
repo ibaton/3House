@@ -1,7 +1,6 @@
 package treehou.se.habit.ui.control.config.cells;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;

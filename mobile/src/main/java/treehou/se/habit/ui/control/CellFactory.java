@@ -14,9 +14,6 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.Controller;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class CellFactory<T> {
 
     private static final String TAG = "CellFactory";

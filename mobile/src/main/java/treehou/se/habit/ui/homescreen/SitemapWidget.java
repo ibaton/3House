@@ -9,7 +9,6 @@ import android.widget.RemoteViews;
 
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
-import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.db.SitemapDB;
 
 /**

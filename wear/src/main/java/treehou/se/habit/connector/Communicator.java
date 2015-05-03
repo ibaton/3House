@@ -1,9 +1,7 @@
 package treehou.se.habit.connector;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -19,9 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 import treehou.se.habit.connector.messages.VoiceCommandMessage;
 
-/**
- * Created by ibaton on 2015-03-12.
- */
 public class Communicator {
 
     private static final String TAG = "WearCommunicator";

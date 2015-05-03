@@ -6,14 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.core.controller.IncDecCell;
-import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +23,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import treehou.se.habit.Constants;
 import treehou.se.habit.R;
 import treehou.se.habit.core.Server;
@@ -67,7 +67,7 @@ public class ServersFragment extends Fragment  {
         lstServer.setAdapter(serversAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstServer.setLayoutManager(gridLayoutManager);
-        lstServer.setItemAnimator(new SlideInLeftAnimator());
+        lstServer.setItemAnimator(new DefaultItemAnimator());
         lstServer.setAdapter(serversAdapter);
 
         setHasOptionsMenu(true);

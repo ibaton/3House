@@ -1,10 +1,8 @@
 package treehou.se.habit.ui.widgets.factories;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,13 +11,9 @@ import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.ConnectorUtil;
 import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
 public class ChartBuilder implements IWidgetBuilder {
 
     private static final String TAG = "ChartBuilder";

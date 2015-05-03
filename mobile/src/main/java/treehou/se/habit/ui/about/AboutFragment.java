@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.adapter.ImageItem;
 import treehou.se.habit.ui.adapter.ImageItemAdapter;
@@ -66,7 +66,7 @@ public class AboutFragment extends Fragment {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         mListView.setLayoutManager(gridLayoutManager);
-        mListView.setItemAnimator(new SlideInLeftAnimator());
+        mListView.setItemAnimator(new DefaultItemAnimator());
         mListView.setAdapter(mAdapter);
 
         mAdapter.setItemClickListener(new ImageItemAdapter.OnItemClickListener() {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,7 +22,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Controller;
 
@@ -62,7 +62,9 @@ public class ControllsFragment extends Fragment {
         mListView = (RecyclerView) view.findViewById(R.id.list);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(R.string.controllers);
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.controllers);
+        }
 
         mAdapter = new ControllerAdapter(getActivity());
         final List<Controller> controllers = Controller.getControllers();
@@ -71,7 +73,7 @@ public class ControllsFragment extends Fragment {
         // Set the adapter
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         mListView.setLayoutManager(gridLayoutManager);
-        mListView.setItemAnimator(new SlideInLeftAnimator());
+        mListView.setItemAnimator(new DefaultItemAnimator());
         mListView.setAdapter(mAdapter);
 
         setHasOptionsMenu(true);

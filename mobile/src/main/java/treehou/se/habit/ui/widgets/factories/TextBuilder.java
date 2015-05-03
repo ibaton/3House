@@ -4,20 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.InputType;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.Item;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.settings.WidgetSettings;
-import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 /**

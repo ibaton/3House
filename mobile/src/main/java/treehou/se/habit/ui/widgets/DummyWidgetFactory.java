@@ -3,34 +3,18 @@ package treehou.se.habit.ui.widgets;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import treehou.se.habit.Constants;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.settings.WidgetSettings;
-import treehou.se.habit.ui.SitemapFragment;
 import treehou.se.habit.ui.Util;
 
-/**
- * Created by ibaton on 2014-09-28.
- */
 public class DummyWidgetFactory {
 
     private static final String TAG = "WidgetFactory";

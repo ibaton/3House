@@ -9,7 +9,6 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
-import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 import treehou.se.habit.tasker.boundle.CommandBoundleScrubber;
 
 public final class FireReceiver extends BroadcastReceiver {

@@ -10,5 +10,5 @@
         android:layout_height="50dp"
         android:id="@+id/viw_color"
         android:background="@color/transparent"
-        android:layout_gravity="center_horizontal"></FrameLayout>
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

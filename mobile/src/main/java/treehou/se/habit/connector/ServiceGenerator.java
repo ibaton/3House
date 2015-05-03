@@ -9,19 +9,13 @@ import com.squareup.okhttp.OkHttpClient;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;

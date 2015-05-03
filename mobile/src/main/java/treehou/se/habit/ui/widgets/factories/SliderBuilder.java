@@ -1,15 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
-import android.widget.Spinner;
-
-import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
