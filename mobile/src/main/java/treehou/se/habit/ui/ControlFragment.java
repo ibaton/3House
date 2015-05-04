@@ -1,7 +1,5 @@
 package treehou.se.habit.ui;
 
-
-
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,12 +36,12 @@ public class ControlFragment extends Fragment {
     public static final String ARG_ID = "ARG_ID";
 
     private LinearLayout louController;
-    private AppCompatActivity activity;
 
     private Controller controller;
     private CellFactory<Integer> cellFactory;
 
     private ActionBar actionBar;
+    private AppCompatActivity activity;
 
     public static ControlFragment newInstance(long id) {
         ControlFragment fragment = new ControlFragment();
@@ -78,6 +76,7 @@ public class ControlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        activity = (AppCompatActivity) getActivity();
         actionBar = activity.getSupportActionBar();
 
         int[] pallete;
@@ -89,8 +88,6 @@ public class ControlFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_contoll, container, false);
-
-        activity = (AppCompatActivity) getActivity();
 
         View viwBackground = rootView.findViewById(R.id.viw_background);
         View titleHolder = rootView.findViewById(R.id.lou_title_holder);
