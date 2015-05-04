@@ -18,8 +18,6 @@
         class="com.larswerkman.holocolorpicker.ColorPicker"
         android:id="@+id/pcr_color"
         app:color_wheel_thickness="30dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
         android:layout_weight="1"
         android:layout_gravity="center_horizontal" />
 

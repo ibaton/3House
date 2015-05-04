@@ -24,7 +24,6 @@
     <color name="item_homescreen_background">#1a000000</color>
     <color name="item_homescreen_background_boder">#20000000</color>
 
-    <color name="image_border">#ee000000</color>
     <color name="image_background">#ffc6c6c6</color>
 
     <color name="drawer">#ffffffff</color>
@@ -39,6 +38,4 @@
     <color name="transparent_dark">#22000000</color>
 
     <color name="load">#ff81817d</color>
-    <color name="red">#ffFF0000</color>
-    <color name="blue">#ff0000FF</color>
 </resources>

@@ -89,7 +89,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_SERVER, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + appWidgetId, server.getId());
         prefs.putBoolean(PREF_PREFIX_KEY + appWidgetId + PREF_POSTFIX_SHOW_TITLE, showTitle);
-        prefs.commit();
+        prefs.apply();
     }
 
     static boolean loadControllShowTitlePref(Context context, int appWidgetId) {
@@ -108,7 +108,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
     static void deleteTitlePref(Context context, int appWidgetId) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_SERVER, 0).edit();
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.commit();
+        prefs.apply();
     }
 }
 

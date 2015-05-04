@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/MenuItemSubText"
-                    android:text="Failed to load sitemaps"
+                    android:text="@string/faild_to_load_sitemaps"
                     android:id="@+id/lbl_sitemap"/>
 
                 <TextView

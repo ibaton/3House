@@ -40,6 +40,6 @@ public class PrefSettings {
         else {
             editor.remove(PREF_DEFAULT_SITEMAP);
         }
-        editor.commit();
+        editor.apply();
     }
 }

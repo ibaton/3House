@@ -17,7 +17,6 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
         android:id="@+id/lbl_icon_label"
         android:layout_gravity="center_vertical" />
 

@@ -13,7 +13,6 @@
     <dimen name="widget_margin">8dp</dimen>
 
     <dimen name="button_size">64dp</dimen>
-    <dimen name="button_size_ring">8dp</dimen>
     <dimen name="widget_default_padding_vertical">10dp</dimen>
     <dimen name="widget_default_padding_horizontal">10dp</dimen>
     <dimen name="default_item_padding">10dp</dimen>

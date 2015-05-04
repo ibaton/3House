@@ -92,7 +92,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + appWidgetId, controller.getId());
         prefs.putBoolean(PREF_PREFIX_KEY + appWidgetId + PREF_POSTFIX_SHOW_TITLE, showTitle);
-        prefs.commit();
+        prefs.apply();
     }
 
     // Read the prefix from the SharedPreferences object for this widget.
@@ -113,7 +113,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
         prefs.remove(PREF_PREFIX_KEY + appWidgetId + PREF_POSTFIX_SHOW_TITLE);
-        prefs.commit();
+        prefs.apply();
     }
 }
 

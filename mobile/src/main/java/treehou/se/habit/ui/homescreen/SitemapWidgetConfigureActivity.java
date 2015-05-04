@@ -79,7 +79,7 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
         Log.d(TAG, "saveSitemapIdPref " + sitemapId);
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + appWidgetId, sitemapId);
-        prefs.commit();
+        prefs.apply();
     }
 
     // Read the prefix from the SharedPreferences object for this widget.
@@ -95,7 +95,7 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
     static void deletePref(Context context, int appWidgetId) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.commit();
+        prefs.apply();
     }
 }
 

@@ -17,7 +17,6 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="16dp">
 
             <Spinner
@@ -30,7 +29,7 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show Name"
+                android:text="@string/show_name"
                 android:id="@+id/cbx_show_title"
                 android:checked="false" />
         </LinearLayout>

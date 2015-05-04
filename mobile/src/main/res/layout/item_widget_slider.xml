@@ -9,11 +9,10 @@
     android:paddingRight="@dimen/item_spacing_half">
 
     <SeekBar
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minWidth="@dimen/seekbar_widget_width"
         android:id="@+id/skb_dim"
-        android:layout_weight="1"
         android:max="100"
         android:indeterminate="false"/>
 </FrameLayout>

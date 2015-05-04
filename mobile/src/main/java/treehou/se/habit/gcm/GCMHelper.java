@@ -46,7 +46,7 @@ public class GCMHelper {
         editor.putString(PROPERTY_REG_ID, regId);
         int appVersion = getAppVersion(context);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
+        editor.apply();
         Log.i(TAG, "Saving regId " + regId + " on app version " + appVersion);
     }
 

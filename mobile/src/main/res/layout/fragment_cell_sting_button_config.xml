@@ -23,7 +23,6 @@
     <ToggleButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New ToggleButton"
         android:id="@+id/tgl_on_off"
         android:layout_gravity="right|top"
         android:checked="true" />

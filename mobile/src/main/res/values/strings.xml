@@ -4,7 +4,6 @@
     <string name="app_name">3Hou.se</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="server_urls">OpenHAB Server URL</string>
@@ -25,7 +24,6 @@
     <string name="settings">Settings</string>
     <string name="controllers">Controllers</string>
     <string name="sitemaps">Sitemaps</string>
-    <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="configure">Configure</string>
     <string name="notification_title">3Hou.se</string>
@@ -64,10 +62,8 @@
     <string name="hdr_text_size">Size</string>
     <string name="hdr_image">Image</string>
     <string name="hdr_background">Background</string>
-    <string name="generate_qr">Generate QR</string>
     <string name="loading">Loading</string>
     <string name="title_activity_slider">Slider</string>
-    <string name="hello_world">Hello world!</string>
     <string name="max">Max</string>
     <string name="cancel">Cancel</string>
     <string name="pick_color">Pick color</string>
@@ -86,7 +82,7 @@
     <string name="feedback">Feedback</string>
     <string name="email_feedback">mattias@3hou.se</string>
     <string name="google_plus_community">G+ Community</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="send_text_command">Send text command</string>
     <string name="use_default_sitemap">Use default sitemap</string>
     <string name="default_sitemap">Default sitemap</string>
@@ -97,4 +93,6 @@
     <string name="value">Value</string>
     <string name="min">Min</string>
     <string name="back">Back</string>
+    <string name="show_name">Show Name</string>
+    <string name="faild_to_load_sitemaps">Failed to load sitemaps</string>
 </resources>
