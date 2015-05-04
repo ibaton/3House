@@ -9,6 +9,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 
 import com.mattyork.colours.Colour;
 
@@ -28,6 +31,11 @@ import treehou.se.habit.core.controller.CellRow;
 import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 import treehou.se.habit.ui.control.CellFactory;
+import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
+import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
+import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
+import treehou.se.habit.ui.control.builders.SliderCellBuilder;
+import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
 import treehou.se.habit.ui.control.config.ControllCellFragment;
 import treehou.se.habit.ui.control.config.cells.ButtonConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.ColorConfigCellBuilder;
@@ -255,5 +263,52 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         controller.setColor(color);
         updateColorPalette(color);
         controller.save();
+    }
+
+    /**
+     * Show remote view as notification
+     */
+    private void showNotification() {
+
+        RemoteViews views = new RemoteViews(getActivity().getPackageName(), R.layout.controller_widget);
+        views.setInt(R.id.lou_widget, "setBackgroundColor", controller.getColor());
+        views.setInt(R.id.lou_rows, "setBackgroundColor", controller.getColor());
+        views.setViewVisibility(R.id.lbl_title, View.GONE);
+
+        redrawController(views);
+
+        android.app.Notification notification = new NotificationCompat.Builder(getActivity())
+            .setSmallIcon(R.drawable.ic_launcher)
+                .setContent(views)
+                .build();
+
+        NotificationManagerCompat.from(getActivity()).notify(5, notification);
+    }
+
+    /**
+     * Populate remote view with controller cells
+     *
+     * @param rows
+     * @return
+     */
+    public RemoteViews redrawController(RemoteViews rows){
+
+        CellFactory<Integer> cellFactory = new CellFactory<>();
+        cellFactory.setDefaultBuilder(new EmptyCellBuilder());
+        cellFactory.addBuilder(Cell.TYPE_BUTTON, new ButtonCellBuilder());
+        cellFactory.addBuilder(Cell.TYPE_SLIDER, new SliderCellBuilder());
+        cellFactory.addBuilder(Cell.TYPE_INC_DEC, new IncDecCellBuilder());
+        cellFactory.addBuilder(Cell.TYPE_VOICE, new VoiceCellBuilder());
+
+        for (final CellRow row : controller.cellRows()) {
+            RemoteViews rowView = new RemoteViews(getActivity().getPackageName(), R.layout.homescreen_widget_row);
+
+            for (final Cell cell : row.cells()) {
+                RemoteViews itemView = cellFactory.createRemote(getActivity(), controller, cell);
+                rowView.addView(R.id.lou_row, itemView);
+            }
+            rows.addView(R.id.lou_rows, rowView);
+        }
+        return rows;
     }
 }
