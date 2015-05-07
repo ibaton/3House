@@ -99,9 +99,10 @@ public class ControllsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_add_controller:
                 Controller controller = new Controller();
-                controller.name = "Controller ";
+                String name = "Controller ";
                 Long id = controller.save();
-                controller.name += getId();
+                name += getId();
+                controller.setName(name);
                 controller.save();
                 controller.addRow();
                 loadController(id);

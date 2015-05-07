@@ -30,9 +30,11 @@ import java.util.List;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.requests.AuthRequest;
 import treehou.se.habit.core.Server;
+import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.gcm.GCMHelper;
 import treehou.se.habit.ui.about.AboutFragment;
+import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.settings.SetupServerFragment;
 import treehou.se.habit.ui.ControllsFragment;
@@ -111,6 +113,12 @@ public class MainActivity extends AppCompatActivity
             gcmRegisterBackground();
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
+        }
+
+        for(Controller controller : Controller.getControllers()){
+            if (controller.showNotification()) {
+                ControlHelper.showNotification(this, controller);
+            }
         }
     }
 

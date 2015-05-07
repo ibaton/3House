@@ -9,18 +9,17 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
-/**
- * Created by ibaton on 2014-11-01.
- */
-
 @Table(name = "Controllers")
 public class Controller extends Model {
 
     @Column(name = "Name")
-    public String name;
+    private String name;
 
     @Column(name = "color")
-    public int color = Color.parseColor("#33000000");
+    private int color = Color.parseColor("#33000000");
+
+    @Column(name = "showNotification")
+    private boolean showNotification = false;
 
     public List<CellRow> cellRows(){
         return getMany(CellRow.class, "Controller");
@@ -41,6 +40,14 @@ public class Controller extends Model {
     public void setName(String name) {
         this.name = name;
         save();
+    }
+
+    public boolean showNotification() {
+        return showNotification;
+    }
+
+    public void showNotification(boolean showNotification) {
+        this.showNotification = showNotification;
     }
 
     public CellRow addRow(){

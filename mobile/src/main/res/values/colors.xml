@@ -26,6 +26,7 @@
 
     <color name="image_background">#ffc6c6c6</color>
 
+    <color name="settings_drawer">@color/drawer</color>
     <color name="drawer">#ffffffff</color>
     <color name="drawer_text">@color/text_dark</color>
 
