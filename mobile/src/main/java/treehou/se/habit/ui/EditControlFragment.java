@@ -186,6 +186,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     public void redrawController(){
 
+        ControlHelper.showNotification(getActivity(), controller);
+
         louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         Log.d(TAG, "Drawing controller " + controller.cellRows().size());
@@ -277,6 +279,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                 actionBar.setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.colorPrimary)));
             }
         }
+        ControlHelper.showNotification(getActivity(), controller);
 
         super.onDestroyView();
     }

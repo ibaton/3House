@@ -1,5 +1,6 @@
 package treehou.se.habit.core.controller;
 
+import android.content.Context;
 import android.graphics.Color;
 
 import com.activeandroid.Model;
@@ -8,6 +9,8 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import java.util.List;
+
+import treehou.se.habit.ui.control.ControlHelper;
 
 @Table(name = "Controllers")
 public class Controller extends Model {
@@ -67,6 +70,16 @@ public class Controller extends Model {
         return new Select()
                 .from(Controller.class)
                 .execute();
+    }
+
+    /**
+     * Delete controller and hide notification.
+     *
+     * @param context
+     */
+    public void deleteController(Context context){
+        ControlHelper.hideNotification(context, this);
+        delete();
     }
 
     @Override

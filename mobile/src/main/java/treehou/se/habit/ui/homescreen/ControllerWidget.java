@@ -7,16 +7,8 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.CellRow;
 import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
-import treehou.se.habit.ui.control.CellFactory;
-import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
-import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
-import treehou.se.habit.ui.control.builders.SliderCellBuilder;
-import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
-
+import treehou.se.habit.ui.control.ControlHelper;
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in {@link ControllerWidgetConfigureActivity ControllerWidgetConfigureActivity}
@@ -71,32 +63,10 @@ public class ControllerWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.lbl_title, controller.getName());
         views.setViewVisibility(R.id.lbl_title, showTitle?View.VISIBLE:View.GONE);
 
-        redrawController(context, views, controller);
+        ControlHelper.drawRemoteController(context, views, controller);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
-    public static void redrawController(Context context, RemoteViews rows, Controller controller){
-
-        rows.removeAllViews(R.id.lou_rows);
-
-        CellFactory<Integer> cellFactory = new CellFactory<>();
-        cellFactory.setDefaultBuilder(new EmptyCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_BUTTON, new ButtonCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_SLIDER, new SliderCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_INC_DEC, new IncDecCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_VOICE, new VoiceCellBuilder());
-
-        for (final CellRow row : controller.cellRows()) {
-            RemoteViews rowView = new RemoteViews(context.getPackageName(), R.layout.homescreen_widget_row);
-
-            for (final Cell cell : row.cells()) {
-                RemoteViews itemView = cellFactory.createRemote(context, controller, cell);
-                rowView.addView(R.id.lou_row, itemView);
-            }
-            rows.addView(R.id.lou_rows, rowView);
-        }
     }
 }
 

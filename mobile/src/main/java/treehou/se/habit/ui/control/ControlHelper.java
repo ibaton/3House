@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.control;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -60,22 +61,24 @@ public class ControlHelper {
 
         Log.d(TAG, "Show controller as notification");
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.controller_widget);
-        views.removeAllViews(R.id.lou_rows);
-        views.setInt(R.id.lou_widget, "setBackgroundColor", controller.getColor());
-        views.setInt(R.id.lou_rows, "setBackgroundColor", controller.getColor());
-        views.setViewVisibility(R.id.lbl_title, View.GONE);
+        if(controller.showNotification() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.controller_widget);
+            views.removeAllViews(R.id.lou_rows);
+            views.setInt(R.id.lou_widget, "setBackgroundColor", controller.getColor());
+            views.setInt(R.id.lou_rows, "setBackgroundColor", controller.getColor());
+            views.setViewVisibility(R.id.lbl_title, View.GONE);
 
-        ControlHelper.drawRemoteController(context, views, controller);
+            ControlHelper.drawRemoteController(context, views, controller);
 
-        android.app.Notification notification = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                .setOngoing(true)
-                .setContent(views)
-                .build();
+            android.app.Notification notification = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                    .setOngoing(true)
+                    .setContent(views)
+                    .build();
 
-        NotificationManagerCompat.from(context).notify(controller.getId().intValue(), notification);
+            NotificationManagerCompat.from(context).notify(controller.getId().intValue(), notification);
+        }
     }
 
     /**
@@ -89,5 +92,19 @@ public class ControlHelper {
         Log.d(TAG, "Hide controller notification");
 
         NotificationManagerCompat.from(context).cancel(controller.getId().intValue());
+    }
+
+    /**
+     * Show all controllers as notifications.
+     *
+     * @param context
+     */
+    public static void showNotifications(Context context) {
+        NotificationManagerCompat.from(context).cancelAll();
+        for(Controller controller : Controller.getControllers()){
+            if(controller.showNotification()){
+                showNotification(context, controller);
+            }
+        }
     }
 }

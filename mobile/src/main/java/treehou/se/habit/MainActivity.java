@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ControlHelper.showNotifications(this);
+
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
 

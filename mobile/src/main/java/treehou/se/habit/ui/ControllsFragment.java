@@ -167,7 +167,7 @@ public class ControllsFragment extends Fragment {
                                         break;
                                     case 1:
                                         mAdapter.removeItem(position);
-                                        controller.delete();
+                                        controller.deleteController(getActivity());
                                         break;
                                 }
                             }
@@ -194,12 +194,6 @@ public class ControllsFragment extends Fragment {
 
         public void removeItem(int position) {
             Log.d(TAG, "removeItem: " + position);
-            items.remove(position);
-            notifyItemRemoved(position);
-        }
-
-        public void removeItem(Controller controller) {
-            int position = items.indexOf(controller);
             items.remove(position);
             notifyItemRemoved(position);
         }
