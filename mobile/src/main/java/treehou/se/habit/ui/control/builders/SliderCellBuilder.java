@@ -3,6 +3,7 @@ package treehou.se.habit.ui.control.builders;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,12 +19,8 @@ import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
-import treehou.se.habit.ui.control.Icon;
 import treehou.se.habit.ui.control.SliderActivity;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SwitchConfigCellBuilder";
@@ -38,12 +35,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         View cellView = inflater.inflate(R.layout.cell_slider, null);
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
 
-        Icon icon = Util.getIcon(context, numberCell.getIcon());
-
-        if(icon != null) {
-            ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon_button);
-            imgIcon.setImageResource(icon.getResource());
-        }
+        ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon_button);
+        imgIcon.setImageDrawable(Util.getIconDrawable(context, numberCell.getIcon()));
 
         SeekBar sbrNumber = (SeekBar) cellView.findViewById(R.id.sbrNumber);
         sbrNumber.setMax(numberCell.getMax());
@@ -75,9 +68,9 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
         cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());
 
-        Icon icon = Util.getIcon(context, numberCell.getIcon());
+        Bitmap icon = Util.getIconBitmap(context, numberCell.getIcon());
         if(icon != null) {
-            cellView.setImageViewResource(R.id.img_icon_button, icon.getResource());
+            cellView.setImageViewBitmap(R.id.img_icon_button, icon);
         }
         Intent intent = new Intent(context.getApplicationContext(), SliderActivity.class);
         intent.setAction(SliderActivity.ACTION_NUMBER);

@@ -8,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+
+import com.mikepenz.iconics.typeface.IIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +22,7 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.VoiceCell;
-import treehou.se.habit.ui.control.Icon;
+import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellVoiceConfigFragment extends Fragment {
@@ -30,6 +33,7 @@ public class CellVoiceConfigFragment extends Fragment {
 
     private VoiceCell voiceCell;
     private Spinner sprItems;
+    private ImageButton btnSetIcon;
 
     private Cell cell;
 
@@ -60,7 +64,6 @@ public class CellVoiceConfigFragment extends Fragment {
             if((voiceCell=cell.voiceCell())==null){
                 voiceCell = new VoiceCell();
                 voiceCell.setCell(cell);
-                voiceCell.setIcon(R.drawable.cell_play);
                 voiceCell.save();
             }
         }
@@ -137,30 +140,28 @@ public class CellVoiceConfigFragment extends Fragment {
             }
         });
 
-        final Spinner sprIcons = (Spinner) rootView.findViewById(R.id.spr_icons);
-        IconAdapter iconAdapter = new IconAdapter(getActivity());
-
-        sprIcons.setAdapter(iconAdapter);
-        Icon icon = new Icon();
-        icon.setValue(voiceCell.getIcon());
-        sprIcons.setSelection(iconAdapter.getIndexOf(icon));
-
-        sprIcons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
+        updateIconImage();
+        btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Icon icon = (Icon)sprIcons.getItemAtPosition(position);
-                voiceCell.setIcon(icon.getValue());
-                voiceCell.save();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onClick(View v) {
+                Util.crateIconSelected(getActivity(), new IconAdapter.IconSelectListener() {
+                    @Override
+                    public void iconSelected(final IIcon icon) {
+                        if (icon != null) {
+                            voiceCell.setIcon(icon.getName());
+                            voiceCell.save();
+                            updateIconImage();
+                        }
+                    }
+                });
             }
         });
 
         return rootView;
     }
 
-
+    private void updateIconImage(){
+        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), voiceCell.getIcon()));
+    }
 }

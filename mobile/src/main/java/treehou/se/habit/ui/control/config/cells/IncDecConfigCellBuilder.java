@@ -2,6 +2,7 @@ package treehou.se.habit.ui.control.config.cells;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,15 +35,14 @@ public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
         View cellView = inflater.inflate(R.layout.cell_conf_button, null);
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
 
-        Icon icon = Util.getIcon(context, numberCell.getIcon());
-
         ImageButton imgIcon = (ImageButton) cellView.findViewById(R.id.img_icon_button);
         imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         Log.d(TAG, "Build: Button icon " + numberCell.getIcon());
 
+        Drawable icon = Util.getIconDrawable(context, numberCell.getIcon());
         if(icon != null) {
-            imgIcon.setImageResource(icon.getResource());
+            imgIcon.setImageDrawable(icon);
         }
 
         return cellView;

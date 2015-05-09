@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.control.config.cells;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,18 +33,10 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
         View cellView = inflater.inflate(R.layout.cell_conf_slider, null);
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
 
-        int iconId = numberCell.getIcon();
-        int[] iconIds = context.getResources().getIntArray(R.array.cell_icons_values);
-
-        for (int iconId1 : iconIds) {
-            if (iconId1 == iconId) {
-                break;
-            }
-        }
-        Icon icon = Util.getIcon(context, numberCell.getIcon());
+        Drawable icon = Util.getIconDrawable(context, numberCell.getIcon());
         if(icon != null) {
             ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon);
-            imgIcon.setImageResource(icon.getResource());
+            imgIcon.setImageDrawable(icon);
         }
 
         return cellView;

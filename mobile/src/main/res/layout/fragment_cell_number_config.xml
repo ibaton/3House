@@ -46,17 +46,12 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/image"
-                        android:id="@+id/hdr_icon" />
+                        android:text="@string/image" />
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <ImageButton
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spr_icons"
-                        android:entries="@array/empty"
-                        android:layout_gravity="center_horizontal"
-                        android:spinnerMode="dropdown" />
+                        android:layout_height="@dimen/controller_config_icon_height"
+                        android:id="@+id/btn_set_icon"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"

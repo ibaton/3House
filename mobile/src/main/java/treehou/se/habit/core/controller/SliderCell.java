@@ -18,8 +18,8 @@ public class SliderCell extends Model {
     public static final int TYPE_SLIDER = 2;
     public static final int TYPE_CHART = 3;
 
-    @Column(name = "icon")
-    public int icon;
+    @Column(name = "iconName")
+    public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
     public Cell cell;
@@ -44,11 +44,11 @@ public class SliderCell extends Model {
         this.item = item;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

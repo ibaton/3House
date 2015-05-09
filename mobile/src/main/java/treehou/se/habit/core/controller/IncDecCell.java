@@ -13,8 +13,8 @@ import treehou.se.habit.core.Item;
 @Table(name = "IncDecCell")
 public class IncDecCell extends Model {
 
-    @Column(name = "icon")
-    public int icon;
+    @Column(name = "iconName")
+    public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
     public Cell cell;
@@ -42,11 +42,11 @@ public class IncDecCell extends Model {
         this.item = item;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

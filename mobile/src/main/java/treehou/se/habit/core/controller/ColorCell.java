@@ -11,11 +11,11 @@ import treehou.se.habit.core.Item;
  * Created by ibaton on 2014-11-08.
  */
 
-@Table(name = "CollorCells")
+@Table(name = "ColorCells")
 public class ColorCell extends Model {
 
-    @Column(name = "icon")
-    public int icon;
+    @Column(name = "iconName")
+    public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
     public Cell cell;
@@ -34,11 +34,11 @@ public class ColorCell extends Model {
         this.item = item;
     }
 
-    public int getIcon() {
-        return ((icon != 0) ? icon : R.drawable.cell_mute);
+    public String getIcon() {
+        return icon;
     }
 
-    public void setIcon(int iconOn) {
+    public void setIcon(String iconOn) {
         this.icon = iconOn;
     }
 

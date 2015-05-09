@@ -14,7 +14,7 @@ import treehou.se.habit.core.Item;
 public class VoiceCell extends Model {
 
     @Column(name = "icon")
-    public int icon;
+    public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
     public Cell cell;
@@ -30,12 +30,12 @@ public class VoiceCell extends Model {
         this.item = item;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int iconOn) {
-        this.icon = iconOn;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public Cell getCell() {

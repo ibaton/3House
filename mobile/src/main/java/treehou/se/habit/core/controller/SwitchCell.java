@@ -11,8 +11,8 @@ import com.activeandroid.annotation.Table;
 @Table(name = "SwitchCells")
 public class SwitchCell extends Model {
 
-    @Column(name = "icon")
-    public int iconOn;
+    @Column(name = "iconName")
+    public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
     public Cell cell;
@@ -20,12 +20,12 @@ public class SwitchCell extends Model {
     @Column(name = "command")
     public String command;
 
-    public int getIconOn() {
-        return iconOn;
+    public String getIconOn() {
+        return icon;
     }
 
-    public void setIconOn(int iconOn) {
-        this.iconOn = iconOn;
+    public void setIconOn(String icon) {
+        this.icon = icon;
     }
 
     public Cell getCell() {

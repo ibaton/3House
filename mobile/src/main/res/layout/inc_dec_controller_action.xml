@@ -40,12 +40,15 @@
                     android:spinnerMode="dropdown"
                     android:entries="@array/empty" />
 
-                <android.support.v7.widget.AppCompatSpinner
-                    android:layout_width="match_parent"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/spr_icons"
-                    android:spinnerMode="dropdown"
-                    android:entries="@array/empty" />
+                    android:text="@string/image" />
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/controller_config_icon_height"
+                    android:id="@+id/btn_set_icon"/>
 
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"

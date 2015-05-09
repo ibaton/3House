@@ -16,12 +16,8 @@ import treehou.se.habit.core.controller.VoiceCell;
 import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
-import treehou.se.habit.ui.control.Icon;
 import treehou.se.habit.ui.homescreen.VoiceService;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "VoiceCellBuilder";
@@ -35,10 +31,8 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         View cellView = inflater.inflate(R.layout.cell_button, null);
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
 
-        Icon icon = Util.getIcon(context, voiceCell.getIcon());
-
         ImageButton imgIcon = (ImageButton) cellView.findViewById(R.id.img_icon_button);
-        imgIcon.setImageResource(icon.getResource());
+        imgIcon.setImageDrawable(Util.getIconDrawable(context, voiceCell.getIcon()));
 
         imgIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,8 +69,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
         cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());
 
-        Icon icon = Util.getIcon(context, voiceCell.getIcon());
-        cellView.setImageViewResource(R.id.img_icon_button, icon.getResource());
+        cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, voiceCell.getIcon()));
 
         Intent callbackIntent = VoiceService.createVoiceCommand(context, voiceCell.getItem().getServer());
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

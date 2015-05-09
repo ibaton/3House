@@ -17,8 +17,8 @@ public class StringCell extends Model {
     @Column(name = "command")
     public String command;
 
-    @Column(name = "icon")
-    public int icon;
+    @Column(name = "iconName")
+    public String icon;
 
     public Cell getCell() {
         return cell;
@@ -36,11 +36,11 @@ public class StringCell extends Model {
         this.command = command;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 }

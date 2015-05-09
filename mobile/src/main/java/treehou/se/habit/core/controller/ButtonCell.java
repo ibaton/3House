@@ -10,8 +10,8 @@ import treehou.se.habit.core.Item;
 @Table(name = "ButtonCells")
 public class ButtonCell extends Model {
 
-    @Column(name = "icon")
-    public int icon;
+    @Column(name = "iconName")
+    public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
     public Cell cell;
@@ -30,11 +30,11 @@ public class ButtonCell extends Model {
         this.item = item;
     }
 
-    public int getIcon() {
-        return ((icon != 0) ? icon : R.drawable.cell_mute);
+    public String getIcon() {
+        return icon;
     }
 
-    public void setIconOn(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+
+import com.mikepenz.iconics.typeface.IIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,7 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.IncDecCell;
-import treehou.se.habit.ui.control.Icon;
+import treehou.se.habit.ui.Util;
 import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellIncDecConfigFragment extends Fragment {
@@ -35,6 +38,8 @@ public class CellIncDecConfigFragment extends Fragment {
     private EditText txtMax;
     private EditText txtMin;
     private EditText txtValue;
+    private ImageButton btnSetIcon;
+
     private ArrayAdapter<Item> mItemAdapter ;
     private ArrayList<Item> mItems = new ArrayList<>();
 
@@ -80,7 +85,6 @@ public class CellIncDecConfigFragment extends Fragment {
 
         txtValue = (EditText) rootView.findViewById(R.id.txtValue);
         txtValue.setText("" + numberCell.getValue());
-
 
         sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -132,31 +136,29 @@ public class CellIncDecConfigFragment extends Fragment {
             });
         }
 
-        final Spinner sprIcons = (Spinner) rootView.findViewById(R.id.spr_icons);
-        IconAdapter iconAdapter = new IconAdapter(getActivity());
-
-        sprIcons.setAdapter(iconAdapter);
-        Icon icon = new Icon();
-        iconAdapter.getIndexOf(icon);
-        icon.setValue(numberCell.getIcon());
-        sprIcons.setSelection(iconAdapter.getIndexOf(icon));
-        sprIcons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
+        updateIconImage();
+        btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Icon icon = (Icon)sprIcons.getItemAtPosition(position);
-                if(icon != null) {
-                    numberCell.setIcon(icon.getValue());
-                    numberCell.save();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onClick(View v) {
+                Util.crateIconSelected(getActivity(), new IconAdapter.IconSelectListener() {
+                    @Override
+                    public void iconSelected(final IIcon icon) {
+                        if(icon != null) {
+                            numberCell.setIcon(icon.getName());
+                            numberCell.save();
+                            updateIconImage();
+                        }
+                    }
+                });
             }
         });
 
         return rootView;
+    }
+
+    private void updateIconImage(){
+        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
     }
 
     private List<Item> filterItems(List<Item> items){

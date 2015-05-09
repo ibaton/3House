@@ -72,6 +72,11 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
+    compile 'com.mikepenz.iconics:library:0.9.1@aar'
+    compile 'com.mikepenz.iconics:octicons-typeface:2.2.0@aar'
+    compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
+    compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
+
     compile ('com.ning:async-http-client:1.9.15')
     compile ('org.atmosphere:wasync:2.1.1') {
         exclude group: 'com.ning', module: 'async-http-client'

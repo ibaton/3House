@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.mikepenz.iconics.typeface.IIcon;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,6 @@ public class CellColorConfigFragment extends Fragment {
             if((colorCell =cell.colorCell())==null){
                 colorCell = new ColorCell();
                 colorCell.setCell(cell);
-                colorCell.setIcon(R.drawable.cell_play);
                 colorCell.save();
             }
         }
@@ -143,16 +144,14 @@ public class CellColorConfigFragment extends Fragment {
         final Spinner sprIcons = (Spinner) rootView.findViewById(R.id.spr_icons);
         IconAdapter iconAdapter = new IconAdapter(getActivity());
 
-        sprIcons.setAdapter(iconAdapter);
-        Icon icon = new Icon();
-        icon.setValue(colorCell.getIcon());
+        /*sprIcons.setAdapter(iconAdapter);
         sprIcons.setSelection(iconAdapter.getIndexOf(icon));
 
         sprIcons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Icon icon = (Icon)sprIcons.getItemAtPosition(position);
-                colorCell.setIcon(icon.getValue());
+                IIcon icon = (IIcon)sprIcons.getItemAtPosition(position);
+                colorCell.setIcon(icon.getName());
                 colorCell.save();
             }
 
@@ -160,7 +159,7 @@ public class CellColorConfigFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
         return rootView;
     }
