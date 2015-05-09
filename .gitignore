@@ -37,3 +37,5 @@ proguard/
 
 # Log Files
 *.log
+
+*.properties
