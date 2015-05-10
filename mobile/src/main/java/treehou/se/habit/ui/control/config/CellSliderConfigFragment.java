@@ -28,7 +28,7 @@ import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellSliderConfigFragment extends Fragment {
 
-    private static final String TAG = "CellSwitchConfigFragment";
+    private static final String TAG = "CellSwitchConfigFragm";
     private static String ARG_CELL_ID = "ARG_CELL_ID";
 
     private Cell cell;
@@ -37,6 +37,7 @@ public class CellSliderConfigFragment extends Fragment {
     private Spinner sprItems;
     private TextView txtMax;
     private ImageButton btnSetIcon;
+    private View louRange;
 
     private ArrayAdapter<Item> mItemAdapter ;
     private ArrayList<Item> mItems = new ArrayList<>();
@@ -75,19 +76,19 @@ public class CellSliderConfigFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_cell_number_config, container, false);
 
-        final View louRange = rootView.findViewById(R.id.lou_range);
+        louRange = rootView.findViewById(R.id.lou_range);
 
         sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = (Item) sprItems.getItemAtPosition(position);
-                if(item != null) {
+                Item item = mItems.get(position);
+                if (item != null) {
                     item.save();
 
-                    if(item.getType().equals(Item.TYPE_NUMBER) || item.getType().equals(Item.TYPE_GROUP)){
+                    if (item.getType().equals(Item.TYPE_NUMBER) || item.getType().equals(Item.TYPE_GROUP)) {
                         louRange.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         louRange.setVisibility(View.GONE);
                     }
 
@@ -97,7 +98,8 @@ public class CellSliderConfigFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
         sprItems.post(new Runnable() {

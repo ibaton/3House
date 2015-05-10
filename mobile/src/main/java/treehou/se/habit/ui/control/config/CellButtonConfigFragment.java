@@ -88,7 +88,7 @@ public class CellButtonConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = (Item) sprItems.getItemAtPosition(position);
+                Item item = mItems.get(position);
                 if(item != null) {
                     item.save();
 

@@ -128,7 +128,7 @@ public class CellVoiceConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = (Item) sprItems.getItemAtPosition(position);
+                Item item = mItems.get(position);
                 item.save();
 
                 voiceCell.setItem(item);
