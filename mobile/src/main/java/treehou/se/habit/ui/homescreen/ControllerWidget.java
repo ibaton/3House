@@ -56,6 +56,7 @@ public class ControllerWidget extends AppWidgetProvider {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.controller_widget);
+        views.removeAllViews(R.id.lou_rows);
 
         views.setInt(R.id.lou_widget, "setBackgroundColor", controller.getColor());
         views.setInt(R.id.lou_rows, "setBackgroundColor", controller.getColor());
