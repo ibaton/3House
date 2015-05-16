@@ -27,7 +27,7 @@ public class ChartBuilder implements IWidgetBuilder {
 
     static class ChartBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "ChartBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
 

@@ -17,7 +17,7 @@ import treehou.se.habit.ui.control.CellFactory;
 
 public class ColorConfigCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "SwitchConfigCellBuilder";
+    private static final String TAG = "ColorConfigCellBuilder";
 
     public View build(Context context, Controller controller, Cell cell){
 

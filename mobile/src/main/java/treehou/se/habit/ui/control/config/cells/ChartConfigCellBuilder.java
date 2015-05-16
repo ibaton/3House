@@ -13,7 +13,7 @@ import treehou.se.habit.ui.control.CellFactory;
  */
 public class ChartConfigCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "SwitchConfigCellBuilder";
+    private static final String TAG = "ChartConfigCellBuilder";
 
     public View build(Context context, Controller controller, Cell cell){
 

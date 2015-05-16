@@ -28,7 +28,7 @@ import treehou.se.habit.ui.control.ControllerUtil;
  */
 public class IncDecCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "SwitchConfigCellBuilder";
+    private static final String TAG = "IncDecCellBuilder";
 
     public View build(final Context context, Controller controller, final Cell cell){
         Log.d(TAG, "Build: Button");
