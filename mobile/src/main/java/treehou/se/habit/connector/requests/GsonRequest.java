@@ -24,7 +24,7 @@ import treehou.se.habit.core.Util;
 */
 public class GsonRequest<T> extends Request<T> {
 
-    public static final String TAG = "AuthRequest";
+    public static final String TAG = "GsonRequest";
 
     private String username;
     private String password;

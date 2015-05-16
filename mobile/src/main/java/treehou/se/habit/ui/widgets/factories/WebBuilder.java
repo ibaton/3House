@@ -22,7 +22,7 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
  */
 public class WebBuilder implements IWidgetBuilder {
 
-    private static final String TAG = "VideoBuilder";
+    private static final String TAG = "WebBuilder";
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
@@ -34,7 +34,7 @@ public class WebBuilder implements IWidgetBuilder {
 
     static class WebBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "WebBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
 

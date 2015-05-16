@@ -29,7 +29,7 @@ import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellButtonConfigFragment extends Fragment {
 
-    private static final String TAG = "CellSwitchConfigFrag";
+    private static final String TAG = "CellButtonConfigFragment";
     private static String ARG_CELL_ID = "ARG_CELL_ID";
 
     private ButtonCell buttonCell;

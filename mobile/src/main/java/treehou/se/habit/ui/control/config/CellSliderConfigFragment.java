@@ -25,7 +25,7 @@ import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellSliderConfigFragment extends Fragment {
 
-    private static final String TAG = "CellSwitchConfigFragment";
+    private static final String TAG = "CellSliderConfigFragment";
     private static String ARG_CELL_ID = "ARG_CELL_ID";
 
     private Cell cell;

@@ -27,7 +27,7 @@ public class VideoBuilder implements IWidgetBuilder {
 
     public static class VideoBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "VideoBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;

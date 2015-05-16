@@ -24,7 +24,7 @@ import treehou.se.habit.ui.control.Icon;
  */
 public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "SwitchConfigCellBuilder";
+    private static final String TAG = "IncDecConfigCellBuilder";
 
     public View build(Context context, Controller controller, Cell cell){
 

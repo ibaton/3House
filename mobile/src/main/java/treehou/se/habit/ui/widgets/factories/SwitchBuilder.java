@@ -68,7 +68,7 @@ public class SwitchBuilder implements IWidgetBuilder {
      */
     static class RollerShutterBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "RollerShutterBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
@@ -148,7 +148,7 @@ public class SwitchBuilder implements IWidgetBuilder {
      */
     static class PickerBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "PickerBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
@@ -222,7 +222,7 @@ public class SwitchBuilder implements IWidgetBuilder {
      */
     static class SingleButtonBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "SingleButtonBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
@@ -284,7 +284,7 @@ public class SwitchBuilder implements IWidgetBuilder {
      */
     static class SwitchBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "SwitchBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private SwitchCompat swtSwitch;

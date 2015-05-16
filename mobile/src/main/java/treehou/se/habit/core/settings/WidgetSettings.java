@@ -16,7 +16,7 @@ import treehou.se.habit.Constants;
 @Table(name = "WidgetSettings")
 public class WidgetSettings extends Model {
 
-    private static final String TAG = "NotificationSettings";
+    private static final String TAG = "WidgetSettings";
     public static final String PREF_GLOBAL = "NotificationSettings";
 
     public static final int MUTED_COLOR = 0;

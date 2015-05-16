@@ -21,7 +21,7 @@ import treehou.se.habit.ui.control.Icon;
  */
 public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "SwitchConfigCellBuilder";
+    private static final String TAG = "SliderConfigCellBuilder";
 
     public View build(Context context, Controller controller, Cell cell){
 
