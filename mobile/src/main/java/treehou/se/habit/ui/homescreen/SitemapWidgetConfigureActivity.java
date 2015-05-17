@@ -19,7 +19,7 @@ import treehou.se.habit.ui.SitemapSelectorFragment;
  */
 public class SitemapWidgetConfigureActivity extends AppCompatActivity implements SitemapSelectorFragment.OnSitemapSelectListener {
 
-    private static final String TAG = "SitemapWidgetConfigure";
+    private static final String TAG = "SitemapWidgetConfigureActivity";
     private static final String VOLLEY_TAG_SITEMAPS = "SitemapListFragmentSitemaps2";
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;

@@ -23,7 +23,7 @@ import treehou.se.habit.ui.control.ControllerUtil;
 
 public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "SwitchConfigCellBuilder";
+    private static final String TAG = "ButtonCellBuilder";
 
     public View build(final Context context, Controller controller, final Cell cell){
         Log.d(TAG, "Build: Button");
