@@ -279,7 +279,6 @@ public class SwitchBuilder implements IWidgetBuilder {
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private SwitchCompat swtSwitch;
-        private CompoundButton.OnCheckedChangeListener switchListener;
 
         public static SwitchBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
             return new SwitchBuilderHolder(widget, parent, factory);
@@ -303,16 +302,18 @@ public class SwitchBuilder implements IWidgetBuilder {
             float percentage = Util.toPercentage(settings.getTextSize());
             swtSwitch.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * swtSwitch.getTextSize());
 
-            switchListener = new CompoundButton.OnCheckedChangeListener() {
+            getView().setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Log.d(TAG, widget.getLabel() + " " + isChecked);
+                public void onClick(View v) {
+                    boolean newState = !(swtSwitch.isChecked());
+                    Log.d(TAG, widget.getLabel() + " " + newState);
                     if (widget.getItem() != null) {
+                        swtSwitch.setChecked(newState);
                         Communicator communicator = Communicator.instance(factory.getContext());
-                        communicator.command(factory.getServer(), widget.getItem(), isChecked ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
+                        communicator.command(factory.getServer(), widget.getItem(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
                     }
                 }
-            };
+            });
 
             baseHolder.getSubView().addView(itemView);
             update(widget);
@@ -326,10 +327,7 @@ public class SwitchBuilder implements IWidgetBuilder {
                 return;
             }
 
-            swtSwitch.setOnCheckedChangeListener(null);
             swtSwitch.setChecked(widget.getItem().getState().equals(Constants.COMMAND_ON));
-            swtSwitch.setOnCheckedChangeListener(switchListener);
-
             baseHolder.update(widget);
         }
 
