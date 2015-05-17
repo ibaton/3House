@@ -159,6 +159,7 @@ public class CellButtonConfigFragment extends Fragment {
         btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Util.crateIconSelected(getActivity(), new IconAdapter.IconSelectListener() {
                     @Override
                     public void iconSelected(final IIcon icon) {

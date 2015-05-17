@@ -97,4 +97,6 @@
     <string name="faild_to_load_sitemaps">Failed to load sitemaps</string>
     <string name="as_notification">As notification</string>
     <string name="more">More</string>
+    <string name="media">Media</string>
+    <string name="sensor">Sensor</string>
 </resources>
