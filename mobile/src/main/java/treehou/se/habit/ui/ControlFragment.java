@@ -32,7 +32,7 @@ import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
  */
 public class ControlFragment extends Fragment {
 
-    public static final String TAG = "ContolFragment";
+    public static final String TAG = "ControlFragment";
     public static final String ARG_ID = "ARG_ID";
 
     private LinearLayout louController;

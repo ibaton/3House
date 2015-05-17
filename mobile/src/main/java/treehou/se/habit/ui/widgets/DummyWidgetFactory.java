@@ -17,7 +17,7 @@ import treehou.se.habit.ui.Util;
 
 public class DummyWidgetFactory {
 
-    private static final String TAG = "WidgetFactory";
+    private static final String TAG = "DummyWidgetFactory";
 
     private Context context;
 

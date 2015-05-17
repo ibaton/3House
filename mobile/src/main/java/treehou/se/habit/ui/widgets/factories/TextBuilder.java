@@ -28,7 +28,7 @@ public class TextBuilder implements IWidgetBuilder {
 
     public static class TextBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SliderBuilderHolder";
+        private static final String TAG = "TextBuilderHolder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
