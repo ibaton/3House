@@ -27,7 +27,7 @@ import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellVoiceConfigFragment extends Fragment {
 
-    private static final String TAG = "CellSwitchConfigFrag";
+    private static final String TAG = "CellVoiceConfigFragment";
 
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;

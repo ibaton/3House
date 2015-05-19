@@ -16,9 +16,6 @@ import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
 public class ColorpickerBuilder implements IWidgetBuilder {
 
     private int color;
@@ -26,7 +23,12 @@ public class ColorpickerBuilder implements IWidgetBuilder {
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        WidgetFactory.IWidgetHolder rootView = new BaseBuilder().build(widgetFactory, page, widget, parent);
+        WidgetFactory.IWidgetHolder builder = new BaseBuilder.BaseBuilderHolder.Builder(widgetFactory)
+                .setWidget(widget)
+                .setFlat(true)
+                .setShowLabel(true)
+                .setParent(parent)
+                .build();
 
         LayoutInflater inflater = widgetFactory.getInflater();
         final Context context = widgetFactory.getContext();
@@ -46,7 +48,7 @@ public class ColorpickerBuilder implements IWidgetBuilder {
             }
         }
 
-        rootView.getView().setOnClickListener(new View.OnClickListener() {
+        builder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (widget.getItem() != null) {
@@ -61,9 +63,11 @@ public class ColorpickerBuilder implements IWidgetBuilder {
             }
         });
 
-        LinearLayout subView = (LinearLayout) rootView.getView().findViewById(R.id.lou_widget_holder);
+        LinearLayout subView = (LinearLayout) builder.getView().findViewById(R.id.lou_widget_holder);
         subView.addView(itemView);
 
-        return rootView;
+        builder.update(widget);
+
+        return builder;
     }
 }

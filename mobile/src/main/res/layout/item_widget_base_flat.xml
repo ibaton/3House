@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="?android:selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="horizontal"
+        android:background="?android:selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -87,7 +89,9 @@
             android:paddingTop="@dimen/large_spacing_half"
             android:paddingBottom="@dimen/large_spacing_half"
             android:visibility="visible"
-            android:background="?android:attr/selectableItemBackground"
+            android:clickable="false"
+            android:selectable="false"
+            android:background="@null"
             android:src="@drawable/next_page"/>
     </LinearLayout>
 </FrameLayout>

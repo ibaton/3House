@@ -9,8 +9,8 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 28
-        versionName "3.8"
+        versionCode 29
+        versionName "3.9"
     }
     buildTypes {
         release {

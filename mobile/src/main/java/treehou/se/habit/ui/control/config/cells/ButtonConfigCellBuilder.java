@@ -20,7 +20,7 @@ import treehou.se.habit.ui.control.Icon;
 
 public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "SwitchConfigCellBuilder";
+    private static final String TAG = "ButtonConfigCellBuilder";
 
     public View build(final Context context, Controller controller, Cell cell){
         final ButtonCell buttonCell = cell.buttonCell();

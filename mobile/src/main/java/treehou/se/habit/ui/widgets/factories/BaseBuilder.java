@@ -144,7 +144,7 @@ public class BaseBuilder {
             /*TODO implement*/
             if (widget.getLinkedPage() != null) {
                 btnNextPage.setVisibility(View.VISIBLE);
-                btnNextPage.setOnClickListener(new View.OnClickListener() {
+                rootView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         EventBus.getDefault().post(widget.getLinkedPage());

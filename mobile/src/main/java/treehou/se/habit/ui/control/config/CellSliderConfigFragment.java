@@ -28,8 +28,8 @@ import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellSliderConfigFragment extends Fragment {
 
-    private static final String TAG = "CellSwitchConfigFragm";
-
+    private static final String TAG = "CellSliderConfigFragment";
+    
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
