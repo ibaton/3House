@@ -1,6 +1,9 @@
 package treehou.se.habit.ui.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,20 +13,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import treehou.se.habit.R;
+import treehou.se.habit.ui.Util;
 
 public class IconPickerFragment extends Fragment {
 
+    public static final String ARG_CATEGORY = "ARG_CATEGORY";
+    public static final String RESULT_ICON = "RESULT_ICON";
+
     private RecyclerView lstIcons;
-    private CategoryAdapter adapter;
+    private IconAdapter adapter;
 
     public static IconPickerFragment newInstance() {
         IconPickerFragment fragment = new IconPickerFragment();
@@ -43,86 +49,92 @@ public class IconPickerFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_icon_picker, null);
         lstIcons = (RecyclerView) rootView.findViewById(R.id.lst_categories);
         lstIcons.setItemAnimator(new DefaultItemAnimator());
-        lstIcons.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        lstIcons.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
-        adapter = new CategoryAdapter(getActivity());
-        adapter.add(new CategoryPicker(GoogleMaterial.Icon.gmd_play_arrow, getString(R.string.media)));
-        adapter.add(new CategoryPicker(GoogleMaterial.Icon.gmd_alarm, getString(R.string.sensor)));
+        adapter = new IconAdapter(getActivity());
+        if(getArguments() != null){
+            List<IIcon> icons = Util.CAT_ICONS.get((Util.IconCategory) getArguments().getSerializable(ARG_CATEGORY));
+            for(IIcon icon : icons) {
+                adapter.add(icon);
+            }
+        }
 
         lstIcons.setAdapter(adapter);
+
 
         return rootView;
     }
 
-    private class CategoryPicker {
-
-        private IIcon icon;
-        private String category;
-
-        public CategoryPicker(IIcon icon, String category) {
-            this.icon = icon;
-            this.category = category;
-        }
-
-        public String getCategory() {
-            return category;
-        }
-
-        public void setCategory(String category) {
-            this.category = category;
-        }
-
-        public IIcon getIcon() {
-            return icon;
-        }
-
-        public void setIcon(IIcon icon) {
-            this.icon = icon;
-        }
-    }
-
-    private class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private Context context;
-        private List<CategoryPicker> categories = new ArrayList<>();
+        private List<IIcon> icons = new ArrayList<>();
 
 
-        class CategoryHolder extends RecyclerView.ViewHolder {
+        class IconHolder extends RecyclerView.ViewHolder {
 
             public ImageView imgIcon;
-            public TextView lblCategory;
 
-            public CategoryHolder(View itemView) {
+            public IconHolder(View itemView) {
                 super(itemView);
 
-                imgIcon = (ImageView) itemView.findViewById(R.id.img_item);
-                lblCategory = (TextView) itemView.findViewById(R.id.lbl_label);
+                imgIcon = (ImageView) itemView.findViewById(R.id.img_menu);
             }
         }
 
-        public CategoryAdapter(Context context) {
+        public IconAdapter(Context context) {
             this.context = context;
         }
 
-        public void add(CategoryPicker category){
-            categories.add(category);
+        public void add(IIcon icon){
+            icons.add(icon);
             notifyDataSetChanged();
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_menu, null);
+            View itemView = inflater.inflate(R.layout.item_icon, parent, false);
 
-            return new CategoryHolder(itemView);
+            return new IconHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+            final IIcon item = icons.get(position);
+            IconHolder catHolder = (IconHolder) holder;
+
+            IconicsDrawable drawable = new IconicsDrawable(getActivity(), item).color(Color.BLACK).sizeDp(50);
+
+            catHolder.imgIcon.setImageDrawable(drawable);
+
+            catHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra(RESULT_ICON, item.getName());
+
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                    getActivity().finish();
+                }
+            });
+        }
 
         @Override
         public int getItemCount() {
-            return categories.size();
+            return icons.size();
         }
+    }
+
+    public static IconPickerFragment newInstance(Util.IconCategory category) {
+
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CATEGORY, category);
+
+        IconPickerFragment fragment = new IconPickerFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 }

@@ -99,4 +99,6 @@
     <string name="more">More</string>
     <string name="media">Media</string>
     <string name="sensor">Sensor</string>
+    <string name="title_activity_icon_picker">IconPickerActivity</string>
+    <string name="all">All</string>
 </resources>

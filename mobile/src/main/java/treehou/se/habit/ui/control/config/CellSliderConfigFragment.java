@@ -1,5 +1,7 @@
 package treehou.se.habit.ui.control.config;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,8 +14,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.mikepenz.iconics.typeface.IIcon;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +24,14 @@ import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.ui.Util;
-import treehou.se.habit.ui.control.IconAdapter;
+import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellSliderConfigFragment extends Fragment {
 
     private static final String TAG = "CellSwitchConfigFragm";
+
     private static String ARG_CELL_ID = "ARG_CELL_ID";
+    private static int REQUEST_ICON = 183;
 
     private Cell cell;
 
@@ -140,16 +142,8 @@ public class CellSliderConfigFragment extends Fragment {
         btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.crateIconSelected(getActivity(), new IconAdapter.IconSelectListener() {
-                    @Override
-                    public void iconSelected(final IIcon icon) {
-                        if (icon != null) {
-                            numberCell.setIcon(icon.getName());
-                            numberCell.save();
-                            updateIconImage();
-                        }
-                    }
-                });
+                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+                startActivityForResult(intent, REQUEST_ICON);
             }
         });
 
@@ -201,5 +195,17 @@ public class CellSliderConfigFragment extends Fragment {
         }
 
         numberCell.save();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_ICON &&
+                resultCode == Activity.RESULT_OK &&
+                data.hasExtra(IconPickerActivity.RESULT_ICON)){
+
+            numberCell.setIcon(data.getStringExtra(IconPickerActivity.RESULT_ICON));
+            numberCell.save();
+            updateIconImage();
+        }
     }
 }

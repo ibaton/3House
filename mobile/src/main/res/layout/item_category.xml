@@ -22,8 +22,9 @@
             android:layout_height="fill_parent">
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:padding="10dp"
                 android:layout_marginRight="@dimen/short_space"
                 android:id="@+id/img_menu"
                 android:src="@drawable/ic_icon_server" />

@@ -151,13 +151,4 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         cell.setColor(color);
         cell.save();
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        /*if(TextUtilstxtLabel.getText()){
-                cell.getItem().getType().equals(Item.TYPE_STRING) ||
-        }*/
-    }
 }

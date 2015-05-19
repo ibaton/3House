@@ -1,5 +1,7 @@
 package treehou.se.habit.ui.control.config;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -15,8 +17,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.mikepenz.iconics.typeface.IIcon;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +28,14 @@ import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.ButtonCell;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.ui.Util;
-import treehou.se.habit.ui.control.IconAdapter;
+import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellButtonConfigFragment extends Fragment {
 
     private static final String TAG = "CellSwitchConfigFrag";
+
     private static String ARG_CELL_ID = "ARG_CELL_ID";
+    private static int REQUEST_ICON = 183;
 
     private ButtonCell buttonCell;
     private Cell cell;
@@ -94,20 +96,25 @@ public class CellButtonConfigFragment extends Fragment {
 
                     buttonCell.setItem(item);
                     buttonCell.save();
-                    if (item.getType().equals(Item.TYPE_STRING)) {
-                        txtCommand.setVisibility(View.VISIBLE);
-                        txtCommand.setInputType(InputType.TYPE_CLASS_TEXT);
-                        tglOnOff.setVisibility(View.GONE);
-                    } else if (item.getType().equals(Item.TYPE_NUMBER)) {
-                        txtCommand.setVisibility(View.VISIBLE);
-                        txtCommand.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        tglOnOff.setVisibility(View.GONE);
-                    } else if (item.getType().equals(Item.TYPE_CONTACT)) {
-                        txtCommand.setVisibility(View.GONE);
-                        tglOnOff.setVisibility(View.VISIBLE);
-                    } else {
-                        txtCommand.setVisibility(View.GONE);
-                        tglOnOff.setVisibility(View.VISIBLE);
+                    switch (item.getType()) {
+                        case Item.TYPE_STRING:
+                            txtCommand.setVisibility(View.VISIBLE);
+                            txtCommand.setInputType(InputType.TYPE_CLASS_TEXT);
+                            tglOnOff.setVisibility(View.GONE);
+                            break;
+                        case Item.TYPE_NUMBER:
+                            txtCommand.setVisibility(View.VISIBLE);
+                            txtCommand.setInputType(InputType.TYPE_CLASS_NUMBER);
+                            tglOnOff.setVisibility(View.GONE);
+                            break;
+                        case Item.TYPE_CONTACT:
+                            txtCommand.setVisibility(View.GONE);
+                            tglOnOff.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            txtCommand.setVisibility(View.GONE);
+                            tglOnOff.setVisibility(View.VISIBLE);
+                            break;
                     }
                 }
             }
@@ -159,17 +166,8 @@ public class CellButtonConfigFragment extends Fragment {
         btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Util.crateIconSelected(getActivity(), new IconAdapter.IconSelectListener() {
-                    @Override
-                    public void iconSelected(final IIcon icon) {
-                        if (icon != null) {
-                            buttonCell.setIcon(icon.getName());
-                            buttonCell.save();
-                            updateIconImage();
-                        }
-                    }
-                });
+                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+                startActivityForResult(intent, REQUEST_ICON);
             }
         });
 
@@ -212,5 +210,17 @@ public class CellButtonConfigFragment extends Fragment {
             buttonCell.setCommand(tglOnOff.isChecked()?Constants.COMMAND_ON:Constants.COMMAND_OFF);
         }
         buttonCell.save();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_ICON &&
+                resultCode == Activity.RESULT_OK &&
+                data.hasExtra(IconPickerActivity.RESULT_ICON)){
+
+            buttonCell.setIcon(data.getStringExtra(IconPickerActivity.RESULT_ICON));
+            buttonCell.save();
+            updateIconImage();
+        }
     }
 }
