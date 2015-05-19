@@ -9,10 +9,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -61,6 +65,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     private View viwBackground;
     private View lblSettingsContainer;
     private CheckBox cbxAsNotification;
+    private DrawerLayout drwLayout;
 
     private ActionBar actionBar;
 
@@ -101,6 +106,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         }
 
         ControlHelper.showNotification(getActivity(), controller);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -109,6 +116,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         View rootView = inflater.inflate(R.layout.fragment_edit_control, container, false);
 
         actionBar = activity.getSupportActionBar();
+
+        drwLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
 
         titleHolder = rootView.findViewById(R.id.lou_title_holder);
 
@@ -168,6 +177,31 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         getActivity().sendBroadcast(i);
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.edit_controllers, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_more:
+                toggleSettings();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void toggleSettings(){
+        if(drwLayout.isDrawerOpen(lblSettingsContainer)) {
+            drwLayout.closeDrawer(lblSettingsContainer);
+        } else {
+            drwLayout.openDrawer(lblSettingsContainer);
+        }
     }
 
     @Override

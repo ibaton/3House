@@ -96,4 +96,9 @@
     <string name="show_name">Show Name</string>
     <string name="faild_to_load_sitemaps">Failed to load sitemaps</string>
     <string name="as_notification">As notification</string>
+    <string name="more">More</string>
+    <string name="media">Media</string>
+    <string name="sensor">Sensor</string>
+    <string name="title_activity_icon_picker">IconPickerActivity</string>
+    <string name="all">All</string>
 </resources>

@@ -44,6 +44,55 @@ public class Util {
         }
     }
 
+    public enum IconCategory {
+        SENSORS, MEDIA, COMMANDS, ALL
+    }
+
+    public final static Map<IconCategory, List<IIcon>> CAT_ICONS = new HashMap<>();
+    static {
+        List<IIcon> sensors = new ArrayList<>();
+        sensors.add(CommunityMaterial.Icon.cmd_alarm);
+        sensors.add(CommunityMaterial.Icon.cmd_alarm_plus);
+        sensors.add(CommunityMaterial.Icon.cmd_alert);
+        sensors.add(CommunityMaterial.Icon.cmd_bell);
+        sensors.add(CommunityMaterial.Icon.cmd_bell_off);
+        sensors.add(CommunityMaterial.Icon.cmd_bell_ring);
+        sensors.add(CommunityMaterial.Icon.cmd_brightness_5);
+        sensors.add(CommunityMaterial.Icon.cmd_brightness_6);
+        sensors.add(CommunityMaterial.Icon.cmd_brightness_7);
+        CAT_ICONS.put(IconCategory.SENSORS, sensors);
+
+        List<IIcon> media = new ArrayList<>();
+        media.add(CommunityMaterial.Icon.cmd_play);
+        media.add(CommunityMaterial.Icon.cmd_pause);
+        media.add(CommunityMaterial.Icon.cmd_stop);
+        media.add(CommunityMaterial.Icon.cmd_forward);
+        media.add(CommunityMaterial.Icon.cmd_rewind);
+        media.add(CommunityMaterial.Icon.cmd_skip_next);
+        media.add(CommunityMaterial.Icon.cmd_skip_previous);
+        media.add(CommunityMaterial.Icon.cmd_microphone_off);
+        media.add(CommunityMaterial.Icon.cmd_microphone);
+        media.add(CommunityMaterial.Icon.cmd_microphone_off);
+        media.add(CommunityMaterial.Icon.cmd_volume_off);
+        media.add(CommunityMaterial.Icon.cmd_volume_low);
+        media.add(CommunityMaterial.Icon.cmd_volume_medium);
+        media.add(CommunityMaterial.Icon.cmd_volume_high);
+        CAT_ICONS.put(IconCategory.MEDIA, media);
+
+        List<IIcon> commands = new ArrayList<>();
+        commands.add(CommunityMaterial.Icon.cmd_airplane);
+        commands.add(CommunityMaterial.Icon.cmd_airplane_off);
+        commands.add(CommunityMaterial.Icon.cmd_bell_ring);
+        commands.add(CommunityMaterial.Icon.cmd_lock);
+        commands.add(CommunityMaterial.Icon.cmd_lock_open);
+        commands.add(CommunityMaterial.Icon.cmd_power);
+        commands.add(CommunityMaterial.Icon.cmd_coffee);
+        commands.add(CommunityMaterial.Icon.cmd_beer);
+        CAT_ICONS.put(IconCategory.COMMANDS, commands);
+
+        CAT_ICONS.put(IconCategory.ALL, getIcons());
+    }
+
     /**
      * Get a shallow copy of all available icons.
      *
