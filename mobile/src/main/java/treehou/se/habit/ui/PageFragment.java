@@ -1,6 +1,7 @@
 package treehou.se.habit.ui;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -108,7 +109,10 @@ public class PageFragment extends Fragment {
         updatePage(mPage);
 
         // Start listening for server updates
-        longPoller.execute();
+        // TODO Support for older versions.
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            longPoller.execute();
+        }
 
         return view;
     }
@@ -118,7 +122,9 @@ public class PageFragment extends Fragment {
         super.onDestroyView();
 
         // Stop listening for server updates
-        longPoller.cancel(true);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            longPoller.cancel(true);
+        }
     }
 
     private AsyncTask<Void, Void, Void> longPoller = new AsyncTask<Void, Void, Void>() {
