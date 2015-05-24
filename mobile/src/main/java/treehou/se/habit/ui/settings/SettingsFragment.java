@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
-import treehou.se.habit.ui.settings.subsettings.CustomWidgetFragment;
-import treehou.se.habit.ui.settings.subsettings.NotificationsFragment;
-import treehou.se.habit.ui.settings.subsettings.SitemapFragment;
+import treehou.se.habit.ui.settings.subsettings.NotificationsSettingsFragment;
+import treehou.se.habit.ui.settings.subsettings.SitemapSettingsFragment;
 import treehou.se.habit.ui.settings.subsettings.WidgetSettingsFragment;
 
 public class SettingsFragment extends Fragment {
@@ -61,7 +60,6 @@ public class SettingsFragment extends Fragment {
         items.add(new ImageItem(ITEM_WIDGETS, getActivity().getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
         items.add(new ImageItem(ITEM_SITEMAPS, getActivity().getString(R.string.sitemaps), R.drawable.ic_icon_settings_sitemap));
         items.add(new ImageItem(ITEM_NOTIFICATIONS, getActivity().getString(R.string.settings_notification), R.drawable.ic_item_settings_notifications));
-        //items.add(new ImageItem(ITEM_CUSTOM_WIDGETS, getActivity().getString(R.string.custom_widgets), R.drawable.ic_item_settings_custom_widget));
 
         mAdapter = new ImageAdapter(getActivity(), items);
     }
@@ -95,13 +93,10 @@ public class SettingsFragment extends Fragment {
                     fragment = WidgetSettingsFragment.newInstance();
                     break;
                 case ITEM_NOTIFICATIONS :
-                    fragment = NotificationsFragment.newInstance();
+                    fragment = NotificationsSettingsFragment.newInstance();
                     break;
                 case ITEM_SITEMAPS :
-                    fragment = SitemapFragment.newInstance();
-                    break;
-                case ITEM_CUSTOM_WIDGETS :
-                    fragment = CustomWidgetFragment.newInstance();
+                    fragment = SitemapSettingsFragment.newInstance();
                     break;
             }
 

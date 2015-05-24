@@ -213,7 +213,7 @@ public class SwitchBuilder implements IWidgetBuilder {
      */
     static class SingleButtonBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SingleButtonBuilderHolder";
+        private static final String TAG = "SingleButtonBuilder";
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;

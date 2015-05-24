@@ -23,11 +23,6 @@ public class AboutFragment extends Fragment {
     private static final int ITEM_GOOGLE_PLUS   = 2;
 
     /**
-     * The fragment's ListView/GridView.
-     */
-    private RecyclerView mListView;
-
-    /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
@@ -61,8 +56,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        // Set the adapter
-        mListView = (RecyclerView) view.findViewById(R.id.list);
+        RecyclerView mListView = (RecyclerView) view.findViewById(R.id.list);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         mListView.setLayoutManager(gridLayoutManager);

@@ -18,19 +18,19 @@ import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.ui.SitemapSelectorFragment;
 import treehou.se.habit.util.PrefSettings;
 
-public class SitemapFragment extends Fragment implements SitemapSelectorFragment.OnSitemapSelectListener {
+public class SitemapSettingsFragment extends Fragment implements SitemapSelectorFragment.OnSitemapSelectListener {
 
     private static final int REQUEST_SITEMAP = 3;
     private Button btnDefaultSitemap;
 
-    public static SitemapFragment newInstance() {
-        SitemapFragment fragment = new SitemapFragment();
+    public static SitemapSettingsFragment newInstance() {
+        SitemapSettingsFragment fragment = new SitemapSettingsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public SitemapFragment() {
+    public SitemapSettingsFragment() {
         // Required empty public constructor
     }
 
@@ -77,7 +77,7 @@ public class SitemapFragment extends Fragment implements SitemapSelectorFragment
             @Override
             public void onClick(View v) {
                 Fragment fragment = SitemapSelectorFragment.newInstance();
-                fragment.setTargetFragment(SitemapFragment.this, REQUEST_SITEMAP);
+                fragment.setTargetFragment(SitemapSettingsFragment.this, REQUEST_SITEMAP);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(container.getId(), fragment)
                         .addToBackStack(null)

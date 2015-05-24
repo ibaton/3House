@@ -14,18 +14,18 @@ import android.widget.CompoundButton;
 import treehou.se.habit.R;
 import treehou.se.habit.core.settings.NotificationSettings;
 
-public class NotificationsFragment extends Fragment {
+public class NotificationsSettingsFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    public static NotificationsFragment newInstance() {
-        NotificationsFragment fragment = new NotificationsFragment();
+    public static NotificationsSettingsFragment newInstance() {
+        NotificationsSettingsFragment fragment = new NotificationsSettingsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public NotificationsFragment() {
+    public NotificationsSettingsFragment() {
         // Required empty public constructor
     }
 
