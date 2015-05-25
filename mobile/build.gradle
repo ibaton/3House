@@ -78,5 +78,5 @@ dependencies {
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
 
     compile ('org.atmosphere:wasync:2.1.2')
-    compile 'joda-time:joda-time:2.3'
+    compile 'joda-time:joda-time:2.7'
 }

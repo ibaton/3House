@@ -127,6 +127,7 @@ public class PageFragment extends Fragment {
         }
     }
 
+    // TODO extract to separate class
     private AsyncTask<Void, Void, Void> longPoller = new AsyncTask<Void, Void, Void>() {
 
         @Override
