@@ -28,9 +28,6 @@ public class FrameBuilder implements IWidgetBuilder {
 
     public static class FrameHolder extends WidgetFactory.WidgetHolder {
 
-        private Context context;
-        private View rootView;
-
         private TextView lblName;
         private View titleHolder;
         private WidgetFactory widgetFactory;
@@ -65,10 +62,7 @@ public class FrameBuilder implements IWidgetBuilder {
 
             Log.d(TAG, "Crating frame " + widget.getLabel());
 
-            this.context = context;
             widgetFactory = factory;
-
-            rootView = view;
             this.lblName = lblName;
 
             lblName.setText(widget.getLabel());

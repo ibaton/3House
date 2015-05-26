@@ -29,7 +29,7 @@
     </style>
 
     <style name="FrameHeader" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/frame_header</item>
     </style>
