@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import treehou.se.habit.R;
@@ -56,6 +57,10 @@ public class DummyWidgetFactory {
 
         setBackgroundColor(imgIcon, bitmap, backgroundType);
         iconHolder.setVisibility(View.VISIBLE);
+
+        View holderView = inflater.inflate(R.layout.widget_container, null);
+        LinearLayout holder = (LinearLayout) holderView.findViewById(R.id.lou_widget_frame_holder);
+        holder.addView(itemView);
 
         return itemView;
     }

@@ -15,4 +15,5 @@
         android:id="@+id/skb_dim"
         android:max="100"
         android:indeterminate="false"/>
+
 </FrameLayout>

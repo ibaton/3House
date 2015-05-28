@@ -12,20 +12,22 @@
 
     <style name="MenuItemText" parent="TextAppearance.AppCompat.Large">
         <item name="android:textSize">24sp</item>
+        <item name="android:lines">1</item>
     </style>
 
     <style name="MenuItemSubText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">18sp</item>
+        <item name="android:lines">1</item>
     </style>
 
     <style name="WidgetText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">"sans-serif"</item>
     </style>
 
     <style name="WidgetSubText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorValueItem</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="FrameHeader" parent="TextAppearance.AppCompat.Medium">

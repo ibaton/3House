@@ -9,9 +9,6 @@ import retrofit.http.Path;
 import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Sitemap;
 
-/**
-* Created by ibaton on 2015-03-01.
-*/
 public interface OpenHabService {
 
     @Headers("Accept: application/json")

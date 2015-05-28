@@ -4,7 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/item_spacing">
+    android:paddingLeft="@dimen/item_spacing"
+    android:paddingRight="@dimen/item_spacing"
+    android:paddingTop="@dimen/item_spacing_vertical"
+    android:paddingBottom="@dimen/item_spacing_vertical">
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -12,7 +15,8 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="@dimen/item_elevation"
+        card_view:cardElevation="@dimen/item_elevation"
+        card_view:cardUseCompatPadding="true"
         card_view:cardBackgroundColor="@color/item_background">
 
 

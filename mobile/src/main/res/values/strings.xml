@@ -101,4 +101,5 @@
     <string name="sensor">Sensor</string>
     <string name="title_activity_icon_picker">IconPickerActivity</string>
     <string name="all">All</string>
+    <string name="server">Server</string>
 </resources>

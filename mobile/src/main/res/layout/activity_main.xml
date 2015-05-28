@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        app:elevation="@dimen/item_elevation"
         app:theme="@style/DarkActionbar"
-
         app:popupTheme="@style/Theme.AppCompat"/>
 
     <android.support.v4.widget.DrawerLayout

@@ -5,9 +5,6 @@ import android.support.multidex.MultiDex;
 
 import treehou.se.habit.connector.TrustModifier;
 
-/**
- * Created by ibaton on 2015-03-25.
- */
 public class HabitApplication extends com.activeandroid.app.Application {
 
     @Override
