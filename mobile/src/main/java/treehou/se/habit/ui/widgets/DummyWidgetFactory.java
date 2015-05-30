@@ -62,7 +62,7 @@ public class DummyWidgetFactory {
         LinearLayout holder = (LinearLayout) holderView.findViewById(R.id.lou_widget_frame_holder);
         holder.addView(itemView);
 
-        return itemView;
+        return holderView;
     }
 
     public void setBackgroundColor(ImageView imgIcon, Bitmap bitmap, int type){
