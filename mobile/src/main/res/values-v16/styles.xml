@@ -7,8 +7,21 @@
         <item name="android:fontFamily">"sans-serif"</item>
     </style>
 
+    <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <style name="WidgetText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">"sans-serif"</item>
+    </style>
+
+    <style name="draver_item_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/drawer_text</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
         <item name="android:fontFamily">"sans-serif"</item>
     </style>
 </resources>

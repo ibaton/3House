@@ -3,17 +3,17 @@
     <color name="transparent">#00000000</color>
 
     <color name="frame">#ffa5a5a5</color>
-    <color name="colorPrimary">#ff79bb52</color>
-    <color name="colorPrimaryDark">#ff589E2E</color>
-    <color name="colorAccent">#FFA4DD83</color>
+    <color name="colorPrimary">#FF8BC34A</color>
+    <color name="colorPrimaryDark">#ff689F38</color>
+    <color name="colorAccent">#FF9800</color>
 
     <color name="navigationBarColor">#55000000</color>
 
     //Used for flat ui
-    <color name="colorPrimaryLighter">#ff93e364</color>
-    <color name="colorPrimaryDarker">#ff182a0c</color>
+    <color name="colorPrimaryLighter">#FFAED581</color>
+    <color name="colorPrimaryDarker">#FF33691E</color>
 
-    <color name="colorValueItem">#FFFDB996</color>
+    <color name="colorValueItem">@color/colorAccent</color>
 
     <!--<color name="background">#ff515151</color>-->
     <color name="background">#ffdcdcdc</color>

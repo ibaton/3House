@@ -82,11 +82,11 @@ public class NavigationDrawerFragment extends Fragment {
             mFromSavedInstanceState = true;
         }
 
-        items.add(new DrawerItem(getActivity().getString(R.string.sitemaps),R.drawable.ic_icon_sitemap, ITEM_SITEMAPS));
-        items.add(new DrawerItem(getActivity().getString(R.string.controllers),R.drawable.ic_icon_controller, ITEM_CONTROLLERS));
-        items.add(new DrawerItem(getActivity().getString(R.string.servers), R.drawable.ic_icon_server, ITEM_SERVER));
-        items.add(new DrawerItem(getActivity().getString(R.string.settings), R.drawable.ic_icon_settings, ITEM_SETTINGS));
-        items.add(new DrawerItem(getActivity().getString(R.string.about), R.drawable.ic_icon_about, ITEM_ABOUT));
+        items.add(new DrawerItem(getActivity().getString(R.string.sitemaps),R.drawable.ic_home_grey600_24dp, ITEM_SITEMAPS));
+        items.add(new DrawerItem(getActivity().getString(R.string.controllers),R.drawable.ic_remote_grey600_24dp, ITEM_CONTROLLERS));
+        items.add(new DrawerItem(getActivity().getString(R.string.servers), R.drawable.ic_monitor_grey600_24dp, ITEM_SERVER));
+        items.add(new DrawerItem(getActivity().getString(R.string.settings), R.drawable.ic_settings_grey600_24dp, ITEM_SETTINGS));
+        items.add(new DrawerItem(getActivity().getString(R.string.about), R.drawable.ic_information_grey600_24dp, ITEM_ABOUT));
 
         menuAdapter = new DrawerAdapter(getActivity(), items);
     }

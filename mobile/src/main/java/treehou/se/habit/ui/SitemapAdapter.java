@@ -9,9 +9,6 @@ import java.util.List;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Server;
 
-/**
- * Created by ibaton on 2014-09-11.
- */
 public class SitemapAdapter extends FragmentStatePagerAdapter {
 
     private List<LinkedPage> mPages;
