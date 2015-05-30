@@ -14,9 +14,6 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
 public class SelectionBuilder implements IWidgetBuilder {
 
     @Override
@@ -32,6 +29,8 @@ public class SelectionBuilder implements IWidgetBuilder {
         private View itemView;
         private Spinner sprSelect;
         private WidgetFactory factory;
+
+        private int lastPosition = -1;
 
         private BaseBuilder.BaseBuilderHolder baseHolder;
 
@@ -70,6 +69,7 @@ public class SelectionBuilder implements IWidgetBuilder {
             for(int i=0; i<mappings.size(); i++){
                 if (mappings.get(i).getCommand().equals(widget.getItem().getState())){
                     sprSelect.setSelection(i);
+                    lastPosition = i;
                     break;
                 }
             }
@@ -82,9 +82,12 @@ public class SelectionBuilder implements IWidgetBuilder {
                     sprSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            Widget.Mapping mapping = mappings.get(position);
-                            Communicator communicator = Communicator.instance(factory.getContext());
-                            communicator.command(factory.getServer(), widget.getItem(), mapping.getCommand());
+                            if(position != lastPosition) {
+                                Widget.Mapping mapping = mappings.get(position);
+                                Communicator communicator = Communicator.instance(factory.getContext());
+                                communicator.command(factory.getServer(), widget.getItem(), mapping.getCommand());
+                                lastPosition = position;
+                            }
                         }
 
                         @Override
