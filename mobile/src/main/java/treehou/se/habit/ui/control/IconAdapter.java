@@ -15,7 +15,7 @@ import com.mikepenz.iconics.typeface.IIcon;
 import java.util.ArrayList;
 
 import treehou.se.habit.R;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 
 /**
  * A adapter for selecting an icon.

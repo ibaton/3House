@@ -36,7 +36,7 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.settings.WidgetSettings;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 
 /**
  * Created by ibaton on 2014-09-10.

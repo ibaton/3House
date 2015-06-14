@@ -11,6 +11,7 @@ public class HabitApplication extends com.activeandroid.app.Application {
     public void onCreate() {
         super.onCreate();
 
+        // TODO Remove when support for self signed certificates
         TrustModifier.NukeSSLCerts.nuke();
     }
 

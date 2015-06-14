@@ -16,7 +16,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.ui.SitemapSelectorFragment;
-import treehou.se.habit.util.PrefSettings;
+import treehou.se.habit.util.Settings;
 
 public class SitemapSettingsFragment extends Fragment implements SitemapSelectorFragment.OnSitemapSelectListener {
 
@@ -51,9 +51,9 @@ public class SitemapSettingsFragment extends Fragment implements SitemapSelector
         btnDefaultSitemap = (Button) rootView.findViewById(R.id.btnSetDefaultSitemap);
 
         CheckBox cbxDefaultSitemaps = (CheckBox) rootView.findViewById(R.id.cbx_default_sitemap);
-        cbxDefaultSitemaps.setChecked(PrefSettings.instance(getActivity()).getUseDefaultSitemap());
+        cbxDefaultSitemaps.setChecked(Settings.instance(getActivity()).getUseDefaultSitemap());
 
-        SitemapDB sitemapDB = PrefSettings.instance(getActivity()).getDefaultSitemap();
+        SitemapDB sitemapDB = Settings.instance(getActivity()).getDefaultSitemap();
         if(sitemapDB != null) {
             btnDefaultSitemap.setText(sitemapDB.getName());
             btnDefaultSitemap.setVisibility(View.VISIBLE);
@@ -66,7 +66,7 @@ public class SitemapSettingsFragment extends Fragment implements SitemapSelector
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
-                    PrefSettings.instance(getActivity()).setDefaultSitemap(null);
+                    Settings.instance(getActivity()).setDefaultSitemap(null);
                     btnDefaultSitemap.setText(R.string.default_sitemap);
                 }
                 btnDefaultSitemap.setVisibility(isChecked ? View.VISIBLE : View.GONE);
@@ -93,7 +93,7 @@ public class SitemapSettingsFragment extends Fragment implements SitemapSelector
     public void onSitemapSelect(Sitemap sitemap) {
         SitemapDB sitemapDB = new SitemapDB(sitemap);
         sitemapDB.save();
-        PrefSettings.instance(getActivity()).setDefaultSitemap(sitemapDB);
+        Settings.instance(getActivity()).setDefaultSitemap(sitemapDB);
 
         if(getActivity() != null) {
             btnDefaultSitemap.setText(sitemap.getName());

@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
-import com.mikepenz.iconics.typeface.IIcon;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +23,7 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.IncDecCell;
-import treehou.se.habit.ui.Util;
-import treehou.se.habit.ui.control.IconAdapter;
+import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellIncDecConfigFragment extends Fragment {

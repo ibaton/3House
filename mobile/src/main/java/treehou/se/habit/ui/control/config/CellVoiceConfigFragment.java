@@ -22,7 +22,7 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.VoiceCell;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellVoiceConfigFragment extends Fragment {

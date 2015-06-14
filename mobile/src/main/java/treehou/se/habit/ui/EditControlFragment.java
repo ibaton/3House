@@ -43,6 +43,7 @@ import treehou.se.habit.ui.control.config.cells.IncDecConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.SliderConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.VoiceConfigCellBuilder;
 import treehou.se.habit.ui.homescreen.ControllerWidget;
+import treehou.se.habit.util.Util;
 
 /**
  * A simple {@link Fragment} subclass.

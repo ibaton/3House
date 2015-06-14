@@ -14,7 +14,7 @@ import android.widget.TextView;
 import treehou.se.habit.R;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.settings.WidgetSettings;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 
 public class DummyWidgetFactory {
 

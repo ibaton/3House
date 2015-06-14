@@ -17,7 +17,7 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.settings.WidgetSettings;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 /**

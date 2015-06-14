@@ -1,7 +1,6 @@
 package treehou.se.habit.ui.control.config.cells;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -13,10 +12,9 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.core.controller.VoiceCell;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
-import treehou.se.habit.ui.control.Icon;
 
 public class VoiceConfigCellBuilder implements CellFactory.CellBuilder {
 

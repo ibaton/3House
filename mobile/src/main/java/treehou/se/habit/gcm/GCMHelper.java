@@ -1,10 +1,31 @@
 package treehou.se.habit.gcm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.List;
+
+import treehou.se.habit.Constants;
+import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.connector.requests.AuthRequest;
+import treehou.se.habit.core.Server;
 
 /**
  * Created by ibaton on 2015-01-11.
@@ -38,6 +59,92 @@ public class GCMHelper {
             return "";
         }
         return registrationId;
+    }
+
+    /**
+     * Register treehou.se.habit.gcm to listen for notifications
+     */
+    public static void gcmRegisterBackground(final Context context) {
+        final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+        new AsyncTask<Void,Void,String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg;
+                try {
+                    final String regId = gcm.register(Constants.GCM_SENDER_ID);
+                    Log.e(TAG, "Registered gmc " + regId);
+                    msg = "Device registered, registration ID=" + regId;
+
+                    String deviceModel = URLEncoder.encode(Build.MODEL, "UTF-8");
+                    String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                    String regUrl = "https://my.openhab.org/addAndroidRegistration?deviceId=" + deviceId +
+                            "&deviceModel=" + deviceModel + "&regId=" + regId;
+                    Communicator communicator = Communicator.instance(context);
+                    List<Server> servers = Server.getServers();
+                    for(final Server server : servers) {
+
+                        String regid = GCMHelper.getRegistrationId(context);
+                        if (regid.isEmpty()) {
+                            //continue; //TODO check if work
+                        }
+
+                        // Needs to have a my openhab acount for this to work
+                        if (server != null &&
+                                server.getRemoteUrl() != null &&
+                                !server.getRemoteUrl().toLowerCase().startsWith("https://my.openhab.org")){
+                            continue;
+                        }
+
+                        if(server.getUsername() != null && !server.getUsername().equals("") &&
+                                server.getPassword() != null && !server.getPassword().equals("")) {
+
+                            AuthRequest registerRequest = new AuthRequest(Request.Method.GET, regUrl, server.getUsername(), server.getPassword(), new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.d(TAG, "GCM reg id success " + server.getUsername());
+
+                                    GCMHelper.saveRegistrationId(context, regId);
+
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.e(TAG, "GCM reg id error: " + error + " " + server.getUsername());
+                                }
+                            });
+                            registerRequest.setRetryPolicy(new DefaultRetryPolicy( 5000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                            communicator.addBasicRequest(registerRequest);
+                        }
+                    }
+                    // TODO show error message
+                } catch (IOException e) {
+                    msg = "Error :" + e.getMessage();
+                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage());
+                }
+
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+            }
+        }.execute();
+    }
+
+    public static boolean checkPlayServices(Activity context) {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, context, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+            }
+            return false;
+        }
+        return true;
     }
 
     // TODO Implement multiple server registration, Not possible with my openhab, create new?

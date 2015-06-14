@@ -1,9 +1,6 @@
 package treehou.se.habit;
 
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,20 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.List;
 
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.requests.AuthRequest;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Controller;
 import treehou.se.habit.core.db.SitemapDB;
@@ -41,20 +26,15 @@ import treehou.se.habit.ui.ControllsFragment;
 import treehou.se.habit.ui.ServersFragment;
 import treehou.se.habit.ui.SitemapFragment;
 import treehou.se.habit.ui.SitemapListFragment;
-import treehou.se.habit.util.PrefSettings;
+import treehou.se.habit.util.Settings;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private static final String TAG = "MainActivity";
-    public static final String GCM_SENDER_ID = "737820980945";
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     public static final String EXTRA_SHOW_SITEMAP = "showSitemap";
-
-    private GoogleCloudMessaging gcm;
-    private String regid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +70,7 @@ public class MainActivity extends AppCompatActivity
             }else {
                 // Load default sitemap if any
                 long showSitemap = getIntent().getLongExtra(EXTRA_SHOW_SITEMAP, -1);
-                SitemapDB defaultSitemap = PrefSettings.instance(this).getDefaultSitemap();
+                SitemapDB defaultSitemap = Settings.instance(this).getDefaultSitemap();
                 if(savedInstanceState == null && showSitemap >= 0) {
                     fragmentManager.beginTransaction()
                         .replace(R.id.page_container, SitemapListFragment.newInstance(showSitemap))
@@ -110,9 +90,8 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            gcmRegisterBackground();
+        if (GCMHelper.checkPlayServices(this)) {
+            GCMHelper.gcmRegisterBackground(this);
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
@@ -200,95 +179,5 @@ public class MainActivity extends AppCompatActivity
         if(fragmentManager.getBackStackEntryCount() > 0){
             fragmentManager.popBackStackImmediate();
         }
-    }
-
-    /**
-     * Register treehou.se.habit.gcm to listen for notifications
-     */
-    private void gcmRegisterBackground() {
-        new AsyncTask<Void,Void,String>() {
-
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg;
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(MainActivity.this);
-                    }
-                    final String regId = gcm.register(GCM_SENDER_ID);
-                    Log.e(TAG, "Registered gmc " + regId);
-                    msg = "Device registered, registration ID=" + regId;
-
-                    String deviceModel = URLEncoder.encode(Build.MODEL, "UTF-8");
-                    String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                    String regUrl = "https://my.openhab.org/addAndroidRegistration?deviceId=" + deviceId +
-                            "&deviceModel=" + deviceModel + "&regId=" + regId;
-                    Communicator communicator = Communicator.instance(MainActivity.this);
-                    List<Server> servers = Server.getServers();
-                    for(final Server server : servers) {
-
-                        regid = GCMHelper.getRegistrationId(MainActivity.this);
-                        if (regid.isEmpty()) {
-                            //continue; //TODO check if work
-                        }
-
-                        // Needs to have a my openhab acount for this to work
-                        if (server != null &&
-                                server.getRemoteUrl() != null &&
-                                !server.getRemoteUrl().toLowerCase().startsWith("https://my.openhab.org")){
-                            continue;
-                        }
-
-                        if(server.getUsername() != null && !server.getUsername().equals("") &&
-                           server.getPassword() != null && !server.getPassword().equals("")) {
-
-                            AuthRequest registerRequest = new AuthRequest(Request.Method.GET, regUrl, server.getUsername(), server.getPassword(), new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    Log.d(TAG, "GCM reg id success " + server.getUsername());
-
-                                    GCMHelper.saveRegistrationId(MainActivity.this, regId);
-
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.e(TAG, "GCM reg id error: " + error + " " + server.getUsername());
-                                }
-                            });
-                            registerRequest.setRetryPolicy(new DefaultRetryPolicy( 5000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                            communicator.addBasicRequest(registerRequest);
-                        }
-                    }
-                    // TODO show error message
-                } catch (IOException e) {
-                    msg = "Error :" + e.getMessage();
-                    e.printStackTrace();
-                    Log.e(TAG, e.getMessage());
-                }
-
-                return msg;
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-            }
-        }.execute();
-    }
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Log.i(TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 }

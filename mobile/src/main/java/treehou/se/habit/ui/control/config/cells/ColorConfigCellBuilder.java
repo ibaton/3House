@@ -12,7 +12,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.ColorCell;
 import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 
 public class ColorConfigCellBuilder implements CellFactory.CellBuilder {

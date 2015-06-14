@@ -23,6 +23,7 @@ import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
 import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
 import treehou.se.habit.ui.control.builders.SliderCellBuilder;
 import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
+import treehou.se.habit.util.Util;
 
 /**
  * A simple {@link Fragment} subclass.

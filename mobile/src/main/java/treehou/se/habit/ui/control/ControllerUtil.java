@@ -6,6 +6,7 @@ import com.mattyork.colours.Colour;
 
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.util.Util;
 
 /**
  * Created by ibaton on 2015-03-02.
@@ -22,12 +23,12 @@ public class ControllerUtil {
         int[] pallete;
         if (Colour.alpha(cell.getColor()) < 150) {
             if (preventInvis && Colour.alpha(controller.getColor()) < 150) {
-                pallete = treehou.se.habit.ui.Util.generatePallete(Color.LTGRAY);
+                pallete = Util.generatePallete(Color.LTGRAY);
             }else {
-                pallete = treehou.se.habit.ui.Util.generatePallete(controller.getColor());
+                pallete = Util.generatePallete(controller.getColor());
             }
         } else {
-            pallete = treehou.se.habit.ui.Util.generatePallete(cell.getColor());
+            pallete = Util.generatePallete(cell.getColor());
         }
 
         return pallete;

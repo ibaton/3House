@@ -13,17 +13,7 @@ public class Constants {
     // TODO remove when support for multiple servers.
     public static final String PREFERENCE_SERVER    = "server";
 
-    // URL for remote openHAB server.
-    public static final String PREF_URL_REMOTE  = "url_remote";
-
-    // URL for local openHAB server.
-    public static final String PREF_URL_LOCAL   = "url_local";
-
-    // Username for openHAB server.
-    public static final String PREF_USERNAME    = "user";
-
-    // Password for openHAB server.
-    public static final String PREF_PASSWORD    = "password";
+    public static final String GCM_SENDER_ID = "737820980945";
 
     // Notification to speech.
     public static final String PREF_REGISTRATION_SERVER = "notification_to_speech";

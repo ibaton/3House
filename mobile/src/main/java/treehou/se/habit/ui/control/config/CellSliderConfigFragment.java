@@ -23,7 +23,7 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.SliderCell;
-import treehou.se.habit.ui.Util;
+import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellSliderConfigFragment extends Fragment {

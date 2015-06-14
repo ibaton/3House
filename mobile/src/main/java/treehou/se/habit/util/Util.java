@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -182,19 +182,19 @@ public class Util {
 
     public static int getBackground(Context context, Bitmap bitmap, int type){
         if(type == WidgetSettings.MUTED_COLOR) {
-            return Palette.generate(bitmap).getMutedColor(context.getResources().getColor(R.color.image_background));
+            return Palette.from(bitmap).generate().getMutedColor(context.getResources().getColor(R.color.image_background));
         }else if(type == WidgetSettings.LIGHT_MUTED_COLOR) {
-            return Palette.generate(bitmap).getLightMutedColor(context.getResources().getColor(R.color.image_background));
+            return Palette.from(bitmap).generate().getLightMutedColor(context.getResources().getColor(R.color.image_background));
         }else if(type == WidgetSettings.DARK_MUTED_COLOR) {
-            return Palette.generate(bitmap).getDarkMutedColor(context.getResources().getColor(R.color.image_background));
+            return Palette.from(bitmap).generate().getDarkMutedColor(context.getResources().getColor(R.color.image_background));
         }else if(type == WidgetSettings.VIBRANT_COLOR) {
-            return Palette.generate(bitmap).getVibrantColor(context.getResources().getColor(R.color.image_background));
+            return Palette.from(bitmap).generate().getVibrantColor(context.getResources().getColor(R.color.image_background));
         }else if(type == WidgetSettings.LIGHT_VIBRANT_COLOR) {
-            return Palette.generate(bitmap).getLightVibrantColor(context.getResources().getColor(R.color.image_background));
+            return Palette.from(bitmap).generate().getLightVibrantColor(context.getResources().getColor(R.color.image_background));
         }else if(type == WidgetSettings.DARK_VIBRANT_COLOR) {
-            return Palette.generate(bitmap).getDarkVibrantColor(context.getResources().getColor(R.color.image_background));
+            return Palette.from(bitmap).generate().getDarkVibrantColor(context.getResources().getColor(R.color.image_background));
         }else {
-            return Palette.generate(bitmap).getMutedColor(context.getResources().getColor(R.color.image_background));
+            return Palette.from(bitmap).generate().getMutedColor(context.getResources().getColor(R.color.image_background));
         }
     }
 
