@@ -9,9 +9,6 @@ import com.activeandroid.annotation.Table;
 
 import treehou.se.habit.Constants;
 
-/**
- * Created by ibaton on 2015-01-24.
- */
 @Table(name = "WidgetSettings")
 public class WidgetSettings extends Model {
 

@@ -49,10 +49,6 @@
             android:name=".ui.ColorpickerActivity"
             android:label="@string/title_activity_colorpicker" >
         </activity>
-        <activity
-            android:name=".ui.control.config.ColorpickerActivity"
-            android:label="@string/title_activity_colorpicker" >
-        </activity>
 
         <service android:name=".gcm.GcmIntentService" />
 

@@ -32,10 +32,6 @@ import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.Util;
 import treehou.se.habit.ui.homescreen.VoiceService;
 
-/**
- * A simple {@link Fragment} subclass.
- *
- */
 public class SitemapFragment extends Fragment {
 
     private static final String TAG = "SitemapFragment";

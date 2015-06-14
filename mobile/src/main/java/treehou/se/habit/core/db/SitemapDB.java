@@ -9,9 +9,6 @@ import com.activeandroid.annotation.Table;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Sitemap;
 
-/**
- * Created by ibaton on 2014-09-10.
- */
 @Table(name = "Sitemap")
 public class SitemapDB extends Model {
 

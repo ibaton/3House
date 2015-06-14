@@ -4,15 +4,11 @@ import android.net.Uri;
 
 import java.util.List;
 
-/**
- * Created by ibaton on 2014-09-10.
- */
 public class Sitemap {
     private String name;
     private String label;
     private String link;
     private LinkedPage homepage;
-    //private Server server;
     private long server;
 
     public String getName() {
@@ -131,6 +127,7 @@ public class Sitemap {
     }
 
     public class SitemapHolder{
+
         //TODO multiple sitemaps
         public List<Sitemap> sitemap;
     }

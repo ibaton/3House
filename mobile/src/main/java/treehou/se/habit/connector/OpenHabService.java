@@ -1,5 +1,7 @@
 package treehou.se.habit.connector;
 
+import java.util.List;
+
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -13,7 +15,7 @@ public interface OpenHabService {
 
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps")
-    void listSitemaps(retrofit.Callback<Sitemap.SitemapHolder> callback);
+    void listSitemaps(retrofit.Callback<List<Sitemap>> callback);
 
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps/{id}")

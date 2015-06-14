@@ -6,14 +6,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
-* Created by ibaton on 2014-10-18.
-*/
 public class SitemapDeserializer implements JsonDeserializer<List<Sitemap>> {
 
     private static final String TAG = "SitemapDeserializer";
@@ -26,8 +27,23 @@ public class SitemapDeserializer implements JsonDeserializer<List<Sitemap>> {
         List<Sitemap> sitemaps = new ArrayList<>();
         if(json.isJsonObject()) {
             Log.d(TAG, "Deserializing single sitemap");
-            Sitemap sitemap = context.deserialize(json, Sitemap.class);
-            sitemaps.add(sitemap);
+            JsonObject jSitemaps = json.getAsJsonObject();
+            if(jSitemaps.has("sitemap")) {
+                if(jSitemaps.get("sitemap").isJsonObject()) {
+                    JsonElement jSitemap = jSitemaps.get("sitemap");
+                    sitemaps.add(context.<Sitemap>deserialize(jSitemap, Sitemap.class));
+                    sitemaps.add(context.<Sitemap>deserialize(jSitemap, Sitemap.class));
+                    return sitemaps;
+                }
+                else {
+                    JsonArray jSitemap = jSitemaps.get("sitemap").getAsJsonArray();
+                    return context.deserialize(jSitemap, new TypeToken<List<Sitemap>>() {}.getType());
+                }
+            }
+            else {
+                Sitemap sitemap = context.deserialize(json, Sitemap.class);
+                sitemaps.add(sitemap);
+            }
         }else if(json.isJsonArray()){
             Log.d(TAG, "Deserializing multiple sitemap");
             JsonArray jWidgets = json.getAsJsonArray();

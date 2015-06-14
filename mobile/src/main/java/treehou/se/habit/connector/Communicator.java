@@ -383,7 +383,7 @@ public class Communicator {
         addRequest(server, request, false);
     }
 
-    public class MultiSitemapRequest implements retrofit.Callback<Sitemap.SitemapHolder> {
+    public class MultiSitemapRequest implements retrofit.Callback<List<Sitemap>> {
 
         private int runningRequests;
         private SitemapsRequestListener listener;
@@ -396,8 +396,7 @@ public class Communicator {
         }
 
         @Override
-        public void success(Sitemap.SitemapHolder sitemapHolder, retrofit.client.Response response) {
-            List<Sitemap> sitemaps = sitemapHolder.sitemap;
+        public void success(List<Sitemap> sitemaps, retrofit.client.Response response) {
             for(Sitemap sitemap : sitemaps) {
                 Log.d(TAG, "Server " + server + " Sitemap " + sitemap);
                 sitemap.setServer(server);
@@ -411,7 +410,7 @@ public class Communicator {
             if(error == null){
                 Log.w(TAG, "No server to connect to");
             }else {
-                Log.w(TAG, "Failed to connect to server " + error.getMessage() + " " + server.getUrl());
+                Log.w(TAG, "Failed to connect to server " + error.getMessage() + " " + server.getUrl() + " " + error.getBody());
             }
 
             if(runningRequests <= 0) {
