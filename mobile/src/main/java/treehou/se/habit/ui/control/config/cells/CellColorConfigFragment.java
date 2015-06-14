@@ -11,8 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.mikepenz.iconics.typeface.IIcon;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,6 @@ import treehou.se.habit.core.Item;
 import treehou.se.habit.core.Server;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.ColorCell;
-import treehou.se.habit.ui.control.Icon;
 import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellColorConfigFragment extends Fragment {

@@ -2,7 +2,6 @@
 <resources>
     <color name="transparent">#00000000</color>
 
-    <color name="frame">#ffa5a5a5</color>
     <color name="colorPrimary">#FF8BC34A</color>
     <color name="colorPrimaryDark">#ff689F38</color>
     <color name="colorAccent">#FF9800</color>
@@ -21,20 +20,15 @@
     <color name="item_background">#ffffffff</color>
     <color name="item_background_boder">#ff424242</color>
 
-    <color name="item_homescreen_background">#1a000000</color>
-    <color name="item_homescreen_background_boder">#20000000</color>
-
     <color name="image_background">#ffc6c6c6</color>
 
     <color name="settings_drawer">@color/drawer</color>
     <color name="drawer">#ffffffff</color>
     <color name="drawer_text">@color/text_dark</color>
 
-    <color name="text">#ffc6c6c6</color>
     <color name="text_dark">#ff222222</color>
 
     <color name="frame_header">#ff686868</color>
-    <color name="frame_header_background">#fff6f6f6</color>
 
     <color name="transparent_dark">#22000000</color>
 

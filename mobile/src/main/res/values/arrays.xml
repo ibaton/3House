@@ -8,12 +8,6 @@
         <item>@color/colorPrimaryLighter</item> <!-- really much lighter color of main color -->
     </integer-array>
 
-    <string-array name="drawer">
-        <item>Sitemaps</item>
-        <item>Controllers</item>
-        <item>Settings</item>
-    </string-array>
-
     <array name="cell_colors">
         <item>#00000000</item>
         <item>#33000000</item>
@@ -51,74 +45,6 @@
         <item>5</item>
         <item>2</item>
     </integer-array>
-
-    <integer-array name="cell_icons_values">
-        <item>0</item>
-
-        <item>1000</item>
-        <item>1001</item>
-        <item>1002</item>
-        <item>1003</item>
-
-        <item>2000</item>
-        <item>2001</item>
-        <item>2002</item>
-        <item>2003</item>
-        <item>2004</item>
-
-        <item>3000</item>
-        <item>3001</item>
-        <item>3002</item>
-        <item>3003</item>
-        <item>3004</item>
-
-        <item>4000</item>
-    </integer-array>
-
-    <string-array name="cell_icons_name">
-        <item>Empty</item>
-
-        <item>Up</item>
-        <item>Down</item>
-        <item>Left</item>
-        <item>Right</item>
-
-        <item>Play</item>
-        <item>Pause</item>
-        <item>Stop</item>
-        <item>Forward</item>
-        <item>Backwards</item>
-
-        <item>Mute</item>
-        <item>Audio</item>
-        <item>Volume +</item>
-        <item>Volume -</item>
-        <item>Voice</item>
-
-        <item>Wall-plug</item>
-    </string-array>
-
-    <array name="cell_icons">
-        <item></item>
-        <item>@drawable/cell_up</item>
-        <item>@drawable/cell_down</item>
-        <item>@drawable/cell_left</item>
-        <item>@drawable/cell_right</item>
-
-        <item>@drawable/cell_play</item>
-        <item>@drawable/cell_pause</item>
-        <item>@drawable/cell_stop</item>
-        <item>@drawable/cell_jump_forward</item>
-        <item>@drawable/cell_jump_backwards</item>
-
-        <item>@drawable/cell_mute</item>
-        <item>@drawable/cell_audio_on</item>
-        <item>@drawable/cell_volume_up</item>
-        <item>@drawable/cell_volume_down</item>
-        <item>@drawable/cell_voice</item>
-
-        <item>@drawable/cell_wall_plug</item>
-    </array>
 
     <string-array name="controll_manager">
         <item>Edit</item>

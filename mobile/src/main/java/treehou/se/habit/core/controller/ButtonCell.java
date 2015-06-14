@@ -4,7 +4,6 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import treehou.se.habit.R;
 import treehou.se.habit.core.Item;
 
 @Table(name = "ButtonCells")

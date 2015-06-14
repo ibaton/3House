@@ -4,12 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import treehou.se.habit.R;
 import treehou.se.habit.core.Item;
-
-/**
- * Created by ibaton on 2014-11-08.
- */
 
 @Table(name = "ColorCells")
 public class ColorCell extends Model {
