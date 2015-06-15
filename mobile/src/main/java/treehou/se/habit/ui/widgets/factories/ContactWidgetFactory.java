@@ -13,12 +13,12 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 /**
  * Created by ibaton on 2014-10-19.
  */
-public class ContactBuilder implements IWidgetBuilder {
+public class ContactWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        WidgetFactory.IWidgetHolder rootView = new BaseBuilder().build(widgetFactory, page, widget, parent);
+        WidgetFactory.IWidgetHolder rootView = new BaseWidgetFactory().build(widgetFactory, page, widget, parent);
 
         View itemView = widgetFactory.getInflater().inflate(R.layout.item_widget_switch, null);
 

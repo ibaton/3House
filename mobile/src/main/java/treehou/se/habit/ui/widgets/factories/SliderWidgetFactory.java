@@ -10,10 +10,7 @@ import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
-public class SliderBuilder implements IWidgetBuilder {
+public class SliderWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
@@ -27,7 +24,7 @@ public class SliderBuilder implements IWidgetBuilder {
 
         private View itemView;
         private SeekBar skbDim;
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
 
         public SliderBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
@@ -39,7 +36,7 @@ public class SliderBuilder implements IWidgetBuilder {
             itemView = factory.getInflater().inflate(R.layout.item_widget_slider, null);
             skbDim = (SeekBar) itemView.findViewById(R.id.skb_dim);
 
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .setFlat(flat)

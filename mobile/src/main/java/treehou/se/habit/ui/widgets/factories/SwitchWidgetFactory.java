@@ -20,12 +20,9 @@ import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
-public class SwitchBuilder implements IWidgetBuilder {
+public class SwitchWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "SwitchBuilder";
+    private static final String TAG = "SwitchWidgetFactory";
 
     @Override
     public WidgetFactory.IWidgetHolder build(
@@ -35,7 +32,7 @@ public class SwitchBuilder implements IWidgetBuilder {
         if(widget.getMapping() == null) {
             final ItemDB item = widget.getItem();
             if (item == null){
-                return new NullBuilder().build(widgetFactory, page, widget, parent);
+                return new NullWidgetFactory().build(widgetFactory, page, widget, parent);
             }
 
             Log.d(TAG, "Type " + item.getType());
@@ -61,7 +58,7 @@ public class SwitchBuilder implements IWidgetBuilder {
 
         private static final String TAG = "RollerShutterBuilderHolder";
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
 
         public static RollerShutterBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
@@ -71,7 +68,7 @@ public class SwitchBuilder implements IWidgetBuilder {
         private RollerShutterBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
 
             this.factory = factory;
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setShowLabel(true)
                     .setParent(parent)
@@ -141,7 +138,7 @@ public class SwitchBuilder implements IWidgetBuilder {
 
         private static final String TAG = "PickerBuilderHolder";
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
         private RadioGroup rgpMapping;
 
@@ -152,7 +149,7 @@ public class SwitchBuilder implements IWidgetBuilder {
         private PickerBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
 
             this.factory = factory;
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setShowLabel(true)
                     .setParent(parent)
@@ -215,7 +212,7 @@ public class SwitchBuilder implements IWidgetBuilder {
 
         private static final String TAG = "SingleButtonBuilder";
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
 
         private Button btnSingle;
@@ -227,7 +224,7 @@ public class SwitchBuilder implements IWidgetBuilder {
         private SingleButtonBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
             this.factory = factory;
             WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(settings.isCompressedSingleButton())
                     .setShowLabel(true)
@@ -277,7 +274,7 @@ public class SwitchBuilder implements IWidgetBuilder {
 
         private static final String TAG = "SwitchBuilderHolder";
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
         private SwitchCompat swtSwitch;
 
         public static SwitchBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
@@ -287,7 +284,7 @@ public class SwitchBuilder implements IWidgetBuilder {
         private SwitchBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
 
             WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(true)
                     .setShowLabel(true)

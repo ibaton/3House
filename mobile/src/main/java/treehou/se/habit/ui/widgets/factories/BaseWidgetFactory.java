@@ -25,9 +25,9 @@ import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-public class BaseBuilder {
+public class BaseWidgetFactory {
 
-    private static final String TAG = "BaseBuilder";
+    private static final String TAG = "BaseWidgetFactory";
 
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
         return build(widgetFactory, page, widget, parent, false);

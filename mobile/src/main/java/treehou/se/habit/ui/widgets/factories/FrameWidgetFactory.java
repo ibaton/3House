@@ -17,9 +17,9 @@ import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-public class FrameBuilder implements IWidgetBuilder {
+public class FrameWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "FrameBuilder";
+    private static final String TAG = "FrameWidgetFactory";
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, Widget widget, Widget parent) {

@@ -14,7 +14,7 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-public class SelectionBuilder implements IWidgetBuilder {
+public class SelectionWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
@@ -32,12 +32,12 @@ public class SelectionBuilder implements IWidgetBuilder {
 
         private int lastPosition = -1;
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
 
         public SelectBuilder(Widget widget, Widget parent, WidgetFactory factory) {
             this.factory = factory;
 
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .build();

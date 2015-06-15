@@ -9,39 +9,50 @@ import java.net.URL;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.connector.ConnectorUtil;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-public class ImageBuilder implements IWidgetBuilder {
+public class ChartWidgetFactory implements IWidgetFactory {
+
+    private static final String TAG = "ChartWidgetFactory";
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        return new ImageBuilderHolder(widget, parent, widgetFactory);
+        return ChartBuilderHolder.create(widgetFactory, widget);
     }
 
-    static class ImageBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "ImageBuilderHolder";
+    static class ChartBuilderHolder implements WidgetFactory.IWidgetHolder {
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private static final String TAG = "ChartBuilderHolder";
+
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+
         private ImageView imgImage;
+        private Widget widget;
         private WidgetFactory factory;
 
-        private ImageBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        public static ChartBuilderHolder create(WidgetFactory factory, Widget widget){
+            return new ChartBuilderHolder(widget, factory);
+        }
+
+        private ChartBuilderHolder(Widget widget, WidgetFactory factory) {
             this.factory = factory;
 
-            View itemView = factory.getInflater().inflate(R.layout.item_widget_image, null);
-            imgImage = (ImageView) itemView.findViewById(R.id.img_image);
-
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
-                    .setParent(parent)
+                    .setFlat(false)
                     .setShowLabel(false)
                     .build();
 
+
+            View itemView = factory.getInflater().inflate(R.layout.item_widget_chart, null);
+            imgImage = (ImageView) itemView.findViewById(R.id.img_chart);
             baseHolder.getSubView().addView(itemView);
+
             update(widget);
         }
 
@@ -54,15 +65,15 @@ public class ImageBuilder implements IWidgetBuilder {
             }
 
             try {
-                Log.d(TAG, "Image url " + widget.getUrl());
-                URL imageUrl = new URL(widget.getUrl());
+                URL imageUrl = new URL(ConnectorUtil.buildChartRequestString(factory.getServer().getUrl(), widget));
                 Communicator communicator = Communicator.instance(factory.getContext());
-                communicator.loadImage(factory.getServer(), imageUrl, imgImage);
+                communicator.loadImage(factory.getServer(), imageUrl, imgImage, false);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
 
             baseHolder.update(widget);
+            this.widget = widget;
         }
 
         @Override

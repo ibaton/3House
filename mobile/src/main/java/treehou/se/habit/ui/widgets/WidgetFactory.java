@@ -14,20 +14,20 @@ import java.util.Map;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.ui.widgets.factories.ChartBuilder;
-import treehou.se.habit.ui.widgets.factories.ColorpickerBuilder;
-import treehou.se.habit.ui.widgets.factories.FrameBuilder;
-import treehou.se.habit.ui.widgets.factories.GroupBuilder;
-import treehou.se.habit.ui.widgets.factories.ICustomWidgetBuilder;
-import treehou.se.habit.ui.widgets.factories.IWidgetBuilder;
-import treehou.se.habit.ui.widgets.factories.ImageBuilder;
-import treehou.se.habit.ui.widgets.factories.NullBuilder;
-import treehou.se.habit.ui.widgets.factories.SelectionBuilder;
-import treehou.se.habit.ui.widgets.factories.SliderBuilder;
-import treehou.se.habit.ui.widgets.factories.SwitchBuilder;
-import treehou.se.habit.ui.widgets.factories.TextBuilder;
-import treehou.se.habit.ui.widgets.factories.VideoBuilder;
-import treehou.se.habit.ui.widgets.factories.WebBuilder;
+import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.FrameWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.GroupWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.ICustomWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.IWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.ImageWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.NullWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.SelectionWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.SwitchWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.TextWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.VideoWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.WebWidgetFactory;
 
 public class WidgetFactory {
 
@@ -38,29 +38,29 @@ public class WidgetFactory {
     private LinkedPage page;
     private LayoutInflater inflater;
 
-    private IWidgetBuilder defaultBuilder = new NullBuilder();
+    private IWidgetFactory defaultBuilder = new NullWidgetFactory();
 
-    private Map<String, IWidgetBuilder> builders = new HashMap<>();
+    private Map<String, IWidgetFactory> builders = new HashMap<>();
 
     public WidgetFactory(FragmentActivity context, ServerDB server, LinkedPage page){
         this.context = context;
         this.server = server;
         this.page = page;
 
-        builders.put(Widget.TYPE_FRAME, new FrameBuilder());
-        builders.put(Widget.TYPE_CHART, new ChartBuilder());
-        builders.put(Widget.TYPE_COLORPICKER, new ColorpickerBuilder());
-        builders.put(Widget.TYPE_IMAGE, new ImageBuilder());
-        builders.put(Widget.TYPE_VIDEO, new VideoBuilder());
-        builders.put(Widget.TYPE_WEB, new WebBuilder());
-        builders.put(Widget.TYPE_SLIDER, new SliderBuilder());
-        builders.put(Widget.TYPE_SWITCH, new SwitchBuilder());
-        builders.put(Widget.TYPE_SELECTION, new SelectionBuilder());
-        builders.put(Widget.TYPE_TEXT, new TextBuilder());
-        builders.put(Widget.TYPE_GROUP, new GroupBuilder());
+        builders.put(Widget.TYPE_FRAME, new FrameWidgetFactory());
+        builders.put(Widget.TYPE_CHART, new ChartWidgetFactory());
+        builders.put(Widget.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
+        builders.put(Widget.TYPE_IMAGE, new ImageWidgetFactory());
+        builders.put(Widget.TYPE_VIDEO, new VideoWidgetFactory());
+        builders.put(Widget.TYPE_WEB, new WebWidgetFactory());
+        builders.put(Widget.TYPE_SLIDER, new SliderWidgetFactory());
+        builders.put(Widget.TYPE_SWITCH, new SwitchWidgetFactory());
+        builders.put(Widget.TYPE_SELECTION, new SelectionWidgetFactory());
+        builders.put(Widget.TYPE_TEXT, new TextWidgetFactory());
+        builders.put(Widget.TYPE_GROUP, new GroupWidgetFactory());
     }
 
-    private ICustomWidgetBuilder getCustomWidget(List<Widget> widgets ,int position , Widget parent) {
+    private ICustomWidgetFactory getCustomWidget(List<Widget> widgets ,int position , Widget parent) {
         return null;
     }
 
@@ -72,7 +72,7 @@ public class WidgetFactory {
             ViewGroup louWidgetHolder = null;
 
             if (builders.containsKey(widget.getType())) {
-                IWidgetBuilder builder = builders.get(widget.getType());
+                IWidgetFactory builder = builders.get(widget.getType());
                 itemHolder = builder.build(this, page, widget, parent);
             } else {
                 Log.w(TAG, "Error: No builder with type " + widget.getType());

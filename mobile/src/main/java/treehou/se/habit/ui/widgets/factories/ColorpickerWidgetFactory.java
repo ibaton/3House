@@ -16,14 +16,14 @@ import treehou.se.habit.ui.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.Util;
 
-public class ColorpickerBuilder implements IWidgetBuilder {
+public class ColorpickerWidgetFactory implements IWidgetFactory {
 
     private int color;
 
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        WidgetFactory.IWidgetHolder builder = new BaseBuilder.BaseBuilderHolder.Builder(widgetFactory)
+        WidgetFactory.IWidgetHolder builder = new BaseWidgetFactory.BaseBuilderHolder.Builder(widgetFactory)
                 .setWidget(widget)
                 .setFlat(true)
                 .setShowLabel(true)

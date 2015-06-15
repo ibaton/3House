@@ -12,12 +12,9 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
-public class VideoBuilder implements IWidgetBuilder {
+public class VideoWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "VideoBuilder";
+    private static final String TAG = "VideoWidgetFactory";
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
@@ -29,7 +26,7 @@ public class VideoBuilder implements IWidgetBuilder {
 
         private static final String TAG = "VideoBuilderHolder";
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
 
         private View itemView;
@@ -42,7 +39,7 @@ public class VideoBuilder implements IWidgetBuilder {
             itemView = factory.getInflater().inflate(R.layout.item_widget_video, null);
             mVideoView = (VideoView) itemView.findViewById(R.id.vidView);
 
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .setShowLabel(false)

@@ -14,10 +14,7 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
-public class TextBuilder implements IWidgetBuilder {
+public class TextWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
@@ -30,14 +27,14 @@ public class TextBuilder implements IWidgetBuilder {
 
         private static final String TAG = "TextBuilderHolder";
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
         private WidgetFactory factory;
 
         public TextBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
 
             this.factory = factory;
 
-            baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .setFlat(false)

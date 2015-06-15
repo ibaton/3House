@@ -11,12 +11,9 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
-/**
- * Created by ibaton on 2014-10-19.
- */
-public class WebBuilder implements IWidgetBuilder {
+public class WebWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "WebBuilder";
+    private static final String TAG = "WebWidgetFactory";
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
@@ -30,7 +27,7 @@ public class WebBuilder implements IWidgetBuilder {
 
         private static final String TAG = "WebBuilderHolder";
 
-        private BaseBuilder.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
 
         private WebView webView;
         private Widget widget;
@@ -42,7 +39,7 @@ public class WebBuilder implements IWidgetBuilder {
 
         private WebBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
 
-            baseHolder = BaseBuilder.BaseBuilderHolder.create(factory, false, widget, parent);
+            baseHolder = BaseWidgetFactory.BaseBuilderHolder.create(factory, false, widget, parent);
 
             final View itemView = factory.getInflater().inflate(R.layout.item_widget_web, null);
             webView = (WebView) itemView.findViewById(R.id.webView);
