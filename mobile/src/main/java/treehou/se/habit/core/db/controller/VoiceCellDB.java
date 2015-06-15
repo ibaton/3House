@@ -1,32 +1,28 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import treehou.se.habit.core.Item;
-
-/**
- * Created by ibaton on 2014-11-08.
- */
+import treehou.se.habit.core.db.ItemDB;
 
 @Table(name = "VoiceCells")
-public class VoiceCell extends Model {
+public class VoiceCellDB extends Model {
 
     @Column(name = "icon")
     public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Cell cell;
+    public CellDB cell;
 
     @Column(name = "Item")
-    public Item item;
+    public ItemDB item;
 
-    public Item getItem() {
+    public ItemDB getItem() {
         return item;
     }
 
-    public void setItem(Item item) {
+    public void setItem(ItemDB item) {
         this.item = item;
     }
 
@@ -38,11 +34,11 @@ public class VoiceCell extends Model {
         this.icon = icon;
     }
 
-    public Cell getCell() {
+    public CellDB getCell() {
         return cell;
     }
 
-    public void setCell(Cell cell) {
+    public void setCell(CellDB cell) {
         this.cell = cell;
     }
 

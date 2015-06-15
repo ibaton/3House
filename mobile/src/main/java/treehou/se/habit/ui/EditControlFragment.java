@@ -29,9 +29,9 @@ import android.widget.LinearLayout;
 import com.mattyork.colours.Colour;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.CellRow;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.CellRowDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControlHelper;
@@ -70,7 +70,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     private ActionBar actionBar;
 
-    private Controller controller;
+    private ControllerDB controller;
 
     private AppCompatActivity activity;
 
@@ -95,15 +95,15 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
         cellFactory = new CellFactory<>();
         cellFactory.setDefaultBuilder(new DefaultConfigCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_BUTTON, new ButtonConfigCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_VOICE, new VoiceConfigCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_SLIDER, new SliderConfigCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_INC_DEC, new IncDecConfigCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_COLOR, new ColorConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_COLOR, new ColorConfigCellBuilder());
 
         if (getArguments() != null) {
             Long id = getArguments().getLong(ARG_ID);
-            controller = Controller.load(Controller.class, id);
+            controller = ControllerDB.load(ControllerDB.class, id);
         }
 
         ControlHelper.showNotification(getActivity(), controller);
@@ -226,7 +226,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         Log.d(TAG, "Drawing controller " + controller.cellRows().size());
-        for (final CellRow row : controller.cellRows()){
+        for (final CellRowDB row : controller.cellRows()){
             Log.d(TAG, "Drawing row " + row.getId());
             final LinearLayout louRow = (LinearLayout) inflater.inflate(R.layout.controller_row_edit, null);
 
@@ -238,7 +238,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
             final LinearLayout louColumnHolder = (LinearLayout) louRow.findViewById(R.id.lou_btn_holder);
             final ImageButton btnAddCell = (ImageButton) louRow.findViewById(R.id.btn_add_column);
 
-            for (final Cell cell : row.cells()) {
+            for (final CellDB cell : row.cells()) {
                 Log.d(TAG, "Drawing cell " + cell.getId());
                 final View itemView = cellFactory.create(getActivity(), controller, cell);
                 itemView.setOnClickListener(new View.OnClickListener() {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.reciever.CommandReciever;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 
@@ -22,7 +22,7 @@ public class CommandBoundleManager {
      * @param command The toast message to be displayed by the plug-in. Cannot be null.
      * @return A plug-in bundle.
      */
-    public static Bundle generateCommandBundle(final Context context, final Item item, final String command) {
+    public static Bundle generateCommandBundle(final Context context, final ItemDB item, final String command) {
 
         Log.d(TAG, "Item " + item + " Command " + command);
 

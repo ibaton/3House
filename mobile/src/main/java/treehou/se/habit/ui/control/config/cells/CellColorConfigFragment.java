@@ -16,10 +16,10 @@ import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.ColorCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.controller.ColorCellDB;
 import treehou.se.habit.ui.control.IconAdapter;
 
 public class CellColorConfigFragment extends Fragment {
@@ -28,15 +28,15 @@ public class CellColorConfigFragment extends Fragment {
 
     private static String ARG_CELL_ID = "ARG_CELL_ID";
 
-    private Cell cell;
+    private CellDB cell;
 
-    private ColorCell colorCell;
+    private ColorCellDB colorCell;
     private Spinner sprItems;
 
-    private ArrayAdapter<Item> mItemAdapter ;
-    private ArrayList<Item> mItems = new ArrayList<>();
+    private ArrayAdapter<ItemDB> mItemAdapter ;
+    private ArrayList<ItemDB> mItems = new ArrayList<>();
 
-    public static CellColorConfigFragment newInstance(Cell cell) {
+    public static CellColorConfigFragment newInstance(CellDB cell) {
         CellColorConfigFragment fragment = new CellColorConfigFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CELL_ID, cell.getId());
@@ -56,21 +56,21 @@ public class CellColorConfigFragment extends Fragment {
 
         if (getArguments() != null) {
             Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = Cell.load(Cell.class, id);
+            cell = CellDB.load(CellDB.class, id);
             if((colorCell =cell.colorCell())==null){
-                colorCell = new ColorCell();
+                colorCell = new ColorCellDB();
                 colorCell.setCell(cell);
                 colorCell.save();
             }
         }
     }
 
-    private List<Item> filterItems(List<Item> items){
+    private List<ItemDB> filterItems(List<ItemDB> items){
 
-        List<Item> tempItems = new ArrayList<>();
-        for(Item item : items){
-            if(item.getType().equals(Item.TYPE_COLOR) ||
-                    item.getType().equals(Item.TYPE_GROUP)){
+        List<ItemDB> tempItems = new ArrayList<>();
+        for(ItemDB item : items){
+            if(item.getType().equals(ItemDB.TYPE_COLOR) ||
+                    item.getType().equals(ItemDB.TYPE_GROUP)){
                 tempItems.add(item);
             }
         }
@@ -100,12 +100,12 @@ public class CellColorConfigFragment extends Fragment {
         sprItems.setAdapter(mItemAdapter);
 
         Communicator communicator = Communicator.instance(getActivity());
-        List<Server> servers = Server.getServers();
+        List<ServerDB> servers = ServerDB.getServers();
         mItems.clear();
-        for(Server server : servers) {
+        for(ServerDB server : servers) {
             communicator.requestItems(server, new Communicator.ItemsRequestListener() {
                 @Override
-                public void onSuccess(List<Item> items) {
+                public void onSuccess(List<ItemDB> items) {
                     items = filterItems(items);
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
@@ -126,7 +126,7 @@ public class CellColorConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = (Item) sprItems.getItemAtPosition(position);
+                ItemDB item = (ItemDB) sprItems.getItemAtPosition(position);
                 item.save();
 
                 colorCell.setItem(item);

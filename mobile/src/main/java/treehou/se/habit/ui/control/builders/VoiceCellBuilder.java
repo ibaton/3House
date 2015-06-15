@@ -10,9 +10,9 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.core.controller.VoiceCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.controller.VoiceCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -22,8 +22,8 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "VoiceCellBuilder";
 
-    public View build(final Context context, Controller controller, final Cell cell){
-        final VoiceCell voiceCell = cell.voiceCell();
+    public View build(final Context context, ControllerDB controller, final CellDB cell){
+        final VoiceCellDB voiceCell = cell.voiceCell();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -63,8 +63,8 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
     }
 
     @Override
-    public RemoteViews buildRemote(final Context context, Controller controller, Cell cell) {
-        final VoiceCell voiceCell = cell.voiceCell();
+    public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
+        final VoiceCellDB voiceCell = cell.voiceCell();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
         cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());

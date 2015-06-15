@@ -33,7 +33,7 @@ import java.util.Locale;
 import treehou.se.habit.Constants;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
-import treehou.se.habit.core.settings.NotificationSettings;
+import treehou.se.habit.core.db.settings.NotificationSettingsDB;
 import treehou.se.habit.service.wear.VoiceActionService;
 
 
@@ -46,7 +46,7 @@ public class GcmIntentService extends IntentService {
 
     private static final String TAG = "GcmIntentService";
 
-    // Notification delete receiver
+    // NotificationDB delete receiver
 
     private TextToSpeech textToSpeech;
 
@@ -119,7 +119,7 @@ public class GcmIntentService extends IntentService {
 
         Server server = Server.load(Server.class, serverId);*/
 
-        NotificationSettings notificationSettings = NotificationSettings.loadGlobal(getApplicationContext());
+        NotificationSettingsDB notificationSettings = NotificationSettingsDB.loadGlobal(getApplicationContext());
         if(notificationSettings.notificationToSpeach()) {
             textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
@@ -132,9 +132,9 @@ public class GcmIntentService extends IntentService {
             });
         }
 
-        /*Notification notification = new Notification(msg);
+        /*NotificationDB notification = new NotificationDB(msg);
         notification.save();
-        List<Notification> notifications = new Select().all().from(Notification.class).execute();*/
+        List<NotificationDB> notifications = new Select().all().from(NotificationDB.class).execute();*/
         //TODO create inbox style
 
         String replyLabel = getString(R.string.notification_title);

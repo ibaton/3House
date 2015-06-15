@@ -1,17 +1,13 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import treehou.se.habit.core.Item;
-
-/**
- * Created by ibaton on 2014-11-08.
- */
+import treehou.se.habit.core.db.ItemDB;
 
 @Table(name = "SliderCells")
-public class SliderCell extends Model {
+public class SliderCellDB extends Model {
 
     public static final int TYPE_MAX = 0;
     public static final int TYPE_MIN = 1;
@@ -22,13 +18,13 @@ public class SliderCell extends Model {
     public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Cell cell;
+    public CellDB cell;
 
     @Column(name = "type")
     public int type;
 
     @Column(name = "Item")
-    public Item item;
+    public ItemDB item;
 
     @Column(name = "min")
     public int min = 0;
@@ -36,11 +32,11 @@ public class SliderCell extends Model {
     @Column(name = "max")
     public int max = 100;
 
-    public Item getItem() {
+    public ItemDB getItem() {
         return item;
     }
 
-    public void setItem(Item item) {
+    public void setItem(ItemDB item) {
         this.item = item;
     }
 
@@ -52,11 +48,11 @@ public class SliderCell extends Model {
         this.icon = icon;
     }
 
-    public Cell getCell() {
+    public CellDB getCell() {
         return cell;
     }
 
-    public void setCell(Cell cell) {
+    public void setCell(CellDB cell) {
         this.cell = cell;
     }
 

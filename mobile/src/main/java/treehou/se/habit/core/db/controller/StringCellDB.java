@@ -1,18 +1,14 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
-
 @Table(name = "StringCells")
-public class StringCell extends Model {
+public class StringCellDB extends Model {
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Cell cell;
+    public CellDB cell;
 
     @Column(name = "command")
     public String command;
@@ -20,11 +16,11 @@ public class StringCell extends Model {
     @Column(name = "iconName")
     public String icon;
 
-    public Cell getCell() {
+    public CellDB getCell() {
         return cell;
     }
 
-    public void setCell(Cell cell) {
+    public void setCell(CellDB cell) {
         this.cell = cell;
     }
 

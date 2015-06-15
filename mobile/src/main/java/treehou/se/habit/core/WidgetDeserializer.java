@@ -11,9 +11,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
-* Created by ibaton on 2014-10-18.
-*/
+import treehou.se.habit.core.db.ItemDB;
+
 public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
 
     private static final String TAG = "WidgetDeserializer";
@@ -37,7 +36,7 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
         }
 
         if(jObject.has("item")){
-            Item item = context.deserialize(jObject.get("item").getAsJsonObject(), Item.class);
+            ItemDB item = context.deserialize(jObject.get("item").getAsJsonObject(), ItemDB.class);
             widget.setItem(item);
         }
 

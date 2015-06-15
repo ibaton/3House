@@ -13,7 +13,7 @@ import java.util.List;
 import treehou.se.habit.R;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -48,7 +48,7 @@ public class FrameBuilder implements IWidgetBuilder {
             FrameHolder holder = new FrameHolder(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
 
             Log.d(TAG, "update " + widget.getLabel());
-            final WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
             float percentage = Util.toPercentage(settings.getTextSize());
             holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
 

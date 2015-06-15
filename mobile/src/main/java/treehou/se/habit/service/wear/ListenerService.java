@@ -10,9 +10,9 @@ import java.util.List;
 
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.Util;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.service.wear.connector.messages.VoiceCommandMessage;
+import treehou.se.habit.util.Util;
 
 public class ListenerService extends WearableListenerService {
 
@@ -35,11 +35,11 @@ public class ListenerService extends WearableListenerService {
         Gson gson = Util.createGsonBuilder();
         VoiceCommandMessage message = gson.fromJson(jMessage, VoiceCommandMessage.class);
 
-        Server server = null;
+        ServerDB server = null;
         if(message.haveServer()){
-            server = Server.load(Server.class, message.getServer());
+            server = ServerDB.load(ServerDB.class, message.getServer());
         }else {
-            List<Server> servers = Server.getServers();
+            List<ServerDB> servers = ServerDB.getServers();
             if(servers.size() > 0) {
                 server = servers.get(0);
             }

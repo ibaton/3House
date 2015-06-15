@@ -38,11 +38,11 @@ import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.Util;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ThreadPool;
+import treehou.se.habit.util.Util;
 
 public class PageFragment extends Fragment {
 
@@ -53,7 +53,7 @@ public class PageFragment extends Fragment {
     private static final String ARG_PAGE    = "ARG_PAGE";
     private static final String ARG_SERVER  = "ARG_SERVER";
 
-    private Server server;
+    private ServerDB server;
     private LinkedPage mPage;
 
     private LinearLayout louFragments;
@@ -71,7 +71,7 @@ public class PageFragment extends Fragment {
      * @param page the page to visualise
      * @return
      */
-    public static PageFragment newInstance(Server server, LinkedPage page) {
+    public static PageFragment newInstance(ServerDB server, LinkedPage page) {
         Gson gson = Util.createGsonBuilder();
 
         Bundle args = new Bundle();
@@ -94,7 +94,7 @@ public class PageFragment extends Fragment {
         Gson gson = Util.createGsonBuilder();
 
         long serverId = args.getLong(ARG_SERVER);
-        server = Server.load(Server.class, serverId);
+        server = ServerDB.load(ServerDB.class, serverId);
 
         String jPage = args.getString(ARG_PAGE);
         mPage = gson.fromJson(jPage, LinkedPage.class);

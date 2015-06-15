@@ -7,7 +7,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 /**
@@ -33,7 +33,7 @@ public class SliderBuilder implements IWidgetBuilder {
         public SliderBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
 
             this.factory = factory;
-            WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
             boolean flat = settings.isCompressedSlider();
 
             itemView = factory.getInflater().inflate(R.layout.item_widget_slider, null);

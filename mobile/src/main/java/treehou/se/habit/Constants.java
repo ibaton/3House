@@ -3,7 +3,7 @@ package treehou.se.habit;
 import java.util.HashSet;
 import java.util.Set;
 
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 
 /**
  * Created by ibaton on 2014-09-10.
@@ -15,10 +15,8 @@ public class Constants {
 
     public static final String GCM_SENDER_ID = "737820980945";
 
-    // Notification to speech.
+    // NotificationDB to speech.
     public static final String PREF_REGISTRATION_SERVER = "notification_to_speech";
-
-    public static final String PREFIX_NOTIFICATION = "prefnot_";
 
     public static final boolean DEFAULT_NOTIFICATION_TO_SPEACH = false;
 
@@ -30,18 +28,18 @@ public class Constants {
 
     public static final Set<String> SUPPORT_SWITCH = new HashSet<>();
     static {
-        SUPPORT_SWITCH.add(Item.TYPE_GROUP);
-        SUPPORT_SWITCH.add(Item.TYPE_SWITCH);
-        SUPPORT_SWITCH.add(Item.TYPE_STRING);
-        SUPPORT_SWITCH.add(Item.TYPE_NUMBER);
-        SUPPORT_SWITCH.add(Item.TYPE_CONTACT);
-        SUPPORT_SWITCH.add(Item.TYPE_COLOR);
+        SUPPORT_SWITCH.add(ItemDB.TYPE_GROUP);
+        SUPPORT_SWITCH.add(ItemDB.TYPE_SWITCH);
+        SUPPORT_SWITCH.add(ItemDB.TYPE_STRING);
+        SUPPORT_SWITCH.add(ItemDB.TYPE_NUMBER);
+        SUPPORT_SWITCH.add(ItemDB.TYPE_CONTACT);
+        SUPPORT_SWITCH.add(ItemDB.TYPE_COLOR);
     }
 
     public static final Set<String> SUPPORT_INC_DEC = new HashSet<>();
     static {
-        SUPPORT_SWITCH.add(Item.TYPE_GROUP);
-        SUPPORT_INC_DEC.add(Item.TYPE_NUMBER);
-        SUPPORT_INC_DEC.add(Item.TYPE_DIMMER);
+        SUPPORT_SWITCH.add(ItemDB.TYPE_GROUP);
+        SUPPORT_INC_DEC.add(ItemDB.TYPE_NUMBER);
+        SUPPORT_INC_DEC.add(ItemDB.TYPE_DIMMER);
     }
 }

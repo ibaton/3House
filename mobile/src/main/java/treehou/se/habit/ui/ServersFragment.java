@@ -25,7 +25,7 @@ import java.util.List;
 
 import treehou.se.habit.Constants;
 import treehou.se.habit.R;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.settings.SetupServerFragment;
 
 public class ServersFragment extends Fragment  {
@@ -50,7 +50,7 @@ public class ServersFragment extends Fragment  {
         super.onCreate(savedInstanceState);
 
         serversAdapter = new ServersAdapter(getActivity());
-        serversAdapter.addAll(Server.getServers());
+        serversAdapter.addAll(ServerDB.getServers());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ServersFragment extends Fragment  {
         super.onResume();
 
         serversAdapter.clear();
-        serversAdapter.addAll(Server.getServers());
+        serversAdapter.addAll(ServerDB.getServers());
 
         // Initialize demo server first time starting
         SharedPreferences preferences = getActivity().getSharedPreferences(Constants.PREFERENCE_SERVER, Context.MODE_PRIVATE);
@@ -88,7 +88,7 @@ public class ServersFragment extends Fragment  {
             SharedPreferences.Editor edit = preferences.edit();
             edit.putBoolean(Constants.PREF_INIT_SETUP,false);
             if(serversAdapter.getItemCount() == 0){
-                Server demoServer = new Server();
+                ServerDB demoServer = new ServerDB();
                 demoServer.setName("Demo");
                 demoServer.setRemoteUrl("http://demo.openhab.org:8080");
                 demoServer.save();
@@ -120,7 +120,7 @@ public class ServersFragment extends Fragment  {
 
     public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder>{
 
-        private List<Server> items = new ArrayList<>();
+        private List<ServerDB> items = new ArrayList<>();
         private Context context;
 
         public class ServerHolder extends RecyclerView.ViewHolder {
@@ -147,7 +147,7 @@ public class ServersFragment extends Fragment  {
 
         @Override
         public void onBindViewHolder(ServerHolder serverHolder, final int position) {
-            final Server server = items.get(position);
+            final ServerDB server = items.get(position);
 
             serverHolder.lblName.setText(server.getName());
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -186,11 +186,11 @@ public class ServersFragment extends Fragment  {
             return items.size();
         }
 
-        public Server getItem(int position) {
+        public ServerDB getItem(int position) {
             return items.get(position);
         }
 
-        public void addItem(Server item) {
+        public void addItem(ServerDB item) {
             items.add(0, item);
             notifyItemInserted(0);
         }
@@ -201,7 +201,7 @@ public class ServersFragment extends Fragment  {
             notifyItemRemoved(position);
         }
 
-        public void removeItem(Server item) {
+        public void removeItem(ServerDB item) {
             int position = items.indexOf(item);
             items.remove(position);
             notifyItemRemoved(position);
@@ -212,8 +212,8 @@ public class ServersFragment extends Fragment  {
             notifyDataSetChanged();
         }
 
-        public void addAll(List<Server> items) {
-            for(Server item : items) {
+        public void addAll(List<ServerDB> items) {
+            for(ServerDB item : items) {
                 this.items.add(0, item);
                 notifyItemRangeInserted(0, items.size());
             }

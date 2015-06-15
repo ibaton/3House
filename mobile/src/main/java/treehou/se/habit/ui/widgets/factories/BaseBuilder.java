@@ -21,7 +21,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -90,7 +90,7 @@ public class BaseBuilder {
 
             BaseBuilderHolder holder = new BaseBuilderHolder(factory.getContext(), rootView, widget, factory);
 
-            final WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
             float percentage = Util.toPercentage(settings.getTextSize());
 
             holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);

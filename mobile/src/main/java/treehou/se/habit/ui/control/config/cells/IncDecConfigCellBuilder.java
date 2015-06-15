@@ -10,9 +10,9 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.core.controller.IncDecCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.controller.IncDecCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -24,9 +24,9 @@ public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "IncDecConfigCellBuilder";
 
-    public View build(Context context, Controller controller, Cell cell){
+    public View build(Context context, ControllerDB controller, CellDB cell){
 
-        IncDecCell numberCell = cell.incDecCell();
+        IncDecCellDB numberCell = cell.incDecCell();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -50,7 +50,7 @@ public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
 
 
     @Override
-    public RemoteViews buildRemote(Context context, Controller controller, Cell cell) {
+    public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
         return null;
     }
 }

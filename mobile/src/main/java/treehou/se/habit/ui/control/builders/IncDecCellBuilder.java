@@ -14,10 +14,10 @@ import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.core.controller.IncDecCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.controller.IncDecCellDB;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.CommandService;
@@ -30,10 +30,10 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "IncDecCellBuilder";
 
-    public View build(final Context context, Controller controller, final Cell cell){
+    public View build(final Context context, ControllerDB controller, final CellDB cell){
         Log.d(TAG, "Build: Button");
 
-        final IncDecCell buttonCell = cell.incDecCell();
+        final IncDecCellDB buttonCell = cell.incDecCell();
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_button, null);
@@ -52,7 +52,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
             imgIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Server server = buttonCell.getItem().getServer();
+                    ServerDB server = buttonCell.getItem().getServer();
                     Communicator communicator = Communicator.instance(context);
                     communicator.incDec(server, buttonCell.getItem(), buttonCell.getValue(), buttonCell.getMin(), buttonCell.getMax());
                 }
@@ -63,8 +63,8 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
     }
 
     @Override
-    public RemoteViews buildRemote(final Context context, Controller controller, Cell cell) {
-        final IncDecCell buttonCell = cell.incDecCell();
+    public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
+        final IncDecCellDB buttonCell = cell.incDecCell();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
         cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.CellFactory;
 
 /**
@@ -15,7 +15,7 @@ public class ChartConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "ChartConfigCellBuilder";
 
-    public View build(Context context, Controller controller, Cell cell){
+    public View build(Context context, ControllerDB controller, CellDB cell){
 
         /*ChartCell chartCell = cell.chartCell();
 
@@ -29,7 +29,7 @@ public class ChartConfigCellBuilder implements CellFactory.CellBuilder {
     }
 
     @Override
-    public RemoteViews buildRemote(Context context, Controller controller, Cell cell) {
+    public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
         return null;
     }
 }

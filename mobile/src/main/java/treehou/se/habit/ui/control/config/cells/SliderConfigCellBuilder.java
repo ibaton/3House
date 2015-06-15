@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.core.controller.SliderCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.controller.SliderCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -22,9 +22,9 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderConfigCellBuilder";
 
-    public View build(Context context, Controller controller, Cell cell){
+    public View build(Context context, ControllerDB controller, CellDB cell){
 
-        SliderCell numberCell = cell.sliderCell();
+        SliderCellDB numberCell = cell.sliderCell();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -44,7 +44,7 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
 
     @Override
-    public RemoteViews buildRemote(Context context, Controller controller, Cell cell) {
+    public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
         return null;
     }
 }

@@ -1,4 +1,4 @@
-package treehou.se.habit.core.settings;
+package treehou.se.habit.core.db.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,7 +10,7 @@ import com.activeandroid.annotation.Table;
 import treehou.se.habit.Constants;
 
 @Table(name = "WidgetSettings")
-public class WidgetSettings extends Model {
+public class WidgetSettingsDB extends Model {
 
     private static final String TAG = "WidgetSettings";
     public static final String PREF_GLOBAL = "NotificationSettings";
@@ -21,12 +21,6 @@ public class WidgetSettings extends Model {
     public static final int VIBRANT_COLOR = 3;
     public static final int LIGHT_VIBRANT_COLOR = 4;
     public static final int DARK_VIBRANT_COLOR = 5;
-
-    /*public static final String IMAGE_ = "NotificationSettings";
-    public static final String PREF_GLOBAL = "NotificationSettings";
-    public static final String PREF_GLOBAL = "NotificationSettings";
-    public static final String PREF_GLOBAL = "NotificationSettings";
-    public static final String PREF_GLOBAL = "NotificationSettings";*/
 
     @Column(name = "textSize")
     private int textSize;
@@ -43,7 +37,7 @@ public class WidgetSettings extends Model {
     @Column(name = "compressedSlider")
     private boolean compressedSlider = true;
 
-    public WidgetSettings() {
+    public WidgetSettingsDB() {
         super();
         textSize = Constants.DEFAULT_TEXT_ADDON;
         imageBackground = DARK_MUTED_COLOR;
@@ -91,19 +85,19 @@ public class WidgetSettings extends Model {
         save();
     }
 
-    public static WidgetSettings loadGlobal(Context context){
+    public static WidgetSettingsDB loadGlobal(Context context){
 
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_SERVER, Context.MODE_PRIVATE);
         long id = preferences.getLong(PREF_GLOBAL,-1);
 
-        WidgetSettings notificationSettings = null;
+        WidgetSettingsDB notificationSettings = null;
 
         if(id != -1) {
-            notificationSettings = WidgetSettings.load(WidgetSettings.class, id);
+            notificationSettings = WidgetSettingsDB.load(WidgetSettingsDB.class, id);
         }
 
         if(notificationSettings == null) {
-            notificationSettings = new WidgetSettings();
+            notificationSettings = new WidgetSettingsDB();
             notificationSettings.save();
 
             SharedPreferences.Editor editor = preferences.edit();

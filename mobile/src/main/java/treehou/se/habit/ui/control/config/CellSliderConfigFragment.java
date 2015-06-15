@@ -19,10 +19,10 @@ import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.SliderCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.controller.SliderCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -33,18 +33,18 @@ public class CellSliderConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private Cell cell;
+    private CellDB cell;
 
-    private SliderCell numberCell;
+    private SliderCellDB numberCell;
     private Spinner sprItems;
     private TextView txtMax;
     private ImageButton btnSetIcon;
     private View louRange;
 
-    private ArrayAdapter<Item> mItemAdapter ;
-    private ArrayList<Item> mItems = new ArrayList<>();
+    private ArrayAdapter<ItemDB> mItemAdapter ;
+    private ArrayList<ItemDB> mItems = new ArrayList<>();
 
-    public static CellSliderConfigFragment newInstance(Cell cell) {
+    public static CellSliderConfigFragment newInstance(CellDB cell) {
         CellSliderConfigFragment fragment = new CellSliderConfigFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CELL_ID, cell.getId());
@@ -62,9 +62,9 @@ public class CellSliderConfigFragment extends Fragment {
 
         if (getArguments() != null) {
             Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = Cell.load(Cell.class, id);
+            cell = CellDB.load(CellDB.class, id);
             if((numberCell =cell.sliderCell())==null){
-                numberCell = new SliderCell();
+                numberCell = new SliderCellDB();
                 numberCell.setCell(cell);
                 numberCell.save();
             }
@@ -84,11 +84,11 @@ public class CellSliderConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = mItems.get(position);
+                ItemDB item = mItems.get(position);
                 if (item != null) {
                     item.save();
 
-                    if (item.getType().equals(Item.TYPE_NUMBER) || item.getType().equals(Item.TYPE_GROUP)) {
+                    if (item.getType().equals(ItemDB.TYPE_NUMBER) || item.getType().equals(ItemDB.TYPE_GROUP)) {
                         louRange.setVisibility(View.VISIBLE);
                     } else {
                         louRange.setVisibility(View.GONE);
@@ -111,15 +111,15 @@ public class CellSliderConfigFragment extends Fragment {
             }
         });
         Communicator communicator = Communicator.instance(getActivity());
-        List<Server> servers = Server.getServers();
+        List<ServerDB> servers = ServerDB.getServers();
         mItems.clear();
         if(numberCell.getItem() != null) {
             mItems.add(numberCell.getItem());
         }
-        for(Server server : servers) {
+        for(ServerDB server : servers) {
             communicator.requestItems(server, new Communicator.ItemsRequestListener() {
                 @Override
-                public void onSuccess(List<Item> items) {
+                public void onSuccess(List<ItemDB> items) {
                     items = filterItems(items);
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
@@ -161,17 +161,17 @@ public class CellSliderConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
     }
 
-    private List<Item> filterItems(List<Item> items){
+    private List<ItemDB> filterItems(List<ItemDB> items){
 
-        List<Item> tempItems = new ArrayList<>();
-        for(Item item : items){
-            if(item.getType().equals(Item.TYPE_NUMBER)){
+        List<ItemDB> tempItems = new ArrayList<>();
+        for(ItemDB item : items){
+            if(item.getType().equals(ItemDB.TYPE_NUMBER)){
                 tempItems.add(item);
-            }else if(item.getType().equals(Item.TYPE_DIMMER)){
+            }else if(item.getType().equals(ItemDB.TYPE_DIMMER)){
                 tempItems.add(item);
-            }else if(item.getType().equals(Item.TYPE_COLOR)){
+            }else if(item.getType().equals(ItemDB.TYPE_COLOR)){
                 tempItems.add(item);
-            }else if(item.getType().equals(Item.TYPE_GROUP)){
+            }else if(item.getType().equals(ItemDB.TYPE_GROUP)){
                 tempItems.add(item);
             }
         }
@@ -185,8 +185,8 @@ public class CellSliderConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        if(numberCell.getItem().getType().equals(Item.TYPE_NUMBER)
-                || numberCell.getItem().getType().equals(Item.TYPE_GROUP)){
+        if(numberCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)
+                || numberCell.getItem().getType().equals(ItemDB.TYPE_GROUP)){
             numberCell.setMin(0);
             numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
         }else{

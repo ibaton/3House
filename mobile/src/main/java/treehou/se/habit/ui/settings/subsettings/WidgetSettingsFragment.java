@@ -19,7 +19,7 @@ import android.widget.SeekBar;
 import treehou.se.habit.Constants;
 import treehou.se.habit.R;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.DummyWidgetFactory;
 
 public class WidgetSettingsFragment extends Fragment {
@@ -56,7 +56,7 @@ public class WidgetSettingsFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(getActivity().getString(R.string.settings_widget));
 
-        final WidgetSettings settings = WidgetSettings.loadGlobal(getActivity());
+        final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
 
         View rootView = inflater.inflate(R.layout.fragment_settings_widget, container, false);
         widgetHolder = (FrameLayout) rootView.findViewById(R.id.widget_holder);
@@ -88,28 +88,28 @@ public class WidgetSettingsFragment extends Fragment {
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_item_settings_widget);
 
         ImageView img1 = (ImageView) rootView.findViewById(R.id.img_widget_icon1);
-        factory.setBackgroundColor(img1,bitmap,WidgetSettings.MUTED_COLOR);
-        img1.setOnClickListener(new BackgroundSelectListener(WidgetSettings.MUTED_COLOR));
+        factory.setBackgroundColor(img1,bitmap, WidgetSettingsDB.MUTED_COLOR);
+        img1.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.MUTED_COLOR));
 
         ImageView img2 = (ImageView) rootView.findViewById(R.id.img_widget_icon2);
-        factory.setBackgroundColor(img2,bitmap,WidgetSettings.LIGHT_MUTED_COLOR);
-        img2.setOnClickListener(new BackgroundSelectListener(WidgetSettings.LIGHT_MUTED_COLOR));
+        factory.setBackgroundColor(img2,bitmap, WidgetSettingsDB.LIGHT_MUTED_COLOR);
+        img2.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_MUTED_COLOR));
 
         ImageView img3 = (ImageView) rootView.findViewById(R.id.img_widget_icon3);
-        factory.setBackgroundColor(img3,bitmap,WidgetSettings.DARK_MUTED_COLOR);
-        img3.setOnClickListener(new BackgroundSelectListener(WidgetSettings.DARK_MUTED_COLOR));
+        factory.setBackgroundColor(img3,bitmap, WidgetSettingsDB.DARK_MUTED_COLOR);
+        img3.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_MUTED_COLOR));
 
         ImageView img4 = (ImageView) rootView.findViewById(R.id.img_widget_icon4);
-        factory.setBackgroundColor(img4,bitmap,WidgetSettings.VIBRANT_COLOR);
-        img4.setOnClickListener(new BackgroundSelectListener(WidgetSettings.VIBRANT_COLOR));
+        factory.setBackgroundColor(img4,bitmap, WidgetSettingsDB.VIBRANT_COLOR);
+        img4.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.VIBRANT_COLOR));
 
         ImageView img5 = (ImageView) rootView.findViewById(R.id.img_widget_icon5);
-        factory.setBackgroundColor(img5,bitmap,WidgetSettings.LIGHT_VIBRANT_COLOR);
-        img5.setOnClickListener(new BackgroundSelectListener(WidgetSettings.LIGHT_VIBRANT_COLOR));
+        factory.setBackgroundColor(img5,bitmap, WidgetSettingsDB.LIGHT_VIBRANT_COLOR);
+        img5.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_VIBRANT_COLOR));
 
         ImageView img6 = (ImageView) rootView.findViewById(R.id.img_widget_icon6);
-        factory.setBackgroundColor(img6,bitmap,WidgetSettings.DARK_VIBRANT_COLOR);
-        img6.setOnClickListener(new BackgroundSelectListener(WidgetSettings.DARK_VIBRANT_COLOR));
+        factory.setBackgroundColor(img6,bitmap, WidgetSettingsDB.DARK_VIBRANT_COLOR);
+        img6.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_VIBRANT_COLOR));
 
         SeekBar barImageSize = (SeekBar) rootView.findViewById(R.id.bar_image_size);
         barImageSize.setProgress(settings.getIconSize()-BASE_IMAGE_SIZE);
@@ -159,12 +159,12 @@ public class WidgetSettingsFragment extends Fragment {
     }
 
     private void setCompressedButtonChanged(boolean isChecked){
-        WidgetSettings settings = WidgetSettings.loadGlobal(getActivity());
+        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
         settings.setCompressedSingleButton(isChecked);
     }
 
     private void setCompressedSliderChanged(boolean isChecked){
-        WidgetSettings settings = WidgetSettings.loadGlobal(getActivity());
+        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
         settings.setCompressedSlider(isChecked);
     }
 
@@ -187,7 +187,7 @@ public class WidgetSettingsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            WidgetSettings settings = WidgetSettings.loadGlobal(getActivity());
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
             settings.setImageBackground(backgroundType);
             settings.save();
 

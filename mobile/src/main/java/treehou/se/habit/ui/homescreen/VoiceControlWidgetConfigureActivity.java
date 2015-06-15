@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 
 /**
  * The configuration screen for the {@link VoiceControlWidget VoiceControlWidget} AppWidget.
@@ -43,7 +43,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         setContentView(R.layout.voice_control_widget_configure);
 
         sprServers = (Spinner) findViewById(R.id.spr_server);
-        ArrayAdapter<Server> serverAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, Server.getServers());
+        ArrayAdapter<ServerDB> serverAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ServerDB.getServers());
         sprServers.setAdapter(serverAdapter);
 
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
@@ -72,7 +72,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             //TODO check that server is selectes
-            saveServerPref(VoiceControlWidgetConfigureActivity.this, mAppWidgetId, (Server)sprServers.getSelectedItem(), cbxShowTitle.isChecked());
+            saveServerPref(VoiceControlWidgetConfigureActivity.this, mAppWidgetId, (ServerDB)sprServers.getSelectedItem(), cbxShowTitle.isChecked());
 
             VoiceControlWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
@@ -85,7 +85,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
     };
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveServerPref(Context context, int appWidgetId, Server server, boolean showTitle) {
+    static void saveServerPref(Context context, int appWidgetId, ServerDB server, boolean showTitle) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_SERVER, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + appWidgetId, server.getId());
         prefs.putBoolean(PREF_PREFIX_KEY + appWidgetId + PREF_POSTFIX_SHOW_TITLE, showTitle);

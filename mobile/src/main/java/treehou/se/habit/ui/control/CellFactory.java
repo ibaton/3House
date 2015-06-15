@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
 
 public class CellFactory<T> {
 
@@ -29,7 +29,7 @@ public class CellFactory<T> {
         defaultBuilder = builder;
     }
 
-    public View create(Context context, Controller controller, final Cell cell){
+    public View create(Context context, ControllerDB controller, final CellDB cell){
 
         Log.d(TAG,"cellBuilder cell type " + cell.getType());
         View cellView;
@@ -58,7 +58,7 @@ public class CellFactory<T> {
         return cellView;
     }
 
-    public RemoteViews createRemote(Context context, Controller controller, final Cell cell){
+    public RemoteViews createRemote(Context context, ControllerDB controller, final CellDB cell){
 
         Log.d(TAG,"cellBuilder cell type " + cell.getType());
 
@@ -83,20 +83,20 @@ public class CellFactory<T> {
 
     public static interface CellBuilder {
 
-        public View build(Context context, Controller controller, Cell cell);
-        public RemoteViews buildRemote(Context context, Controller controller, Cell cell);
+        public View build(Context context, ControllerDB controller, CellDB cell);
+        public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell);
     }
 
     public static class DefaultBuilder implements CellBuilder {
 
-        public View build(Context context, Controller controller, Cell cell){
+        public View build(Context context, ControllerDB controller, CellDB cell){
 
             LayoutInflater inflater = LayoutInflater.from(context);
             return inflater.inflate(R.layout.cell_empty, null);
         }
 
         @Override
-        public RemoteViews buildRemote(Context context, Controller controller, Cell cell) {
+        public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
             return new RemoteViews(context.getPackageName(), R.layout.cell_empty);
         }
     }

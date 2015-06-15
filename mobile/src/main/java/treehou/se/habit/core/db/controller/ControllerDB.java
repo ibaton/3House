@@ -1,4 +1,4 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,7 +13,7 @@ import java.util.List;
 import treehou.se.habit.ui.control.ControlHelper;
 
 @Table(name = "Controllers")
-public class Controller extends Model {
+public class ControllerDB extends Model {
 
     @Column(name = "Name")
     private String name;
@@ -24,8 +24,8 @@ public class Controller extends Model {
     @Column(name = "showNotification")
     private boolean showNotification = false;
 
-    public List<CellRow> cellRows(){
-        return getMany(CellRow.class, "Controller");
+    public List<CellRowDB> cellRows(){
+        return getMany(CellRowDB.class, "Controller");
     }
 
     public String getName() {
@@ -53,12 +53,12 @@ public class Controller extends Model {
         this.showNotification = showNotification;
     }
 
-    public CellRow addRow(){
-        CellRow cellRow = new CellRow();
+    public CellRowDB addRow(){
+        CellRowDB cellRow = new CellRowDB();
         cellRow.controller = this;
         cellRow.save();
 
-        Cell cell = new Cell();
+        CellDB cell = new CellDB();
         cell.cellRow = cellRow;
         cell.save();
 
@@ -66,9 +66,9 @@ public class Controller extends Model {
     }
 
 
-    public static List<Controller> getControllers(){
+    public static List<ControllerDB> getControllers(){
         return new Select()
-                .from(Controller.class)
+                .from(ControllerDB.class)
                 .execute();
     }
 

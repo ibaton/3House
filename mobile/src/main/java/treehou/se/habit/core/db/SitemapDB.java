@@ -6,7 +6,6 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Sitemap;
 
 @Table(name = "Sitemap")
@@ -22,7 +21,7 @@ public class SitemapDB extends Model {
     private String link;
 
     @Column(name = "server")
-    private Server server;
+    private ServerDB server;
 
     public SitemapDB() {}
 
@@ -54,7 +53,7 @@ public class SitemapDB extends Model {
     }
 
     public boolean isLocal(){
-        Server server = getServer();
+        ServerDB server = getServer();
         Uri uri = Uri.parse(link);
 
         try{
@@ -68,11 +67,11 @@ public class SitemapDB extends Model {
         this.link = link;
     }
 
-    public Server getServer() {
+    public ServerDB getServer() {
         return server;
     }
 
-    public void setServer(Server server) {
+    public void setServer(ServerDB server) {
         this.server = server;
         save();
     }

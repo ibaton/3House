@@ -11,6 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mattyork.colours.Colour;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -26,7 +29,14 @@ import java.util.List;
 import java.util.Map;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.ItemDeserializer;
+import treehou.se.habit.core.Sitemap;
+import treehou.se.habit.core.SitemapDeserializer;
+import treehou.se.habit.core.Widget;
+import treehou.se.habit.core.WidgetDeserializer;
+import treehou.se.habit.core.WidgetMappingDeserializer;
+import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.control.IconAdapter;
 
 public class Util {
@@ -177,21 +187,21 @@ public class Util {
     }
 
     public static int getBackground(Context context, Bitmap bitmap){
-        return getBackground(context, bitmap, WidgetSettings.MUTED_COLOR);
+        return getBackground(context, bitmap, WidgetSettingsDB.MUTED_COLOR);
     }
 
     public static int getBackground(Context context, Bitmap bitmap, int type){
-        if(type == WidgetSettings.MUTED_COLOR) {
+        if(type == WidgetSettingsDB.MUTED_COLOR) {
             return Palette.from(bitmap).generate().getMutedColor(context.getResources().getColor(R.color.image_background));
-        }else if(type == WidgetSettings.LIGHT_MUTED_COLOR) {
+        }else if(type == WidgetSettingsDB.LIGHT_MUTED_COLOR) {
             return Palette.from(bitmap).generate().getLightMutedColor(context.getResources().getColor(R.color.image_background));
-        }else if(type == WidgetSettings.DARK_MUTED_COLOR) {
+        }else if(type == WidgetSettingsDB.DARK_MUTED_COLOR) {
             return Palette.from(bitmap).generate().getDarkMutedColor(context.getResources().getColor(R.color.image_background));
-        }else if(type == WidgetSettings.VIBRANT_COLOR) {
+        }else if(type == WidgetSettingsDB.VIBRANT_COLOR) {
             return Palette.from(bitmap).generate().getVibrantColor(context.getResources().getColor(R.color.image_background));
-        }else if(type == WidgetSettings.LIGHT_VIBRANT_COLOR) {
+        }else if(type == WidgetSettingsDB.LIGHT_VIBRANT_COLOR) {
             return Palette.from(bitmap).generate().getLightVibrantColor(context.getResources().getColor(R.color.image_background));
-        }else if(type == WidgetSettings.DARK_VIBRANT_COLOR) {
+        }else if(type == WidgetSettingsDB.DARK_VIBRANT_COLOR) {
             return Palette.from(bitmap).generate().getDarkVibrantColor(context.getResources().getColor(R.color.image_background));
         }else {
             return Palette.from(bitmap).generate().getMutedColor(context.getResources().getColor(R.color.image_background));
@@ -204,5 +214,21 @@ public class Util {
 
     public static int[] generatePallete(int color){
         return Colour.colorSchemeOfType(color, Colour.ColorScheme.ColorSchemeAnalagous);
+    }
+
+    public static Gson gson = null;
+
+    public synchronized static Gson createGsonBuilder(){
+
+        if (gson == null) {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget>>() {}.getType(), new WidgetDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<Sitemap>>() {}.getType(), new SitemapDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget.Mapping>>() {}.getType(), new WidgetMappingDeserializer());
+            gsonBuilder.registerTypeAdapter(ItemDB.class, new ItemDeserializer());
+            gson = gsonBuilder.create();
+        }
+
+        return gson;
     }
 }

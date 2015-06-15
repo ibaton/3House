@@ -1,4 +1,4 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -7,15 +7,12 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 
-/**
-* Created by ibaton on 2014-10-18.
-*/
-public class ItemSerializer implements JsonSerializer<Item> {
+public class ItemSerializer implements JsonSerializer<ItemDB> {
 
     @Override
-    public JsonElement serialize(Item src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(ItemDB src, Type typeOfSrc, JsonSerializationContext context) {
 
         JsonObject object = new JsonObject();
         object.addProperty("type", src.getType());

@@ -9,9 +9,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
-* Created by ibaton on 2014-10-18.
-*/
 public class WidgetMappingDeserializer implements JsonDeserializer<List<Widget.Mapping>> {
 
     private static final String TAG = "WidgetMappingDeserializer";

@@ -6,13 +6,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
-* Created by ibaton on 2014-09-13.
-*/
+import treehou.se.habit.core.db.ItemDB;
+
 public class Widget {
 
     public static final String TAG                  = "Widget";
 
+    // TODO convert to enum
     public static final String TYPE_DUMMY           = "Dummy";
     public static final String TYPE_FRAME           = "Frame";
     public static final String TYPE_SWITCH          = "Switch";
@@ -32,7 +32,7 @@ public class Widget {
     private String label;
     private String period;
     private String url;
-    private Item item;
+    private ItemDB item;
     private List<Widget> widget;
     private List<Mapping> mapping;
     private LinkedPage linkedPage;
@@ -74,11 +74,11 @@ public class Widget {
         this.label = label;
     }
 
-    public Item getItem() {
+    public ItemDB getItem() {
         return item;
     }
 
-    public void setItem(Item item) {
+    public void setItem(ItemDB item) {
         this.item = item;
     }
 

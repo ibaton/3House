@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 /**
@@ -53,7 +53,7 @@ public class CommandReciever implements IFireReciever {
             final long itemId = bundle.getLong(BUNDLE_EXTRA_ITEM);
             final String command = bundle.getString(BUNDLE_EXTRA_COMMAND);
 
-            Item item = Item.load(Item.class, itemId);
+            ItemDB item = ItemDB.load(ItemDB.class, itemId);
             if(item != null){
                 Communicator.instance(context).command(item.getServer(), item, command);
                 Log.d(TAG, "Sent command " + command + " to item " + item.getName());

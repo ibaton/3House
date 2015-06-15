@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 
 public class SetupServerFragment extends Fragment {
 
@@ -24,7 +24,7 @@ public class SetupServerFragment extends Fragment {
     private EditText txtUsername;
     private EditText txtPassword;
 
-    private Server server;
+    private ServerDB server;
 
     private Button btnBack;
 
@@ -32,7 +32,7 @@ public class SetupServerFragment extends Fragment {
         return new SetupServerFragment();
     }
 
-    public static SetupServerFragment newInstance(Server server) {
+    public static SetupServerFragment newInstance(ServerDB server) {
         SetupServerFragment fragment = new SetupServerFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_SERVER, server.getId());
@@ -49,12 +49,12 @@ public class SetupServerFragment extends Fragment {
 
         if(savedInstanceState != null && savedInstanceState.containsKey(EXTRA_SERVER_ID)){
             long serverId = savedInstanceState.getLong(EXTRA_SERVER_ID);
-            server = Server.load(Server.class, serverId);
+            server = ServerDB.load(ServerDB.class, serverId);
         }else if (getArguments() != null) {
             long serverId = getArguments().getLong(ARG_SERVER);
-            server = Server.load(Server.class, serverId);
+            server = ServerDB.load(ServerDB.class, serverId);
         }else{
-            server = new Server();
+            server = new ServerDB();
             server.save();
         }
     }

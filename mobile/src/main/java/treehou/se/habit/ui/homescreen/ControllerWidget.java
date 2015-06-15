@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 /**
  * Implementation of App Widget functionality.
@@ -47,7 +47,7 @@ public class ControllerWidget extends AppWidgetProvider {
         long controllId = ControllerWidgetConfigureActivity.loadControllIdPref(context, appWidgetId);
         boolean showTitle = ControllerWidgetConfigureActivity.loadControllShowTitlePref(context, appWidgetId);
 
-        Controller controller = Controller.load(Controller.class, controllId);
+        ControllerDB controller = ControllerDB.load(ControllerDB.class, controllId);
         if(controller == null){
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.error_widget);
             appWidgetManager.updateAppWidget(appWidgetId, views);

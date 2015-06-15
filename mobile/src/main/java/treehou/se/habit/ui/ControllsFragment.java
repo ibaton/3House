@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.ControllerDB;
 
 public class ControllsFragment extends Fragment {
 
@@ -51,7 +51,7 @@ public class ControllsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("ControllsFragment", ""+Controller.getControllers().size());
+        Log.d("ControllsFragment", ""+ ControllerDB.getControllers().size());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ControllsFragment extends Fragment {
         }
 
         mAdapter = new ControllerAdapter(getActivity());
-        final List<Controller> controllers = Controller.getControllers();
+        final List<ControllerDB> controllers = ControllerDB.getControllers();
         mAdapter.addAll(controllers);
 
         // Set the adapter
@@ -98,7 +98,7 @@ public class ControllsFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.action_add_controller:
-                Controller controller = new Controller();
+                ControllerDB controller = new ControllerDB();
                 String name = "Controller ";
                 Long id = controller.save();
                 name += getId();
@@ -114,7 +114,7 @@ public class ControllsFragment extends Fragment {
 
     public class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.ControllerHolder>{
 
-        private List<Controller> items = new ArrayList<>();
+        private List<ControllerDB> items = new ArrayList<>();
         private Context context;
 
         public class ControllerHolder extends RecyclerView.ViewHolder {
@@ -141,7 +141,7 @@ public class ControllsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ControllerHolder controllerHolder, final int position) {
-            final Controller controller = items.get(position);
+            final ControllerDB controller = items.get(position);
 
             controllerHolder.lblName.setText(controller.getName());
 
@@ -183,11 +183,11 @@ public class ControllsFragment extends Fragment {
             return items.size();
         }
 
-        public Controller getItem(int position) {
+        public ControllerDB getItem(int position) {
             return items.get(position);
         }
 
-        public void addItem(Controller controller) {
+        public void addItem(ControllerDB controller) {
             items.add(0, controller);
             notifyItemInserted(0);
         }
@@ -198,8 +198,8 @@ public class ControllsFragment extends Fragment {
             notifyItemRemoved(position);
         }
 
-        public void addAll(List<Controller> controllers) {
-            for(Controller controller : controllers) {
+        public void addAll(List<ControllerDB> controllers) {
+            for(ControllerDB controller : controllers) {
                 items.add(0, controller);
                 notifyItemRangeInserted(0, controllers.size());
             }

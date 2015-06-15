@@ -18,9 +18,9 @@ import java.util.TimerTask;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.Util;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Widget;
+import treehou.se.habit.util.Util;
 
 public class ColorpickerActivity extends AppCompatActivity {
 
@@ -40,7 +40,7 @@ public class ColorpickerActivity extends AppCompatActivity {
         int color = bundle.getInt(EXTRA_COLOR);
 
         Gson gson = Util.createGsonBuilder();
-        Server server = Server.load(Server.class, serverId);
+        ServerDB server = ServerDB.load(ServerDB.class, serverId);
         Widget widget = gson.fromJson(jWidget, Widget.class);
 
         if (savedInstanceState == null) {
@@ -61,14 +61,14 @@ public class ColorpickerActivity extends AppCompatActivity {
         private static final String ARG_WIDGET  = "ARG_SITEMAP";
         private static final String ARG_COLOR   = "ARG_COLOR";
 
-        private Server server;
+        private ServerDB server;
         private Widget widget;
         private int color;
         private ColorPicker pcrColor;
 
         private Timer timer = new Timer();
 
-        public static PlaceholderFragment newInstance(Server server, Widget widget, int color){
+        public static PlaceholderFragment newInstance(ServerDB server, Widget widget, int color){
             PlaceholderFragment fragment = new PlaceholderFragment();
 
             Bundle args = new Bundle();
@@ -93,7 +93,7 @@ public class ColorpickerActivity extends AppCompatActivity {
             color = args.getInt(ARG_COLOR);
 
             Gson gson = Util.createGsonBuilder();
-            server = Server.load(Server.class, serverId);
+            server = ServerDB.load(ServerDB.class, serverId);
             widget = gson.fromJson(jWidget, Widget.class);
         }
 

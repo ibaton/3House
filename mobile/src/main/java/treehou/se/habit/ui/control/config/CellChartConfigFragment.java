@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.ChartCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ChartCellDB;
 
 public class CellChartConfigFragment extends Fragment {
 
     private static String ARG_CELL_ID = "ARG_CELL_ID";
 
-    public static CellChartConfigFragment newInstance(Cell cell) {
+    public static CellChartConfigFragment newInstance(CellDB cell) {
         CellChartConfigFragment fragment = new CellChartConfigFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CELL_ID, cell.getId());
@@ -31,11 +31,11 @@ public class CellChartConfigFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             Long id = getArguments().getLong(ARG_CELL_ID);
-            Cell cell = Cell.load(Cell.class, id);
-            ChartCell chartCell = cell.chartCell();
+            CellDB cell = CellDB.load(CellDB.class, id);
+            ChartCellDB chartCell = cell.chartCell();
 
             if(chartCell ==null){
-                chartCell = new ChartCell();
+                chartCell = new ChartCellDB();
                 chartCell.setCell(cell);
                 chartCell.save();
             }

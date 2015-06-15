@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 
 /**
  * Implementation of App Widget functionality.
@@ -51,7 +51,7 @@ public class VoiceControlWidget extends AppWidgetProvider {
             int appWidgetId) {
 
         boolean showTitle = VoiceControlWidgetConfigureActivity.loadControllShowTitlePref(context, appWidgetId);
-        Server server = Server.load(Server.class, VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
+        ServerDB server = ServerDB.load(ServerDB.class, VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
 
         if(server == null){
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.error_widget);
@@ -75,7 +75,7 @@ public class VoiceControlWidget extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    public static Intent createVoiceCommand(Context context, Server server){
+    public static Intent createVoiceCommand(Context context, ServerDB server){
 
         Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

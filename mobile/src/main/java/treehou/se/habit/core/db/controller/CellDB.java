@@ -1,4 +1,4 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import android.graphics.Color;
 
@@ -8,12 +8,8 @@ import com.activeandroid.annotation.Table;
 
 import java.util.List;
 
-/**
- * Created by ibaton on 2014-11-03.
- */
-
 @Table(name = "Cells")
-public class Cell extends Model {
+public class CellDB extends Model {
 
     public static final int TYPE_EMPTY         = 0;
     public static final int TYPE_BUTTON        = 1;
@@ -23,7 +19,7 @@ public class Cell extends Model {
     public static final int TYPE_INC_DEC       = 5;
 
     @Column(name = "CellRow", onDelete = Column.ForeignKeyAction.CASCADE)
-    public CellRow cellRow;
+    public CellRowDB cellRow;
 
     @Column(name = "type")
     public int type = TYPE_EMPTY;
@@ -42,52 +38,52 @@ public class Cell extends Model {
         this.type = type;
     }
 
-    public CellRow getCellRow() {
+    public CellRowDB getCellRow() {
         return cellRow;
     }
 
-    public void setCellRow(CellRow cellRow) {
+    public void setCellRow(CellRowDB cellRow) {
         this.cellRow = cellRow;
     }
 
-    public SliderCell sliderCell(){
-        List<SliderCell> numberCells = getMany(SliderCell.class, "Cell");
+    public SliderCellDB sliderCell(){
+        List<SliderCellDB> numberCells = getMany(SliderCellDB.class, "Cell");
         return (numberCells.size()>0)?numberCells.get(0):null;
     }
 
-    public ButtonCell buttonCell(){
-        List<ButtonCell> buttonCells = getMany(ButtonCell.class, "Cell");
+    public ButtonCellDB buttonCell(){
+        List<ButtonCellDB> buttonCells = getMany(ButtonCellDB.class, "Cell");
         return (buttonCells.size()>0)?buttonCells.get(0):null;
     }
 
-    public ColorCell colorCell(){
-        List<ColorCell> colorCells = getMany(ColorCell.class, "Cell");
+    public ColorCellDB colorCell(){
+        List<ColorCellDB> colorCells = getMany(ColorCellDB.class, "Cell");
         return (colorCells.size()>0)?colorCells.get(0):null;
     }
 
 
-    public VoiceCell voiceCell(){
-        List<VoiceCell> voiceCells = getMany(VoiceCell.class, "Cell");
+    public VoiceCellDB voiceCell(){
+        List<VoiceCellDB> voiceCells = getMany(VoiceCellDB.class, "Cell");
         return (voiceCells.size()>0)?voiceCells.get(0):null;
     }
 
-    public SwitchCell switchCell(){
-        List<SwitchCell> switchCells = getMany(SwitchCell.class, "Cell");
+    public SwitchCellDB switchCell(){
+        List<SwitchCellDB> switchCells = getMany(SwitchCellDB.class, "Cell");
         return (switchCells.size()>0)?switchCells.get(0):null;
     }
 
-    public ChartCell chartCell(){
-        List<ChartCell> chartCells = getMany(ChartCell.class, "Cell");
+    public ChartCellDB chartCell(){
+        List<ChartCellDB> chartCells = getMany(ChartCellDB.class, "Cell");
         return (chartCells.size()>0)?chartCells.get(0):null;
     }
 
-    public IncDecCell incDecCell(){
-        List<IncDecCell> incDecCells = getMany(IncDecCell.class, "Cell");
+    public IncDecCellDB incDecCell(){
+        List<IncDecCellDB> incDecCells = getMany(IncDecCellDB.class, "Cell");
         return (incDecCells.size()>0)?incDecCells.get(0):null;
     }
 
-    public StringCell stringCell(){
-        List<StringCell> stringCells = getMany(StringCell.class, "Cell");
+    public StringCellDB stringCell(){
+        List<StringCellDB> stringCells = getMany(StringCellDB.class, "Cell");
         return (stringCells.size()>0)?stringCells.get(0):null;
     }
 

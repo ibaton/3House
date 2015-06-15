@@ -10,7 +10,7 @@ import java.util.List;
 
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 
 public class VoiceActionService extends IntentService {
 
@@ -31,8 +31,8 @@ public class VoiceActionService extends IntentService {
         if(command != null){
             Log.d(TAG, "Received command " + intent);
 
-            Server server = null;
-            List<Server> servers = Server.getServers();
+            ServerDB server = null;
+            List<ServerDB> servers = ServerDB.getServers();
             if(servers.size() > 0) {
                 server = servers.get(0);
             }

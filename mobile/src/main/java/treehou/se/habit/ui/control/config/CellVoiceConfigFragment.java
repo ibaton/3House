@@ -18,10 +18,10 @@ import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.VoiceCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.controller.VoiceCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -32,16 +32,16 @@ public class CellVoiceConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private VoiceCell voiceCell;
+    private VoiceCellDB voiceCell;
     private Spinner sprItems;
     private ImageButton btnSetIcon;
 
-    private Cell cell;
+    private CellDB cell;
 
-    private ArrayAdapter<Item> mItemAdapter ;
-    private ArrayList<Item> mItems = new ArrayList<>();
+    private ArrayAdapter<ItemDB> mItemAdapter ;
+    private ArrayList<ItemDB> mItems = new ArrayList<>();
 
-    public static CellVoiceConfigFragment newInstance(Cell cell) {
+    public static CellVoiceConfigFragment newInstance(CellDB cell) {
         CellVoiceConfigFragment fragment = new CellVoiceConfigFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CELL_ID, cell.getId());
@@ -61,20 +61,20 @@ public class CellVoiceConfigFragment extends Fragment {
 
         if (getArguments() != null) {
             Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = Cell.load(Cell.class, id);
+            cell = CellDB.load(CellDB.class, id);
             if((voiceCell=cell.voiceCell())==null){
-                voiceCell = new VoiceCell();
+                voiceCell = new VoiceCellDB();
                 voiceCell.setCell(cell);
                 voiceCell.save();
             }
         }
     }
 
-    private List<Item> filterItems(List<Item> items){
+    private List<ItemDB> filterItems(List<ItemDB> items){
 
-        List<Item> tempItems = new ArrayList<>();
-        for(Item item : items){
-            if(item.getType().equals(Item.TYPE_STRING)){
+        List<ItemDB> tempItems = new ArrayList<>();
+        for(ItemDB item : items){
+            if(item.getType().equals(ItemDB.TYPE_STRING)){
                 tempItems.add(item);
             }
         }
@@ -103,12 +103,12 @@ public class CellVoiceConfigFragment extends Fragment {
         sprItems.setAdapter(mItemAdapter);
 
         Communicator communicator = Communicator.instance(getActivity());
-        List<Server> servers = Server.getServers();
+        List<ServerDB> servers = ServerDB.getServers();
         mItems.clear();
-        for(Server server : servers) {
+        for(ServerDB server : servers) {
             communicator.requestItems(server, new Communicator.ItemsRequestListener() {
                 @Override
-                public void onSuccess(List<Item> items) {
+                public void onSuccess(List<ItemDB> items) {
                     items = filterItems(items);
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
@@ -129,7 +129,7 @@ public class CellVoiceConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = mItems.get(position);
+                ItemDB item = mItems.get(position);
                 item.save();
 
                 voiceCell.setItem(item);

@@ -12,10 +12,10 @@ import android.widget.SeekBar;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.core.controller.SliderCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.controller.SliderCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -25,9 +25,9 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderCellBuilder";
 
-    public View build(final Context context, Controller controller, final Cell cell){
+    public View build(final Context context, ControllerDB controller, final CellDB cell){
 
-        final SliderCell numberCell = cell.sliderCell();
+        final SliderCellDB numberCell = cell.sliderCell();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -52,7 +52,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Server server = numberCell.getItem().getServer();
+                ServerDB server = numberCell.getItem().getServer();
                 Communicator communicator = Communicator.instance(context);
                 communicator.command(server, numberCell.getItem(), ""+seekBar.getProgress());
             }
@@ -62,8 +62,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
     }
 
     @Override
-    public RemoteViews buildRemote(final Context context, Controller controller, Cell cell) {
-        final SliderCell numberCell = cell.sliderCell();
+    public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
+        final SliderCellDB numberCell = cell.sliderCell();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
         cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());

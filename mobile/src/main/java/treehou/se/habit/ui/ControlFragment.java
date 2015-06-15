@@ -14,9 +14,9 @@ import android.widget.TextView;
 import com.mattyork.colours.Colour;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.CellRow;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.CellRowDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
@@ -38,7 +38,7 @@ public class ControlFragment extends Fragment {
 
     private LinearLayout louController;
 
-    private Controller controller;
+    private ControllerDB controller;
     private CellFactory<Integer> cellFactory;
 
     private ActionBar actionBar;
@@ -62,14 +62,14 @@ public class ControlFragment extends Fragment {
 
         cellFactory = new CellFactory<>();
         cellFactory.setDefaultBuilder(new EmptyCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_BUTTON, new ButtonCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_INC_DEC, new IncDecCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_SLIDER, new SliderCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_VOICE, new VoiceCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
 
         if (getArguments() != null) {
             Long id = getArguments().getLong(ARG_ID);
-            controller = Controller.load(Controller.class, id);
+            controller = ControllerDB.load(ControllerDB.class, id);
         }
     }
 
@@ -131,7 +131,7 @@ public class ControlFragment extends Fragment {
         louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-        for (final CellRow row : controller.cellRows()) {
+        for (final CellRowDB row : controller.cellRows()) {
             final LinearLayout louRow = (LinearLayout) inflater.inflate(R.layout.controller_row, null);
             LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -139,7 +139,7 @@ public class ControlFragment extends Fragment {
             louRow.setLayoutParams(rowParam);
 
             final LinearLayout louColumnHolder = (LinearLayout) louRow.findViewById(R.id.lou_btn_holder);
-            for (final Cell cell : row.cells()) {
+            for (final CellDB cell : row.cells()) {
                 final View itemView = cellFactory.create(getActivity(), controller, cell);
 
                 louColumnHolder.addView(itemView);

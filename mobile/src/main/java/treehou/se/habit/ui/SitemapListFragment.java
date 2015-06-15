@@ -22,7 +22,7 @@ import java.util.Map;
 import treehou.se.habit.R;
 
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.db.SitemapDB;
 
@@ -99,8 +99,8 @@ public class SitemapListFragment extends Fragment {
 
         mSitemapAdapter.clear();
 
-        List<Server> servers = Server.getServers();
-        for(final Server server : servers){
+        List<ServerDB> servers = ServerDB.getServers();
+        for(final ServerDB server : servers){
             requestSitemap(server);
         }
     }
@@ -111,7 +111,7 @@ public class SitemapListFragment extends Fragment {
      *
      * @param server
      */
-    private void requestSitemap(final Server server){
+    private void requestSitemap(final ServerDB server){
 
         mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
 
@@ -170,11 +170,11 @@ public class SitemapListFragment extends Fragment {
         public static final int STATE_LOADING = 1;
         public static final int STATE_ERROR = 2;
 
-        public Server server;
+        public ServerDB server;
         public int state = STATE_LOADING;
         public List<Sitemap> sitemaps = new ArrayList<>();
 
-        public SitemapItem(Server server) {
+        public SitemapItem(ServerDB server) {
             this.server = server;
         }
 
@@ -186,7 +186,7 @@ public class SitemapListFragment extends Fragment {
 
     private class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>{
 
-        private Map<Server, SitemapItem> items = new HashMap<>();
+        private Map<ServerDB, SitemapItem> items = new HashMap<>();
 
         public class SitemapBaseHolder extends RecyclerView.ViewHolder {
 
@@ -402,7 +402,7 @@ public class SitemapListFragment extends Fragment {
             return -1;
         }
 
-        public void setServerState(Server server, int state) {
+        public void setServerState(ServerDB server, int state) {
             SitemapItem item = items.get(server);
             if(item == null){
                 item = new SitemapItem(server);

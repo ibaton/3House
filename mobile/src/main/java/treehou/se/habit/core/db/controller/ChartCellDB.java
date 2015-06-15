@@ -1,24 +1,20 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
-
 @Table(name = "ChartCells")
-public class ChartCell extends Model {
+public class ChartCellDB extends Model {
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Cell cell;
+    public CellDB cell;
 
-    public Cell getCell() {
+    public CellDB getCell() {
         return cell;
     }
 
-    public void setCell(Cell cell) {
+    public void setCell(CellDB cell) {
         this.cell = cell;
     }
 }

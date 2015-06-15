@@ -19,8 +19,8 @@ import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 
 public class IncDecActionFragment extends Fragment {
@@ -32,8 +32,8 @@ public class IncDecActionFragment extends Fragment {
     private TextView txtMin;
     private TextView txtMax;
 
-    private ArrayAdapter<Item> itemAdapter;
-    private List<Item> filteredItems = new ArrayList<>();
+    private ArrayAdapter<ItemDB> itemAdapter;
+    private List<ItemDB> filteredItems = new ArrayList<>();
 
     public static IncDecActionFragment newInstance() {
         IncDecActionFragment fragment = new IncDecActionFragment();
@@ -70,13 +70,13 @@ public class IncDecActionFragment extends Fragment {
             }
         });
         Communicator communicator = Communicator.instance(getActivity());
-        List<Server> servers = Server.getServers();
+        List<ServerDB> servers = ServerDB.getServers();
         filteredItems.clear();
 
-        for(Server server : servers) {
+        for(ServerDB server : servers) {
             communicator.requestItems(server, new Communicator.ItemsRequestListener() {
                 @Override
-                public void onSuccess(List<Item> items) {
+                public void onSuccess(List<ItemDB> items) {
                     items = filterItems(items);
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
@@ -101,10 +101,10 @@ public class IncDecActionFragment extends Fragment {
         return rootView;
     }
 
-    private List<Item> filterItems(List<Item> items){
+    private List<ItemDB> filterItems(List<ItemDB> items){
 
-        List<Item> tempItems = new ArrayList<>();
-        for(Item item : items){
+        List<ItemDB> tempItems = new ArrayList<>();
+        for(ItemDB item : items){
             if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }
@@ -125,7 +125,7 @@ public class IncDecActionFragment extends Fragment {
             int min = Integer.parseInt(txtMin.getText().toString());
             int max = Integer.parseInt(txtMax.getText().toString());
 
-            Item item = (Item) sprItems.getSelectedItem();
+            ItemDB item = (ItemDB) sprItems.getSelectedItem();
             item.save();
 
             final Bundle resultBundle = IncDecBoundleManager.generateCommandBundle(getActivity(), item, value, min, max);

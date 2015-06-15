@@ -9,9 +9,9 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
-import treehou.se.habit.core.controller.VoiceCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.controller.VoiceCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -20,9 +20,9 @@ public class VoiceConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "VoiceConfigCellBuilder";
 
-    public View build(Context context, Controller controller, Cell cell){
+    public View build(Context context, ControllerDB controller, CellDB cell){
 
-        VoiceCell voiceCell = cell.voiceCell();
+        VoiceCellDB voiceCell = cell.voiceCell();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -41,7 +41,7 @@ public class VoiceConfigCellBuilder implements CellFactory.CellBuilder {
     }
 
     @Override
-    public RemoteViews buildRemote(Context context, Controller controller, Cell cell) {
+    public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
         return null;
     }
 }

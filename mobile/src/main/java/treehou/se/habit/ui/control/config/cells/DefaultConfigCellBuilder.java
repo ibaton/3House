@@ -8,14 +8,14 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
 
 public class DefaultConfigCellBuilder implements CellFactory.CellBuilder {
 
-    public View build(Context context, Controller controller, Cell cell){
+    public View build(Context context, ControllerDB controller, CellDB cell){
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -31,7 +31,7 @@ public class DefaultConfigCellBuilder implements CellFactory.CellBuilder {
     }
 
     @Override
-    public RemoteViews buildRemote(Context context, Controller controller, Cell cell) {
+    public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
         return null;
     }
 }

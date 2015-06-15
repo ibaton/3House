@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 
 public class DummyWidgetFactory {
@@ -29,7 +29,7 @@ public class DummyWidgetFactory {
     public View createWidget(final Widget widget){
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        WidgetSettings settings = WidgetSettings.loadGlobal(context);
+        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(context);
 
         View itemView = inflater.inflate(R.layout.item_widget_base, null);
         View baseDataHolder = itemView.findViewById(R.id.lou_base_data_holder);

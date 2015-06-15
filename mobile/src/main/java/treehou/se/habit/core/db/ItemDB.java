@@ -1,4 +1,4 @@
-package treehou.se.habit.core;
+package treehou.se.habit.core.db;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -8,11 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-/**
- * Created by ibaton on 2014-10-06.
- */
 @Table(name = "Items")
-public class Item extends Model {
+public class ItemDB extends Model {
 
     public static final String TYPE_SWITCH  = "SwitchItem";
     public static final String TYPE_STRING  = "StringItem";
@@ -27,7 +24,7 @@ public class Item extends Model {
 
 
     @Column(name = "Server", onDelete = Column.ForeignKeyAction.CASCADE)
-    private Server server;
+    private ServerDB server;
 
     @Column(name = "type")
     private String type;
@@ -41,13 +38,13 @@ public class Item extends Model {
     @Column(name = "state")
     private String state;
 
-    public Item() {}
+    public ItemDB() {}
 
-    public Server getServer() {
+    public ServerDB getServer() {
         return server;
     }
 
-    public void setServer(Server server) {
+    public void setServer(ServerDB server) {
         this.server = server;
     }
 
@@ -94,7 +91,7 @@ public class Item extends Model {
     }
 
     public class ItemHolder{
-        public List<Item> item;
+        public List<ItemDB> item;
     }
 
     @Override
@@ -105,9 +102,9 @@ public class Item extends Model {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof Item))return false;
+        if (!(obj instanceof ItemDB))return false;
 
-        Item item = (Item) obj;
+        ItemDB item = (ItemDB) obj;
         return type.equals(item.getType()) && name.equals(item.getName());
     }
 }

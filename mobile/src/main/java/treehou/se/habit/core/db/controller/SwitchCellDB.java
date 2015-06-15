@@ -1,47 +1,38 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import treehou.se.habit.core.Item;
+/**
+ * Created by ibaton on 2014-11-08.
+ */
 
-@Table(name = "ButtonCells")
-public class ButtonCell extends Model {
+@Table(name = "SwitchCells")
+public class SwitchCellDB extends Model {
 
     @Column(name = "iconName")
     public String icon;
 
     @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Cell cell;
+    public CellDB cell;
 
     @Column(name = "command")
     public String command;
 
-    @Column(name = "Item")
-    public Item item;
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public String getIcon() {
+    public String getIconOn() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIconOn(String icon) {
         this.icon = icon;
     }
 
-    public Cell getCell() {
+    public CellDB getCell() {
         return cell;
     }
 
-    public void setCell(Cell cell) {
+    public void setCell(CellDB cell) {
         this.cell = cell;
     }
 

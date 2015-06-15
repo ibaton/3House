@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 
 /**
@@ -54,7 +54,7 @@ public class IncDecReciever implements IFireReciever {
 
             final int value = Math.max(Math.min(bundle.getInt(BUNDLE_EXTRA_VALUE), range), -range);
 
-            Item item = Item.load(Item.class, itemId);
+            ItemDB item = ItemDB.load(ItemDB.class, itemId);
             if(item != null){
                 Communicator.instance(context).incDec(item.getServer(), item, value, min, max);
                 Log.d(TAG, "Sent command " + value + " to item " + item.getName());

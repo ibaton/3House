@@ -9,7 +9,7 @@ import android.util.Log;
 import java.util.List;
 
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 
 public class VoiceService extends IntentService {
 
@@ -22,7 +22,7 @@ public class VoiceService extends IntentService {
 
     private static final long NULL_SERVER = -1;
 
-    public static Intent createVoiceCommand(Context context, Server server) {
+    public static Intent createVoiceCommand(Context context, ServerDB server) {
         Intent intent = new Intent(context, VoiceService.class);
         intent.setAction(ACTION_COMMAND);
         intent.putExtra(EXTRA_SERVER, server.getId());
@@ -42,7 +42,7 @@ public class VoiceService extends IntentService {
             Log.w(TAG, "No server specified.");
             return;
         }
-        Server server = Server.load(Server.class, serverId);
+        ServerDB server = ServerDB.load(ServerDB.class, serverId);
 
         List<String> results = intent.getExtras().getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
         if (!results.isEmpty()) {

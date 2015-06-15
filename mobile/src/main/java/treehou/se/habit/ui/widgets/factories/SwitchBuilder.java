@@ -13,10 +13,10 @@ import android.widget.RadioGroup;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -33,13 +33,13 @@ public class SwitchBuilder implements IWidgetBuilder {
             final Widget widget, final Widget parent) {
 
         if(widget.getMapping() == null) {
-            final Item item = widget.getItem();
+            final ItemDB item = widget.getItem();
             if (item == null){
                 return new NullBuilder().build(widgetFactory, page, widget, parent);
             }
 
             Log.d(TAG, "Type " + item.getType());
-            if(item.getType().equals(Item.TYPE_ROLLERSHUTTER)){
+            if(item.getType().equals(ItemDB.TYPE_ROLLERSHUTTER)){
                 return RollerShutterBuilderHolder.create(widgetFactory, widget, parent);
             }else{
                 Log.d(TAG, "Switch state " + widget.getItem().getState() + " : " + widget.getItem().getName());
@@ -77,7 +77,7 @@ public class SwitchBuilder implements IWidgetBuilder {
                     .setParent(parent)
                     .build();
 
-            final Item item = widget.getItem();
+            final ItemDB item = widget.getItem();
             View itemView = factory.getInflater().inflate(R.layout.item_widget_rollershutters, null);
 
             ImageButton btnUp = (ImageButton) itemView.findViewById(R.id.btn_up);
@@ -173,7 +173,7 @@ public class SwitchBuilder implements IWidgetBuilder {
                 return;
             }
 
-            WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
 
             //TODO do this smother
             rgpMapping.removeAllViews();
@@ -226,7 +226,7 @@ public class SwitchBuilder implements IWidgetBuilder {
 
         private SingleButtonBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
             this.factory = factory;
-            WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
             baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(settings.isCompressedSingleButton())
@@ -286,7 +286,7 @@ public class SwitchBuilder implements IWidgetBuilder {
 
         private SwitchBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
 
-            WidgetSettings settings = WidgetSettings.loadGlobal(factory.getContext());
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
             baseHolder = new BaseBuilder.BaseBuilderHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(true)

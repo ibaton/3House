@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 import treehou.se.habit.ui.control.config.cells.CellColorConfigFragment;
 
@@ -26,7 +26,7 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     private Button btnPicker;
 
     private ArrayAdapter mTypeAdapter;
-    private Cell cell;
+    private CellDB cell;
 
     public static ControllCellFragment newInstance(long cellId) {
         ControllCellFragment fragment = new ControllCellFragment();
@@ -43,7 +43,7 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             long cellId = getArguments().getLong(ARG_CELL_ID);
-            cell = Cell.load(Cell.class, cellId);
+            cell = CellDB.load(CellDB.class, cellId);
         }
 
         String[] cellTypes = getResources().getStringArray(R.array.cell_types);
@@ -102,23 +102,23 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             Fragment fragment = null;
             switch (cell.getType()) {
-                case Cell.TYPE_BUTTON :
+                case CellDB.TYPE_BUTTON :
                     Log.d(TAG,"Loading button fragment.");
                     fragment = CellButtonConfigFragment.newInstance(cell);
                    break;
-                case Cell.TYPE_SLIDER:
+                case CellDB.TYPE_SLIDER:
                     Log.d(TAG,"Loading slider fragment.");
                     fragment = CellSliderConfigFragment.newInstance(cell);
                     break;
-                case Cell.TYPE_VOICE:
+                case CellDB.TYPE_VOICE:
                     Log.d(TAG,"Loading voice fragment.");
                     fragment = CellVoiceConfigFragment.newInstance(cell);
                     break;
-                case Cell.TYPE_COLOR:
+                case CellDB.TYPE_COLOR:
                     Log.d(TAG,"Loading color fragment.");
                     fragment = CellColorConfigFragment.newInstance(cell);
                     break;
-                case Cell.TYPE_INC_DEC:
+                case CellDB.TYPE_INC_DEC:
                     Log.d(TAG,"Loading IncDec fragment.");
                     fragment = CellIncDecConfigFragment.newInstance(cell);
                     break;

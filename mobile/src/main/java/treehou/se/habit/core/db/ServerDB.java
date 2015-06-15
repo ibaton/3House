@@ -1,4 +1,4 @@
-package treehou.se.habit.core;
+package treehou.se.habit.core.db;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -7,11 +7,8 @@ import com.activeandroid.query.Select;
 
 import java.util.List;
 
-/**
- * Created by ibaton on 2014-09-10.
- */
 @Table(name = "Server")
-public class Server extends Model {
+public class ServerDB extends Model {
 
     @Column(name = "name")
     private String name = "";
@@ -28,7 +25,7 @@ public class Server extends Model {
     @Column(name = "remoteUrl")
     private String remoteUrl = "";
 
-    public Server(){}
+    public ServerDB(){}
 
     public String getName() {
         return name;
@@ -74,9 +71,9 @@ public class Server extends Model {
         return localUrl!=null?localUrl:remoteUrl;
     }
 
-    public static List<Server> getServers(){
+    public static List<ServerDB> getServers(){
         return new Select()
-                .from(Server.class)
+                .from(ServerDB.class)
                 .execute();
     }
 
@@ -95,8 +92,8 @@ public class Server extends Model {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Server){
-            Server server = (Server) obj;
+        if(obj instanceof ServerDB){
+            ServerDB server = (ServerDB) obj;
 
             return ((getUsername() != null || this.getPassword().equals(server.getUsername())) &&
                     (getPassword() == null || getPassword().equals(server.getPassword())) &&

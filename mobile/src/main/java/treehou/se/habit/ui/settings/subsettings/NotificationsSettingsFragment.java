@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.settings.NotificationSettings;
+import treehou.se.habit.core.db.settings.NotificationSettingsDB;
 
 public class NotificationsSettingsFragment extends Fragment {
 
@@ -35,7 +35,7 @@ public class NotificationsSettingsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        final NotificationSettings settings = NotificationSettings.loadGlobal(getActivity());
+        final NotificationSettingsDB settings = NotificationSettingsDB.loadGlobal(getActivity());
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(R.string.settings_notification);

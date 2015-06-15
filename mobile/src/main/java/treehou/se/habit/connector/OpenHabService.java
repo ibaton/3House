@@ -8,7 +8,7 @@ import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.Sitemap;
 
 public interface OpenHabService {
@@ -23,11 +23,11 @@ public interface OpenHabService {
 
     @Headers("Accept: application/json")
     @GET("/rest/items/")
-    void getItems(retrofit.Callback<Item.ItemHolder> callback);
+    void getItems(retrofit.Callback<ItemDB.ItemHolder> callback);
 
     @Headers("Accept: application/json")
     @GET("/rest/items/{id}")
-    void getItem(@Path("id") String id, retrofit.Callback<Item> callback);
+    void getItem(@Path("id") String id, retrofit.Callback<ItemDB> callback);
 
     @Headers({
         "Accept: application/text",

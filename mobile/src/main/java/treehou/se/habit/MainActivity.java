@@ -14,8 +14,8 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.gcm.GCMHelper;
 import treehou.se.habit.ui.about.AboutFragment;
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {
 
             // Load server setup server fragment if no server found
-            List<Server> servers = Server.getServers();
+            List<ServerDB> servers = ServerDB.getServers();
             if(servers.size() <= 0) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, ServersFragment.newInstance())
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        for(Controller controller : Controller.getControllers()){
+        for(ControllerDB controller : ControllerDB.getControllers()){
             if (controller.showNotification()) {
                 ControlHelper.showNotification(this, controller);
             }

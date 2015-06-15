@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import java.util.List;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.ControllerDB;
 
 /**
  * The configuration screen for the {@link ControllerWidget ControllerWidget} AppWidget.
@@ -44,7 +44,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.controller_widget_configure);
 
         sprControllers = (Spinner) findViewById(R.id.spr_controller);
-        List<Controller> controllers = Controller.getControllers();
+        List<ControllerDB> controllers = ControllerDB.getControllers();
         ArrayAdapter mAdapter = new ArrayAdapter<>(this
                 , android.R.layout.simple_list_item_1, controllers);
         sprControllers.setAdapter(mAdapter);
@@ -72,7 +72,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         public void onClick(View v) {
             final Context context = ControllerWidgetConfigureActivity.this;
 
-            Controller controller = (Controller) sprControllers.getSelectedItem();
+            ControllerDB controller = (ControllerDB) sprControllers.getSelectedItem();
             saveControllerIdPref(context, mAppWidgetId, controller, cbxShowTitle.isChecked());
 
             // It is the responsibility of the configuration activity to update the app widget
@@ -88,7 +88,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     };
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveControllerIdPref(Context context, int appWidgetId, Controller controller, boolean showTitle) {
+    static void saveControllerIdPref(Context context, int appWidgetId, ControllerDB controller, boolean showTitle) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + appWidgetId, controller.getId());
         prefs.putBoolean(PREF_PREFIX_KEY + appWidgetId + PREF_POSTFIX_SHOW_TITLE, showTitle);

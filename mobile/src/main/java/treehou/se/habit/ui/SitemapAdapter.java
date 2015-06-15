@@ -7,14 +7,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
 import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 
 public class SitemapAdapter extends FragmentStatePagerAdapter {
 
     private List<LinkedPage> mPages;
-    private Server mServer;
+    private ServerDB mServer;
 
-    public SitemapAdapter(Server server, FragmentManager fragmentManager, List<LinkedPage> pages){
+    public SitemapAdapter(ServerDB server, FragmentManager fragmentManager, List<LinkedPage> pages){
         super(fragmentManager);
 
         mPages = pages;

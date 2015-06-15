@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import java.util.List;
 
+import treehou.se.habit.core.db.ServerDB;
+
 public class Sitemap {
     private String name;
     private String label;
@@ -34,7 +36,7 @@ public class Sitemap {
 
 
     public boolean isLocal(){
-        Server server = getServer();
+        ServerDB server = getServer();
         Uri uri = Uri.parse(link);
 
         try{
@@ -60,7 +62,7 @@ public class Sitemap {
         return server;
     }
 
-    public void setServer(Server server) {
+    public void setServer(ServerDB server) {
         this.server = server.getId();
     }
 
@@ -68,8 +70,8 @@ public class Sitemap {
         this.server = server;
     }
 
-    public Server getServer(){
-        return Server.load(Server.class, server);
+    public ServerDB getServer(){
+        return ServerDB.load(ServerDB.class, server);
     }
 
     @Override

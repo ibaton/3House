@@ -11,9 +11,9 @@ import android.widget.SeekBar;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.SliderCell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.controller.SliderCellDB;
 
 public class SliderActivity extends AppCompatActivity {
     public static final String TAG = "SliderActivity";
@@ -63,7 +63,7 @@ public class SliderActivity extends AppCompatActivity {
      */
     public static class SliderFragment extends Fragment {
 
-        private SliderCell numberCell;
+        private SliderCellDB numberCell;
 
         public SliderFragment() {}
 
@@ -82,7 +82,7 @@ public class SliderActivity extends AppCompatActivity {
 
                 if (getArguments() != null) {
                     Long id = getArguments().getLong(ARG_CELL);
-                    Cell cell = Cell.load(Cell.class, id);
+                    CellDB cell = CellDB.load(CellDB.class, id);
                     numberCell = cell.sliderCell();
                 }
 
@@ -100,7 +100,7 @@ public class SliderActivity extends AppCompatActivity {
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         if (numberCell != null) {
-                            Server server = numberCell.getItem().getServer();
+                            ServerDB server = numberCell.getItem().getServer();
                             Communicator communicator = Communicator.instance(getActivity());
                             communicator.command(server, numberCell.getItem(), "" + seekBar.getProgress());
                         }

@@ -25,7 +25,7 @@ import java.util.List;
 import treehou.se.habit.Constants;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.requests.AuthRequest;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 
 /**
  * Created by ibaton on 2015-01-11.
@@ -81,8 +81,8 @@ public class GCMHelper {
                     String regUrl = "https://my.openhab.org/addAndroidRegistration?deviceId=" + deviceId +
                             "&deviceModel=" + deviceModel + "&regId=" + regId;
                     Communicator communicator = Communicator.instance(context);
-                    List<Server> servers = Server.getServers();
-                    for(final Server server : servers) {
+                    List<ServerDB> servers = ServerDB.getServers();
+                    for(final ServerDB server : servers) {
 
                         String regid = GCMHelper.getRegistrationId(context);
                         if (regid.isEmpty()) {

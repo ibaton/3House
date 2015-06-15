@@ -25,11 +25,8 @@ import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedOutput;
-import treehou.se.habit.core.Util;
+import treehou.se.habit.util.Util;
 
-/**
- * Created by ibaton on 2015-02-28.
- */
 public class ServiceGenerator {
 
     private static SSLSocketFactory factory;

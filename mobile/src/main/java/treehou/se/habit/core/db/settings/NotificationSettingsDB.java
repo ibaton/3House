@@ -1,4 +1,4 @@
-package treehou.se.habit.core.settings;
+package treehou.se.habit.core.db.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +11,7 @@ import com.activeandroid.annotation.Table;
 import treehou.se.habit.Constants;
 
 @Table(name = "NotificaitonSettings")
-public class NotificationSettings extends Model {
+public class NotificationSettingsDB extends Model {
 
     private static final String TAG = "NotificationSettings";
     public static final String PREF_GLOBAL = "NotificationSettings";
@@ -20,7 +20,7 @@ public class NotificationSettings extends Model {
     @Column(name = "notificationToSpeach")
     private boolean notificationToSpeach;
 
-    public NotificationSettings() {
+    public NotificationSettingsDB() {
         super();
         notificationToSpeach = Constants.DEFAULT_NOTIFICATION_TO_SPEACH;
     }
@@ -33,21 +33,21 @@ public class NotificationSettings extends Model {
         this.notificationToSpeach = notificationToSpeach;
     }
 
-    public static NotificationSettings loadGlobal(Context context){
+    public static NotificationSettingsDB loadGlobal(Context context){
 
         SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_SERVER, Context.MODE_PRIVATE);
         long id = preferences.getLong(PREF_GLOBAL,-1);
 
-        NotificationSettings notificationSettings = null;
+        NotificationSettingsDB notificationSettings = null;
 
         if(id != -1) {
-            notificationSettings = NotificationSettings.load(NotificationSettings.class, id);
+            notificationSettings = NotificationSettingsDB.load(NotificationSettingsDB.class, id);
             Log.d(TAG, "Global notification settings is " + notificationSettings);
         }
 
         if(notificationSettings == null) {
             Log.d(TAG, "Global notification settings is created");
-            notificationSettings = new NotificationSettings();
+            notificationSettings = new NotificationSettingsDB();
             notificationSettings.save();
 
             SharedPreferences.Editor editor = preferences.edit();

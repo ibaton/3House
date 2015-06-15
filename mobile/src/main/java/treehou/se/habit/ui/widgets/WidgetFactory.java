@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.factories.ChartBuilder;
 import treehou.se.habit.ui.widgets.factories.ColorpickerBuilder;
@@ -34,7 +34,7 @@ public class WidgetFactory {
     private static final String TAG = "WidgetFactory";
 
     private FragmentActivity context;
-    private Server server;
+    private ServerDB server;
     private LinkedPage page;
     private LayoutInflater inflater;
 
@@ -42,7 +42,7 @@ public class WidgetFactory {
 
     private Map<String, IWidgetBuilder> builders = new HashMap<>();
 
-    public WidgetFactory(FragmentActivity context, Server server, LinkedPage page){
+    public WidgetFactory(FragmentActivity context, ServerDB server, LinkedPage page){
         this.context = context;
         this.server = server;
         this.page = page;
@@ -103,7 +103,7 @@ public class WidgetFactory {
         return inflater;
     }
 
-    public Server getServer() {
+    public ServerDB getServer() {
         return server;
     }
 

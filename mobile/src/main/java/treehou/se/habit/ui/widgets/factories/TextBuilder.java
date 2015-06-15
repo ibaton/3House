@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -57,9 +57,9 @@ public class TextBuilder implements IWidgetBuilder {
                 return;
             }
 
-            final Item item = widget.getItem();
+            final ItemDB item = widget.getItem();
             final Context context = factory.getContext();
-            if(item != null && item.getType().equals(Item.TYPE_STRING) && item.getType().equals(Item.TYPE_STRING)){
+            if(item != null && item.getType().equals(ItemDB.TYPE_STRING) && item.getType().equals(ItemDB.TYPE_STRING)){
 
                 baseHolder.getView().setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -72,10 +72,10 @@ public class TextBuilder implements IWidgetBuilder {
                         final EditText input = (EditText) inputView.findViewById(R.id.txt_command);
                         input.setText(item.getState());
 
-                        if(item.getType().equals(Item.TYPE_STRING)) {
+                        if(item.getType().equals(ItemDB.TYPE_STRING)) {
                             input.setInputType(InputType.TYPE_CLASS_TEXT);
                         }
-                        else if (item.getType().equals(Item.TYPE_NUMBER)) {
+                        else if (item.getType().equals(ItemDB.TYPE_NUMBER)) {
                             input.setInputType(InputType.TYPE_CLASS_NUMBER);
                         }
                         builder.setView(inputView);

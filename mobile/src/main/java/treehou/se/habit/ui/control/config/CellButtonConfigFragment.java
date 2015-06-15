@@ -23,10 +23,10 @@ import java.util.List;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.Item;
-import treehou.se.habit.core.Server;
-import treehou.se.habit.core.controller.ButtonCell;
-import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.controller.ButtonCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -37,18 +37,18 @@ public class CellButtonConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private ButtonCell buttonCell;
-    private Cell cell;
+    private ButtonCellDB buttonCell;
+    private CellDB cell;
 
     private Spinner sprItems;
     private ToggleButton tglOnOff;
     private TextView txtCommand;
     private ImageView btnSetIcon;
 
-    private ArrayAdapter<Item> mItemAdapter;
-    private ArrayList<Item> mItems = new ArrayList<>();
+    private ArrayAdapter<ItemDB> mItemAdapter;
+    private ArrayList<ItemDB> mItems = new ArrayList<>();
 
-    public static CellButtonConfigFragment newInstance(Cell cell) {
+    public static CellButtonConfigFragment newInstance(CellDB cell) {
         CellButtonConfigFragment fragment = new CellButtonConfigFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CELL_ID, cell.getId());
@@ -66,9 +66,9 @@ public class CellButtonConfigFragment extends Fragment {
 
         if (getArguments() != null) {
             Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = Cell.load(Cell.class, id);
+            cell = CellDB.load(CellDB.class, id);
             if((buttonCell=cell.buttonCell())==null){
-                buttonCell = new ButtonCell();
+                buttonCell = new ButtonCellDB();
                 buttonCell.setCell(cell);
                 buttonCell.setCommand(Constants.COMMAND_ON);
                 buttonCell.save();
@@ -90,24 +90,24 @@ public class CellButtonConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Item item = mItems.get(position);
+                ItemDB item = mItems.get(position);
                 if(item != null) {
                     item.save();
 
                     buttonCell.setItem(item);
                     buttonCell.save();
                     switch (item.getType()) {
-                        case Item.TYPE_STRING:
+                        case ItemDB.TYPE_STRING:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_TEXT);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case Item.TYPE_NUMBER:
+                        case ItemDB.TYPE_NUMBER:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_NUMBER);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case Item.TYPE_CONTACT:
+                        case ItemDB.TYPE_CONTACT:
                             txtCommand.setVisibility(View.GONE);
                             tglOnOff.setVisibility(View.VISIBLE);
                             break;
@@ -130,15 +130,15 @@ public class CellButtonConfigFragment extends Fragment {
             }
         });
         Communicator communicator = Communicator.instance(getActivity());
-        List<Server> servers = Server.getServers();
+        List<ServerDB> servers = ServerDB.getServers();
         mItems.clear();
         if(buttonCell.getItem() != null) {
             mItems.add(buttonCell.getItem());
         }
-        for(Server server : servers) {
+        for(ServerDB server : servers) {
             communicator.requestItems(server, new Communicator.ItemsRequestListener() {
                 @Override
-                public void onSuccess(List<Item> items) {
+                public void onSuccess(List<ItemDB> items) {
                     items = filterItems(items);
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
@@ -178,16 +178,16 @@ public class CellButtonConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), buttonCell.getIcon()));
     }
 
-    private List<Item> filterItems(List<Item> items){
+    private List<ItemDB> filterItems(List<ItemDB> items){
 
-        List<Item> tempItems = new ArrayList<>();
-        for(Item item : items){
-            if(item.getType().equals(Item.TYPE_SWITCH) ||
-               item.getType().equals(Item.TYPE_GROUP) ||
-               item.getType().equals(Item.TYPE_STRING) ||
-               item.getType().equals(Item.TYPE_NUMBER) ||
-               item.getType().equals(Item.TYPE_CONTACT) ||
-               item.getType().equals(Item.TYPE_COLOR)){
+        List<ItemDB> tempItems = new ArrayList<>();
+        for(ItemDB item : items){
+            if(item.getType().equals(ItemDB.TYPE_SWITCH) ||
+               item.getType().equals(ItemDB.TYPE_GROUP) ||
+               item.getType().equals(ItemDB.TYPE_STRING) ||
+               item.getType().equals(ItemDB.TYPE_NUMBER) ||
+               item.getType().equals(ItemDB.TYPE_CONTACT) ||
+               item.getType().equals(ItemDB.TYPE_COLOR)){
                 tempItems.add(item);
             }
         }
@@ -201,10 +201,10 @@ public class CellButtonConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        if(buttonCell.getItem().getType().equals(Item.TYPE_STRING) ||
-                buttonCell.getItem().getType().equals(Item.TYPE_NUMBER)){
+        if(buttonCell.getItem().getType().equals(ItemDB.TYPE_STRING) ||
+                buttonCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)){
             buttonCell.setCommand(txtCommand.getText().toString());
-        }else if(buttonCell.getItem().getType().equals(Item.TYPE_CONTACT)){
+        }else if(buttonCell.getItem().getType().equals(ItemDB.TYPE_CONTACT)){
             buttonCell.setCommand(tglOnOff.isChecked()?Constants.COMMAND_OPEN:Constants.COMMAND_CLOSE);
         }else {
             buttonCell.setCommand(tglOnOff.isChecked()?Constants.COMMAND_ON:Constants.COMMAND_OFF);

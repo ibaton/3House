@@ -19,8 +19,8 @@ import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.Item;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 public class CommandActionFragment extends Fragment {
@@ -28,8 +28,8 @@ public class CommandActionFragment extends Fragment {
     private Spinner sprItems;
     private TextView txtCommand;
 
-    private ArrayAdapter<Item> itemAdapter;
-    private List<Item> filteredItems = new ArrayList<>();
+    private ArrayAdapter<ItemDB> itemAdapter;
+    private List<ItemDB> filteredItems = new ArrayList<>();
 
     public static CommandActionFragment newInstance() {
         CommandActionFragment fragment = new CommandActionFragment();
@@ -63,13 +63,13 @@ public class CommandActionFragment extends Fragment {
             }
         });
         Communicator communicator = Communicator.instance(getActivity());
-        List<Server> servers = Server.getServers();
+        List<ServerDB> servers = ServerDB.getServers();
         filteredItems.clear();
 
-        for(Server server : servers) {
+        for(ServerDB server : servers) {
             communicator.requestItems(server, new Communicator.ItemsRequestListener() {
                 @Override
-                public void onSuccess(List<Item> items) {
+                public void onSuccess(List<ItemDB> items) {
                     items = filterItems(items);
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
@@ -96,9 +96,9 @@ public class CommandActionFragment extends Fragment {
         return rootView;
     }
 
-    private List<Item> filterItems(List<Item> items){
+    private List<ItemDB> filterItems(List<ItemDB> items){
 
-        List<Item> tempItems = new ArrayList<>();
+        List<ItemDB> tempItems = new ArrayList<>();
         tempItems.addAll(items);
         items.clear();
         items.addAll(tempItems);
@@ -110,7 +110,7 @@ public class CommandActionFragment extends Fragment {
 
         final Intent resultIntent = new Intent();
 
-        Item item = (Item) sprItems.getSelectedItem();
+        ItemDB item = (ItemDB) sprItems.getSelectedItem();
         item.save();
 
         String command = txtCommand.getText().toString();

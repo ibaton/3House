@@ -27,10 +27,10 @@ import de.greenrobot.event.EventBus;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.Util;
 import treehou.se.habit.ui.homescreen.VoiceService;
+import treehou.se.habit.util.Util;
 
 public class SitemapFragment extends Fragment {
 
@@ -187,7 +187,7 @@ public class SitemapFragment extends Fragment {
 
 
 
-    public void openVoiceCommand(Server server){
+    public void openVoiceCommand(ServerDB server){
         Intent callbackIntent = VoiceService.createVoiceCommand(getActivity(), server);
 
         PendingIntent openhabPendingIntent = PendingIntent.getService(getActivity(), 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

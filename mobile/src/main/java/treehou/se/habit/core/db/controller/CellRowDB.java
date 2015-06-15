@@ -1,4 +1,4 @@
-package treehou.se.habit.core.controller;
+package treehou.se.habit.core.db.controller;
 
 import android.util.Log;
 
@@ -8,33 +8,30 @@ import com.activeandroid.annotation.Table;
 
 import java.util.List;
 
-/**
- * Created by ibaton on 2014-11-03.
- */
 @Table(name = "CellRows")
-public class CellRow extends Model{
+public class CellRowDB extends Model{
 
     private static final String TAG = "CellRow";
 
     @Column(name = "Controller", onDelete = Column.ForeignKeyAction.CASCADE)
-    public Controller controller;
+    public ControllerDB controller;
 
-    public List<Cell> cells(){
-        return getMany(Cell.class, "CellRow");
+    public List<CellDB> cells(){
+        return getMany(CellDB.class, "CellRow");
     }
 
-    public Cell addCell(){
+    public CellDB addCell(){
 
         Log.d(TAG, "Added cell to row " + getId());
 
-        Cell cell = new Cell();
+        CellDB cell = new CellDB();
         cell.cellRow = this;
         cell.save();
 
         return cell;
     }
 
-    public void deleteCell(Cell cell){
+    public void deleteCell(CellDB cell){
         cell.delete();
         if(cells().size() == 0){
             delete();

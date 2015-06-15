@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.ControllerDB;
 
 /**
 * Created by ibaton on 2015-03-21.
@@ -75,7 +75,7 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
         notifyItemRemoved(position);
     }
 
-    public void removeItem(Controller controller) {
+    public void removeItem(ControllerDB controller) {
         int position = items.indexOf(controller);
         items.remove(position);
         notifyItemRemoved(position);

@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import treehou.se.habit.core.Util;
+import treehou.se.habit.util.Util;
 
 /**
 * Created by ibaton on 2014-09-10.

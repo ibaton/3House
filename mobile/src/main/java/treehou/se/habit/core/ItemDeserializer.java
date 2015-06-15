@@ -9,17 +9,16 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-/**
-* Created by ibaton on 2014-10-18.
-*/
-public class ItemDeserializer implements JsonDeserializer<Item>, JsonSerializer<Item> {
+import treehou.se.habit.core.db.ItemDB;
+
+public class ItemDeserializer implements JsonDeserializer<ItemDB>, JsonSerializer<ItemDB> {
 
     private static final String TAG = "ItemDeserializer";
 
     @Override
-    public Item deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public ItemDB deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
-        Item item = new Item();
+        ItemDB item = new ItemDB();
 
         JsonObject jObject = json.getAsJsonObject();
         if(jObject.has("type")) {
@@ -42,7 +41,7 @@ public class ItemDeserializer implements JsonDeserializer<Item>, JsonSerializer<
     }
 
     @Override
-    public JsonElement serialize(Item src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(ItemDB src, Type typeOfSrc, JsonSerializationContext context) {
 
         JsonObject object = new JsonObject();
         object.addProperty("type", src.getType());

@@ -1,4 +1,4 @@
-package treehou.se.habit.core;
+package treehou.se.habit.core.db;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -8,11 +8,8 @@ import org.joda.time.DateTime;
 
 import java.util.Date;
 
-/**
- * Created by ibaton on 2015-01-27.
- */
 @Table(name = "Notification")
-public class Notification extends Model {
+public class NotificationDB extends Model {
 
     @Column(name = "message")
     private String message = "";
@@ -23,10 +20,10 @@ public class Notification extends Model {
     @Column(name = "viewed")
     boolean viewed;
 
-    public Notification() {
+    public NotificationDB() {
     }
 
-    public Notification(String message) {
+    public NotificationDB(String message) {
         this.message = message;
     }
 

@@ -31,16 +31,13 @@ import java.util.Map;
 
 import retrofit.RetrofitError;
 import treehou.se.habit.connector.requests.GsonRequest;
-import treehou.se.habit.core.Item;
+import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Server;
 import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 
-/**
- * Created by ibaton on 2014-09-10.
- */
 public class Communicator {
 
     private static final String TAG = "Communicator";
@@ -48,7 +45,7 @@ public class Communicator {
     private static Communicator mInstance;
     private Context context;
     private RequestQueue requestQueue;
-    private Map<Server, Picasso> requestLoaders = new HashMap<>();
+    private Map<ServerDB, Picasso> requestLoaders = new HashMap<>();
 
     public static synchronized Communicator instance(Context context){
         if (mInstance == null) {
@@ -62,11 +59,11 @@ public class Communicator {
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public static OpenHabService generateOpenHabService(Server server, boolean local){
+    public static OpenHabService generateOpenHabService(ServerDB server, boolean local){
         return generateOpenHabService(server, local ? server.getLocalUrl() : server.getRemoteUrl());
     }
 
-    public static OpenHabService generateOpenHabService(Server server, String url){
+    public static OpenHabService generateOpenHabService(ServerDB server, String url){
         return ServiceGenerator.createService(OpenHabService.class, url, server.getUsername(), server.getPassword());
     }
 
@@ -80,11 +77,11 @@ public class Communicator {
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
     }
 
-    public void command(Server server, Item item, final String command){
+    public void command(ServerDB server, ItemDB item, final String command){
         command(server, item.getName(), command);
     }
 
-    public void command(final Server server, final String item, final String command){
+    public void command(final ServerDB server, final String item, final String command){
 
         final retrofit.Callback<retrofit.client.Response> callback = new retrofit.Callback<retrofit.client.Response>() {
             @Override
@@ -134,10 +131,10 @@ public class Communicator {
         return Math.max(Math.min(number, max), min);
     }
 
-    public void incDec(final Server server, final Item item, final int value, final int min, final int max){
+    public void incDec(final ServerDB server, final ItemDB item, final int value, final int min, final int max){
         requestItem(server, item.getName(), new ItemRequestListener() {
             @Override
-            public void onSuccess(Item newItem) {
+            public void onSuccess(ItemDB newItem) {
                 Log.d(TAG, "Item state " + newItem.getState() + " " + newItem.getType());
                 String state = newItem.getState();
                 if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.getType())) {
@@ -169,7 +166,7 @@ public class Communicator {
         });
     }
 
-    public Picasso buildPicasso(Context context, final Server server){
+    public Picasso buildPicasso(Context context, final ServerDB server){
 
         if(requestLoaders.containsKey(server)){
             return requestLoaders.get(server);
@@ -228,7 +225,7 @@ public class Communicator {
      * @param imageView the view to put bitmap in.
      * @param useCache set if cache should be used.
      */
-    public void loadImage(final Server server, final URL imageUrl, final ImageView imageView, boolean useCache){
+    public void loadImage(final ServerDB server, final URL imageUrl, final ImageView imageView, boolean useCache){
         Log.d(TAG, "onBitmapLoaded image start " + imageUrl.toString());
         final Callback callback = new Callback() {
             @Override
@@ -237,7 +234,7 @@ public class Communicator {
                 imageView.setVisibility(View.VISIBLE);
                 Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
 
-                WidgetSettings settings = WidgetSettings.loadGlobal(context);
+                WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(context);
 
                 int imageBackground = Util.getBackground(context, bitmap, settings.getImageBackground());
                 imageView.setBackgroundColor(imageBackground);
@@ -264,7 +261,7 @@ public class Communicator {
      * @param imageUrl the url of image.
      * @param imageView the view to put bitmap in.
      */
-    public void loadImage(final Server server, final URL imageUrl, final ImageView imageView){
+    public void loadImage(final ServerDB server, final URL imageUrl, final ImageView imageView){
         loadImage(server, imageUrl, imageView, true);
     }
 
@@ -272,7 +269,7 @@ public class Communicator {
         requestQueue.cancelAll(tag);
     }
 
-    public <T> void addRequest(final Server server, final GsonRequest<T> request){
+    public <T> void addRequest(final ServerDB server, final GsonRequest<T> request){
         addRequest(server, request, true);
     }
 
@@ -283,7 +280,7 @@ public class Communicator {
      * @param multiServerRetry try to connect to local and remote server.
      * @param <T>
      */
-    public <T> void addRequest(final Server server, final GsonRequest<T> request, boolean multiServerRetry){
+    public <T> void addRequest(final ServerDB server, final GsonRequest<T> request, boolean multiServerRetry){
 
         final Uri localUrl = ConnectorUtil.changeHostUrl(Uri.parse(request.getUrl()),Uri.parse(server.getLocalUrl()));
         final Uri remoteRequestUrl = ConnectorUtil.changeHostUrl(Uri.parse(request.getUrl()), Uri.parse(server.getRemoteUrl()));
@@ -337,7 +334,7 @@ public class Communicator {
         requestQueue.add(request);
     }
 
-    public void requestSitemaps(String tag, final Server server, final SitemapsRequestListener listener){
+    public void requestSitemaps(String tag, final ServerDB server, final SitemapsRequestListener listener){
 
         Uri url = Uri.parse("http://www.dummy.com:8080");
 
@@ -372,7 +369,7 @@ public class Communicator {
         }
     }
 
-    public void requestPage(String tag, Server server, String link, Response.Listener<LinkedPage> successListener, Response.ErrorListener errorListener) {
+    public void requestPage(String tag, ServerDB server, String link, Response.Listener<LinkedPage> successListener, Response.ErrorListener errorListener) {
         Log.d(TAG, "Requesting page " + link);
         GsonRequest<LinkedPage> request = new GsonRequest<>(
                 Request.Method.GET, link,
@@ -387,9 +384,9 @@ public class Communicator {
 
         private int runningRequests;
         private SitemapsRequestListener listener;
-        private Server server;
+        private ServerDB server;
 
-        public MultiSitemapRequest(int requests, final SitemapsRequestListener listener, Server server) {
+        public MultiSitemapRequest(int requests, final SitemapsRequestListener listener, ServerDB server) {
             this.runningRequests = requests;
             this.listener = listener;
             this.server = server;
@@ -423,13 +420,13 @@ public class Communicator {
         }
     };
 
-    public void requestItems(final Server server, final ItemsRequestListener listener){
+    public void requestItems(final ServerDB server, final ItemsRequestListener listener){
 
-        final retrofit.Callback<Item.ItemHolder> callback = new retrofit.Callback<Item.ItemHolder>() {
+        final retrofit.Callback<ItemDB.ItemHolder> callback = new retrofit.Callback<ItemDB.ItemHolder>() {
             @Override
-            public void success(Item.ItemHolder itemHolder, retrofit.client.Response response) {
-                List<Item> items = itemHolder.item;
-                for(Item item : items){
+            public void success(ItemDB.ItemHolder itemHolder, retrofit.client.Response response) {
+                List<ItemDB> items = itemHolder.item;
+                for(ItemDB item : items){
                     item.setServer(server);
                 }
                 listener.onSuccess(items);
@@ -451,9 +448,9 @@ public class Communicator {
         }
 
         OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.getItems(new retrofit.Callback<Item.ItemHolder>() {
+        service.getItems(new retrofit.Callback<ItemDB.ItemHolder>() {
             @Override
-            public void success(Item.ItemHolder itemHolder, retrofit.client.Response response) {
+            public void success(ItemDB.ItemHolder itemHolder, retrofit.client.Response response) {
                 callback.success(itemHolder, response);
             }
 
@@ -469,11 +466,11 @@ public class Communicator {
         });
     }
 
-    public void requestItem(final Server server, final String item, final ItemRequestListener listener){
+    public void requestItem(final ServerDB server, final String item, final ItemRequestListener listener){
 
-        final retrofit.Callback<Item> callback = new retrofit.Callback<Item>() {
+        final retrofit.Callback<ItemDB> callback = new retrofit.Callback<ItemDB>() {
             @Override
-            public void success(Item item, retrofit.client.Response response) {
+            public void success(ItemDB item, retrofit.client.Response response) {
                 listener.onSuccess(item);
             }
 
@@ -493,9 +490,9 @@ public class Communicator {
         }
 
         OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.getItem(item, new retrofit.Callback<Item>() {
+        service.getItem(item, new retrofit.Callback<ItemDB>() {
             @Override
-            public void success(Item itemHolder, retrofit.client.Response response) {
+            public void success(ItemDB itemHolder, retrofit.client.Response response) {
                 callback.success(itemHolder, response);
             }
 
@@ -513,7 +510,7 @@ public class Communicator {
 
     public void requestSitemap(final Sitemap sitemap, final SitemapRequestListener listener){
 
-        final Server server = sitemap.getServer();
+        final ServerDB server = sitemap.getServer();
 
         Uri uri = Uri.parse(sitemap.getLink())
                 .buildUpon()
@@ -536,12 +533,12 @@ public class Communicator {
     }
 
     public interface ItemRequestListener{
-        public void onSuccess(Item item);
+        public void onSuccess(ItemDB item);
         public void onFailure(String message);
     }
 
     public interface ItemsRequestListener{
-        public void onSuccess(List<Item> items);
+        public void onSuccess(List<ItemDB> items);
         public void onFailure(String message);
     }
 

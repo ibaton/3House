@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.CellRow;
-import treehou.se.habit.core.controller.Controller;
+import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.controller.CellRowDB;
+import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
 import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
 import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
@@ -30,22 +30,22 @@ public class ControlHelper {
      * @param rows
      * @return
      */
-    public static RemoteViews drawRemoteController(Context context, RemoteViews rows, Controller controller){
+    public static RemoteViews drawRemoteController(Context context, RemoteViews rows, ControllerDB controller){
 
         Log.d(TAG, "Drawing remote controller");
 
         CellFactory<Integer> cellFactory = new CellFactory<>();
         cellFactory.setDefaultBuilder(new EmptyCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_BUTTON, new ButtonCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_SLIDER, new SliderCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_INC_DEC, new IncDecCellBuilder());
-        cellFactory.addBuilder(Cell.TYPE_VOICE, new VoiceCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecCellBuilder());
+        cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
 
-        for (final CellRow row : controller.cellRows()) {
+        for (final CellRowDB row : controller.cellRows()) {
             Log.d(TAG, "Rows " + controller.cellRows().size());
             RemoteViews rowView = new RemoteViews(context.getPackageName(), R.layout.homescreen_widget_row);
 
-            for (final Cell cell : row.cells()) {
+            for (final CellDB cell : row.cells()) {
                 RemoteViews itemView = cellFactory.createRemote(context, controller, cell);
                 rowView.addView(R.id.lou_row, itemView);
             }
@@ -57,7 +57,7 @@ public class ControlHelper {
     /**
      * Show remote view as notification
      */
-    public static void showNotification(Context context, Controller controller) {
+    public static void showNotification(Context context, ControllerDB controller) {
 
         Log.d(TAG, "Show controller as notification");
 
@@ -87,7 +87,7 @@ public class ControlHelper {
      * @param context
      * @param controller
      */
-    public static void hideNotification(Context context, Controller controller) {
+    public static void hideNotification(Context context, ControllerDB controller) {
 
         Log.d(TAG, "Hide controller notification");
 
@@ -101,7 +101,7 @@ public class ControlHelper {
      */
     public static void showNotifications(Context context) {
         NotificationManagerCompat.from(context).cancelAll();
-        for(Controller controller : Controller.getControllers()){
+        for(ControllerDB controller : ControllerDB.getControllers()){
             if(controller.showNotification()){
                 showNotification(context, controller);
             }

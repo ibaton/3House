@@ -5,9 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ibaton on 2014-09-13.
- */
 public class LinkedPage {
 
     private String id;
