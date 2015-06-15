@@ -1,4 +1,4 @@
-package treehou.se.habit.core;
+package treehou.se.habit.core.serializers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -11,6 +11,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import treehou.se.habit.core.LinkedPage;
+import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.db.ItemDB;
 
 public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {

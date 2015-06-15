@@ -29,12 +29,12 @@ import java.util.List;
 import java.util.Map;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.ItemDeserializer;
+import treehou.se.habit.core.serializers.ItemDeserializer;
 import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.SitemapDeserializer;
+import treehou.se.habit.core.serializers.SitemapDeserializer;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.WidgetDeserializer;
-import treehou.se.habit.core.WidgetMappingDeserializer;
+import treehou.se.habit.core.serializers.WidgetDeserializer;
+import treehou.se.habit.core.serializers.WidgetMappingDeserializer;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.control.IconAdapter;

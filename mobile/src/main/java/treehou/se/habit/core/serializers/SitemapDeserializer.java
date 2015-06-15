@@ -1,4 +1,4 @@
-package treehou.se.habit.core;
+package treehou.se.habit.core.serializers;
 
 import android.util.Log;
 
@@ -12,6 +12,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import treehou.se.habit.core.Sitemap;
 
 public class SitemapDeserializer implements JsonDeserializer<List<Sitemap>> {
 

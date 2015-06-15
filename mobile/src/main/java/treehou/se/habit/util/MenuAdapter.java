@@ -13,9 +13,6 @@ import java.util.List;
 
 import treehou.se.habit.R;
 
-/**
-* Created by ibaton on 2015-03-05.
-*/
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder>{
 
     private List<MenuItem> items = new ArrayList<>();

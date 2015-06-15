@@ -1,4 +1,4 @@
-package treehou.se.habit.core;
+package treehou.se.habit.core.serializers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
