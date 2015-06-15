@@ -37,7 +37,6 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         imgIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Server server = Loader.loadServer(context);
 
                 Intent callbackIntent = VoiceService.createVoiceCommand(context, voiceCell.getItem().getServer());
                 PendingIntent openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

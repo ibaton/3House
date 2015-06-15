@@ -16,8 +16,8 @@ import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.tasker.boundle.OpenSitemapBoundleManager;
 import treehou.se.habit.ui.SitemapSelectorFragment;
-import treehou.se.habit.util.MenuAdapter;
-import treehou.se.habit.util.MenuItem;
+import treehou.se.habit.ui.adapter.MenuAdapter;
+import treehou.se.habit.ui.adapter.MenuItem;
 
 /**
  * A placeholder fragment containing a simple view.

@@ -1,4 +1,4 @@
-package treehou.se.habit.util;
+package treehou.se.habit.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

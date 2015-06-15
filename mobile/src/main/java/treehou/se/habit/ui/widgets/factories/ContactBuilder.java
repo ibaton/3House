@@ -27,11 +27,6 @@ public class ContactBuilder implements IWidgetBuilder {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                /*if(widget.getItem() != null){
-                    Server server = Loader.loadServer(context);
-                    Communicator communicator = Communicator.instance(context);
-                    communicator.command(server,isChecked? Constants.COMMAND_OPEN : Constants.COMMAND_CLOSE, widget.getItem().getLink());
-                }*/
             }
         });
 

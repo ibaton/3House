@@ -13,8 +13,8 @@ import treehou.se.habit.R;
 import treehou.se.habit.tasker.items.CommandActionFragment;
 import treehou.se.habit.tasker.items.IncDecActionFragment;
 import treehou.se.habit.tasker.items.SwitchActionFragment;
-import treehou.se.habit.util.MenuAdapter;
-import treehou.se.habit.util.MenuItem;
+import treehou.se.habit.ui.adapter.MenuAdapter;
+import treehou.se.habit.ui.adapter.MenuItem;
 
 
 public class ItemFragment extends Fragment {

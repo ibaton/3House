@@ -1,4 +1,4 @@
-package treehou.se.habit.util;
+package treehou.se.habit.ui.adapter;
 
 /**
 * Created by ibaton on 2015-03-05.

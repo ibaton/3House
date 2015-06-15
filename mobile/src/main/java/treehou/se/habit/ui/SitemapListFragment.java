@@ -37,6 +37,11 @@ public class SitemapListFragment extends Fragment {
     private Communicator communicator;
     private SitemapDB showSitemap = null;
 
+    /**
+     * Create fragment where user can select sitemap.
+     *
+     * @return Fragment
+     */
     public static SitemapListFragment newInstance() {
         SitemapListFragment fragment = new SitemapListFragment();
         Bundle args = new Bundle();
@@ -44,6 +49,13 @@ public class SitemapListFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Load sitemaps for servers.
+     * Open provided sitemap if loaded.
+     *
+     * @param sitemap id of sitemap to load
+     * @return Fragment
+     */
     public static SitemapListFragment newInstance(long sitemap) {
         SitemapListFragment fragment = new SitemapListFragment();
         Bundle args = new Bundle();
@@ -56,8 +68,7 @@ public class SitemapListFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SitemapListFragment() {
-    }
+    public SitemapListFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,8 +134,7 @@ public class SitemapListFragment extends Fragment {
                     if (!mSitemapAdapter.contains(sitemap)) {
                         mSitemapAdapter.add(sitemap);
                     }
-                    // Prioritize sitemap on local sitemap if found.
-                    else if (sitemap.isLocal()) {
+                    else if (sitemap.isLocal()) { // Prioritize sitemap on local sitemap if found.
                         mSitemapAdapter.remove(sitemap);
                         mSitemapAdapter.add(sitemap);
                     }
@@ -138,6 +148,7 @@ public class SitemapListFragment extends Fragment {
                                 .replace(R.id.page_container, SitemapFragment.newInstance(sitemap), SitemapFragment.TAG_SITEMAP_FRAGMENT)
                                 .addToBackStack(null)
                                 .commit();
+
                         showSitemap = null;
                     }
                 }
