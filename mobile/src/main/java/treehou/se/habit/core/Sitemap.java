@@ -2,8 +2,6 @@ package treehou.se.habit.core;
 
 import android.net.Uri;
 
-import java.util.List;
-
 import treehou.se.habit.core.db.ServerDB;
 
 public class Sitemap {
@@ -94,43 +92,5 @@ public class Sitemap {
     @Override
     public int hashCode() {
         return name.hashCode()+(name.hashCode()+this.getServer().getName().hashCode());
-    }
-
-    public class Homepage {
-        private String id;
-        private String title;
-        private String link;
-        private String leaf;
-        private List<Widget> widget;
-
-        public String getLeaf() {
-            return leaf;
-        }
-
-        public void setLeaf(String leaf) {
-            this.leaf = leaf;
-        }
-
-        public String getLink() {
-            return link;
-        }
-
-        public void setLink(String link) {
-            this.link = link;
-        }
-
-        public List<Widget> getWidget() {
-            return widget;
-        }
-
-        public void setWidget(List<Widget> widget) {
-            this.widget = widget;
-        }
-    }
-
-    public class SitemapHolder{
-
-        //TODO multiple sitemaps
-        public List<Sitemap> sitemap;
     }
 }

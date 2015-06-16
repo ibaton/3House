@@ -34,8 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.connector.OpenHabService;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.db.ServerDB;
@@ -69,7 +72,8 @@ public class PageFragment extends Fragment {
      *
      * @param server the server to connect to
      * @param page the page to visualise
-     * @return
+     *
+     * @return Fragment visualazing a page
      */
     public static PageFragment newInstance(ServerDB server, LinkedPage page) {
         Gson gson = Util.createGsonBuilder();
@@ -108,23 +112,7 @@ public class PageFragment extends Fragment {
         louFragments = (LinearLayout) view.findViewById(R.id.lou_widgets);
         updatePage(mPage);
 
-        // Start listening for server updates
-        // TODO Support for older versions.
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            longPoller.execute();
-        }
-
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        // Stop listening for server updates
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            longPoller.cancel(true);
-        }
     }
 
     // TODO extract to separate class
@@ -206,31 +194,35 @@ public class PageFragment extends Fragment {
         super.onResume();
 
         Communicator communicator = Communicator.instance(getActivity());
-        communicator.requestPage(PAGE_REQUEST_TAG, server, mPage.getLink(),
-                new Response.Listener<LinkedPage>() {
+        communicator.requestPage(server, mPage, new Callback<LinkedPage>() {
+            @Override
+            public void success(final LinkedPage linkedPage, final retrofit.client.Response response) {
+                //TODO update instead of reset.
+                Log.d(TAG, "Received update " + linkedPage.getWidget().size() + " widgets from  " + mPage.getLink());
+                ThreadPool.instance().submit(new Runnable() {
                     @Override
-                    public void onResponse(final LinkedPage response) {
-                        //TODO update instead of reset.
-                        Log.d(TAG, "Received update " + response.getWidget().size() + " widgets from  " + mPage.getLink());
-                        ThreadPool.instance().submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                updatePage(response);
-                            }
-                        });
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "error " + error.getCause() + " " + error.getMessage());
-
-                        // TODO Check type of error.
-                        // TODO Retry on remote server.
-                        Toast.makeText(getActivity(), "Lost connection to server", Toast.LENGTH_LONG).show();
-                        getActivity().getSupportFragmentManager().popBackStack();
+                    public void run() {
+                        updatePage(linkedPage);
                     }
                 });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "error " + error.getCause() + " " + error.getMessage());
+
+                // TODO Check type of error.
+                // TODO Retry on remote server.
+                Toast.makeText(getActivity(), "Lost connection to server", Toast.LENGTH_LONG).show();
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        // Start listening for server updates
+        // TODO Support for older versions.
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            longPoller.execute();
+        }
     }
 
     /**
@@ -241,6 +233,7 @@ public class PageFragment extends Fragment {
      * @param page
      */
     private synchronized void updatePage(final LinkedPage page){
+        Log.d(TAG, "Updating page " + page.getTitle() + " widgets: " + page.getWidget().size());
         mPage = page;
         widgetFactory = new WidgetFactory(getActivity(), server, page);
 
@@ -298,5 +291,11 @@ public class PageFragment extends Fragment {
 
         Communicator communicator = Communicator.instance(getActivity());
         communicator.cancelRequest(PAGE_REQUEST_TAG);
+
+
+        // Stop listening for server updates
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            longPoller.cancel(true);
+        }
     }
 }

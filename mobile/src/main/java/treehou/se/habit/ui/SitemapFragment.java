@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import retrofit.Callback;
+import retrofit.RetrofitError;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.LinkedPage;
@@ -96,21 +98,21 @@ public class SitemapFragment extends Fragment {
         sitemapAdapter = new SitemapAdapter(sitemap.getServer(), getActivity().getSupportFragmentManager(), pages);
         pgrSitemap = (ViewPager) rootView.findViewById(R.id.pgr_sitemap);
         pgrSitemap.setAdapter(sitemapAdapter);
-        pgrSitemap.setOnPageChangeListener(pagerChangeListener);
+        pgrSitemap.addOnPageChangeListener(pagerChangeListener);
 
         if(pages.size() == 0) {
-            communicator.requestPage(TAG_PAGE_REQUEST, sitemap.getServer(), sitemap.getHomepage().getLink(),
-                new Response.Listener<LinkedPage>() {
-                    @Override
-                    public void onResponse(LinkedPage page) {
-                        pages.add(page);
-                        sitemapAdapter.notifyDataSetChanged();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {}
-                });
+            communicator.requestPage(sitemap.getServer(), sitemap.getHomepage(), new Callback<LinkedPage>() {
+                @Override
+                public void success(LinkedPage linkedPage, retrofit.client.Response response) {
+                    pages.add(linkedPage);
+                    sitemapAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
         }
         setHasOptionsMenu(true);
 
@@ -135,6 +137,7 @@ public class SitemapFragment extends Fragment {
 
         @Override
         public void onPageScrollStateChanged(int state) {
+            // Remove tabs that not parent of selected view
             if(state == ViewPager.SCROLL_STATE_IDLE){
                 while(pages.size() > index+1) {
                     pages.remove(pages.size()-1);
@@ -146,10 +149,11 @@ public class SitemapFragment extends Fragment {
 
     /**
      * Add and move to page in view pager.
+     *
      * @param page the page to add to pager
      */
     public void addPage(LinkedPage page) {
-        Log.d(TAG, "Add page4 " + page.getLink());
+        Log.d(TAG, "Add page " + page.getLink());
         pages.add(page);
         sitemapAdapter.notifyDataSetChanged();
         pgrSitemap.setCurrentItem(pages.size() - 1, true);
@@ -185,8 +189,11 @@ public class SitemapFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-
+    /**
+     * Start voice command listener.
+     *
+     * @param server server to send command to.
+     */
     public void openVoiceCommand(ServerDB server){
         Intent callbackIntent = VoiceService.createVoiceCommand(getActivity(), server);
 
@@ -206,6 +213,11 @@ public class SitemapFragment extends Fragment {
         startActivity(intent);
     }
 
+    /**
+     * User requested to move to new page.
+     *
+     * @param event
+     */
     public void onEvent(LinkedPage event){
         addPage(event);
     }

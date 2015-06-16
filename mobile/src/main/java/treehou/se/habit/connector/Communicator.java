@@ -369,15 +369,28 @@ public class Communicator {
         }
     }
 
-    public void requestPage(String tag, ServerDB server, String link, Response.Listener<LinkedPage> successListener, Response.ErrorListener errorListener) {
-        Log.d(TAG, "Requesting page " + link);
-        GsonRequest<LinkedPage> request = new GsonRequest<>(
-                Request.Method.GET, link,
-                server.getUsername(), server.getPassword(),
-                LinkedPage.class,
-                successListener, errorListener);
-        request.setTag(tag);
-        addRequest(server, request, false);
+    /**
+     * Request page for from server
+     *
+     * @param server the credentials of server.
+     * @param page the page to fetch.
+     * @param responseListener response listener.
+     */
+    public void requestPage(ServerDB server, LinkedPage page, final retrofit.Callback<LinkedPage> responseListener) {
+        OpenHabService service = generateOpenHabService(server, page.getLink());
+        service.getPage(new retrofit.Callback<LinkedPage>() {
+            @Override
+            public void success(LinkedPage linkedPage, retrofit.client.Response response) {
+                Log.d(TAG, "Received page " + response.getUrl());
+                responseListener.success(linkedPage, response);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "Received page error " + error.getUrl(), error);
+                responseListener.failure(error);
+            }
+        });
     }
 
     public class MultiSitemapRequest implements retrofit.Callback<List<Sitemap>> {

@@ -22,7 +22,6 @@ public class LinkedPage {
     }
 
     public String getLink() {
-
         return link;
     }
 
@@ -42,6 +41,18 @@ public class LinkedPage {
         try {
             URL url = new URL(link);
             return new URL(url.getProtocol(), url.getHost(), url.getPort(), "", null).toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String getPath(){
+        try {
+            URL url = new URL(link);
+            if(url.getPath().length() > 0) {
+                return url.getPath().substring(1);
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
