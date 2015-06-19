@@ -298,7 +298,6 @@ public class ColorPicker extends View {
         int action = event.getAction();
         switch (action) {
         case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_MOVE:
 
             int x = (int) event.getX();
             int y = (int) event.getY();

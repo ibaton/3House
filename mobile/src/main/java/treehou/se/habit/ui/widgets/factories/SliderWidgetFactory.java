@@ -14,7 +14,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
-        return new SliderWidgetHolder(parent, widget, widgetFactory);
+        return new SliderWidgetHolder(widget, parent, widgetFactory);
     }
 
     public static class SliderWidgetHolder implements WidgetFactory.IWidgetHolder {
