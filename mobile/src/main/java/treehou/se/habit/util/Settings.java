@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 
 import treehou.se.habit.core.db.SitemapDB;
 
-/**
- * Created by ibaton on 2015-04-12.
- */
 public class Settings {
 
     private static final String PREF_MANAGER = "treePref";

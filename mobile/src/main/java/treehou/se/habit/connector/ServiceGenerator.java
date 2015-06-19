@@ -81,13 +81,13 @@ public class ServiceGenerator {
         @Override
         public Object fromBody(TypedInput body, Type type) throws ConversionException {
 
-            Log.d(TAG, "fromBody " + body + " " + body.mimeType());
             if(body.mimeType().equals("text/plain") && type == String.class){
                 try {
                     String sBody = IOUtils.toString(body.in());
+                    Log.d(TAG, "fromBody " + sBody + " " + body.mimeType());
                     return sBody;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "fromBody " , e);
                 }
             }
 

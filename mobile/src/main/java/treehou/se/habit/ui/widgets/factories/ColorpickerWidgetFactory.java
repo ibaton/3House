@@ -23,7 +23,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        WidgetFactory.IWidgetHolder builder = new BaseWidgetFactory.BaseBuilderHolder.Builder(widgetFactory)
+        WidgetFactory.IWidgetHolder builder = new BaseWidgetFactory.BaseWidgetHolder.Builder(widgetFactory)
                 .setWidget(widget)
                 .setFlat(true)
                 .setShowLabel(true)

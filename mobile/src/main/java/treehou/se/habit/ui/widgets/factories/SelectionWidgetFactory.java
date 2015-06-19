@@ -19,12 +19,12 @@ public class SelectionWidgetFactory implements IWidgetFactory {
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        return new SelectBuilder(widget, parent, widgetFactory);
+        return new SelectWidgetHolder(widget, parent, widgetFactory);
     }
 
-    public static class SelectBuilder implements WidgetFactory.IWidgetHolder {
+    public static class SelectWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SelectBuilder";
+        private static final String TAG = "SelectWidgetHolder";
 
         private View itemView;
         private Spinner sprSelect;
@@ -32,12 +32,12 @@ public class SelectionWidgetFactory implements IWidgetFactory {
 
         private int lastPosition = -1;
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public SelectBuilder(Widget widget, Widget parent, WidgetFactory factory) {
+        public SelectWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
             this.factory = factory;
 
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .build();

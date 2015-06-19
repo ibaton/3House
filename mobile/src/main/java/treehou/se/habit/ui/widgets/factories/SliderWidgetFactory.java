@@ -14,20 +14,17 @@ public class SliderWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
-
-        return new SliderBuilderHolder(parent, widget, widgetFactory);
+        return new SliderWidgetHolder(parent, widget, widgetFactory);
     }
 
-    public static class SliderBuilderHolder implements WidgetFactory.IWidgetHolder {
-
-        private static final String TAG = "SliderBuilderHolder";
+    public static class SliderWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private View itemView;
         private SeekBar skbDim;
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
-        public SliderBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        public SliderWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
 
             this.factory = factory;
             WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
@@ -36,7 +33,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
             itemView = factory.getInflater().inflate(R.layout.item_widget_slider, null);
             skbDim = (SeekBar) itemView.findViewById(R.id.skb_dim);
 
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .setFlat(flat)

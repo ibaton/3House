@@ -48,9 +48,18 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
             widget.setLinkedPage(linkedPage);
         }
 
-        JsonElement jWidgetElement = jObject.get("widget");
-        List<Widget> widgets = context.deserialize(jWidgetElement, new TypeToken<List<Widget>>() {}.getType());
-        widget.setWidget(widgets);
+        if(jObject.has("widget")) {
+            JsonElement jWidgetElement = jObject.get("widget");
+            List<Widget> widgets = context.deserialize(jWidgetElement, new TypeToken<List<Widget>>() {
+            }.getType());
+            widget.setWidget(widgets);
+        }
+        else if(jObject.has("widgets")) { // openhab2 compat
+            JsonElement jWidgetElement = jObject.get("widgets");
+            List<Widget> widgets = context.deserialize(jWidgetElement, new TypeToken<List<Widget>>() {
+            }.getType());
+            widget.setWidget(widgets);
+        }
 
         JsonElement jMappingElement = jObject.get("mapping");
         List<Widget.Mapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<Widget.Mapping>>() {}.getType());

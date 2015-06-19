@@ -14,32 +14,30 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class VideoWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "VideoWidgetFactory";
-
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        return new VideoBuilderHolder(widget, parent, widgetFactory);
+        return new VideoWidgetHolder(widget, parent, widgetFactory);
     }
 
-    public static class VideoBuilderHolder implements WidgetFactory.IWidgetHolder {
+    public static class VideoWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "VideoBuilderHolder";
+        private static final String TAG = "VideoWidgetHolder";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
         private View itemView;
         private VideoView mVideoView;
         private Widget widget;
 
-        public VideoBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        public VideoWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
             this.factory = factory;
 
             itemView = factory.getInflater().inflate(R.layout.item_widget_video, null);
             mVideoView = (VideoView) itemView.findViewById(R.id.vidView);
 
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .setShowLabel(false)
@@ -62,6 +60,7 @@ public class VideoWidgetFactory implements IWidgetFactory {
                 launchVideo();
             }
 
+            this.widget = widget;
             baseHolder.update(widget);
         }
 

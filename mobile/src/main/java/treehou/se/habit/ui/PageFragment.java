@@ -233,7 +233,7 @@ public class PageFragment extends Fragment {
      * @param page
      */
     private synchronized void updatePage(final LinkedPage page){
-        Log.d(TAG, "Updating page " + page.getTitle() + " widgets: " + page.getWidget().size());
+        Log.d(TAG, "Updating page " + page.getTitle() + " widgets " + widgets.size() + " : " + page.getWidget().size());
         mPage = page;
         widgetFactory = new WidgetFactory(getActivity(), server, page);
 

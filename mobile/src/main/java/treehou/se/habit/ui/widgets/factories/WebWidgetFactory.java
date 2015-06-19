@@ -13,33 +13,31 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class WebWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "WebWidgetFactory";
-
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        WidgetFactory.IWidgetHolder rootView = WebBuilderHolder.create(widgetFactory, widget, parent);
+        WidgetFactory.IWidgetHolder rootView = WebWidgetHolder.create(widgetFactory, widget, parent);
 
         return rootView;
     }
 
-    static class WebBuilderHolder implements WidgetFactory.IWidgetHolder {
+    static class WebWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "WebBuilderHolder";
+        private static final String TAG = "WebWidgetHolder";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
         private WebView webView;
         private Widget widget;
 
-        public static WebBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
+        public static WebWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
 
-            return new WebBuilderHolder(widget, parent, factory);
+            return new WebWidgetHolder(widget, parent, factory);
         }
 
-        private WebBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        private WebWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
 
-            baseHolder = BaseWidgetFactory.BaseBuilderHolder.create(factory, false, widget, parent);
+            baseHolder = BaseWidgetFactory.BaseWidgetHolder.create(factory, false, widget, parent);
 
             final View itemView = factory.getInflater().inflate(R.layout.item_widget_web, null);
             webView = (WebView) itemView.findViewById(R.id.webView);

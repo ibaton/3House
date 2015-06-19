@@ -15,9 +15,9 @@ import java.util.List;
 
 import treehou.se.habit.core.Sitemap;
 
-public class SitemapDeserializer implements JsonDeserializer<List<Sitemap>> {
+public class SitemapListDeserializer implements JsonDeserializer<List<Sitemap>> {
 
-    private static final String TAG = "SitemapDeserializer";
+    private static final String TAG = "SitemapListDeserializer";
 
     @Override
     public List<Sitemap> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
@@ -31,7 +31,6 @@ public class SitemapDeserializer implements JsonDeserializer<List<Sitemap>> {
             if(jSitemaps.has("sitemap")) {
                 if(jSitemaps.get("sitemap").isJsonObject()) {
                     JsonElement jSitemap = jSitemaps.get("sitemap");
-                    sitemaps.add(context.<Sitemap>deserialize(jSitemap, Sitemap.class));
                     sitemaps.add(context.<Sitemap>deserialize(jSitemap, Sitemap.class));
                     return sitemaps;
                 }

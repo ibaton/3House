@@ -18,24 +18,24 @@ public class ImageWidgetFactory implements IWidgetFactory {
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        return new ImageBuilderHolder(widget, parent, widgetFactory);
+        return new ImageWidgetHolder(widget, parent, widgetFactory);
     }
 
-    static class ImageBuilderHolder implements WidgetFactory.IWidgetHolder {
+    static class ImageWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "ImageBuilderHolder";
+        private static final String TAG = "ImageWidgetHolder";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private ImageView imgImage;
         private WidgetFactory factory;
 
-        private ImageBuilderHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        private ImageWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
             this.factory = factory;
 
             View itemView = factory.getInflater().inflate(R.layout.item_widget_image, null);
             imgImage = (ImageView) itemView.findViewById(R.id.img_image);
 
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setParent(parent)
                     .setShowLabel(false)

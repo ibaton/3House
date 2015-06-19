@@ -9,5 +9,5 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
  */
 public interface ICustomWidgetFactory {
 
-    public WidgetFactory.WidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, Widget widget, Widget parent);
+    WidgetFactory.WidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, Widget widget, Widget parent);
 }

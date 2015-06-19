@@ -10,7 +10,7 @@ public class LinkedPage {
     private String id;
     private String link;
     private String title;
-    private String leaf;
+    private boolean leaf;
     private List<Widget> widget;
 
     public String getId() {
@@ -59,11 +59,11 @@ public class LinkedPage {
         return "";
     }
 
-    public String getLeaf() {
+    public boolean getLeaf() {
         return leaf;
     }
 
-    public void setLeaf(String leaf) {
+    public void setLeaf(boolean leaf) {
         this.leaf = leaf;
     }
 
@@ -71,7 +71,7 @@ public class LinkedPage {
         return widget!=null?widget:new ArrayList<Widget>();
     }
 
-    public void setWidget(List<Widget> widget) {
+    public void setWidgets(List<Widget> widget) {
         this.widget = widget;
     }
 }

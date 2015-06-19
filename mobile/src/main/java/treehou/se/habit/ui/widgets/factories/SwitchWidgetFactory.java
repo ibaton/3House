@@ -37,38 +37,37 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
             Log.d(TAG, "Type " + item.getType());
             if(item.getType().equals(ItemDB.TYPE_ROLLERSHUTTER)){
-                return RollerShutterBuilderHolder.create(widgetFactory, widget, parent);
+                return RollerShutterWidgetHolder.create(widgetFactory, widget, parent);
             }else{
                 Log.d(TAG, "Switch state " + widget.getItem().getState() + " : " + widget.getItem().getName());
-                return SwitchBuilderHolder.create(widgetFactory, widget, parent);
+                return SwitchWidgetHolder.create(widgetFactory, widget, parent);
             }
         } else {
             if(widget.getMapping().size() == 1) {
-                return SingleButtonBuilderHolder.create(widgetFactory, widget, parent);
+                return SingleButtonWidgetHolder.create(widgetFactory, widget, parent);
             }else {
-                return PickerBuilderHolder.create(widgetFactory, widget, parent);
+                return PickerWidgetHolder.create(widgetFactory, widget, parent);
             }
         }
     }
 
+
     /**
      * Widget rollershutters
      */
-    static class RollerShutterBuilderHolder implements WidgetFactory.IWidgetHolder {
+    static class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "RollerShutterBuilderHolder";
+        private static final String TAG = "RollerShutterWidgetHold";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
-        private WidgetFactory factory;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public static RollerShutterBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
-            return new RollerShutterBuilderHolder(widget, parent, factory);
+        public static RollerShutterWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+            return new RollerShutterWidgetHolder(widget, parent, factory);
         }
 
-        private RollerShutterBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private RollerShutterWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
 
-            this.factory = factory;
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setShowLabel(true)
                     .setParent(parent)
@@ -131,25 +130,26 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
     }
 
+
     /**
      * Widget with single button
      */
-    static class PickerBuilderHolder implements WidgetFactory.IWidgetHolder {
+    static class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "PickerBuilderHolder";
+        private static final String TAG = "PickerWidgetHolder";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
         private RadioGroup rgpMapping;
 
-        public static PickerBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
-            return new PickerBuilderHolder(widget, parent, factory);
+        public static PickerWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+            return new PickerWidgetHolder(widget, parent, factory);
         }
 
-        private PickerBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private PickerWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
 
             this.factory = factory;
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setShowLabel(true)
                     .setParent(parent)
@@ -208,23 +208,23 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget with single button
      */
-    static class SingleButtonBuilderHolder implements WidgetFactory.IWidgetHolder {
+    static class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "SingleButtonBuilder";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
         private Button btnSingle;
 
-        public static SingleButtonBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
-            return new SingleButtonBuilderHolder(widget, parent, factory);
+        public static SingleButtonWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+            return new SingleButtonWidgetHolder(widget, parent, factory);
         }
 
-        private SingleButtonBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private SingleButtonWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
             this.factory = factory;
             WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(settings.isCompressedSingleButton())
                     .setShowLabel(true)
@@ -267,24 +267,25 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
     }
 
+
     /**
      * Widget with switch
      */
-    static class SwitchBuilderHolder implements WidgetFactory.IWidgetHolder {
+    static class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "SwitchBuilderHolder";
+        private static final String TAG = "SwitchWidgetHolder";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private SwitchCompat swtSwitch;
 
-        public static SwitchBuilderHolder create(WidgetFactory factory, Widget widget, Widget parent){
-            return new SwitchBuilderHolder(widget, parent, factory);
+        public static SwitchWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+            return new SwitchWidgetHolder(widget, parent, factory);
         }
 
-        private SwitchBuilderHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private SwitchWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
 
             WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(true)
                     .setShowLabel(true)

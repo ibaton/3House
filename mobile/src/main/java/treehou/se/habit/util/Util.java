@@ -29,9 +29,11 @@ import java.util.List;
 import java.util.Map;
 
 import treehou.se.habit.R;
+import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.serializers.ItemDeserializer;
 import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.serializers.SitemapDeserializer;
+import treehou.se.habit.core.serializers.LinkedPageDeserializer;
+import treehou.se.habit.core.serializers.SitemapListDeserializer;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.serializers.WidgetDeserializer;
 import treehou.se.habit.core.serializers.WidgetMappingDeserializer;
@@ -223,8 +225,9 @@ public class Util {
         if (gson == null) {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget>>() {}.getType(), new WidgetDeserializer());
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<Sitemap>>() {}.getType(), new SitemapDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<Sitemap>>() {}.getType(), new SitemapListDeserializer());
             gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget.Mapping>>() {}.getType(), new WidgetMappingDeserializer());
+            gsonBuilder.registerTypeAdapter(LinkedPage.class, new LinkedPageDeserializer());
             gsonBuilder.registerTypeAdapter(ItemDB.class, new ItemDeserializer());
             gson = gsonBuilder.create();
         }

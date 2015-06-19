@@ -23,10 +23,10 @@ public class FrameWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, Widget widget, Widget parent) {
-        return FrameHolder.create(widgetFactory, widget);
+        return FrameWidget.create(widgetFactory, widget);
     }
 
-    public static class FrameHolder extends WidgetFactory.WidgetHolder {
+    public static class FrameWidget extends WidgetFactory.WidgetHolder {
 
         private TextView lblName;
         private View titleHolder;
@@ -38,14 +38,14 @@ public class FrameWidgetFactory implements IWidgetFactory {
         private Widget widget;
         private List<Widget> widgets = new ArrayList<>();
 
-        public static FrameHolder create(WidgetFactory factory, Widget widget){
+        public static FrameWidget create(WidgetFactory factory, Widget widget){
 
             View rootView = factory.getInflater().inflate(R.layout.widget_frame, null);
             TextView lblTitle = (TextView) rootView.findViewById(R.id.lbl_widget_name);
             View lblTitleHolder = rootView.findViewById(R.id.lbl_widget_name_holder);
             LinearLayout louWidgetHolder = (LinearLayout) rootView.findViewById(R.id.lou_widget_frame_holder);
 
-            FrameHolder holder = new FrameHolder(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
+            FrameWidget holder = new FrameWidget(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
 
             Log.d(TAG, "update " + widget.getLabel());
             final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
@@ -57,7 +57,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
             return holder;
         }
 
-        private FrameHolder(Context context, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, Widget widget, WidgetFactory factory) {
+        private FrameWidget(Context context, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, Widget widget, WidgetFactory factory) {
             super(view);
 
             Log.d(TAG, "Crating frame " + widget.getLabel());

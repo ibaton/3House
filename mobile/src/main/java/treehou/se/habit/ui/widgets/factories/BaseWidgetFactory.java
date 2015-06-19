@@ -50,13 +50,13 @@ public class BaseWidgetFactory {
             rootView = holderView;
         }
 
-        BaseBuilderHolder holder = new BaseBuilderHolder(widgetFactory.getContext(), rootView, widget, widgetFactory);
+        BaseWidgetHolder holder = new BaseWidgetHolder(widgetFactory.getContext(), rootView, widget, widgetFactory);
         holder.update(widget);
 
         return holder;
     }
 
-    public static class BaseBuilderHolder extends WidgetFactory.WidgetHolder {
+    public static class BaseWidgetHolder extends WidgetFactory.WidgetHolder {
 
         Context context;
         View rootView;
@@ -74,7 +74,7 @@ public class BaseWidgetFactory {
         private List<Widget> widgets = new ArrayList<>();
         private Widget widget;
 
-        public static BaseBuilderHolder create(WidgetFactory factory, boolean flat, Widget widget, final Widget parent){
+        public static BaseWidgetHolder create(WidgetFactory factory, boolean flat, Widget widget, final Widget parent){
 
             final LayoutInflater inflater = factory.getInflater();
             View rootView = flat ? inflater.inflate(R.layout.item_widget_base_flat, null) : inflater.inflate(R.layout.item_widget_base, null);
@@ -88,7 +88,7 @@ public class BaseWidgetFactory {
                 rootView = holderView;
             }
 
-            BaseBuilderHolder holder = new BaseBuilderHolder(factory.getContext(), rootView, widget, factory);
+            BaseWidgetHolder holder = new BaseWidgetHolder(factory.getContext(), rootView, widget, factory);
 
             final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
             float percentage = Util.toPercentage(settings.getTextSize());
@@ -107,7 +107,7 @@ public class BaseWidgetFactory {
             return holder;
         }
 
-        BaseBuilderHolder(Context context, View view, Widget widget, WidgetFactory factory) {
+        BaseWidgetHolder(Context context, View view, Widget widget, WidgetFactory factory) {
             super(view);
 
             this.context = context;
@@ -302,9 +302,9 @@ public class BaseWidgetFactory {
                 return this;
             }
 
-            public BaseBuilderHolder build(){
+            public BaseWidgetHolder build(){
 
-                BaseBuilderHolder baseBuilderHolder = BaseBuilderHolder.create(factory, flat, widget, parent);
+                BaseWidgetHolder baseBuilderHolder = BaseWidgetHolder.create(factory, flat, widget, parent);
                 baseBuilderHolder.setShowLabel(showLabel);
 
                 return baseBuilderHolder;

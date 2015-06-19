@@ -21,28 +21,28 @@ public class ChartWidgetFactory implements IWidgetFactory {
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
 
-        return ChartBuilderHolder.create(widgetFactory, widget);
+        return ChartWidgetHolder.create(widgetFactory, widget);
     }
 
 
-    static class ChartBuilderHolder implements WidgetFactory.IWidgetHolder {
+    static class ChartWidgetHolder implements WidgetFactory.IWidgetHolder {
 
-        private static final String TAG = "ChartBuilderHolder";
+        private static final String TAG = "ChartWidgetHolder";
 
-        private BaseWidgetFactory.BaseBuilderHolder baseHolder;
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
         private ImageView imgImage;
         private Widget widget;
         private WidgetFactory factory;
 
-        public static ChartBuilderHolder create(WidgetFactory factory, Widget widget){
-            return new ChartBuilderHolder(widget, factory);
+        public static ChartWidgetHolder create(WidgetFactory factory, Widget widget){
+            return new ChartWidgetHolder(widget, factory);
         }
 
-        private ChartBuilderHolder(Widget widget, WidgetFactory factory) {
+        private ChartWidgetHolder(Widget widget, WidgetFactory factory) {
             this.factory = factory;
 
-            baseHolder = new BaseWidgetFactory.BaseBuilderHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(false)
                     .setShowLabel(false)
