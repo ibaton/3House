@@ -61,7 +61,9 @@ public class ServersFragment extends Fragment  {
         View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(R.string.servers);
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.servers);
+        }
 
         final RecyclerView lstServer = (RecyclerView) rootView.findViewById(R.id.list);
         lstServer.setAdapter(serversAdapter);

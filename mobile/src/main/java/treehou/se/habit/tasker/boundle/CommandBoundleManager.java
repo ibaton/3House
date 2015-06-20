@@ -8,9 +8,6 @@ import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.reciever.CommandReciever;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 
-/**
- * Created by ibaton on 2015-03-08.
- */
 public class CommandBoundleManager {
 
     public static final String TAG = "CommandBoundleManager";

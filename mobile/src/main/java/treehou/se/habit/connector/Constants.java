@@ -1,8 +1,5 @@
 package treehou.se.habit.connector;
 
-/**
- * Created by ibaton on 2014-10-07.
- */
 public class Constants {
 
     public static final String CHART_URL = "/chart?groups=%s&period=%s&random=%d";

@@ -20,18 +20,16 @@ public class SitemapWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
-            SitemapWidgetConfigureActivity.deletePref(context, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            SitemapWidgetConfigureActivity.deletePref(context, appWidgetId);
         }
     }
 

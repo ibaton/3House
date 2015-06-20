@@ -6,10 +6,6 @@ import com.activeandroid.annotation.Table;
 
 import treehou.se.habit.core.db.ItemDB;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
-
 @Table(name = "IncDecCell")
 public class IncDecCellDB extends Model {
 

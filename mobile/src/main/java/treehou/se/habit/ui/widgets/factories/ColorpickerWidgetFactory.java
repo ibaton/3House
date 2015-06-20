@@ -3,20 +3,24 @@ package treehou.se.habit.ui.widgets.factories;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import treehou.se.habit.R;
+import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
-import treehou.se.habit.util.Util;
 
 public class ColorpickerWidgetFactory implements IWidgetFactory {
+
+    private static final String TAG = "ColorpickerWidget";
 
     private int color;
 
@@ -53,12 +57,16 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
             public void onClick(View v) {
                 if (widget.getItem() != null) {
                     Intent intent = new Intent(context, ColorpickerActivity.class);
-                    Gson gson = Util.createGsonBuilder();
+                    Gson gson = GsonHelper.createGsonBuilder();
                     intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServer().getId());
                     intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
                     intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
 
                     context.startActivity(intent);
+                }
+                else {
+                    Toast.makeText(context, context.getString(R.string.item_missing), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Widget doesn't contain item");
                 }
             }
         });

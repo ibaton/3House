@@ -73,7 +73,9 @@ public class SettingsFragment extends Fragment {
         mListView.setOnItemClickListener(optionsSelectListener);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(R.string.settings);
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.settings);
+        }
 
         return view;
     }

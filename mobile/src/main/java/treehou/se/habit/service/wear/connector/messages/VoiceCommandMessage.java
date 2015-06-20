@@ -1,8 +1,5 @@
 package treehou.se.habit.service.wear.connector.messages;
 
-/**
- * Created by ibaton on 2015-03-13.
- */
 public class VoiceCommandMessage {
 
     private String message;

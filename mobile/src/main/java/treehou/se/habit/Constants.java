@@ -5,9 +5,6 @@ import java.util.Set;
 
 import treehou.se.habit.core.db.ItemDB;
 
-/**
- * Created by ibaton on 2014-09-10.
- */
 public class Constants {
 
     // TODO remove when support for multiple servers.

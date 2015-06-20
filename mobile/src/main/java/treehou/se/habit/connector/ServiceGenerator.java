@@ -25,11 +25,8 @@ import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedOutput;
-import treehou.se.habit.util.Util;
 
 public class ServiceGenerator {
-
-    private static SSLSocketFactory factory;
 
     // No need to instantiate this class.
     private ServiceGenerator() {
@@ -74,7 +71,7 @@ public class ServiceGenerator {
 
         private static final String TAG = "OpenHabConverter";
 
-        private GsonConverter gsonConverter = new GsonConverter(Util.createGsonBuilder());
+        private GsonConverter gsonConverter = new GsonConverter(GsonHelper.createGsonBuilder());
 
         public OpenHabConverter() {}
 

@@ -38,7 +38,9 @@ public class NotificationsSettingsFragment extends Fragment {
         final NotificationSettingsDB settings = NotificationSettingsDB.loadGlobal(getActivity());
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(R.string.settings_notification);
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.settings_notification);
+        }
 
         CheckBox cbxNotificationToSpeech = (CheckBox) rootView.findViewById(R.id.cbx_notification_to_speech);
         cbxNotificationToSpeech.setChecked(settings.notificationToSpeach());

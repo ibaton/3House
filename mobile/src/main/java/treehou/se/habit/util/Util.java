@@ -11,9 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.mattyork.colours.Colour;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -29,15 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.serializers.ItemDeserializer;
-import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.serializers.LinkedPageDeserializer;
-import treehou.se.habit.core.serializers.SitemapListDeserializer;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.serializers.WidgetDeserializer;
-import treehou.se.habit.core.serializers.WidgetMappingDeserializer;
-import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.control.IconAdapter;
 
@@ -216,22 +204,5 @@ public class Util {
 
     public static int[] generatePallete(int color){
         return Colour.colorSchemeOfType(color, Colour.ColorScheme.ColorSchemeAnalagous);
-    }
-
-    public static Gson gson = null;
-
-    public synchronized static Gson createGsonBuilder(){
-
-        if (gson == null) {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget>>() {}.getType(), new WidgetDeserializer());
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<Sitemap>>() {}.getType(), new SitemapListDeserializer());
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget.Mapping>>() {}.getType(), new WidgetMappingDeserializer());
-            gsonBuilder.registerTypeAdapter(LinkedPage.class, new LinkedPageDeserializer());
-            gsonBuilder.registerTypeAdapter(ItemDB.class, new ItemDeserializer());
-            gson = gsonBuilder.create();
-        }
-
-        return gson;
     }
 }

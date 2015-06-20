@@ -17,11 +17,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import treehou.se.habit.util.Util;
+import treehou.se.habit.connector.GsonHelper;
 
-/**
-* Created by ibaton on 2014-09-10.
-*/
 public class GsonRequest<T> extends Request<T> {
 
     public static final String TAG = "GsonRequest";
@@ -33,7 +30,7 @@ public class GsonRequest<T> extends Request<T> {
     private final Response.Listener<T> listener;
     private Response.ErrorListener errorListener;
 
-    private Gson gson = Util.createGsonBuilder();
+    private Gson gson = GsonHelper.createGsonBuilder();
 
     public GsonRequest(int method, String url, String username, String password,
                        Class<T> clazz, Response.Listener<T> listener,

@@ -153,7 +153,6 @@ public class Communicator {
                             command(server, newItem, String.valueOf(itemVal));
                         } catch (NumberFormatException e) {
                             Log.e(TAG, "Could not parse state " + newItem.getState(), e);
-                            return;
                         }
                     }
                 }

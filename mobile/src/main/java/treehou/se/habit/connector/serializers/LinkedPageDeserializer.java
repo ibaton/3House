@@ -1,4 +1,4 @@
-package treehou.se.habit.core.serializers;
+package treehou.se.habit.connector.serializers;
 
 import android.util.Log;
 

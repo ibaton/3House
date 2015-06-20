@@ -8,9 +8,6 @@ import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.util.Util;
 
-/**
- * Created by ibaton on 2015-03-02.
- */
 public class ControllerUtil {
 
     public static final int INDEX_BUTTON = 0;

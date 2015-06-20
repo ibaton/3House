@@ -45,7 +45,7 @@ public class VoiceService extends IntentService {
         ServerDB server = ServerDB.load(ServerDB.class, serverId);
 
         List<String> results = intent.getExtras().getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
-        if (!results.isEmpty()) {
+        if (results != null && !results.isEmpty()) {
             Log.d(TAG, "Received " + results.size() + " voice results.");
 
             String command = results.get(0);

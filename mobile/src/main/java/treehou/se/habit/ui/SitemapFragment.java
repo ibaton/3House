@@ -17,8 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -28,11 +26,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.ui.homescreen.VoiceService;
-import treehou.se.habit.util.Util;
 
 public class SitemapFragment extends Fragment {
 
@@ -52,7 +50,7 @@ public class SitemapFragment extends Fragment {
         SitemapFragment fragment = new SitemapFragment();
 
         Bundle args = new Bundle();
-        Gson gson = Util.createGsonBuilder();
+        Gson gson = GsonHelper.createGsonBuilder();
         args.putString(ARG_SITEMAP, gson.toJson(sitemap));
         fragment.setArguments(args);
 
@@ -66,7 +64,7 @@ public class SitemapFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        Gson gson = Util.createGsonBuilder();
+        Gson gson = GsonHelper.createGsonBuilder();
 
         communicator = Communicator.instance(getActivity());
         sitemap = gson.fromJson(getArguments().getString(ARG_SITEMAP), Sitemap.class);
@@ -213,6 +211,8 @@ public class SitemapFragment extends Fragment {
         startActivity(intent);
     }
 
+
+
     /**
      * User requested to move to new page.
      *
@@ -220,5 +220,11 @@ public class SitemapFragment extends Fragment {
      */
     public void onEvent(LinkedPage event){
         addPage(event);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("SitemapFragment", "SitemapFragment destroyed");
     }
 }

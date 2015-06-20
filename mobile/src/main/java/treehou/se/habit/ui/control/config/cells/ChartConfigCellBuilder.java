@@ -8,9 +8,6 @@ import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.CellFactory;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class ChartConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "ChartConfigCellBuilder";

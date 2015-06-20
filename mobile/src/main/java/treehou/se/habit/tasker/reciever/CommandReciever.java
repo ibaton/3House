@@ -9,9 +9,6 @@ import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
-/**
- * Created by ibaton on 2015-03-08.
- */
 public class CommandReciever implements IFireReciever {
 
     public static final String TAG = "CommandReciever";

@@ -27,9 +27,6 @@ import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.requests.AuthRequest;
 import treehou.se.habit.core.db.ServerDB;
 
-/**
- * Created by ibaton on 2015-01-11.
- */
 public class GCMHelper {
 
     static final String TAG = "GCMHelper";
@@ -96,7 +93,7 @@ public class GCMHelper {
                             continue;
                         }
 
-                        if(server.getUsername() != null && !server.getUsername().equals("") &&
+                        if(server != null && server.getUsername() != null && !server.getUsername().equals("") &&
                                 server.getPassword() != null && !server.getPassword().equals("")) {
 
                             AuthRequest registerRequest = new AuthRequest(Request.Method.GET, regUrl, server.getUsername(), server.getPassword(), new Response.Listener<String>() {

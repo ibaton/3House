@@ -23,9 +23,6 @@ import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.CommandService;
 import treehou.se.habit.ui.control.ControllerUtil;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class IncDecCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "IncDecCellBuilder";

@@ -6,9 +6,6 @@ import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.OpenSitemapReciever;
 
-/**
- * Created by ibaton on 2015-03-08.
- */
 public class OpenSitemapBoundleManager {
 
     public static final String TAG = "OpenSitemapBoundleManager";

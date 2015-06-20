@@ -8,9 +8,6 @@ import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 
-/**
- * Created by ibaton on 2015-03-08.
- */
 public class IncDecReciever implements IFireReciever {
 
     public static final String TAG = "IncDecReciever";

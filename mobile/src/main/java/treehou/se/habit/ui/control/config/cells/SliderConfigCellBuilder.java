@@ -15,9 +15,6 @@ import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderConfigCellBuilder";

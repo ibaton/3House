@@ -146,7 +146,7 @@ public class SitemapListFragment extends Fragment {
 
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
-                                .replace(R.id.page_container, SitemapFragment.newInstance(sitemap), SitemapFragment.TAG_SITEMAP_FRAGMENT)
+                                .replace(R.id.page_container, SitemapFragment.newInstance(sitemap))
                                 .commit();
 
                         showSitemap = null;
@@ -282,7 +282,8 @@ public class SitemapListFragment extends Fragment {
                         settings.setDefaultSitemap(sitemapDB);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
-                                .replace(R.id.page_container, SitemapFragment.newInstance(sitemap), SitemapFragment.TAG_SITEMAP_FRAGMENT)
+                                .replace(R.id.page_container, SitemapFragment.newInstance(sitemap))
+                                .addToBackStack(null)
                                 .commit();
                     }
                 });

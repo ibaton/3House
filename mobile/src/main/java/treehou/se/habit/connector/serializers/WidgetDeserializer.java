@@ -1,4 +1,4 @@
-package treehou.se.habit.core.serializers;
+package treehou.se.habit.connector.serializers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -71,7 +71,7 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
     @Override
     public List<Widget> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
-        List widgets = new ArrayList();
+        List<Widget> widgets = new ArrayList<>();
 
         if(json.isJsonObject()) {
             Widget widget = deserializeWidget(json.getAsJsonObject(), context);

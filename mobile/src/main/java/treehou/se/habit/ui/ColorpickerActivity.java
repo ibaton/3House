@@ -18,9 +18,9 @@ import java.util.TimerTask;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
+import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Widget;
-import treehou.se.habit.util.Util;
 
 public class ColorpickerActivity extends AppCompatActivity {
 
@@ -39,7 +39,7 @@ public class ColorpickerActivity extends AppCompatActivity {
         String jWidget = bundle.getString(EXTRA_WIDGET);
         int color = bundle.getInt(EXTRA_COLOR);
 
-        Gson gson = Util.createGsonBuilder();
+        Gson gson = GsonHelper.createGsonBuilder();
         ServerDB server = ServerDB.load(ServerDB.class, serverId);
         Widget widget = gson.fromJson(jWidget, Widget.class);
 
@@ -72,7 +72,7 @@ public class ColorpickerActivity extends AppCompatActivity {
             PlaceholderFragment fragment = new PlaceholderFragment();
 
             Bundle args = new Bundle();
-            Gson gson = Util.createGsonBuilder();
+            Gson gson = GsonHelper.createGsonBuilder();
             args.putLong(ARG_SERVER , server.getId());
             args.putString(ARG_WIDGET ,gson.toJson(widget));
             args.putInt(ARG_COLOR ,color);
@@ -92,7 +92,7 @@ public class ColorpickerActivity extends AppCompatActivity {
             String jWidget = args.getString(ARG_WIDGET);
             color = args.getInt(ARG_COLOR);
 
-            Gson gson = Util.createGsonBuilder();
+            Gson gson = GsonHelper.createGsonBuilder();
             server = ServerDB.load(ServerDB.class, serverId);
             widget = gson.fromJson(jWidget, Widget.class);
         }
@@ -107,7 +107,6 @@ public class ColorpickerActivity extends AppCompatActivity {
 
             pcrColor = (ColorPicker) rootView.findViewById(R.id.pcr_color_h);
             pcrColor.setColor(color);
-            pcrColor.setOnColorChangeListener(colorChangeListener);
 
             return rootView;
         }

@@ -14,9 +14,6 @@ import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
 
-/**
- * Created by ibaton on 2014-11-08.
- */
 public class EmptyCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, ControllerDB controller, CellDB cell){

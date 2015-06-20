@@ -5,9 +5,6 @@ import com.android.volley.Response;
 
 import java.util.Map;
 
-/**
- * Created by ibaton on 2014-10-05.
- */
 public class CommandRequest extends AuthRequest {
 
     private String mBody;

@@ -10,9 +10,9 @@ import java.util.List;
 
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
+import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.service.wear.connector.messages.VoiceCommandMessage;
-import treehou.se.habit.util.Util;
 
 public class ListenerService extends WearableListenerService {
 
@@ -32,7 +32,7 @@ public class ListenerService extends WearableListenerService {
 
         Log.d(TAG, "Recieved voice command");
 
-        Gson gson = Util.createGsonBuilder();
+        Gson gson = GsonHelper.createGsonBuilder();
         VoiceCommandMessage message = gson.fromJson(jMessage, VoiceCommandMessage.class);
 
         ServerDB server = null;
