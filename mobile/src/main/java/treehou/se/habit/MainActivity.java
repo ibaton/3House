@@ -113,20 +113,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if(fragmentManager.findFragmentByTag(SitemapFragment.TAG_SITEMAP_FRAGMENT) != null){
-            SitemapFragment sitemapFragment = (SitemapFragment) fragmentManager.findFragmentByTag(SitemapFragment.TAG_SITEMAP_FRAGMENT);
+        Fragment fragment = fragmentManager.findFragmentById(R.id.page_container);
+        if(fragment instanceof SitemapFragment){
+            SitemapFragment sitemapFragment = (SitemapFragment) fragment;
             boolean result = sitemapFragment.popStack();
             if(result) {
                 return;
             }
         }
 
-        if(fragmentManager.getBackStackEntryCount() > 1){
-            fragmentManager.popBackStack();
-            return;
-        }else{
-            finish();
-        }
         super.onBackPressed();
     }
 
@@ -156,7 +151,6 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.page_container, fragment)
-                    .addToBackStack(null)
                     .commit();
         }
     }
