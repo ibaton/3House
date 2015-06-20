@@ -61,30 +61,20 @@ public class MainActivity extends AppCompatActivity
             if(servers.size() <= 0) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, ServersFragment.newInstance())
-                        .addToBackStack(null)
                         .commit();
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, SetupServerFragment.newInstance())
-                        .addToBackStack(null)
                         .commit();
             }else {
                 // Load default sitemap if any
-                long showSitemap = getIntent().getLongExtra(EXTRA_SHOW_SITEMAP, -1);
                 SitemapDB defaultSitemap = Settings.instance(this).getDefaultSitemap();
-                if(savedInstanceState == null && showSitemap >= 0) {
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.page_container, SitemapListFragment.newInstance(showSitemap))
-                        .addToBackStack(null)
-                        .commit();
-                }else if (savedInstanceState == null && defaultSitemap != null){
+                if(savedInstanceState == null && defaultSitemap != null) {
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap.getId()))
-                            .addToBackStack(null)
                             .commit();
                 }else {
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance())
-                            .addToBackStack(null)
                             .commit();
                 }
             }

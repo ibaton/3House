@@ -17,7 +17,6 @@ import treehou.se.habit.R;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
 import treehou.se.habit.ui.settings.subsettings.NotificationsSettingsFragment;
-import treehou.se.habit.ui.settings.subsettings.SitemapSettingsFragment;
 import treehou.se.habit.ui.settings.subsettings.WidgetSettingsFragment;
 
 public class SettingsFragment extends Fragment {
@@ -25,7 +24,6 @@ public class SettingsFragment extends Fragment {
     private static final int ITEM_WIDGETS = 1;
     private static final int ITEM_NOTIFICATIONS = 2;
     private static final int ITEM_CUSTOM_WIDGETS = 3;
-    private static final int ITEM_SITEMAPS = 4;
 
     /**
      * The fragment's ListView/GridView.
@@ -58,7 +56,6 @@ public class SettingsFragment extends Fragment {
 
         ArrayList<ImageItem> items = new ArrayList<>();
         items.add(new ImageItem(ITEM_WIDGETS, getActivity().getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
-        items.add(new ImageItem(ITEM_SITEMAPS, getActivity().getString(R.string.sitemaps), R.drawable.ic_icon_settings_sitemap));
         items.add(new ImageItem(ITEM_NOTIFICATIONS, getActivity().getString(R.string.settings_notification), R.drawable.ic_item_settings_notifications));
 
         mAdapter = new ImageAdapter(getActivity(), items);
@@ -94,9 +91,6 @@ public class SettingsFragment extends Fragment {
                     break;
                 case ITEM_NOTIFICATIONS :
                     fragment = NotificationsSettingsFragment.newInstance();
-                    break;
-                case ITEM_SITEMAPS :
-                    fragment = SitemapSettingsFragment.newInstance();
                     break;
             }
 

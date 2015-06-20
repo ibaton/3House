@@ -43,15 +43,6 @@ public class Settings {
     }
 
     /**
-     * Check if sitemap should be open per default.
-     *
-     * @return true if sitemap should be open per default, else false
-     */
-    public boolean getUseDefaultSitemap(){
-        return preferences.getLong(PREF_DEFAULT_SITEMAP, -1) != -1;
-    }
-
-    /**
      * Get the sitemap to open by default
      *
      * @return default sitemap.

@@ -25,6 +25,7 @@ import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.db.SitemapDB;
+import treehou.se.habit.util.Settings;
 
 public class SitemapListFragment extends Fragment {
 
@@ -146,7 +147,6 @@ public class SitemapListFragment extends Fragment {
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.page_container, SitemapFragment.newInstance(sitemap), SitemapFragment.TAG_SITEMAP_FRAGMENT)
-                                .addToBackStack(null)
                                 .commit();
 
                         showSitemap = null;
@@ -276,10 +276,13 @@ public class SitemapListFragment extends Fragment {
                 sitemapHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Settings settings = Settings.instance(getActivity());
+                        SitemapDB sitemapDB = new SitemapDB(sitemap);
+                        sitemapDB.save();
+                        settings.setDefaultSitemap(sitemapDB);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.page_container, SitemapFragment.newInstance(sitemap), SitemapFragment.TAG_SITEMAP_FRAGMENT)
-                                .addToBackStack(null)
                                 .commit();
                     }
                 });
