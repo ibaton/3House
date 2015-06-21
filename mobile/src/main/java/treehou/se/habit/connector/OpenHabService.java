@@ -28,7 +28,7 @@ public interface OpenHabService {
 
     @Headers("Accept: application/json")
     @GET("/rest/items/")
-    void getItems(retrofit.Callback<ItemDB.ItemHolder> callback);
+    void getItems(retrofit.Callback<List<ItemDB>> callback);
 
     @Headers("Accept: application/json")
     @GET("/rest/items/{id}")

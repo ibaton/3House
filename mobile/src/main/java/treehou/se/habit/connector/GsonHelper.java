@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import treehou.se.habit.connector.serializers.ItemDeserializer;
+import treehou.se.habit.connector.serializers.ItemListDeserializer;
 import treehou.se.habit.connector.serializers.LinkedPageDeserializer;
 import treehou.se.habit.connector.serializers.SitemapListDeserializer;
 import treehou.se.habit.connector.serializers.WidgetDeserializer;
@@ -30,6 +31,7 @@ public class GsonHelper {
             gsonBuilder.registerTypeAdapter(new TypeToken<List<Sitemap>>() {}.getType(), new SitemapListDeserializer());
             gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget.Mapping>>() {}.getType(), new WidgetMappingDeserializer());
             gsonBuilder.registerTypeAdapter(LinkedPage.class, new LinkedPageDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<ItemDB>>() {}.getType(), new ItemListDeserializer());
             gsonBuilder.registerTypeAdapter(ItemDB.class, new ItemDeserializer());
             gson = gsonBuilder.create();
         }

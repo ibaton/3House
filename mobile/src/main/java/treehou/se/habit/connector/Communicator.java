@@ -434,10 +434,9 @@ public class Communicator {
 
     public void requestItems(final ServerDB server, final ItemsRequestListener listener){
 
-        final retrofit.Callback<ItemDB.ItemHolder> callback = new retrofit.Callback<ItemDB.ItemHolder>() {
+        final retrofit.Callback<List<ItemDB>> callback = new retrofit.Callback<List<ItemDB>>() {
             @Override
-            public void success(ItemDB.ItemHolder itemHolder, retrofit.client.Response response) {
-                List<ItemDB> items = itemHolder.item;
+            public void success(List<ItemDB> items, retrofit.client.Response response) {
                 for(ItemDB item : items){
                     item.setServer(server);
                 }
@@ -460,10 +459,10 @@ public class Communicator {
         }
 
         OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.getItems(new retrofit.Callback<ItemDB.ItemHolder>() {
+        service.getItems(new retrofit.Callback<List<ItemDB>>() {
             @Override
-            public void success(ItemDB.ItemHolder itemHolder, retrofit.client.Response response) {
-                callback.success(itemHolder, response);
+            public void success(List<ItemDB> items, retrofit.client.Response response) {
+                callback.success(items, response);
             }
 
             @Override
@@ -473,6 +472,7 @@ public class Communicator {
                     service.getItems(callback);
                 }else{
                     callback.failure(error);
+                    Log.e(TAG, "Request items failed " + error.getUrl(), error);
                 }
             }
         });
