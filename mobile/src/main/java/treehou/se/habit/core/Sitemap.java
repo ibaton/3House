@@ -31,8 +31,6 @@ public class Sitemap {
         return link;
     }
 
-
-
     public boolean isLocal(){
         ServerDB server = getServer();
         Uri uri = Uri.parse(link);

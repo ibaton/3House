@@ -82,7 +82,7 @@ public class SitemapFragment extends Fragment {
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
-            actionBar.setTitle(sitemap.getName());
+            actionBar.setTitle(sitemap.getLabel());
         }
     }
 
