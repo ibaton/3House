@@ -91,6 +91,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/as_notification"
                         android:id="@+id/as_notification" />
+
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/show_title"
+                        android:id="@+id/show_title" />
                 </LinearLayout>
             </ScrollView>
 

@@ -24,6 +24,9 @@ public class ControllerDB extends Model {
     @Column(name = "showNotification")
     private boolean showNotification = false;
 
+    @Column(name = "showTitle")
+    private boolean showTitle = true;
+
     public List<CellRowDB> cellRows(){
         return getMany(CellRowDB.class, "Controller");
     }
@@ -51,6 +54,14 @@ public class ControllerDB extends Model {
 
     public void showNotification(boolean showNotification) {
         this.showNotification = showNotification;
+    }
+
+    public boolean showTitle() {
+        return showTitle;
+    }
+
+    public void showTitle(boolean showTitle) {
+        this.showTitle = showTitle;
     }
 
     public CellRowDB addRow(){

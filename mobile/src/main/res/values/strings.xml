@@ -80,4 +80,5 @@
     <string name="server">Server</string>
     <string name="menu_item">Menu item</string>
     <string name="item_missing">Item is missing</string>
+    <string name="show_title">Show title</string>
 </resources>

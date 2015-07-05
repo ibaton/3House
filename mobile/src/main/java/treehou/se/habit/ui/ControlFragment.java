@@ -94,6 +94,8 @@ public class ControlFragment extends Fragment {
         View titleHolder = rootView.findViewById(R.id.lou_title_holder);
         titleHolder.setBackgroundColor(pallete[0]);
 
+        titleHolder.setVisibility(controller.showTitle() ? View.VISIBLE : View.GONE);
+
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity.getWindow().setStatusBarColor(pallete[0]);
             activity.getWindow().setNavigationBarColor(pallete[0]);

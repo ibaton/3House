@@ -66,6 +66,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     private View viwBackground;
     private View lblSettingsContainer;
     private CheckBox cbxAsNotification;
+    private CheckBox cbxShowTitle;
     private DrawerLayout drwLayout;
 
     private ActionBar actionBar;
@@ -140,6 +141,16 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                 }else {
                     ControlHelper.hideNotification(getActivity(), controller);
                 }
+            }
+        });
+
+        cbxShowTitle = (CheckBox) rootView.findViewById(R.id.show_title);
+        cbxShowTitle.setChecked(controller.showTitle());
+        cbxShowTitle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                controller.showTitle(isChecked);
+                controller.save();
             }
         });
 
