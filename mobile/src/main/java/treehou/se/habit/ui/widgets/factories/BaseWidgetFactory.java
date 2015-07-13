@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -74,13 +75,17 @@ public class BaseWidgetFactory {
         private List<Widget> widgets = new ArrayList<>();
         private Widget widget;
 
-        public static BaseWidgetHolder create(WidgetFactory factory, boolean flat, Widget widget, final Widget parent){
+        public static BaseWidgetHolder create(Builder builder){
 
-            final LayoutInflater inflater = factory.getInflater();
-            View rootView = flat ? inflater.inflate(R.layout.item_widget_base_flat, null) : inflater.inflate(R.layout.item_widget_base, null);
+            final LayoutInflater inflater = builder.getFactory().getInflater();
+
+            View rootView = builder.getView();
+            if(rootView == null) {
+                rootView = builder.isFlat() ? inflater.inflate(R.layout.item_widget_base_flat, null) : inflater.inflate(R.layout.item_widget_base, null);
+            }
 
             // Put in dummy frame if not in frame
-            if (parent == null) {
+            if (builder.getParent() == null) {
                 View holderView = inflater.inflate(R.layout.widget_container, null);
                 LinearLayout holder = (LinearLayout) holderView.findViewById(R.id.lou_widget_frame_holder);
                 holder.addView(rootView);
@@ -88,9 +93,9 @@ public class BaseWidgetFactory {
                 rootView = holderView;
             }
 
-            BaseWidgetHolder holder = new BaseWidgetHolder(factory.getContext(), rootView, widget, factory);
+            BaseWidgetHolder holder = new BaseWidgetHolder(builder.getFactory().getContext(), rootView, builder.getWidget(), builder.getFactory());
 
-            final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
+            final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(builder.getFactory().getContext());
             float percentage = Util.toPercentage(settings.getTextSize());
 
             holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
@@ -102,7 +107,7 @@ public class BaseWidgetFactory {
             layoutParams.width = (int) (((float) layoutParams.width) * imageSizePercentage);
             holder.imgIcon.setLayoutParams(layoutParams);
 
-            holder.update(widget);
+            holder.update(builder.getWidget());
 
             return holder;
         }
@@ -275,6 +280,7 @@ public class BaseWidgetFactory {
             private WidgetFactory factory;
             private Widget widget;
             private Widget parent;
+            private View view;
             private boolean flat = false;
             private boolean showLabel = true;
 
@@ -297,14 +303,43 @@ public class BaseWidgetFactory {
                 return this;
             }
 
+            public Builder setView(View view) {
+                this.view = view;
+                return this;
+            }
+
             public Builder setShowLabel(boolean showLabel) {
                 this.showLabel = showLabel;
                 return this;
             }
 
+            public WidgetFactory getFactory() {
+                return factory;
+            }
+
+            public Widget getWidget() {
+                return widget;
+            }
+
+            public Widget getParent() {
+                return parent;
+            }
+
+            public View getView() {
+                return view;
+            }
+
+            public boolean isFlat() {
+                return flat;
+            }
+
+            public boolean isShowLabel() {
+                return showLabel;
+            }
+
             public BaseWidgetHolder build(){
 
-                BaseWidgetHolder baseBuilderHolder = BaseWidgetHolder.create(factory, flat, widget, parent);
+                BaseWidgetHolder baseBuilderHolder = BaseWidgetHolder.create(this);
                 baseBuilderHolder.setShowLabel(showLabel);
 
                 return baseBuilderHolder;

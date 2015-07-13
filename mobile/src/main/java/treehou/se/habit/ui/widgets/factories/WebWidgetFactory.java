@@ -37,7 +37,12 @@ public class WebWidgetFactory implements IWidgetFactory {
 
         private WebWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
 
-            baseHolder = BaseWidgetFactory.BaseWidgetHolder.create(factory, false, widget, parent);
+            WidgetFactory.IWidgetHolder baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+                    .setWidget(widget)
+                    .setFlat(false)
+                    .setShowLabel(true)
+                    .setParent(parent)
+                    .build();
 
             final View itemView = factory.getInflater().inflate(R.layout.item_widget_web, null);
             webView = (WebView) itemView.findViewById(R.id.webView);
@@ -53,7 +58,7 @@ public class WebWidgetFactory implements IWidgetFactory {
             settings.setDatabaseEnabled(true);
             settings.setAppCacheEnabled(true);
 
-            baseHolder.getSubView().addView(itemView);
+            //baseHolder.getSubView().addView(itemView);
 
             update(widget);
         }

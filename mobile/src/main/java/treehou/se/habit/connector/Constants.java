@@ -16,6 +16,9 @@ public class Constants {
     public static final String COMMAND_STOP     = "STOP";
     public static final String COMMAND_MOVE     = "MOVE";
 
+    public static final String COMMAND_INCREMENT = "INCREASE";
+    public static final String COMMAND_DECREMENT = "DECREASE";
+
     public static final String COMMAND_COLOR    = "%d,%d,%d";
 
     public static final String ITEM_VOICE_COMMAND = "VoiceCommand";
