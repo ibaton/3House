@@ -91,7 +91,7 @@ public class SitemapFragment extends Fragment {
                              final Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_sitemap, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sitemap, null);
 
         sitemapAdapter = new SitemapAdapter(sitemap.getServer(), getActivity().getSupportFragmentManager(), pages);
         pgrSitemap = (ViewPager) rootView.findViewById(R.id.pgr_sitemap);
