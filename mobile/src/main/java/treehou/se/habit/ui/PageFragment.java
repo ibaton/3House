@@ -260,7 +260,7 @@ public class PageFragment extends Fragment {
             @Override
             public void run() {
                 if(invalidateWidgets) {
-                    Log.d(TAG, "Invalidating widgets " + pageWidgets.size() + " : " + widgets.size());
+                    Log.d(TAG, "Invalidating widgets " + pageWidgets.size() + " : " + widgets.size() + " " + page.getTitle());
 
                     widgetHolders.clear();
                     louFragments.removeAllViews();

@@ -5,10 +5,8 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import treehou.se.habit.core.LinkedPage;
@@ -18,10 +16,8 @@ import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.FrameWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.GroupWidgetFactory;
-import treehou.se.habit.ui.widgets.factories.ICustomWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.IWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ImageWidgetFactory;
-import treehou.se.habit.ui.widgets.factories.NullWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SelectionWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SwitchWidgetFactory;
@@ -38,7 +34,7 @@ public class WidgetFactory {
     private LinkedPage page;
     private LayoutInflater inflater;
 
-    private IWidgetFactory defaultBuilder = new NullWidgetFactory();
+    private IWidgetFactory defaultBuilder = new TextWidgetFactory();
 
     private Map<String, IWidgetFactory> builders = new HashMap<>();
 
@@ -60,38 +56,24 @@ public class WidgetFactory {
         builders.put(Widget.TYPE_GROUP, new GroupWidgetFactory());
     }
 
-    private ICustomWidgetFactory getCustomWidget(List<Widget> widgets ,int position , Widget parent) {
-        return null;
-    }
-
     public IWidgetHolder createWidget(final Widget widget , final Widget parent){
         inflater = LayoutInflater.from(context);
 
-        IWidgetHolder itemHolder = null;
+        IWidgetHolder itemHolder;
         try {
-            ViewGroup louWidgetHolder = null;
-
             if (builders.containsKey(widget.getType())) {
+                Log.w(TAG, "Building widget with type " + widget.getType());
                 IWidgetFactory builder = builders.get(widget.getType());
                 itemHolder = builder.build(this, page, widget, parent);
             } else {
                 Log.w(TAG, "Error: No builder with type " + widget.getType());
                 return defaultBuilder.build(this, page, widget, parent);
             }
-
-            /*if(louWidgetHolder != null) {
-                List<Widget> subWidgets = widget.getWidget();
-                for (final Widget w : subWidgets) {
-                    IWidgetHolder subWidget = createWidget(w, widget);
-                    louWidgetHolder.addView(subWidget.getView());
-                }
-            }*/
         }catch (Exception e){
             e.printStackTrace();
             itemHolder = defaultBuilder.build(this, page, widget, parent);
         }
 
-        //itemView.setOnLongClickListener(dialogItemListener);
         return itemHolder;
     }
 
@@ -128,29 +110,5 @@ public class WidgetFactory {
 
     public LinkedPage getPage() {
         return page;
-    }
-
-    public static class WidgetSettingsCallback {
-        private List<Widget> widgets;
-        private int position;
-        private Widget parent;
-
-        public WidgetSettingsCallback(List<Widget> widgets ,int position , Widget parent) {
-            this.widgets = widgets;
-            this.position = position;
-            this.parent = parent;
-        }
-
-        public List<Widget> getWidgets() {
-            return widgets;
-        }
-
-        public int getPosition() {
-            return position;
-        }
-
-        public Widget getParent() {
-            return parent;
-        }
     }
 }

@@ -52,8 +52,8 @@ public class LinkedPageDeserializer implements JsonDeserializer<LinkedPage> {
                 jWidgets = jObject.get("widget");
             }
 
-            if(jWidgets != null && jWidgets.isJsonArray()) {
-                linkedPage.setWidgets(context.<List<Widget>>deserialize(jWidgets.getAsJsonArray(), new TypeToken<List<Widget>>() {}.getType()));
+            if(jWidgets != null) {
+                linkedPage.setWidgets(context.<List<Widget>>deserialize(jWidgets, new TypeToken<List<Widget>>() {}.getType()));
             }
 
             return linkedPage;
