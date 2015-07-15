@@ -64,7 +64,10 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                         updateTick();
                     }
                 }, tickTime, tickTime);
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            } else if (event.getAction() == MotionEvent.ACTION_UP ||
+                    event.getAction() == MotionEvent.ACTION_CANCEL ||
+                    event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+
                 timer.cancel();
                 listener.onRelease(tick);
             }
