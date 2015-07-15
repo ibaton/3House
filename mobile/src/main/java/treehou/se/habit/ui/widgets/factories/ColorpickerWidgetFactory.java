@@ -29,99 +29,9 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
 
     private static final String TAG = "ColorpickerWidget";
 
-    private int color;
-
-    private View clrView1;
-
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
-
-        LayoutInflater inflater = widgetFactory.getInflater();
-        final Context context = widgetFactory.getContext();
-        View itemView = inflater.inflate(R.layout.item_widget_color, null);
-        clrView1 = itemView.findViewById(R.id.clr_color);
-
-        View btnIncrement = itemView.findViewById(R.id.btn_increment);
-        btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
-            @Override
-            public void onTick(int tick) {
-                if (tick > 0){
-                    Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_INCREMENT);
-                }
-            }
-
-            @Override
-            public void onRelease(int tick) {
-                if (tick <= 0){
-                    Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_ON);
-                }
-            }
-        }));
-
-        View btnDecrement = itemView.findViewById(R.id.btn_decrement);
-        btnDecrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
-            @Override
-            public void onTick(int tick) {
-                if (tick > 0){
-                    Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_DECREMENT);
-                }
-            }
-
-            @Override
-            public void onRelease(int tick) {
-                if (tick <= 0){
-                    Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_OFF);
-                }
-            }
-        }));
-
-        WidgetFactory.IWidgetHolder builder = new BaseWidgetFactory.BaseWidgetHolder.Builder(widgetFactory)
-                .setWidget(widget)
-                .setFlat(true)
-                .setShowLabel(true)
-                .setView(itemView)
-                .setParent(parent)
-                .build();
-
-        color = Color.BLACK;
-
-        if(widget.getItem() != null && widget.getItem().getState() != null) {
-            String[] sHSV = widget.getItem().getState().split(",");
-            if (sHSV.length == 3) {
-                float[] hSV = {
-                        Float.valueOf(sHSV[0]),
-                        Float.valueOf(sHSV[1]),
-                        Float.valueOf(sHSV[2])};
-                color = Color.HSVToColor(hSV);
-            }
-        }
-        setColor(color);
-
-        builder.getView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (widget.getItem() != null) {
-                    Intent intent = new Intent(context, ColorpickerActivity.class);
-                    Gson gson = GsonHelper.createGsonBuilder();
-                    intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServer().getId());
-                    intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
-                    intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
-
-                    context.startActivity(intent);
-                } else {
-                    Toast.makeText(context, context.getString(R.string.item_missing), Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Widget doesn't contain item");
-                }
-            }
-        });
-
-        builder.update(widget);
-
-        return builder;
-    }
-
-    private void setColor(int color){
-        clrView1.setBackgroundColor(color);
+        return ColorWidgetHolder.create(widgetFactory, widget, parent);
     }
 
     static class HoldListener implements View.OnTouchListener {
@@ -169,6 +79,125 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         interface OnHoldListener {
             void onTick(int tick);
             void onRelease(int tick);
+        }
+    }
+
+    /**
+     * Color widget
+     */
+    static class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
+
+        private static final String TAG = "PickerWidgetHolder";
+
+        private BaseWidgetFactory.BaseWidgetHolder baseHolder;
+        private int color;
+        private View clrView1;
+
+        public static ColorWidgetHolder create(WidgetFactory widgetFactory, Widget widget, Widget parent){
+            return new ColorWidgetHolder(widget, parent, widgetFactory);
+        }
+
+        private ColorWidgetHolder(final Widget widget, Widget parent, final WidgetFactory widgetFactory) {
+
+            LayoutInflater inflater = widgetFactory.getInflater();
+            final Context context = widgetFactory.getContext();
+            View itemView = inflater.inflate(R.layout.item_widget_color, null);
+            clrView1 = itemView.findViewById(R.id.clr_color);
+
+            View btnIncrement = itemView.findViewById(R.id.btn_increment);
+            btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
+                @Override
+                public void onTick(int tick) {
+                    if (tick > 0){
+                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_INCREMENT);
+                    }
+                }
+
+                @Override
+                public void onRelease(int tick) {
+                    if (tick <= 0){
+                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_ON);
+                    }
+                }
+            }));
+
+            View btnDecrement = itemView.findViewById(R.id.btn_decrement);
+            btnDecrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
+                @Override
+                public void onTick(int tick) {
+                    if (tick > 0) {
+                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_DECREMENT);
+                    }
+                }
+
+                @Override
+                public void onRelease(int tick) {
+                    if (tick <= 0) {
+                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_OFF);
+                    }
+                }
+            }));
+
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(widgetFactory)
+                    .setWidget(widget)
+                    .setFlat(true)
+                    .setShowLabel(true)
+                    .setView(itemView)
+                    .setParent(parent)
+                    .build();
+
+            baseHolder.getView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (widget.getItem() != null) {
+                        Intent intent = new Intent(context, ColorpickerActivity.class);
+                        Gson gson = GsonHelper.createGsonBuilder();
+                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServer().getId());
+                        intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
+                        intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
+
+                        context.startActivity(intent);
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.item_missing), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Widget doesn't contain item");
+                    }
+                }
+            });
+
+            update(widget);
+        }
+
+        private void setColor(int color){
+            clrView1.setBackgroundColor(color);
+        }
+
+        @Override
+        public void update(final Widget widget) {
+            Log.d(TAG, "update " + widget);
+
+            if (widget == null) {
+                return;
+            }
+
+            color = Color.BLACK;
+            if(widget.getItem() != null && widget.getItem().getState() != null) {
+                String[] sHSV = widget.getItem().getState().split(",");
+                if (sHSV.length == 3) {
+                    float[] hSV = {
+                            Float.valueOf(sHSV[0]),
+                            Float.valueOf(sHSV[1]),
+                            Float.valueOf(sHSV[2])};
+                    color = Color.HSVToColor(hSV);
+                }
+            }
+            setColor(color);
+
+            baseHolder.update(widget);
+        }
+
+        @Override
+        public View getView() {
+            return baseHolder.getView();
         }
     }
 }
