@@ -138,7 +138,7 @@ public class SitemapFragment extends Fragment {
             // Remove tabs that not parent of selected view
             if(state == ViewPager.SCROLL_STATE_IDLE){
                 while(pages.size() > index+1) {
-                    pages.remove(pages.size()-1);
+                    pages.remove(pages.size() - 1);
                     sitemapAdapter.notifyDataSetChanged();
                 }
             }

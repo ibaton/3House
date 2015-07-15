@@ -53,8 +53,10 @@ public class PageFragment extends Fragment {
     private static final String ARG_PAGE    = "ARG_PAGE";
     private static final String ARG_SERVER  = "ARG_SERVER";
 
+    private static final String STATE_PAGE = "STATE_PAGE";
+
     private ServerDB server;
-    private LinkedPage mPage;
+    private LinkedPage page;
 
     private LinearLayout louFragments;
 
@@ -63,6 +65,8 @@ public class PageFragment extends Fragment {
     private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
 
     private AsyncTask<Void, Void, Void> longPoller;
+
+    private boolean initialized = false;
 
     private Socket pollSocket;
 
@@ -100,7 +104,17 @@ public class PageFragment extends Fragment {
         server = ServerDB.load(ServerDB.class, serverId);
 
         String jPage = args.getString(ARG_PAGE);
-        mPage = gson.fromJson(jPage, LinkedPage.class);
+        page = gson.fromJson(jPage, LinkedPage.class);
+
+        initialized = false;
+        if(savedInstanceState != null && savedInstanceState.containsKey(STATE_PAGE)) {
+            jPage = savedInstanceState.getString(STATE_PAGE);
+            LinkedPage savedPage = gson.fromJson(jPage, LinkedPage.class);
+            if(savedPage.getId().equals(page.getId())) {
+                page = savedPage;
+                initialized = true;
+            }
+        }
     }
 
     @Override
@@ -109,9 +123,41 @@ public class PageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_widget, container, false);
 
         louFragments = (LinearLayout) view.findViewById(R.id.lou_widgets);
-        updatePage(mPage);
+        updatePage(page);
+
+        if(!initialized) {
+            requestPageUpdate();
+        }
+        initialized = true;
 
         return view;
+    }
+
+    private void requestPageUpdate(){
+        Communicator communicator = Communicator.instance(getActivity());
+        communicator.requestPage(server, page, new Callback<LinkedPage>() {
+            @Override
+            public void success(final LinkedPage linkedPage, final retrofit.client.Response response) {
+                //TODO update instead of reset.
+                Log.d(TAG, "Received update " + linkedPage.getWidget().size() + " widgets from  " + page.getLink());
+                ThreadPool.instance().submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        updatePage(linkedPage);
+                    }
+                });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "error " + error.getCause() + " " + error.getMessage());
+
+                // TODO Check type of error.
+                // TODO Retry on remote server.
+                Toast.makeText(getActivity(), "Lost connection to server", Toast.LENGTH_LONG).show();
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
     }
 
     // TODO extract to separate class
@@ -136,7 +182,7 @@ public class PageFragment extends Fragment {
 
                 RequestBuilder request = client.newRequestBuilder()
                     .method(org.atmosphere.wasync.Request.METHOD.GET)
-                    .uri(mPage.getLink())
+                    .uri(page.getLink())
                     .header("Authorization", credentials)
                     .header("Accept", "application/json")
                     .header("Accept-Charset", "utf-8")
@@ -195,31 +241,6 @@ public class PageFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Communicator communicator = Communicator.instance(getActivity());
-        communicator.requestPage(server, mPage, new Callback<LinkedPage>() {
-            @Override
-            public void success(final LinkedPage linkedPage, final retrofit.client.Response response) {
-                //TODO update instead of reset.
-                Log.d(TAG, "Received update " + linkedPage.getWidget().size() + " widgets from  " + mPage.getLink());
-                ThreadPool.instance().submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        updatePage(linkedPage);
-                    }
-                });
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "error " + error.getCause() + " " + error.getMessage());
-
-                // TODO Check type of error.
-                // TODO Retry on remote server.
-                Toast.makeText(getActivity(), "Lost connection to server", Toast.LENGTH_LONG).show();
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
-
         // Start listening for server updates
         // TODO Support for older versions.
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -237,7 +258,7 @@ public class PageFragment extends Fragment {
      */
     private synchronized void updatePage(final LinkedPage page){
         Log.d(TAG, "Updating page " + page.getTitle() + " widgets " + widgets.size() + " : " + page.getWidget().size());
-        mPage = page;
+        this.page = page;
         widgetFactory = new WidgetFactory(getActivity(), server, page);
 
         final List<Widget> pageWidgets = page.getWidget();
@@ -300,5 +321,11 @@ public class PageFragment extends Fragment {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             longPoller.cancel(true);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(STATE_PAGE, GsonHelper.createGsonBuilder().toJson(page)); // TODO save state prevent fragment from requesting state again
+        super.onSaveInstanceState(outState);
     }
 }
