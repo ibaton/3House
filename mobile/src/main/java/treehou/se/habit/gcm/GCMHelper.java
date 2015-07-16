@@ -10,10 +10,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -22,9 +18,12 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import javax.security.auth.callback.Callback;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import treehou.se.habit.Constants;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.requests.AuthRequest;
 import treehou.se.habit.core.db.ServerDB;
 
 public class GCMHelper {
@@ -75,8 +74,7 @@ public class GCMHelper {
 
                     String deviceModel = URLEncoder.encode(Build.MODEL, "UTF-8");
                     String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    String regUrl = "https://my.openhab.org/addAndroidRegistration?deviceId=" + deviceId +
-                            "&deviceModel=" + deviceModel + "&regId=" + regId;
+
                     Communicator communicator = Communicator.instance(context);
                     List<ServerDB> servers = ServerDB.getServers();
                     for(final ServerDB server : servers) {
@@ -96,22 +94,18 @@ public class GCMHelper {
                         if(server != null && server.getUsername() != null && !server.getUsername().equals("") &&
                                 server.getPassword() != null && !server.getPassword().equals("")) {
 
-                            AuthRequest registerRequest = new AuthRequest(Request.Method.GET, regUrl, server.getUsername(), server.getPassword(), new Response.Listener<String>() {
+                            communicator.registerMyOpenhabGCM(server, deviceId, deviceModel, regId, new retrofit.Callback<String>() {
                                 @Override
-                                public void onResponse(String response) {
+                                public void success(String regId, Response response) {
                                     Log.d(TAG, "GCM reg id success " + server.getUsername());
-
                                     GCMHelper.saveRegistrationId(context, regId);
-
                                 }
-                            }, new Response.ErrorListener() {
+
                                 @Override
-                                public void onErrorResponse(VolleyError error) {
+                                public void failure(RetrofitError error) {
                                     Log.e(TAG, "GCM reg id error: " + error + " " + server.getUsername());
                                 }
                             });
-                            registerRequest.setRetryPolicy(new DefaultRetryPolicy( 5000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                            communicator.addBasicRequest(registerRequest);
                         }
                     }
                     // TODO show error message

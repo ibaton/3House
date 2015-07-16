@@ -314,8 +314,6 @@ public class PageFragment extends Fragment {
         super.onPause();
 
         Communicator communicator = Communicator.instance(getActivity());
-        communicator.cancelRequest(PAGE_REQUEST_TAG);
-
 
         // Stop listening for server updates
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -11,11 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Callback;
@@ -30,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit.RetrofitError;
-import treehou.se.habit.connector.requests.GsonRequest;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
@@ -42,9 +36,10 @@ public class Communicator {
 
     private static final String TAG = "Communicator";
 
+    private static final String MY_OPENHAB_URL = "https://my.openhab.org";
+
     private static Communicator mInstance;
     private Context context;
-    private RequestQueue requestQueue;
     private Map<ServerDB, Picasso> requestLoaders = new HashMap<>();
 
     public static synchronized Communicator instance(Context context){
@@ -56,7 +51,16 @@ public class Communicator {
 
     private Communicator(Context context){
         this.context = context;
-        requestQueue = Volley.newRequestQueue(context);
+    }
+
+    public static MyOpenHabService generateMyOpenHabService(ServerDB server){
+        try {
+            return BasicAuthServiceGenerator.createService(MyOpenHabService.class, MY_OPENHAB_URL, server.getUsername(), server.getPassword());
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Failed to create OpenhabService ", e);
+        }
+        return null;
     }
 
     public static OpenHabService generateOpenHabService(ServerDB server, boolean local){
@@ -64,7 +68,13 @@ public class Communicator {
     }
 
     public static OpenHabService generateOpenHabService(ServerDB server, String url){
-        return ServiceGenerator.createService(OpenHabService.class, url, server.getUsername(), server.getPassword());
+        try {
+            return BasicAuthServiceGenerator.createService(OpenHabService.class, url, server.getUsername(), server.getPassword());
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Failed to create OpenhabService ", e);
+        }
+        return null;
     }
 
     public static NetworkInfo getNetworkInfo(Context context){
@@ -187,31 +197,10 @@ public class Communicator {
 
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new OkHttpDownloader(httpClient));
-
-        //, TrustModifier.createAcceptAllClient()
-
-        /*builder.downloader(new OkHttpDownloader(TrustModifier.createAcceptAllClient()) {
-            @Override
-            protected HttpURLConnection openConnection(Uri uri) throws IOException {
-                Log.d(TAG, "onBitmapLoaded openConnection " + uri);
-                HttpURLConnection connection = super.openConnection(uri);
-
-                if(!TextUtils.isEmpty(server.getUsername()) && !TextUtils.isEmpty(server.getPassword())) {
-                    connection.setRequestProperty("Authorization", ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
-                }
-
-                return connection;
-            }
-
-            @Override
-            public Response load(Uri uri, int networkPolicy) throws IOException {
-                return super.load(uri, networkPolicy);
-            }
-        });*/
         builder.memoryCache(new LruCache(context));
         final Picasso picasso = builder.build();
 
-        requestLoaders.put(server,picasso);
+        requestLoaders.put(server, picasso);
 
         return picasso;
     }
@@ -262,75 +251,6 @@ public class Communicator {
      */
     public void loadImage(final ServerDB server, final URL imageUrl, final ImageView imageView){
         loadImage(server, imageUrl, imageView, true);
-    }
-
-    public void cancelRequest(String tag){
-        requestQueue.cancelAll(tag);
-    }
-
-    public <T> void addRequest(final ServerDB server, final GsonRequest<T> request){
-        addRequest(server, request, true);
-    }
-
-    /**
-     *
-     * @param server
-     * @param request
-     * @param multiServerRetry try to connect to local and remote server.
-     * @param <T>
-     */
-    public <T> void addRequest(final ServerDB server, final GsonRequest<T> request, boolean multiServerRetry){
-
-        final Uri localUrl = ConnectorUtil.changeHostUrl(Uri.parse(request.getUrl()),Uri.parse(server.getLocalUrl()));
-        final Uri remoteRequestUrl = ConnectorUtil.changeHostUrl(Uri.parse(request.getUrl()), Uri.parse(server.getRemoteUrl()));
-
-        if(!multiServerRetry){
-            requestQueue.add(request);
-            return;
-        }
-
-        final Response.ErrorListener errorListener = request.getErrorListener();
-        final Response.Listener<T> listener = request.getResponseListener();
-
-        // Make remote request if not connected to wifi.
-        if(!isConnectedWifi(context) || !server.haveLocal()) {
-            if (server.haveRemote()){
-                GsonRequest<T> remoteRequest = new GsonRequest<>(
-                        request.getMethod(), remoteRequestUrl.toString(),
-                        server.getUsername(), server.getPassword(),
-                        request.getClazz(), listener, errorListener);
-                requestQueue.add(remoteRequest);
-            }
-            return;
-        }
-
-        // Fallback to remote on failure.
-        Response.ErrorListener retryErrorResponse = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (server.haveRemote()) {
-                    Log.d(TAG, "addRequest local error " + error);
-                    GsonRequest<T> remoteRequest = new GsonRequest<>(
-                            request.getMethod(), remoteRequestUrl.toString(),
-                            server.getUsername(), server.getPassword(),
-                            request.getClazz(), listener, errorListener);
-                    Log.d(TAG, "addRequest remote " + remoteRequest.getUrl());
-                    requestQueue.add(remoteRequest);
-                }
-            }
-        };
-
-        // Create remote request. Fallback to remote if have any
-        GsonRequest<T> newRequest = new GsonRequest<>(
-                request.getMethod(), localUrl.toString(),
-                server.getUsername(), server.getPassword(),
-                request.getClazz(), listener, server.haveRemote()?retryErrorResponse:errorListener);
-        requestQueue.add(newRequest);
-        Log.d(TAG, "addRequest local " + request.getUrl());
-    }
-
-    public void addBasicRequest(final Request request){
-        requestQueue.add(request);
     }
 
     public void requestSitemaps(String tag, final ServerDB server, final SitemapsRequestListener listener){
@@ -544,23 +464,28 @@ public class Communicator {
         });
     }
 
+    public void registerMyOpenhabGCM(final ServerDB server, String deviceId, String deviceModel, String regId, retrofit.Callback<String> callback){
+        MyOpenHabService service = generateMyOpenHabService(server);
+        service.registerGCM(deviceId, deviceModel, regId, callback);
+    }
+
     public interface ItemRequestListener{
-        public void onSuccess(ItemDB item);
-        public void onFailure(String message);
+        void onSuccess(ItemDB item);
+        void onFailure(String message);
     }
 
     public interface ItemsRequestListener{
-        public void onSuccess(List<ItemDB> items);
-        public void onFailure(String message);
+        void onSuccess(List<ItemDB> items);
+        void onFailure(String message);
     }
 
     public interface SitemapRequestListener{
-        public void onSuccess(Sitemap sitemap);
-        public void onFailure(String message);
+        void onSuccess(Sitemap sitemap);
+        void onFailure(String message);
     }
 
     public interface SitemapsRequestListener{
-        public void onSuccess(List<Sitemap> sitemaps);
-        public void onFailure(String message);
+        void onSuccess(List<Sitemap> sitemaps);
+        void onFailure(String message);
     }
 }

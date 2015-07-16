@@ -114,13 +114,6 @@ public class SitemapSelectorFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        communicator.cancelRequest(VOLLEY_TAG_SITEMAPS);
-    }
-
     class SitemapItem{
 
         public static final int STATE_SUCCESS = 0;
