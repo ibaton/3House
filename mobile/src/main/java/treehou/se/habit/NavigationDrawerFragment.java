@@ -30,11 +30,6 @@ import java.util.List;
 
 import treehou.se.habit.util.Settings;
 
-/**
- * Fragment used for managing interactions for and presentation of a navigation drawer.
- * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
- * design guidelines</a> for a complete explanation of the behaviors implemented here.
- */
 public class NavigationDrawerFragment extends Fragment {
 
     public static final String TAG = "NavigationDrawerFragment";
@@ -61,7 +56,6 @@ public class NavigationDrawerFragment extends Fragment {
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
-    private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
     private ArrayList<DrawerItem> items = new ArrayList<>();
@@ -81,7 +75,6 @@ public class NavigationDrawerFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
-            mFromSavedInstanceState = true;
         }
 
         items.add(new DrawerItem(getActivity().getString(R.string.sitemaps),R.drawable.ic_home_grey600_24dp, ITEM_SITEMAPS));

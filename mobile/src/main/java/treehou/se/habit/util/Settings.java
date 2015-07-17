@@ -23,16 +23,6 @@ public class Settings {
     }
 
     /**
-     * Read in the flag indicating whether or not the user has demonstrated awareness of the
-     * drawer. See PREF_USER_LEARNED_DRAWER for details.
-     *
-     * @return true if user has shown awareness of drawer else false.
-     */
-    public boolean userLearnedDrawer() {
-        return preferences.getBoolean(PREF_USER_LEARNED_DRAWER,false);
-    }
-
-    /**
      * The user manually opened the drawer; store this flag to prevent auto-showing
      * the navigation drawer automatically in the future.
      *
