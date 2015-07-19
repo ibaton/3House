@@ -8,8 +8,8 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 12
         targetSdkVersion 22
-        versionCode 31
-        versionName "4.1"
+        versionCode 32
+        versionName "4.2"
 
         // Enabling multidex support.
         multiDexEnabled true
