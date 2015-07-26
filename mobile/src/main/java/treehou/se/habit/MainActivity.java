@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, SetupServerFragment.newInstance())
+                        .addToBackStack(null)
                         .commit();
             }else {
                 // Load default sitemap if any
