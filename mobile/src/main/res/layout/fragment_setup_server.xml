@@ -57,6 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/server_local"
+                        android:inputType="textUri"
                         android:id="@+id/hdr_server_local"/>
 
                     <android.support.v7.widget.AppCompatEditText
@@ -68,6 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/server_remote"
+                        android:inputType="textUri"
                         android:id="@+id/hdr_server_remote"/>
 
                     <android.support.v7.widget.AppCompatEditText
@@ -113,7 +115,7 @@
     <com.cengalabs.flatui.views.FlatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="30dp"
+        android:padding="15dp"
         android:text="@string/back"
         android:id="@+id/btn_back"
         flatui:fl_theme="@array/custom_theme"

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -148,10 +149,11 @@ public class ServersFragment extends Fragment  {
         }
 
         @Override
-        public void onBindViewHolder(ServerHolder serverHolder, final int position) {
+        public void onBindViewHolder(final ServerHolder serverHolder, final int position) {
             final ServerDB server = items.get(position);
 
-            serverHolder.lblName.setText(server.getName());
+            String serverName = server.getName();
+            serverHolder.lblName.setText(TextUtils.isEmpty(serverName) ? context.getString(R.string.home) : serverName);
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -170,7 +172,7 @@ public class ServersFragment extends Fragment  {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        serversAdapter.removeItem(position);
+                                        serversAdapter.removeItem(serverHolder.getAdapterPosition());
                                         server.delete();
                                         break;
                                 }
@@ -206,7 +208,6 @@ public class ServersFragment extends Fragment  {
         public void removeItem(ServerDB item) {
             int position = items.indexOf(item);
             items.remove(position);
-            notifyItemRemoved(position);
         }
 
         public void clear() {

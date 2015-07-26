@@ -30,7 +30,7 @@
 
     <dimen name="large_spacing">14dp</dimen>
     <dimen name="large_spacing_half">7dp</dimen>
-    <dimen name="item_elevation">5dp</dimen>
+    <dimen name="item_elevation">3dp</dimen>
 
     <dimen name="menu_image_size">@dimen/menu_item_image_size</dimen>
     <dimen name="seekbar_widget_width">100dp</dimen>

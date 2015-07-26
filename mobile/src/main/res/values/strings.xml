@@ -81,4 +81,5 @@
     <string name="menu_item">Menu item</string>
     <string name="item_missing">Item is missing</string>
     <string name="show_title">Show title</string>
+    <string name="home">Home</string>
 </resources>
