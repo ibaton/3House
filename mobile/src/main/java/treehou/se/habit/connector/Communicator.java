@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -326,6 +327,10 @@ public class Communicator {
 
         @Override
         public void success(List<Sitemap> sitemaps, retrofit.client.Response response) {
+            if(sitemaps == null) {
+                sitemaps = new ArrayList<>();
+            }
+
             for(Sitemap sitemap : sitemaps) {
                 Log.d(TAG, "Server " + server + " Sitemap " + sitemap);
                 sitemap.setServer(server);

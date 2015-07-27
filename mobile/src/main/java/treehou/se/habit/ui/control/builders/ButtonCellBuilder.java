@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.ServerDB;
@@ -44,9 +45,12 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         imgIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ServerDB server = buttonCell.getItem().getServer();
-                Communicator communicator = Communicator.instance(context);
-                communicator.command(server, buttonCell.getItem(), buttonCell.getCommand());
+                ItemDB item = buttonCell.getItem();
+                if(item != null) {
+                    ServerDB server = item.getServer();
+                    Communicator communicator = Communicator.instance(context);
+                    communicator.command(server, item, buttonCell.getCommand());
+                }
             }
         });
 
