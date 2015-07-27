@@ -147,6 +147,7 @@ public class SitemapListFragment extends Fragment {
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.page_container, SitemapFragment.newInstance(sitemap))
+                                .addToBackStack(null)
                                 .commit();
 
                         showSitemap = null;
