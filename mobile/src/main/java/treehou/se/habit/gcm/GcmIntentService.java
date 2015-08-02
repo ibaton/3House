@@ -69,20 +69,21 @@ public class GcmIntentService extends IntentService {
         }
 
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        String messageType = gcm.getMessageType(intent);
-        Log.d(TAG, "Message type = " + messageType);
+        String gcmType = gcm.getMessageType(intent);
+        Log.d(TAG, "Message type = " + gcmType);
         if (!extras.isEmpty()) {
-            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(gcmType)) {
                 // If this is notification, create new one
                 if (!intent.hasExtra("notificationId")) {
                     notificationId = 1;
                 } else {
                     notificationId = Integer.parseInt(intent.getExtras().getString("notificationId"));
                 }
-                if (intent.getExtras().getString("type").equals("notification")) {
+                String messageType = intent.getExtras().getString("type");
+                if (messageType != null && messageType.equals("notification")) {
                     sendNotification(intent.getExtras().getString("message"), notificationId);
                     // If this is hideNotification, cancel existing notification with it's id
-                } else if (intent.getExtras().getString("type").equals("hideNotification")) {
+                } else if (messageType != null && messageType.equals("hideNotification")) {
                     mNotificationManager.cancel(Integer.parseInt(intent.getExtras().getString("notificationId")));
                 }
             }
