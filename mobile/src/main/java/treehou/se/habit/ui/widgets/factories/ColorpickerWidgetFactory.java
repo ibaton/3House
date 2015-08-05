@@ -182,7 +182,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 return;
             }
 
-            color = Color.BLACK;
+            color = Color.TRANSPARENT;
             if(widget.getItem() != null && widget.getItem().getState() != null) {
                 String[] sHSV = widget.getItem().getState().split(",");
                 if (sHSV.length == 3) {
