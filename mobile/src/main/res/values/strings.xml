@@ -82,4 +82,5 @@
     <string name="item_missing">Item is missing</string>
     <string name="show_title">Show title</string>
     <string name="home">Home</string>
+    <string name="failed_save_controller">Failed to save controller</string>
 </resources>

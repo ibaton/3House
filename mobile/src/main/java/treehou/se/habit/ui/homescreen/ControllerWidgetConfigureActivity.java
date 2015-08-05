@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -73,6 +74,13 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
             final Context context = ControllerWidgetConfigureActivity.this;
 
             ControllerDB controller = (ControllerDB) sprControllers.getSelectedItem();
+            if(controller == null){
+                Toast.makeText(ControllerWidgetConfigureActivity.this, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show();
+                setResult(RESULT_CANCELED);
+                finish();
+                return;
+            }
+
             saveControllerIdPref(context, mAppWidgetId, controller, cbxShowTitle.isChecked());
 
             // It is the responsibility of the configuration activity to update the app widget
