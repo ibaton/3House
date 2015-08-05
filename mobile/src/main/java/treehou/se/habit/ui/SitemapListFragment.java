@@ -130,6 +130,10 @@ public class SitemapListFragment extends Fragment {
         communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
             @Override
             public void onSuccess(List<Sitemap> sitemaps) {
+                if(getActivity() == null){
+                    return;
+                }
+
                 for (Sitemap sitemap : sitemaps) {
                     sitemap.setServer(server);
                     if (!mSitemapAdapter.contains(sitemap)) {
@@ -159,6 +163,10 @@ public class SitemapListFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
+                if(getActivity() == null){
+                    return;
+                }
+
                 if (message == null) {
                     Log.w(TAG, "No server to connect to");
                 } else {

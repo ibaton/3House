@@ -201,13 +201,14 @@ public class CellButtonConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        if(buttonCell.getItem().getType().equals(ItemDB.TYPE_STRING) ||
-                buttonCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)){
+        if(buttonCell.getItem() == null) {
+            buttonCell.setCommand("");
+        } else if (buttonCell.getItem().getType().equals(ItemDB.TYPE_STRING) || buttonCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)) {
             buttonCell.setCommand(txtCommand.getText().toString());
-        }else if(buttonCell.getItem().getType().equals(ItemDB.TYPE_CONTACT)){
-            buttonCell.setCommand(tglOnOff.isChecked()?Constants.COMMAND_OPEN:Constants.COMMAND_CLOSE);
-        }else {
-            buttonCell.setCommand(tglOnOff.isChecked()?Constants.COMMAND_ON:Constants.COMMAND_OFF);
+        } else if (buttonCell.getItem().getType().equals(ItemDB.TYPE_CONTACT)) {
+            buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_OPEN : Constants.COMMAND_CLOSE);
+        } else {
+            buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
         }
         buttonCell.save();
     }
