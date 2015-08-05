@@ -152,10 +152,13 @@ public class PageFragment extends Fragment {
             public void failure(RetrofitError error) {
                 Log.d(TAG, "error " + error.getCause() + " " + error.getMessage());
 
-                // TODO Check type of error.
-                // TODO Retry on remote server.
-                Toast.makeText(getActivity(), "Lost connection to server", Toast.LENGTH_LONG).show();
-                getActivity().getSupportFragmentManager().popBackStack();
+                if(getActivity() != null) {
+
+                    // TODO Check type of error.
+                    // TODO Retry on remote server.
+                    Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
             }
         });
     }
