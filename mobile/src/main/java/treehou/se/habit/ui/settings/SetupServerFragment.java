@@ -15,6 +15,7 @@ import treehou.se.habit.core.db.ServerDB;
 public class SetupServerFragment extends Fragment {
 
     private static final String ARG_SERVER = "ARG_SERVER";
+    public static final String ARG_BUTTON_TEXT_ID = "ARG_BUTTON_TEXT_ID";
 
     private static final String EXTRA_SERVER_ID = "EXTRA_SERVER_ID";
 
@@ -27,6 +28,7 @@ public class SetupServerFragment extends Fragment {
     private ServerDB server;
 
     private Button btnBack;
+    private int buttonTextId = R.string.back;
 
     public static SetupServerFragment newInstance() {
         return new SetupServerFragment();
@@ -46,16 +48,20 @@ public class SetupServerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Bundle bundle = getArguments();
 
         if(savedInstanceState != null && savedInstanceState.containsKey(EXTRA_SERVER_ID)){
             long serverId = savedInstanceState.getLong(EXTRA_SERVER_ID);
             server = ServerDB.load(ServerDB.class, serverId);
-        }else if (getArguments() != null) {
-            long serverId = getArguments().getLong(ARG_SERVER);
-            server = ServerDB.load(ServerDB.class, serverId);
-        }else{
-            server = new ServerDB();
-            server.save();
+        }else if (bundle != null) {
+            if (bundle.containsKey(ARG_SERVER)) {
+                long serverId = bundle.getLong(ARG_SERVER);
+                server = ServerDB.load(ServerDB.class, serverId);
+            } else {
+                server = new ServerDB();
+                server.save();
+            }
+            buttonTextId = bundle.getInt(ARG_BUTTON_TEXT_ID, R.string.back);
         }
     }
 
@@ -71,6 +77,7 @@ public class SetupServerFragment extends Fragment {
         txtUsername = (EditText) rootView.findViewById(R.id.txt_username);
         txtPassword = (EditText) rootView.findViewById(R.id.txt_password);
         btnBack = (Button) rootView.findViewById(R.id.btn_back);
+        btnBack.setText(buttonTextId);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
