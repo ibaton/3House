@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.SitemapDB;

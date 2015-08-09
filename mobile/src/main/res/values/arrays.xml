@@ -52,6 +52,7 @@
     </string-array>
 
     <string-array name="server_manager">
+        <item>Bindings</item>
         <item>Delete</item>
     </string-array>
 </resources>

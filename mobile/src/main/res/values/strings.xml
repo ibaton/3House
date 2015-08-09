@@ -85,4 +85,6 @@
     <string name="home">Home</string>
     <string name="failed_save_controller">Failed to save controller</string>
     <string name="lost_server_connection">Lost connection to server</string>
+    <string name="bindings">Bindings</string>
+    <string name="remove_server_question">Remove server?</string>
 </resources>

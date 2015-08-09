@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.Realm;
 
 import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
@@ -36,6 +37,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.connector.ConnectorUtil;
+import treehou.se.habit.connector.Constants;
 import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.LinkedPage;
@@ -170,11 +173,21 @@ public class PageFragment extends Fragment {
             @Override
             protected Void doInBackground(Void... params) {
 
-                String credentials = String.format("Basic %s:%s", server.getUsername(), server.getPassword());
+
+                Realm realm = null;
+                if(server.requiresAuth()){
+                    realm = new Realm.RealmBuilder()
+                            .setPrincipal(server.getUsername())
+                            .setPassword(server.getPassword())
+                            .setUsePreemptiveAuth(true)
+                            .setScheme(Realm.AuthScheme.BASIC)
+                            .build();
+                }
 
                 AsyncHttpClient asyncHttpClient = new AsyncHttpClient(
                     new AsyncHttpClientConfig.Builder().setAcceptAnyCertificate(true)
                         .setHostnameVerifier(new TrustModifier.NullHostNameVerifier())
+                        .setRealm(realm)
                         .build()
                 );
 
@@ -186,7 +199,6 @@ public class PageFragment extends Fragment {
                 RequestBuilder request = client.newRequestBuilder()
                     .method(org.atmosphere.wasync.Request.METHOD.GET)
                     .uri(page.getLink())
-                    .header("Authorization", credentials)
                     .header("Accept", "application/json")
                     .header("Accept-Charset", "utf-8")
                     .header("X-Atmosphere-Transport", "long-polling")
@@ -206,6 +218,10 @@ public class PageFragment extends Fragment {
                         }
                     })
                     .transport(org.atmosphere.wasync.Request.TRANSPORT.LONG_POLLING);                    // Fallback to Long-Polling
+
+                if (server.requiresAuth()){
+                    request.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
+                }
 
                 pollSocket = client.create(optBuilder.build());
                 try {
@@ -247,8 +263,8 @@ public class PageFragment extends Fragment {
         // Start listening for server updates
         // TODO Support for older versions.
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            longPoller = createLongPoller();
-            longPoller.execute();
+            //longPoller = createLongPoller();
+            //longPoller.execute();
         }
     }
 
@@ -316,10 +332,9 @@ public class PageFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        Communicator communicator = Communicator.instance(getActivity());
-
         // Stop listening for server updates
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && longPoller != null && pollSocket != null) {
+            pollSocket.close();
             longPoller.cancel(true);
         }
     }

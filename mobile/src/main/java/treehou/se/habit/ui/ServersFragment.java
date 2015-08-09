@@ -29,11 +29,12 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.settings.SetupServerFragment;
 
-public class ServersFragment extends Fragment  {
+public class ServersFragment extends Fragment {
 
     private static final String TAG = "ServersFragment";
 
     private ServersAdapter serversAdapter;
+    private ViewGroup container;
 
     public static ServersFragment newInstance() {
         ServersFragment fragment = new ServersFragment();
@@ -58,6 +59,8 @@ public class ServersFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        this.container = container;
 
         View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
 
@@ -167,22 +170,41 @@ public class ServersFragment extends Fragment  {
                 @Override
                 public boolean onLongClick(View v) {
                     new AlertDialog.Builder(getActivity())
-                        .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        serversAdapter.removeItem(serverHolder.getAdapterPosition());
-                                        server.delete();
-                                        break;
+                            .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case 0:
+                                            getActivity().getSupportFragmentManager().beginTransaction()
+                                                    .replace(container.getId(), BindingsFragment.newInstance())
+                                                    .addToBackStack(null)
+                                                    .commit();
+                                            break;
+                                        case 1:
+                                            showRemoveDialog(serverHolder, server);
+                                            break;
+                                    }
                                 }
-                            }
-                        })
-                        .create().show();
+                            })
+                            .create().show();
 
                     return true;
                 }
             });
+        }
+
+        private void showRemoveDialog(final ServerHolder serverHolder, final ServerDB server){
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.remove_server_question)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            serversAdapter.removeItem(serverHolder.getAdapterPosition());
+                            server.delete();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
         }
 
         @Override

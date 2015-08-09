@@ -31,7 +31,7 @@ public class BasicAuthServiceGenerator {
     // No need to instantiate this class.
     private BasicAuthServiceGenerator() {}
 
-    public static <S> S createService(Class<S> serviceClass, String baseUrl, String username, String password) {
+    public static <S> S createService(Class<S> serviceClass, String baseUrl, final String username, final String password) {
 
         OkHttpClient client = new OkHttpClient();
         try {
@@ -48,15 +48,14 @@ public class BasicAuthServiceGenerator {
 
         if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
             // concatenate username and password with colon for authentication
-            final String credentials = username + ":" + password;
 
             builder.setRequestInterceptor(new RequestInterceptor() {
                 @Override
                 public void intercept(RequestFacade request) {
 
-                // create Base64 encodet string
-                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.DEFAULT);
-                request.addHeader("Authorization", auth);
+                    // create Base64 encodet string
+                    String auth = ConnectorUtil.createAuthValue(username, password);
+                    request.addHeader(Constants.HEADER_AUTHENTICATION, auth);
                 }
             });
         }

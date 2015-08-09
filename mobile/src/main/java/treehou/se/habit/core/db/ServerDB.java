@@ -1,5 +1,7 @@
 package treehou.se.habit.core.db;
 
+import android.text.TextUtils;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -24,6 +26,9 @@ public class ServerDB extends Model {
 
     @Column(name = "remoteUrl")
     private String remoteUrl = "";
+
+    @Column(name = "majorVersion")
+    private int majorVersion = 0;
 
     public ServerDB(){}
 
@@ -69,6 +74,22 @@ public class ServerDB extends Model {
 
     public String getUrl(){
         return localUrl!=null?localUrl:remoteUrl;
+    }
+
+    public boolean requiresAuth() {
+        return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password);
+    }
+
+    /**
+     * Set the major version of server
+     * @param majorVersion
+     */
+    public void setMajorVersion(int majorVersion){
+        this.majorVersion = majorVersion;
+    }
+
+    public int getMajorVersion() {
+        return majorVersion;
     }
 
     public static List<ServerDB> getServers(){

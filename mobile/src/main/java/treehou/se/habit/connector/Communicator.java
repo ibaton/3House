@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit.RetrofitError;
+import treehou.se.habit.connector.models.Binding;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
@@ -188,18 +189,18 @@ public class Communicator {
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
 
                 com.squareup.okhttp.Request.Builder newRequest = chain.request().newBuilder();
-                if(!TextUtils.isEmpty(server.getUsername()) && !TextUtils.isEmpty(server.getPassword())) {
-                    newRequest.addHeader("Authorization", ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
+                if (server.requiresAuth()) {
+                    newRequest.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
                 }
 
                 return chain.proceed(newRequest.build());
             }
         });
 
-        Picasso.Builder builder = new Picasso.Builder(context);
-        builder.downloader(new OkHttpDownloader(httpClient));
-        builder.memoryCache(new LruCache(context));
-        final Picasso picasso = builder.build();
+        final Picasso picasso = new Picasso.Builder(context)
+                .downloader(new OkHttpDownloader(httpClient))
+                .memoryCache(new LruCache(context))
+                .build();
 
         requestLoaders.put(server, picasso);
 
@@ -392,10 +393,10 @@ public class Communicator {
 
             @Override
             public void failure(RetrofitError error) {
-                if(server.haveRemote()){
+                if (server.haveRemote()) {
                     OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
                     service.getItems(callback);
-                }else{
+                } else {
                     callback.failure(error);
                     Log.e(TAG, "Request items failed " + error.getUrl(), error);
                 }
@@ -465,6 +466,36 @@ public class Communicator {
             @Override
             public void failure(RetrofitError error) {
                 listener.onFailure(error.getMessage());
+            }
+        });
+    }
+
+    public void listBindings(final ServerDB server, final  retrofit.Callback<List<Binding>> callback){
+
+        // Make remote request if not connected to wifi.
+        if(!isConnectedWifi(context) || !server.haveLocal()) {
+            if (server.haveRemote()){
+                OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
+                service.getBindings(callback);
+            }
+            return;
+        }
+
+        OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
+        service.getBindings(new retrofit.Callback<List<Binding>>() {
+            @Override
+            public void success(List<Binding> bindings, retrofit.client.Response response) {
+                callback.success(bindings, response);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (server.haveRemote()) {
+                    OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
+                    service.getBindings(callback);
+                } else {
+                    callback.failure(error);
+                }
             }
         });
     }

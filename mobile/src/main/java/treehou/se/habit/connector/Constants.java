@@ -2,7 +2,10 @@ package treehou.se.habit.connector;
 
 public class Constants {
 
-    public static final String CHART_URL = "/chart?groups=%s&period=%s&random=%d";
+    //public static final String CHART_URL = "/chart?groups=%s&period=%s&random=%d";
+    public static final String CHART_URL = "/chart";
+    public static final String QUERY_GROUPS = "groups";
+    public static final String QUERY_ITEMS  = "items";
 
     public static final String COMMAND_ON       = "ON";
     public static final String COMMAND_OFF      = "OFF";
@@ -22,4 +25,6 @@ public class Constants {
     public static final String COMMAND_COLOR    = "%d,%d,%d";
 
     public static final String ITEM_VOICE_COMMAND = "VoiceCommand";
+
+    public static final String HEADER_AUTHENTICATION = "Authorization";
 }

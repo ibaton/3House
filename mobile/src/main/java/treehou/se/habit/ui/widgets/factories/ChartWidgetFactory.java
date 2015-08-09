@@ -20,10 +20,8 @@ public class ChartWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
-
-        return ChartWidgetHolder.create(widgetFactory, widget);
+        return ChartWidgetHolder.create(widgetFactory, widget, parent);
     }
-
 
     static class ChartWidgetHolder implements WidgetFactory.IWidgetHolder {
 
@@ -32,24 +30,24 @@ public class ChartWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
         private ImageView imgImage;
-        private Widget widget;
         private WidgetFactory factory;
 
-        public static ChartWidgetHolder create(WidgetFactory factory, Widget widget){
-            return new ChartWidgetHolder(widget, factory);
+        public static ChartWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+            return new ChartWidgetHolder(widget, parent, factory);
         }
 
-        private ChartWidgetHolder(Widget widget, WidgetFactory factory) {
+        private ChartWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
             this.factory = factory;
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
+                    .setParent(parent)
                     .setFlat(false)
                     .setShowLabel(false)
                     .build();
 
-
             View itemView = factory.getInflater().inflate(R.layout.item_widget_chart, null);
+
             imgImage = (ImageView) itemView.findViewById(R.id.img_chart);
             baseHolder.getSubView().addView(itemView);
 
@@ -73,7 +71,6 @@ public class ChartWidgetFactory implements IWidgetFactory {
             }
 
             baseHolder.update(widget);
-            this.widget = widget;
         }
 
         @Override

@@ -42,8 +42,7 @@ public class SetupServerFragment extends Fragment {
         return fragment;
     }
 
-    public SetupServerFragment() {
-    }
+    public SetupServerFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,11 +56,12 @@ public class SetupServerFragment extends Fragment {
             if (bundle.containsKey(ARG_SERVER)) {
                 long serverId = bundle.getLong(ARG_SERVER);
                 server = ServerDB.load(ServerDB.class, serverId);
-            } else {
-                server = new ServerDB();
-                server.save();
             }
             buttonTextId = bundle.getInt(ARG_BUTTON_TEXT_ID, R.string.back);
+        }else {
+            server = new ServerDB();
+            server.save();
+            buttonTextId = R.string.back;
         }
     }
 

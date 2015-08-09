@@ -31,7 +31,7 @@
             android:value="treestore26.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="34" />
+            android:value="35" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -122,10 +122,6 @@
                 <category android:name="org.openhab.habdroid" />
             </intent-filter>
         </receiver>
-
-        <meta-data
-            android:name="com.crashlytics.ApiKey"
-            android:value="7286412f1c2639ecb43859159a7768c678d36a3e" />
 
         <activity
             android:name=".ui.control.SliderActivity"

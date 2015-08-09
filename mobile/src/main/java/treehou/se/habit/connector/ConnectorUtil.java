@@ -6,6 +6,7 @@ import android.util.Base64;
 import java.util.Random;
 
 import treehou.se.habit.core.Widget;
+import treehou.se.habit.core.db.ItemDB;
 
 public class ConnectorUtil {
 
@@ -14,8 +15,14 @@ public class ConnectorUtil {
     public static String buildChartRequestString(String baseUrl, Widget widget){
 
         Random random = new Random();
-        return baseUrl+String.format(Constants.CHART_URL
-                , widget.getItem().getName(), widget.getPeriod(), Math.abs(random.nextInt()));
+        String type = (widget.getItem() != null && widget.getItem().getType().equals(ItemDB.TYPE_GROUP)) ? "groups" : "items";
+        Uri builtUri = Uri.parse(baseUrl+Constants.CHART_URL).buildUpon()
+                .appendQueryParameter(type, widget.getItem().getName())
+                .appendQueryParameter("period", widget.getPeriod())
+                .appendQueryParameter("random",String.valueOf(Math.abs(random.nextInt())))
+                .build();
+
+        return builtUri.toString();
     }
 
     public static Uri changeHostUrl(Uri baseUrl, Uri newHost){
@@ -31,7 +38,8 @@ public class ConnectorUtil {
     public static String createAuthValue(String username, String password) {
 
         final String credentials = username + ":" + password;
-        return "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.DEFAULT);
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        return auth;
     }
 
 }
