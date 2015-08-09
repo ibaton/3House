@@ -15,6 +15,10 @@
         <item name="android:lines">1</item>
     </style>
 
+    <style name="DescriptionText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="MenuItemSubText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">18sp</item>
         <item name="android:lines">1</item>

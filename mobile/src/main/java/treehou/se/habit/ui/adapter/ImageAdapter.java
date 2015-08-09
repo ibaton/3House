@@ -12,9 +12,6 @@ import java.util.List;
 
 import treehou.se.habit.R;
 
-/**
-* Created by ibaton on 2015-03-21.
-*/
 public class ImageAdapter extends ArrayAdapter<ImageItem> {
 
     public ImageAdapter(Context context, List<ImageItem> objects) {

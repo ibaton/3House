@@ -4,12 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Binding {
 
-    private String author;
-    private String description;
     private String id;
     private String name;
-
-    private String label;
+    private String author;
+    private String description;
 
     @SerializedName("UID")
     private String uID;
@@ -30,10 +28,6 @@ public class Binding {
 
     public String getName() {
         return name;
-    }
-
-    public String getLabel() {
-        return label;
     }
 
     public String getuID() {

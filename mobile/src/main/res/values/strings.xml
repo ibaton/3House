@@ -87,4 +87,9 @@
     <string name="lost_server_connection">Lost connection to server</string>
     <string name="bindings">Bindings</string>
     <string name="remove_server_question">Remove server?</string>
+    <string name="failed_to_load_server">Failed to load server</string>
+    <string name="failed_list_bindings">Failed to list bindings</string>
+    <string name="binding">Binding</string>
+    <string name="author">Author</string>
+    <string name="description">Description</string>
 </resources>

@@ -176,7 +176,7 @@ public class ServersFragment extends Fragment {
                                     switch (which) {
                                         case 0:
                                             getActivity().getSupportFragmentManager().beginTransaction()
-                                                    .replace(container.getId(), BindingsFragment.newInstance())
+                                                    .replace(container.getId(), BindingsFragment.newInstance(server))
                                                     .addToBackStack(null)
                                                     .commit();
                                             break;
