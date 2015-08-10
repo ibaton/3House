@@ -5,5 +5,8 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="windowActionModeOverlay">false</item>
+
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
     </style>
 </resources>
