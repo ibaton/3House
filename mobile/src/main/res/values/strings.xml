@@ -92,4 +92,7 @@
     <string name="binding">Binding</string>
     <string name="author">Author</string>
     <string name="description">Description</string>
+    <string name="binding_name_transition">bindingNameTransition</string>
+    <string name="channels">Channels</string>
+    <string name="label">Label</string>
 </resources>

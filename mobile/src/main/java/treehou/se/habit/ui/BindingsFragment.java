@@ -1,8 +1,9 @@
 package treehou.se.habit.ui;
 
-import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.models.Binding;
 import treehou.se.habit.core.db.ServerDB;
 
@@ -29,8 +33,13 @@ public class BindingsFragment extends Fragment {
 
     private static final String ARG_SERVER = "ARG_SERVER";
 
+    private static final String STATE_BINDINGS = "STATE_BINDINGS";
+
     private BindingAdapter bindingAdapter;
     private ServerDB serverDB;
+    private ViewGroup container;
+
+    private List<Binding> bindings = new ArrayList<>();
 
     public static BindingsFragment newInstance(ServerDB serverDB) {
         BindingsFragment fragment = new BindingsFragment();
@@ -53,6 +62,13 @@ public class BindingsFragment extends Fragment {
             }
         }
 
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey(STATE_BINDINGS)){
+                bindings = GsonHelper.createGsonBuilder().fromJson(savedInstanceState.getString(STATE_BINDINGS), new TypeToken<List<Binding>>() {
+                }.getType());
+            }
+        }
+
         super.onCreate(savedInstanceState);
     }
 
@@ -60,8 +76,9 @@ public class BindingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View rootView = inflater.inflate(R.layout.fragment_bindings_list, container, false);
+
+        this.container = container;
 
         if(serverDB == null){
             Toast.makeText(getActivity(), getString(R.string.failed_to_load_server), Toast.LENGTH_LONG).show();
@@ -75,18 +92,20 @@ public class BindingsFragment extends Fragment {
         }
 
         final RecyclerView lstBinding = (RecyclerView) rootView.findViewById(R.id.lst_bindings);
-        bindingAdapter = new BindingAdapter(getActivity());
+        bindingAdapter = new BindingAdapter();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstBinding.setLayoutManager(gridLayoutManager);
         lstBinding.setItemAnimator(new DefaultItemAnimator());
         lstBinding.setAdapter(bindingAdapter);
+        bindingAdapter.setBindings(bindings);
 
         setHasOptionsMenu(true);
 
         Communicator.instance(getActivity()).listBindings(serverDB, new Callback<List<Binding>>() {
             @Override
-            public void success(List<Binding> bindings, Response response) {
+            public void success(List<Binding> newBindings, Response response) {
+                bindings = newBindings;
                 bindingAdapter.setBindings(bindings);
             }
 
@@ -100,12 +119,18 @@ public class BindingsFragment extends Fragment {
         return rootView;
     }
 
-    public static class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder>{
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(STATE_BINDINGS, GsonHelper.createGsonBuilder().toJson(bindings));
 
-        private Context context;
+        super.onSaveInstanceState(outState);
+    }
+
+    public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder>{
+
         private List<Binding> bindings = new ArrayList<>();
 
-        public static class BindingHolder extends RecyclerView.ViewHolder {
+        public class BindingHolder extends RecyclerView.ViewHolder {
 
             private TextView lblName;
             private TextView lblAuthor;
@@ -120,26 +145,39 @@ public class BindingsFragment extends Fragment {
             }
         }
 
-        public BindingAdapter(Context context) {
-            this.context = context;
+        public BindingAdapter() {
         }
 
         @Override
         public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            LayoutInflater inflater = LayoutInflater.from(context);
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
             View itemView = inflater.inflate(R.layout.item_binding, null);
 
             return new BindingHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(BindingHolder holder, int position) {
+        public void onBindViewHolder(final BindingHolder holder, int position) {
 
-            Binding binding = bindings.get(position);
+            final Binding binding = bindings.get(position);
             holder.lblName.setText(binding.getName());
             holder.lblAuthor.setText(binding.getAuthor());
             holder.lblDescription.setText(binding.getDescription());
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Fragment fragment = BindingFragment.newInstance(serverDB, binding);
+
+
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(container.getId(), fragment)
+                            .addToBackStack(null);
+                    transaction.commit();
+                }
+            });
         }
 
         @Override
@@ -153,6 +191,7 @@ public class BindingsFragment extends Fragment {
         }
 
         public void setBindings(List<Binding> newBindings){
+            bindings.clear();
             bindings.addAll(newBindings);
             notifyDataSetChanged();
         }

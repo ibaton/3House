@@ -19,7 +19,7 @@
         card_view:cardBackgroundColor="@color/item_background">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:paddingBottom="@dimen/short_space"

@@ -1,6 +1,6 @@
 package treehou.se.habit.connector.models;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class Binding {
 
@@ -8,11 +8,7 @@ public class Binding {
     private String name;
     private String author;
     private String description;
-
-    @SerializedName("UID")
-    private String uID;
-
-    private boolean bridge;
+    private List<ThingType> thingTypes;
 
     public String getAuthor() {
         return author;
@@ -30,11 +26,7 @@ public class Binding {
         return name;
     }
 
-    public String getuID() {
-        return uID;
-    }
-
-    public boolean isBridge() {
-        return bridge;
+    public List<ThingType> getThingTypes() {
+        return thingTypes;
     }
 }
