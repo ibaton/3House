@@ -178,6 +178,9 @@
             android:name=".ui.util.IconPickerActivity"
             android:label="@string/title_activity_icon_picker" >
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="7286412f1c2639ecb43859159a7768c678d36a3e" />
     </application>
 
 </manifest>
