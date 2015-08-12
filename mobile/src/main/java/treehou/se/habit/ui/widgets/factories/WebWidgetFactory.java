@@ -37,7 +37,7 @@ public class WebWidgetFactory implements IWidgetFactory {
 
         private WebWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
 
-            WidgetFactory.IWidgetHolder baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(false)
                     .setShowLabel(true)
@@ -58,7 +58,7 @@ public class WebWidgetFactory implements IWidgetFactory {
             settings.setDatabaseEnabled(true);
             settings.setAppCacheEnabled(true);
 
-            //baseHolder.getSubView().addView(itemView);
+            baseHolder.getSubView().addView(itemView);
 
             update(widget);
         }
