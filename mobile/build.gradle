@@ -89,7 +89,7 @@ dependencies {
 
     compile ('org.atmosphere:wasync:2.1.2')
     compile 'joda-time:joda-time:2.7'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.1@aar') {
         transitive = true;
     }
 }
