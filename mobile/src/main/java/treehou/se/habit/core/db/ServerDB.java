@@ -1,5 +1,7 @@
 package treehou.se.habit.core.db;
 
+import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.activeandroid.Model;
@@ -8,6 +10,8 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
 import java.util.List;
+
+import treehou.se.habit.R;
 
 @Table(name = "Server")
 public class ServerDB extends Model {
@@ -34,6 +38,10 @@ public class ServerDB extends Model {
 
     public String getName() {
         return name;
+    }
+
+    public String getDisplayName(Context context){
+        return TextUtils.isEmpty(name) ? context.getString(R.string.home) : name;
     }
 
     public void setName(String name) {
