@@ -63,7 +63,6 @@ public class SetupServerFragment extends Fragment {
         if (server == null) {
             server = new ServerDB();
             server.save();
-            buttonTextId = R.string.back;
         }
     }
 
