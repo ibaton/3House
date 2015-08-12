@@ -58,7 +58,9 @@ public class SetupServerFragment extends Fragment {
                 server = ServerDB.load(ServerDB.class, serverId);
             }
             buttonTextId = bundle.getInt(ARG_BUTTON_TEXT_ID, R.string.back);
-        }else {
+        }
+
+        if (server == null) {
             server = new ServerDB();
             server.save();
             buttonTextId = R.string.back;
