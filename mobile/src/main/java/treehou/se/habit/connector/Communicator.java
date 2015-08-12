@@ -216,6 +216,7 @@ public class Communicator {
      * @param useCache set if cache should be used.
      */
     public void loadImage(final ServerDB server, final URL imageUrl, final ImageView imageView, boolean useCache){
+
         Log.d(TAG, "onBitmapLoaded image start " + imageUrl.toString());
         final Callback callback = new Callback() {
             @Override

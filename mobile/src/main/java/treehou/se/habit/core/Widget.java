@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import treehou.se.habit.connector.ConnectorUtil;
 import treehou.se.habit.core.db.ItemDB;
 
 public class Widget {
@@ -101,7 +102,7 @@ public class Widget {
 
     public String getBaseUrl(){
         try {
-            return new URL(getItem().getBaseUrl()).toString();
+            return new URL(ConnectorUtil.getBaseUrl(item.getLink())).toString();
         } catch (Exception e) {
             e.printStackTrace();
         }

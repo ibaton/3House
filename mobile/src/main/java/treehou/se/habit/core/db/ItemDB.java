@@ -80,16 +80,6 @@ public class ItemDB extends Model {
         this.state = state;
     }
 
-    public String getBaseUrl(){
-        try {
-            URL url = new URL(link);
-            return new URL(url.getProtocol(), url.getHost(), url.getPort(), "").toString();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
     public class ItemHolder{
         public List<ItemDB> item;
     }

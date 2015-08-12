@@ -2,7 +2,6 @@ package treehou.se.habit.connector;
 
 public class Constants {
 
-    //public static final String CHART_URL = "/chart?groups=%s&period=%s&random=%d";
     public static final String CHART_URL = "/chart";
     public static final String QUERY_GROUPS = "groups";
     public static final String QUERY_ITEMS  = "items";
