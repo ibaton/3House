@@ -59,9 +59,18 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
             widget.setWidget(widgets);
         }
 
-        JsonElement jMappingElement = jObject.get("mapping");
-        List<Widget.Mapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<Widget.Mapping>>() {}.getType());
-        widget.setMapping(mapping);
+        if(jObject.has("mapping")) {
+            JsonElement jMappingElement = jObject.get("mapping");
+            List<Widget.Mapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<Widget.Mapping>>(){}.getType());
+            widget.setMapping(mapping);
+        }
+
+        if(jObject.has("mappings")) {
+            JsonElement jMappingElement = jObject.get("mappings");
+            List<Widget.Mapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<Widget.Mapping>>(){}.getType());
+            widget.setMapping(mapping);
+        }
+
 
         return widget;
     }

@@ -2,6 +2,7 @@ package treehou.se.habit.connector;
 
 import android.net.Uri;
 import android.util.Base64;
+import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,6 +26,8 @@ public class ConnectorUtil {
                 .build();
         builtUri = changeHostUrl(builtUri, Uri.parse(widget.getItem().getLink()));
 
+        Log.d(TAG, "Creating chart url " + builtUri.toString());
+
         return builtUri.toString();
     }
 
@@ -39,12 +42,9 @@ public class ConnectorUtil {
     }
 
     public static Uri changeHostUrl(Uri baseUrl, Uri newHost){
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(newHost.getScheme())
+        Uri.Builder builder = baseUrl.buildUpon()
+                .scheme(newHost.getScheme())
                 .encodedAuthority(newHost.getHost() + (newHost.getPort() != -1 ? ":" + newHost.getPort() : ""));
-        for(String path : baseUrl.getPathSegments()){
-            builder.appendPath(path);
-        }
         return builder.build();
     }
 
