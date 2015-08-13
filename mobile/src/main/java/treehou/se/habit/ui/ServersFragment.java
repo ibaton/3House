@@ -155,8 +155,7 @@ public class ServersFragment extends Fragment {
         public void onBindViewHolder(final ServerHolder serverHolder, final int position) {
             final ServerDB server = items.get(position);
 
-            String serverName = server.getName();
-            serverHolder.lblName.setText(TextUtils.isEmpty(serverName) ? context.getString(R.string.home) : serverName);
+            serverHolder.lblName.setText(server.getDisplayName(context));
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

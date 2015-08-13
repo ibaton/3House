@@ -273,7 +273,7 @@ public class SitemapListFragment extends Fragment {
                 final Sitemap sitemap = item.sitemap;
 
                 holder.lblName.setText(item.sitemap.getLabel());
-                holder.lblServer.setText(item.sitemap.getServer().getName());
+                holder.lblServer.setText(item.item.server.getDisplayName(getActivity()));
 
                 sitemapHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -291,10 +291,10 @@ public class SitemapListFragment extends Fragment {
                 });
             }else if(SitemapItem.STATE_LOADING == type){
                 SitemapLoadHolder holder = (SitemapLoadHolder) sitemapHolder;
-                holder.lblServer.setText(item.item.server.getName());
+                holder.lblServer.setText(item.item.server.getDisplayName(getActivity()));
             }else if(SitemapItem.STATE_ERROR == type){
                 SitemapErrorHolder holder = (SitemapErrorHolder) sitemapHolder;
-                holder.lblServer.setText(item.item.server.getName());
+                holder.lblServer.setText(item.item.server.getDisplayName(getActivity()));
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -1,5 +1,6 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.graphics.PorterDuff;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.util.TypedValue;
@@ -233,8 +234,21 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
 
             View itemView = factory.getInflater().inflate(R.layout.item_widget_switch_mapping_single, null);
-
             btnSingle = (Button) itemView.findViewById(R.id.btnSingle);
+            if(widget.getMapping().size() == 1){
+
+                Widget.Mapping mapping = widget.getMapping().get(0);
+
+                Communicator communicator = Communicator.instance(factory.getContext());
+                communicator.command(factory.getServer(), widget.getItem(), mapping.getCommand());
+
+                if(widget.getItem() != null && mapping.getCommand().equals(widget.getItem().getState())) {
+                    btnSingle.getBackground().setColorFilter(factory.getContext().getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                }
+                else {
+                    btnSingle.getBackground().clearColorFilter();
+                }
+            }
 
             baseHolder.getSubView().addView(itemView);
             update(widget);

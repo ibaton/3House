@@ -35,7 +35,7 @@ public class Widget {
     private String url;
     private ItemDB item;
     private List<Widget> widget;
-    private List<Mapping> mapping;
+    private List<Mapping> mapping = new ArrayList<>();
     private LinkedPage linkedPage;
 
     public String getWidgetId() {
