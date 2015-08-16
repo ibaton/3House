@@ -237,10 +237,6 @@ public class SwitchWidgetFactory implements IWidgetFactory {
             if(widget.getMapping().size() == 1){
 
                 Widget.Mapping mapping = widget.getMapping().get(0);
-
-                Communicator communicator = Communicator.instance(factory.getContext());
-                communicator.command(factory.getServer(), widget.getItem(), mapping.getCommand());
-
                 if(widget.getItem() != null && mapping.getCommand().equals(widget.getItem().getState())) {
                     btnSingle.getBackground().setColorFilter(factory.getContext().getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
                 }
