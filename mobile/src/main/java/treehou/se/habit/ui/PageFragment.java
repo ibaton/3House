@@ -263,8 +263,8 @@ public class PageFragment extends Fragment {
         // Start listening for server updates
         // TODO Support for older versions.
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //longPoller = createLongPoller();
-            //longPoller.execute();
+            longPoller = createLongPoller();
+            longPoller.execute();
         }
     }
 
