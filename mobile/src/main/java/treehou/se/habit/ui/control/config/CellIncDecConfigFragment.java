@@ -173,9 +173,21 @@ public class CellIncDecConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
-        numberCell.setMin(Integer.parseInt(txtMin.getText().toString()));
-        numberCell.setValue(Integer.parseInt(txtValue.getText().toString()));
+        try {
+            numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
+        }catch (NumberFormatException e) {
+            numberCell.setMax(100);
+        }
+        try {
+            numberCell.setMin(Integer.parseInt(txtMin.getText().toString()));
+        }catch (NumberFormatException e) {
+            numberCell.setMin(0);
+        }
+        try {
+            numberCell.setValue(Integer.parseInt(txtValue.getText().toString()));
+        }catch (NumberFormatException e) {
+            numberCell.setValue(1);
+        }
 
         numberCell.save();
     }

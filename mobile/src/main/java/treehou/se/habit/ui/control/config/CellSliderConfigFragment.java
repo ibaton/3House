@@ -185,6 +185,10 @@ public class CellSliderConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        if(numberCell.getItem() == null){
+            return;
+        }
+
         if(numberCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)
                 || numberCell.getItem().getType().equals(ItemDB.TYPE_GROUP)){
             numberCell.setMin(0);

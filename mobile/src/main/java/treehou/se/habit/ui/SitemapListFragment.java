@@ -130,7 +130,7 @@ public class SitemapListFragment extends Fragment {
         communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
             @Override
             public void onSuccess(List<Sitemap> sitemaps) {
-                if(getActivity() == null){
+                if(getActivity() == null || isRemoving() || isDetached()){
                     return;
                 }
 

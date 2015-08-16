@@ -30,17 +30,16 @@ public class SwitchWidgetFactory implements IWidgetFactory {
             WidgetFactory widgetFactory, LinkedPage page,
             final Widget widget, final Widget parent) {
 
-        if(widget.getMapping() == null) {
+        if(widget.getMapping() == null || widget.getMapping().size() <= 0) {
             final ItemDB item = widget.getItem();
             if (item == null){
+                Log.w(TAG, "Null switch created");
                 return new NullWidgetFactory().build(widgetFactory, page, widget, parent);
             }
 
-            Log.d(TAG, "Type " + item.getType());
             if(item.getType().equals(ItemDB.TYPE_ROLLERSHUTTER)){
                 return RollerShutterWidgetHolder.create(widgetFactory, widget, parent);
             }else{
-                Log.d(TAG, "Switch state " + widget.getItem().getState() + " : " + widget.getItem().getName());
                 return SwitchWidgetHolder.create(widgetFactory, widget, parent);
             }
         } else {

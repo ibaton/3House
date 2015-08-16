@@ -52,6 +52,10 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                if(numberCell.getItem() == null){
+                    return;
+                }
+
                 ServerDB server = numberCell.getItem().getServer();
                 Communicator communicator = Communicator.instance(context);
                 communicator.command(server, numberCell.getItem(), ""+seekBar.getProgress());
