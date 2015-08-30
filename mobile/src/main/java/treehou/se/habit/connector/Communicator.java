@@ -525,4 +525,9 @@ public class Communicator {
         void onSuccess(List<Sitemap> sitemaps);
         void onFailure(String message);
     }
+
+    public static class DummySitemapsRequestListener implements SitemapsRequestListener {
+        public void onSuccess(List<Sitemap> sitemaps){}
+        public void onFailure(String message){}
+    }
 }
