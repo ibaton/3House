@@ -59,8 +59,6 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         sprItems.setAdapter(mTypeAdapter);
         sprItems.setOnItemSelectedListener(itemSelectListener);
 
-        //txtLabel = (TextView) rootView.findViewById(R.id.txt_label);
-
         btnPicker = (Button) rootView.findViewById(R.id.btn_color_picker);
         btnPicker.setOnClickListener(new View.OnClickListener() {
             @Override
