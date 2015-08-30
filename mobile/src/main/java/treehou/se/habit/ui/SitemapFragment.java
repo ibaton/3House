@@ -120,6 +120,9 @@ public class SitemapFragment extends Fragment {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        if(pages.size() > 0 && getActivity() instanceof AppCompatActivity){
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("");
+        }
         super.onStop();
     }
 

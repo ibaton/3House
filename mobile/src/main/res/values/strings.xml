@@ -17,9 +17,6 @@
     <string name="action_add_controller">Add Controller</string>
     <string name="voice_command_title">At you command</string>
     <string name="controller_name">Name</string>
-    <string name="on">On</string>
-    <string name="Off">Off</string>
-    <string name="toggle">Toggle</string>
     <string name="voice_command">Voice command</string>
     <string name="add_server">Add server</string>
     <string name="openhab_server">Openhab Server</string>
@@ -52,8 +49,6 @@
     <string name="item">Item</string>
     <string name="button">Button</string>
     <string name="compressed">Compressed</string>
-    <string name="custom_widgets">Custom widgets</string>
-    <string name="widger_settings">Widget settings</string>
     <string name="slider">Slider</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
@@ -92,7 +87,6 @@
     <string name="binding">Binding</string>
     <string name="author">Author</string>
     <string name="description">Description</string>
-    <string name="binding_name_transition">bindingNameTransition</string>
     <string name="channels">Channels</string>
     <string name="label">Label</string>
 </resources>

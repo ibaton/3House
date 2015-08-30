@@ -71,7 +71,7 @@ public class ControlHelper {
             ControlHelper.drawRemoteController(context, views, controller);
 
             android.app.Notification notification = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification)
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setOngoing(true)
                     .setContent(views)

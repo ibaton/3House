@@ -40,8 +40,6 @@ public class SliderActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        overridePendingTransition(R.animator.dialog_in,R.animator.dialog_out);
     }
 
     @Override
@@ -49,13 +47,6 @@ public class SliderActivity extends AppCompatActivity {
         super.onPause();
 
         finish();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
-        overridePendingTransition(R.animator.dialog_in,R.animator.dialog_out);
     }
 
     /**
