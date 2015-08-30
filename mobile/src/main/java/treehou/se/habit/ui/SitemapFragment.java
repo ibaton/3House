@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.GsonHelper;
@@ -36,15 +37,14 @@ public class SitemapFragment extends Fragment {
 
     private static final String TAG = "SitemapFragment";
     private static final String ARG_SITEMAP = "ARG_SITEMAP";
-    public static final String TAG_SITEMAP_FRAGMENT = "TAG_SITEMAP_FRAGMENT";
-
-    public static final String TAG_PAGE_REQUEST = "TAG_PAGE_REQUEST";
 
     private Sitemap sitemap;
     private Communicator communicator;
     private SitemapAdapter sitemapAdapter;
     private ViewPager pgrSitemap;
     private ArrayList<LinkedPage> pages = new ArrayList<>();
+
+    private RequestPageCallback requestPageCallback = new RequestPageDummyListener();
 
     public static SitemapFragment newInstance(Sitemap sitemap){
         SitemapFragment fragment = new SitemapFragment();
@@ -98,17 +98,28 @@ public class SitemapFragment extends Fragment {
         pgrSitemap.setAdapter(sitemapAdapter);
         pgrSitemap.addOnPageChangeListener(pagerChangeListener);
 
+
+        requestPageCallback = new RequestPageCallback() {
+            @Override
+            public void success(LinkedPage linkedPage, Response response) {
+                pages.add(linkedPage);
+                sitemapAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {}
+        };
+
         if(pages.size() == 0) {
             communicator.requestPage(sitemap.getServer(), sitemap.getHomepage(), new Callback<LinkedPage>() {
                 @Override
                 public void success(LinkedPage linkedPage, retrofit.client.Response response) {
-                    pages.add(linkedPage);
-                    sitemapAdapter.notifyDataSetChanged();
+                    requestPageCallback.success(linkedPage, response);
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-
+                    requestPageCallback.failure(error);
                 }
             });
         }
@@ -118,12 +129,36 @@ public class SitemapFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        requestPageCallback = new RequestPageDummyListener();
+    }
+
+    @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
         if(pages.size() > 0 && getActivity() instanceof AppCompatActivity){
             ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("");
         }
         super.onStop();
+    }
+
+    /**
+     * Handle callbacks for request page.
+     */
+    interface RequestPageCallback {
+        void success(LinkedPage linkedPage, retrofit.client.Response response);
+        void failure(RetrofitError error);
+    }
+
+    class RequestPageDummyListener implements RequestPageCallback {
+
+        @Override
+        public void success(LinkedPage linkedPage, Response response) {}
+
+        @Override
+        public void failure(RetrofitError error) {}
     }
 
     // Removes history when moving back in tabs

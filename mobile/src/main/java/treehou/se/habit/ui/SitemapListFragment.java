@@ -380,6 +380,12 @@ public class SitemapListFragment extends Fragment {
             return count;
         }
 
+        /**
+         * Returns item at a certain position
+         *
+         * @param position item to grab item for
+         * @return
+         */
         public GetResult getItem(int position) {
             GetResult result = null;
             int count = 0;
