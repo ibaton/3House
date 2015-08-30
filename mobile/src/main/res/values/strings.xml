@@ -91,4 +91,5 @@
     <string name="label">Label</string>
     <string name="arrows">Arrows</string>
     <string name="empty_controllers">No controller found. \nPress here to create your first controller.</string>
+    <string name="empty_servers">No servers found. \nPress here to add your first server.</string>
 </resources>

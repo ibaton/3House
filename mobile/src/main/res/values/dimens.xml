@@ -37,5 +37,6 @@
     <dimen name="controller_config_icon_height">50dp</dimen>
     <dimen name="menu_item_image_size">80dp</dimen>
     <dimen name="color_spacer">5dp</dimen>
+    <dimen name="full_page_empty_padding">10dp</dimen>
 
 </resources>
