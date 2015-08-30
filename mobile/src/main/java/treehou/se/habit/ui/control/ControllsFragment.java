@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.control;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,14 +24,19 @@ import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.ui.EditControlFragment;
 
+/**
+ * Fragment listing all app controllers.
+ */
 public class ControllsFragment extends Fragment {
 
     private static final String TAG = "ControllsFragment";
 
     private RecyclerView mListView;
-
     private ControllerAdapter mAdapter;
+
+    private View viwEmpty;
 
     public static ControllsFragment newInstance() {
         ControllsFragment fragment = new ControllsFragment();
@@ -40,24 +45,27 @@ public class ControllsFragment extends Fragment {
         return fragment;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ControllsFragment() {
-    }
+    public ControllsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("ControllsFragment", ""+ ControllerDB.getControllers().size());
+        Log.d(TAG, ""+ ControllerDB.getControllers().size());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_controll, container, false);
+
+        viwEmpty = view.findViewById(R.id.empty);
+        viwEmpty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewController();
+            }
+        });
 
         mListView = (RecyclerView) view.findViewById(R.id.list);
 
@@ -67,6 +75,42 @@ public class ControllsFragment extends Fragment {
         }
 
         mAdapter = new ControllerAdapter(getActivity());
+        mAdapter.setItemListener(new ControllerAdapter.ItemListener() {
+            @Override
+            public void itemCountUpdated(int itemCount) {
+                updateEmptyView(itemCount);
+            }
+
+            @Override
+            public void itemClickListener(ControllerAdapter.ControllerHolder controllerHolder) {
+                ControllerDB controller = mAdapter.getItem(controllerHolder.getAdapterPosition());
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.page_container, ControlFragment.newInstance(controller.getId()))
+                        .addToBackStack(null)
+                        .commit();
+            }
+
+            @Override
+            public boolean itemLongClickListener(final ControllerAdapter.ControllerHolder controllerHolder) {
+                final ControllerDB controller = mAdapter.getItem(controllerHolder.getAdapterPosition());
+                new AlertDialog.Builder(getActivity())
+                        .setItems(R.array.controll_manager, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        loadController(controller.getId());
+                                        break;
+                                    case 1:
+                                        mAdapter.removeItem(controllerHolder.getAdapterPosition());
+                                        controller.deleteController(getActivity());
+                                        break;
+                                }
+                            }
+                        }).create().show();
+                return true;
+            }
+        });
         final List<ControllerDB> controllers = ControllerDB.getControllers();
         mAdapter.addAll(controllers);
 
@@ -76,9 +120,18 @@ public class ControllsFragment extends Fragment {
         mListView.setItemAnimator(new DefaultItemAnimator());
         mListView.setAdapter(mAdapter);
 
+        updateEmptyView(controllers.size());
+
         setHasOptionsMenu(true);
 
         return view;
+    }
+
+    /**
+     * Show empty view if no controllers exist
+     */
+    private void updateEmptyView(int itemCount){
+        viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 
     public void loadController(Long id){
@@ -98,24 +151,32 @@ public class ControllsFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.action_add_controller:
-                ControllerDB controller = new ControllerDB();
-                String name = "Controller ";
-                Long id = controller.save();
-                name += getId();
-                controller.setName(name);
-                controller.save();
-                controller.addRow();
-                loadController(id);
+                createNewController();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.ControllerHolder>{
+    /**
+     * Creates a new empty controller.
+     */
+    private void createNewController(){
+        ControllerDB controller = new ControllerDB();
+        String name = "Controller";
+        Long id = controller.save();
+        name += getId();
+        controller.setName(name);
+        controller.save();
+        controller.addRow();
+        loadController(id);
+    }
+
+    public static class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.ControllerHolder>{
 
         private List<ControllerDB> items = new ArrayList<>();
         private Context context;
+        private ItemListener itemListener = new DummyItemListener();
 
         public class ControllerHolder extends RecyclerView.ViewHolder {
             public final TextView lblName;
@@ -140,40 +201,19 @@ public class ControllsFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(ControllerHolder controllerHolder, final int position) {
+        public void onBindViewHolder(final ControllerHolder controllerHolder, int position) {
             final ControllerDB controller = items.get(position);
-
             controllerHolder.lblName.setText(controller.getName());
-
             controllerHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.page_container, ControlFragment.newInstance(controller.getId()))
-                            .addToBackStack(null)
-                            .commit();
+                    itemListener.itemClickListener(controllerHolder);
                 }
             });
             controllerHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    new AlertDialog.Builder(getActivity())
-                        .setItems(R.array.controll_manager, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        loadController(controller.getId());
-                                        break;
-                                    case 1:
-                                        mAdapter.removeItem(position);
-                                        controller.deleteController(getActivity());
-                                        break;
-                                }
-                            }
-                        }).create().show();
-
-                    return true;
+                    return itemListener.itemLongClickListener(controllerHolder);
                 }
             });
         }
@@ -183,19 +223,49 @@ public class ControllsFragment extends Fragment {
             return items.size();
         }
 
-        public ControllerDB getItem(int position) {
-            return items.get(position);
+        interface ItemListener {
+            void itemCountUpdated(int itemCount);
+            void itemClickListener(ControllerHolder controllerHolder);
+            boolean itemLongClickListener(ControllerHolder controllerHolder);
         }
 
-        public void addItem(ControllerDB controller) {
-            items.add(0, controller);
-            notifyItemInserted(0);
+        class DummyItemListener implements ItemListener {
+
+            @Override
+            public void itemCountUpdated(int itemCount) {}
+
+            @Override
+            public void itemClickListener(ControllerHolder controllerHolder) {}
+
+            @Override
+            public boolean itemLongClickListener(ControllerHolder controllerHolder) {
+                return false;
+            }
+        }
+
+        public void setItemListener(ItemListener itemListener) {
+            if(itemListener == null){
+                this.itemListener = new DummyItemListener();
+                return;
+            }
+            this.itemListener = itemListener;
+        }
+
+        public ControllerDB getItem(int position) {
+            return items.get(position);
         }
 
         public void removeItem(int position) {
             Log.d(TAG, "removeItem: " + position);
             items.remove(position);
             notifyItemRemoved(position);
+            itemListener.itemCountUpdated(items.size());
+        }
+
+        public void addItem(ControllerDB controller) {
+            items.add(0, controller);
+            notifyItemInserted(0);
+            itemListener.itemCountUpdated(items.size());
         }
 
         public void addAll(List<ControllerDB> controllers) {
@@ -203,6 +273,7 @@ public class ControllsFragment extends Fragment {
                 items.add(0, controller);
                 notifyItemRangeInserted(0, controllers.size());
             }
+            itemListener.itemCountUpdated(items.size());
         }
     }
 }

@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.control;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -18,7 +18,6 @@ import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.CellRowDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
-import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
 import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
 import treehou.se.habit.ui.control.builders.SliderCellBuilder;
