@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -169,7 +170,12 @@ public class SitemapFragment extends Fragment {
         public void onPageScrolled(int i, float v, int i2) {}
 
         @Override
-        public void onPageSelected(int i) {index=i;}
+        public void onPageSelected(int i) {
+            index=i;
+            if(pages.size() > 0 && getActivity() instanceof AppCompatActivity){
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(Html.fromHtml(pages.get(i).getActionbarTitle()));
+            }
+        }
 
         @Override
         public void onPageScrollStateChanged(int state) {

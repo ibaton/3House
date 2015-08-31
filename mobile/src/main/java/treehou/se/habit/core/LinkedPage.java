@@ -33,6 +33,10 @@ public class LinkedPage {
         return title;
     }
 
+    public String getActionbarTitle(){
+        return title.replaceAll("(\\[)(.*)(\\])", "$2");
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
