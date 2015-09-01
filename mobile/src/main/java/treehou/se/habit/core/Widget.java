@@ -31,7 +31,11 @@ public class Widget {
     private String type;
     private String icon;
     private String label;
+
+    // Used for charts
     private String period;
+    private String service;
+
     private String url;
     private ItemDB item;
     private List<Widget> widget;
@@ -89,6 +93,14 @@ public class Widget {
 
     public void setPeriod(String period) {
         this.period = period;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
     }
 
     public List<Widget> getWidget() {

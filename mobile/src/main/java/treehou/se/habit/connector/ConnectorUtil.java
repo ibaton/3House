@@ -1,6 +1,7 @@
 package treehou.se.habit.connector;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -19,11 +20,15 @@ public class ConnectorUtil {
 
         Random random = new Random();
         String type = (widget.getItem() != null && widget.getItem().getType().equals(ItemDB.TYPE_GROUP)) ? "groups" : "items";
-        Uri builtUri = Uri.parse(widget.getBaseUrl()+Constants.CHART_URL).buildUpon()
+        Uri.Builder uriBuilder = Uri.parse(widget.getBaseUrl()+Constants.CHART_URL).buildUpon()
                 .appendQueryParameter(type, widget.getItem().getName())
                 .appendQueryParameter("period", widget.getPeriod())
-                .appendQueryParameter("random",String.valueOf(Math.abs(random.nextInt())))
-                .build();
+                .appendQueryParameter("random",String.valueOf(Math.abs(random.nextInt())));
+
+        if(!TextUtils.isEmpty(widget.getService())){
+            uriBuilder.appendQueryParameter("service", widget.getService());
+        }
+        Uri builtUri = uriBuilder.build();
         builtUri = changeHostUrl(builtUri, Uri.parse(widget.getItem().getLink()));
 
         Log.d(TAG, "Creating chart url " + builtUri.toString());

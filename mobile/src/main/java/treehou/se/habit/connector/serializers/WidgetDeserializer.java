@@ -33,6 +33,10 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
             widget.setPeriod(jObject.get("period").getAsString());
         }
 
+        if(jObject.has("service")) {
+            widget.setService(jObject.get("service").getAsString());
+        }
+
         if(jObject.has("url")) {
             widget.setUrl(jObject.get("url").getAsString());
         }
