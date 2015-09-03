@@ -46,6 +46,18 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
             widget.setItem(item);
         }
 
+        if(jObject.has("minValue")){
+            widget.setMinValue(jObject.get("minValue").getAsInt());
+        }
+
+        if(jObject.has("maxValue")){
+            widget.setMaxValue(jObject.get("maxValue").getAsInt());
+        }
+
+        if(jObject.has("step")){
+            widget.setStep(jObject.get("step").getAsInt());
+        }
+
         if(jObject.has(KEY_LINKED_PAGE)){
             JsonObject jLinkedPage = jObject.getAsJsonObject(KEY_LINKED_PAGE);
             LinkedPage linkedPage = context.deserialize(jLinkedPage, LinkedPage.class);
