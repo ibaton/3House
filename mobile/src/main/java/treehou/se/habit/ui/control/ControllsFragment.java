@@ -56,7 +56,7 @@ public class ControllsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_controll, container, false);
+        View view = inflater.inflate(R.layout.fragment_control, container, false);
 
         viwEmpty = view.findViewById(R.id.empty);
         viwEmpty.setOnClickListener(new View.OnClickListener() {
