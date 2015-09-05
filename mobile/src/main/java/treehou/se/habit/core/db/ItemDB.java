@@ -18,9 +18,6 @@ public class ItemDB extends Model {
     public static final String TYPE_GROUP           = "GroupItem";
     public static final String TYPE_DIMMER          = "DimmerItem";
 
-    public static final String STATE_UNINITIALIZED = "Uninitialized";
-
-
     @Column(name = "Server", onDelete = Column.ForeignKeyAction.CASCADE)
     private ServerDB server;
 
@@ -93,14 +90,26 @@ public class ItemDB extends Model {
     }
 
     public String getFormatedValue(){
-        String formatedValue;
-        if(getStateDescription() != null){
-            formatedValue = String.format(getStateDescription().getPattern(), Float.valueOf(getState()));
+        if(getStateDescription() != null && getStateDescription().getPattern() != null){
+
+            String pattern = getStateDescription().getPattern();
+            try {
+                return String.format(pattern, Float.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, Integer.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, getState());
+            }
+            catch (Exception e){}
         }
-        else {
-            formatedValue = getState();
-        }
-        return formatedValue;
+
+        return getState();
     }
 
     public String printableName(){
