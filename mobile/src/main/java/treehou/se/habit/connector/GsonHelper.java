@@ -8,6 +8,7 @@ import java.util.List;
 
 import treehou.se.habit.connector.serializers.ItemDeserializer;
 import treehou.se.habit.connector.serializers.ItemListDeserializer;
+import treehou.se.habit.connector.serializers.ItemStateDeserializer;
 import treehou.se.habit.connector.serializers.LinkedPageDeserializer;
 import treehou.se.habit.connector.serializers.SitemapListDeserializer;
 import treehou.se.habit.connector.serializers.WidgetDeserializer;
@@ -16,6 +17,7 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.StateDescriptionDB;
 
 public class GsonHelper {
 
@@ -33,6 +35,7 @@ public class GsonHelper {
             gsonBuilder.registerTypeAdapter(LinkedPage.class, new LinkedPageDeserializer());
             gsonBuilder.registerTypeAdapter(new TypeToken<List<ItemDB>>() {}.getType(), new ItemListDeserializer());
             gsonBuilder.registerTypeAdapter(ItemDB.class, new ItemDeserializer());
+            gsonBuilder.registerTypeAdapter(StateDescriptionDB.class, new ItemStateDeserializer());
             gson = gsonBuilder.create();
         }
 

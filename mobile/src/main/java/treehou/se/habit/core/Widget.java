@@ -26,6 +26,7 @@ public class Widget {
     public static final String TYPE_TEXT            = "Text";
     public static final String TYPE_SLIDER          = "Slider";
     public static final String TYPE_GROUP           = "Group";
+    public static final String TYPE_SETPOINT        = "Setpoint";
 
     private String widgetId;
     private String type;
@@ -35,6 +36,10 @@ public class Widget {
     // Used for charts
     private String period;
     private String service;
+
+    private int minValue=0;
+    private int maxValue=100;
+    private int step=1;
 
     private String url;
     private ItemDB item;
@@ -143,6 +148,30 @@ public class Widget {
 
     public void setMapping(List<Mapping> mapping) {
         this.mapping = mapping;
+    }
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
+
+    public int getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(int maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public int getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(int minValue) {
+        this.minValue = minValue;
     }
 
     public static class Mapping {

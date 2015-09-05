@@ -38,6 +38,9 @@ public class ItemDB extends Model {
     @Column(name = "state")
     private String state;
 
+    @Column(name = "itemStateDescription")
+    private StateDescriptionDB stateDescription;
+
     public ItemDB() {}
 
     public ServerDB getServer() {
@@ -80,13 +83,32 @@ public class ItemDB extends Model {
         this.state = state;
     }
 
+    public StateDescriptionDB getStateDescription() {
+        return stateDescription;
+    }
+
+    public void setStateDescription(StateDescriptionDB stateDescription) {
+        this.stateDescription = stateDescription;
+    }
+
     public class ItemHolder{
         public List<ItemDB> item;
     }
 
+    public String getFormatedValue(){
+        String formatedValue;
+        if(getStateDescription() != null){
+            formatedValue = String.format(getStateDescription().getPattern(), Float.valueOf(getState()));
+        }
+        else {
+            formatedValue = getState();
+        }
+        return formatedValue;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s - %s - %s", server.getName(), name, type);
+        return String.format("Item - Name: " + name + " Type: " + type);
     }
 
     @Override
