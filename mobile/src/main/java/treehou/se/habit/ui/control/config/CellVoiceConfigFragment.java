@@ -105,6 +105,11 @@ public class CellVoiceConfigFragment extends Fragment {
         Communicator communicator = Communicator.instance(getActivity());
         List<ServerDB> servers = ServerDB.getServers();
         mItems.clear();
+
+        if(voiceCell.getItem() != null) {
+            mItems.add(voiceCell.getItem());
+        }
+
         for(ServerDB server : servers) {
             communicator.requestItems(server, new Communicator.ItemsRequestListener() {
                 @Override
@@ -112,11 +117,6 @@ public class CellVoiceConfigFragment extends Fragment {
                     items = filterItems(items);
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
-
-                    int position = mItems.indexOf(voiceCell.item);
-                    if(position != -1){
-                        sprItems.setSelection(position);
-                    }
                 }
 
                 @Override

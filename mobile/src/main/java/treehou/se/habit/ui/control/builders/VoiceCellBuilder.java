@@ -38,6 +38,10 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
             @Override
             public void onClick(View v) {
 
+                if(voiceCell.getItem() == null || voiceCell.getItem().getServer()  == null){
+                    return;
+                }
+
                 Intent callbackIntent = VoiceService.createVoiceCommand(context, voiceCell.getItem().getServer());
                 PendingIntent openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -69,6 +73,10 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());
 
         cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, voiceCell.getIcon()));
+
+        if(voiceCell.getItem() == null || voiceCell.getItem().getServer()  == null){
+            return cellView;
+        }
 
         Intent callbackIntent = VoiceService.createVoiceCommand(context, voiceCell.getItem().getServer());
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

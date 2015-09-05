@@ -11,14 +11,14 @@ import java.util.List;
 @Table(name = "Items")
 public class ItemDB extends Model {
 
-    public static final String TYPE_SWITCH  = "SwitchItem";
-    public static final String TYPE_STRING  = "StringItem";
-    public static final String TYPE_COLOR   = "ColorItem";
-    public static final String TYPE_NUMBER  = "NumberItem";
-    public static final String TYPE_CONTACT = "ContactItem";
-    public static final String TYPE_ROLLERSHUTTER = "RollershutterItem";
-    public static final String TYPE_GROUP   = "GroupItem";
-    public static final String TYPE_DIMMER  = "DimmerItem";
+    public static final String TYPE_SWITCH          = "SwitchItem";
+    public static final String TYPE_STRING          = "StringItem";
+    public static final String TYPE_COLOR           = "ColorItem";
+    public static final String TYPE_NUMBER          = "NumberItem";
+    public static final String TYPE_CONTACT         = "ContactItem";
+    public static final String TYPE_ROLLERSHUTTER   = "RollershutterItem";
+    public static final String TYPE_GROUP           = "GroupItem";
+    public static final String TYPE_DIMMER          = "DimmerItem";
 
     public static final String STATE_UNINITIALIZED = "Uninitialized";
 
@@ -106,9 +106,16 @@ public class ItemDB extends Model {
         return formatedValue;
     }
 
+    public String printableName(){
+        if(server != null) {
+            return String.format(server + ": "  + name.replaceAll("_|-", " "));
+        }
+        return String.format(name.replaceAll("_|-", " "));
+    }
+
     @Override
     public String toString() {
-        return String.format("Item - Name: " + name + " Type: " + type);
+        return printableName();
     }
 
     @Override
