@@ -24,7 +24,6 @@ import java.util.List;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.ui.EditControlFragment;
 
 /**
  * Fragment listing all app controllers.

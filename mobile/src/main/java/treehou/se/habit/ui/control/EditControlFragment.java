@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.control;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -33,8 +33,6 @@ import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.CellRowDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
-import treehou.se.habit.ui.control.CellFactory;
-import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.control.config.ControllCellFragment;
 import treehou.se.habit.ui.control.config.cells.ButtonConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.ColorConfigCellBuilder;
@@ -45,12 +43,6 @@ import treehou.se.habit.ui.control.config.cells.VoiceConfigCellBuilder;
 import treehou.se.habit.ui.homescreen.ControllerWidget;
 import treehou.se.habit.util.Util;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditControlFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class EditControlFragment extends Fragment implements ColorDialog.ColorDialogCallback {
 
     private static final String TAG = "EditControlFragment";
