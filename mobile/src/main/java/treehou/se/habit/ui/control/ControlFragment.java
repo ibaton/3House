@@ -24,12 +24,6 @@ import treehou.se.habit.ui.control.builders.SliderCellBuilder;
 import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
 import treehou.se.habit.util.Util;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ControlFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class ControlFragment extends Fragment {
 
     public static final String TAG = "ControlFragment";
@@ -90,10 +84,6 @@ public class ControlFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_contoll, container, false);
 
         View viwBackground = rootView.findViewById(R.id.viw_background);
-        View titleHolder = rootView.findViewById(R.id.lou_title_holder);
-        titleHolder.setBackgroundColor(pallete[0]);
-
-        titleHolder.setVisibility(controller.showTitle() ? View.VISIBLE : View.GONE);
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity.getWindow().setStatusBarColor(pallete[0]);
@@ -102,11 +92,12 @@ public class ControlFragment extends Fragment {
                 actionBar.setBackgroundDrawable(new ColorDrawable(pallete[0]));
             }
         }
+        if(actionBar != null) {
+            actionBar.setTitle(controller.getName());
+        }
 
         viwBackground.setBackgroundColor(pallete[0]);
 
-        TextView lblName = (TextView) rootView.findViewById(R.id.lbl_name);
-        lblName.setText(controller.getName());
         louController = (LinearLayout) rootView.findViewById(R.id.lou_rows);
         redrawController();
 

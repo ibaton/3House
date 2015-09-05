@@ -9,17 +9,16 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.StateDescriptionDB;
+import treehou.se.habit.core.db.StateDescription;
 
-public class ItemStateDeserializer implements JsonDeserializer<StateDescriptionDB>, JsonSerializer<StateDescriptionDB> {
+public class ItemStateDeserializer implements JsonDeserializer<StateDescription>, JsonSerializer<StateDescription> {
 
     private static final String TAG = "ItemDeserializer";
 
     @Override
-    public StateDescriptionDB deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public StateDescription deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
-        StateDescriptionDB stateDescription = new StateDescriptionDB();
+        StateDescription stateDescription = new StateDescription();
 
         JsonObject jObject = json.getAsJsonObject();
         if(jObject.has("pattern")) {
@@ -33,7 +32,7 @@ public class ItemStateDeserializer implements JsonDeserializer<StateDescriptionD
     }
 
     @Override
-    public JsonElement serialize(StateDescriptionDB src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(StateDescription src, Type typeOfSrc, JsonSerializationContext context) {
 
         JsonObject object = new JsonObject();
         object.addProperty("pattern", src.getPattern());

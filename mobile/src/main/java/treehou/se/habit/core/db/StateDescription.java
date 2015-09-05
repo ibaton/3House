@@ -1,16 +1,12 @@
 package treehou.se.habit.core.db;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Table;
-
-@Table(name = "StateDescription", id = "_id")
-public class StateDescriptionDB extends Model {
+public class StateDescription {
 
     private String pattern;
 
     private boolean readOnly;
 
-    public StateDescriptionDB() {}
+    public StateDescription() {}
 
     public String getPattern() {
         return pattern;

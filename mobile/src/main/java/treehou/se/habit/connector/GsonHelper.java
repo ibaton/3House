@@ -17,7 +17,7 @@ import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.StateDescriptionDB;
+import treehou.se.habit.core.db.StateDescription;
 
 public class GsonHelper {
 
@@ -35,7 +35,7 @@ public class GsonHelper {
             gsonBuilder.registerTypeAdapter(LinkedPage.class, new LinkedPageDeserializer());
             gsonBuilder.registerTypeAdapter(new TypeToken<List<ItemDB>>() {}.getType(), new ItemListDeserializer());
             gsonBuilder.registerTypeAdapter(ItemDB.class, new ItemDeserializer());
-            gsonBuilder.registerTypeAdapter(StateDescriptionDB.class, new ItemStateDeserializer());
+            gsonBuilder.registerTypeAdapter(StateDescription.class, new ItemStateDeserializer());
             gson = gsonBuilder.create();
         }
 

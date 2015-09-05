@@ -9,9 +9,8 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.StateDescriptionDB;
+import treehou.se.habit.core.db.StateDescription;
 
 public class ItemDeserializer implements JsonDeserializer<ItemDB>, JsonSerializer<ItemDB> {
 
@@ -40,7 +39,7 @@ public class ItemDeserializer implements JsonDeserializer<ItemDB>, JsonSerialize
         }
 
         if(jObject.has("stateDescription")) {
-            item.setStateDescription(context.<StateDescriptionDB>deserialize(jObject.get("stateDescription"), StateDescriptionDB.class));
+            item.setStateDescription(context.<StateDescription>deserialize(jObject.get("stateDescription"), StateDescription.class));
         }
 
         return item;
@@ -56,7 +55,7 @@ public class ItemDeserializer implements JsonDeserializer<ItemDB>, JsonSerialize
         object.addProperty("link", src.getLink());
 
         if(src.getStateDescription() != null) {
-            object.add("stateDescription", context.serialize(src.getStateDescription(), StateDescriptionDB.class));
+            object.add("stateDescription", context.serialize(src.getStateDescription(), StateDescription.class));
         }
 
         return object;

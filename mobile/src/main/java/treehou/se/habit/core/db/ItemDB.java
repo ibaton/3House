@@ -4,8 +4,6 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 @Table(name = "Items")
@@ -38,8 +36,7 @@ public class ItemDB extends Model {
     @Column(name = "state")
     private String state;
 
-    @Column(name = "itemStateDescription")
-    private StateDescriptionDB stateDescription;
+    private StateDescription stateDescription;
 
     public ItemDB() {}
 
@@ -83,11 +80,11 @@ public class ItemDB extends Model {
         this.state = state;
     }
 
-    public StateDescriptionDB getStateDescription() {
+    public StateDescription getStateDescription() {
         return stateDescription;
     }
 
-    public void setStateDescription(StateDescriptionDB stateDescription) {
+    public void setStateDescription(StateDescription stateDescription) {
         this.stateDescription = stateDescription;
     }
 

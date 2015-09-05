@@ -1,5 +1,6 @@
 package treehou.se.habit.ui.control;
 
+import android.app.Notification;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -70,12 +71,16 @@ public class ControlHelper {
 
             ControlHelper.drawRemoteController(context, views, controller);
 
-            android.app.Notification notification = new NotificationCompat.Builder(context)
+            Notification notification = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setOngoing(true)
                     .setContent(views)
                     .build();
+
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                notification.bigContentView = views;
+            }*/
 
             NotificationManagerCompat.from(context).notify(controller.getId().intValue(), notification);
         }
