@@ -19,6 +19,7 @@ import treehou.se.habit.ui.widgets.factories.GroupWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.IWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ImageWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SelectionWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.SetpointWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SwitchWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.TextWidgetFactory;
@@ -52,6 +53,7 @@ public class WidgetFactory {
         builders.put(Widget.TYPE_SLIDER, new SliderWidgetFactory());
         builders.put(Widget.TYPE_SWITCH, new SwitchWidgetFactory());
         builders.put(Widget.TYPE_SELECTION, new SelectionWidgetFactory());
+        builders.put(Widget.TYPE_SETPOINT, new SetpointWidgetFactory());
         builders.put(Widget.TYPE_TEXT, new TextWidgetFactory());
         builders.put(Widget.TYPE_GROUP, new GroupWidgetFactory());
     }

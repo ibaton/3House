@@ -94,7 +94,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private int color;
-        private View clrView1;
+        private View clrView;
 
         public static ColorWidgetHolder create(WidgetFactory widgetFactory, Widget widget, Widget parent){
             return new ColorWidgetHolder(widget, parent, widgetFactory);
@@ -105,7 +105,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
             LayoutInflater inflater = widgetFactory.getInflater();
             final Context context = widgetFactory.getContext();
             View itemView = inflater.inflate(R.layout.item_widget_color, null);
-            clrView1 = itemView.findViewById(R.id.clr_color);
+            clrView = itemView.findViewById(R.id.clr_color);
 
             View btnIncrement = itemView.findViewById(R.id.btn_increment);
             btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
@@ -171,7 +171,8 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         }
 
         private void setColor(int color){
-            clrView1.setBackgroundColor(color);
+            clrView.setBackgroundColor(color);
+            clrView.setVisibility(View.GONE);
         }
 
         @Override

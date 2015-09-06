@@ -14,16 +14,14 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.gcm.GCMHelper;
-import treehou.se.habit.ui.about.AboutFragment;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.settings.SetupServerFragment;
-import treehou.se.habit.ui.ControllsFragment;
+import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.ServersFragment;
 import treehou.se.habit.ui.SitemapFragment;
 import treehou.se.habit.ui.SitemapListFragment;
@@ -146,9 +144,6 @@ public class MainActivity extends AppCompatActivity
                 break;
             case (NavigationDrawerFragment.ITEM_SETTINGS):
                 fragment = SettingsFragment.newInstance();
-                break;
-            case (NavigationDrawerFragment.ITEM_ABOUT):
-                fragment = AboutFragment.newInstance();
                 break;
         }
 

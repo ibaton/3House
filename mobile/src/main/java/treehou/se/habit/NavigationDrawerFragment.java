@@ -39,7 +39,6 @@ public class NavigationDrawerFragment extends Fragment {
     public static final int ITEM_CONTROLLERS    = 1337;
     public static final int ITEM_SERVER         = 5335;
     public static final int ITEM_SETTINGS       = 4214;
-    public static final int ITEM_ABOUT          = 6214;
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
@@ -81,7 +80,6 @@ public class NavigationDrawerFragment extends Fragment {
         items.add(new DrawerItem(getActivity().getString(R.string.controllers),R.drawable.ic_remote_grey600_24dp, ITEM_CONTROLLERS));
         items.add(new DrawerItem(getActivity().getString(R.string.servers), R.drawable.ic_monitor_grey600_24dp, ITEM_SERVER));
         items.add(new DrawerItem(getActivity().getString(R.string.settings), R.drawable.ic_settings_grey600_24dp, ITEM_SETTINGS));
-        items.add(new DrawerItem(getActivity().getString(R.string.about), R.drawable.ic_information_grey600_24dp, ITEM_ABOUT));
 
         menuAdapter = new DrawerAdapter(getActivity(), items);
     }

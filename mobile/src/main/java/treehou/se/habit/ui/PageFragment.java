@@ -306,9 +306,13 @@ public class PageFragment extends Fragment {
                     louFragments.removeAllViews();
 
                     for (Widget widget : pageWidgets) {
-                        WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
-                        widgetHolders.add(result);
-                        louFragments.addView(result.getView());
+                        try {
+                            WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
+                            widgetHolders.add(result);
+                            louFragments.addView(result.getView());
+                        } catch (Exception e) {
+                            Log.w(TAG, "Create widget failed", e);
+                        }
                     }
                     widgets.clear();
                     widgets.addAll(pageWidgets);
@@ -316,12 +320,17 @@ public class PageFragment extends Fragment {
                 else {
                     Log.d(TAG, "updating widgets");
                     for (int i=0; i < widgetHolders.size(); i++) {
-                        WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
 
-                        Log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
-                        Widget newWidget = pageWidgets.get(i);
+                        try {
+                            WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
 
-                        holder.update(newWidget);
+                            Log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
+                            Widget newWidget = pageWidgets.get(i);
+
+                            holder.update(newWidget);
+                        } catch (Exception e) {
+                            Log.w(TAG, "Updating widget failed", e);
+                        }
                     }
                 }
             }

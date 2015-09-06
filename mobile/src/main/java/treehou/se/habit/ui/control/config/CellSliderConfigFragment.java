@@ -123,11 +123,6 @@ public class CellSliderConfigFragment extends Fragment {
                     items = filterItems(items);
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
-
-                    int position = mItems.indexOf(numberCell.item);
-                    if(position != -1){
-                        sprItems.setSelection(position);
-                    }
                 }
 
                 @Override

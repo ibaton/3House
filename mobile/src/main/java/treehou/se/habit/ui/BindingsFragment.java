@@ -170,12 +170,10 @@ public class BindingsFragment extends Fragment {
                 public void onClick(View v) {
 
                     Fragment fragment = BindingFragment.newInstance(serverDB, binding);
-
-
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction()
+                    getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(container.getId(), fragment)
-                            .addToBackStack(null);
-                    transaction.commit();
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
         }

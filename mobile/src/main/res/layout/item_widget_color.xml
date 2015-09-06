@@ -29,6 +29,7 @@
             android:layout_width="@dimen/color_spacer"
             android:layout_height="match_parent"
             android:background="@color/transparent"
+            android:visibility="gone"
             android:id="@+id/clr_color"/>
 
         <LinearLayout

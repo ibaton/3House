@@ -4,24 +4,19 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 @Table(name = "Items")
 public class ItemDB extends Model {
 
-    public static final String TYPE_SWITCH  = "SwitchItem";
-    public static final String TYPE_STRING  = "StringItem";
-    public static final String TYPE_COLOR   = "ColorItem";
-    public static final String TYPE_NUMBER  = "NumberItem";
-    public static final String TYPE_CONTACT = "ContactItem";
-    public static final String TYPE_ROLLERSHUTTER = "RollershutterItem";
-    public static final String TYPE_GROUP   = "GroupItem";
-    public static final String TYPE_DIMMER  = "DimmerItem";
-
-    public static final String STATE_UNINITIALIZED = "Uninitialized";
-
+    public static final String TYPE_SWITCH          = "SwitchItem";
+    public static final String TYPE_STRING          = "StringItem";
+    public static final String TYPE_COLOR           = "ColorItem";
+    public static final String TYPE_NUMBER          = "NumberItem";
+    public static final String TYPE_CONTACT         = "ContactItem";
+    public static final String TYPE_ROLLERSHUTTER   = "RollershutterItem";
+    public static final String TYPE_GROUP           = "GroupItem";
+    public static final String TYPE_DIMMER          = "DimmerItem";
 
     @Column(name = "Server", onDelete = Column.ForeignKeyAction.CASCADE)
     private ServerDB server;
@@ -37,6 +32,8 @@ public class ItemDB extends Model {
 
     @Column(name = "state")
     private String state;
+
+    private StateDescription stateDescription;
 
     public ItemDB() {}
 
@@ -80,13 +77,51 @@ public class ItemDB extends Model {
         this.state = state;
     }
 
+    public StateDescription getStateDescription() {
+        return stateDescription;
+    }
+
+    public void setStateDescription(StateDescription stateDescription) {
+        this.stateDescription = stateDescription;
+    }
+
     public class ItemHolder{
         public List<ItemDB> item;
     }
 
+    public String getFormatedValue(){
+        if(getStateDescription() != null && getStateDescription().getPattern() != null){
+
+            String pattern = getStateDescription().getPattern();
+            try {
+                return String.format(pattern, Float.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, Integer.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, getState());
+            }
+            catch (Exception e){}
+        }
+
+        return getState();
+    }
+
+    public String printableName(){
+        if(server != null) {
+            return server + ": "  + name.replaceAll("_|-", " ");
+        }
+        return name.replaceAll("_|-", " ");
+    }
+
     @Override
     public String toString() {
-        return String.format("%s - %s - %s", server.getName(), name, type);
+        return printableName();
     }
 
     @Override

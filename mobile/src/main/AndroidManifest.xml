@@ -31,7 +31,7 @@
             android:value="treestore26.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="35" />
+            android:value="37" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

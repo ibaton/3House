@@ -45,7 +45,7 @@ public class Util {
     }
 
     public enum IconCategory {
-        SENSORS, MEDIA, COMMANDS, ALL
+        SENSORS, MEDIA, COMMANDS, ARROWS, ALL
     }
 
     public final static Map<IconCategory, List<IIcon>> CAT_ICONS = new HashMap<>();
@@ -61,6 +61,21 @@ public class Util {
         sensors.add(CommunityMaterial.Icon.cmd_brightness_6);
         sensors.add(CommunityMaterial.Icon.cmd_brightness_7);
         CAT_ICONS.put(IconCategory.SENSORS, sensors);
+
+        List<IIcon> arrows = new ArrayList<>();
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_down);
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_down_bold);
+        arrows.add(CommunityMaterial.Icon.cmd_chevron_down);
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_up);
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_up_bold);
+        arrows.add(CommunityMaterial.Icon.cmd_chevron_up);
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_left);
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_left_bold);
+        arrows.add(CommunityMaterial.Icon.cmd_chevron_left);
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_right);
+        arrows.add(CommunityMaterial.Icon.cmd_arrow_right_bold);
+        arrows.add(CommunityMaterial.Icon.cmd_chevron_right);
+        CAT_ICONS.put(IconCategory.ARROWS, arrows);
 
         List<IIcon> media = new ArrayList<>();
         media.add(CommunityMaterial.Icon.cmd_play);

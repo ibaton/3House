@@ -23,6 +23,9 @@ import java.util.List;
 import treehou.se.habit.R;
 import treehou.se.habit.util.Util;
 
+/**
+ * Fragment for picking categories of icons.
+ */
 public class CategoryPickerFragment extends Fragment {
 
     private RecyclerView lstIcons;
@@ -50,10 +53,12 @@ public class CategoryPickerFragment extends Fragment {
         lstIcons.setItemAnimator(new DefaultItemAnimator());
         lstIcons.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        // Hookup list of categories
         adapter = new CategoryAdapter(getActivity());
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_play, getString(R.string.media), Util.IconCategory.MEDIA));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_power, getString(R.string.command), Util.IconCategory.COMMANDS));
+        adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_arrow_up, getString(R.string.arrows), Util.IconCategory.ARROWS));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_view_module, getString(R.string.all), Util.IconCategory.ALL));
 
         lstIcons.setAdapter(adapter);

@@ -132,6 +132,11 @@ public class CellButtonConfigFragment extends Fragment {
         Communicator communicator = Communicator.instance(getActivity());
         List<ServerDB> servers = ServerDB.getServers();
         mItems.clear();
+
+        if(buttonCell.getItem() != null) {
+            mItems.add(buttonCell.getItem());
+        }
+
         if(buttonCell.getItem() != null) {
             mItems.add(buttonCell.getItem());
         }
@@ -142,11 +147,6 @@ public class CellButtonConfigFragment extends Fragment {
                     items = filterItems(items);
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
-
-                    int position = mItems.indexOf(buttonCell.item);
-                    if(position != -1){
-                        sprItems.setSelection(position);
-                    }
                 }
 
                 @Override

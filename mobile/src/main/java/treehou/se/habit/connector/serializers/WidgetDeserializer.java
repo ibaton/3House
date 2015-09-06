@@ -33,6 +33,10 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
             widget.setPeriod(jObject.get("period").getAsString());
         }
 
+        if(jObject.has("service")) {
+            widget.setService(jObject.get("service").getAsString());
+        }
+
         if(jObject.has("url")) {
             widget.setUrl(jObject.get("url").getAsString());
         }
@@ -40,6 +44,18 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
         if(jObject.has("item")){
             ItemDB item = context.deserialize(jObject.get("item").getAsJsonObject(), ItemDB.class);
             widget.setItem(item);
+        }
+
+        if(jObject.has("minValue")){
+            widget.setMinValue(jObject.get("minValue").getAsInt());
+        }
+
+        if(jObject.has("maxValue")){
+            widget.setMaxValue(jObject.get("maxValue").getAsInt());
+        }
+
+        if(jObject.has("step")){
+            widget.setStep(jObject.get("step").getAsInt());
         }
 
         if(jObject.has(KEY_LINKED_PAGE)){

@@ -1,7 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
 import android.content.Context;
-import android.os.Build;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -63,7 +63,6 @@ public class BaseWidgetFactory {
         View rootView;
         View baseDataHolder;
         TextView lblName;
-        TextView lblValue;
         View iconHolder;
         ImageView imgIcon;
         ImageButton btnNextPage;
@@ -99,7 +98,6 @@ public class BaseWidgetFactory {
             float percentage = Util.toPercentage(settings.getTextSize());
 
             holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
-            holder.lblValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * holder.lblValue.getTextSize());
 
             // Set size of icon
             float imageSizePercentage = Util.toPercentage(settings.getIconSize());
@@ -122,7 +120,6 @@ public class BaseWidgetFactory {
             baseDataHolder = rootView.findViewById(R.id.lou_base_data_holder);
             iconHolder = rootView.findViewById(R.id.img_widget_icon_holder);
             lblName = (TextView) rootView.findViewById(R.id.lbl_widget_name);
-            lblValue = (TextView) rootView.findViewById(R.id.lbl_value);
             imgIcon = (ImageView) rootView.findViewById(R.id.img_widget_icon);
             btnNextPage = (ImageButton) rootView.findViewById(R.id.btn_next_page);
             subView = (LinearLayout) rootView.findViewById(R.id.lou_widget_holder);
@@ -138,13 +135,6 @@ public class BaseWidgetFactory {
             Log.d(TAG, "update " + widget.getLabel());
 
             setName(widget.getLabel());
-
-            String[] splitString = widget.getLabel().split("\\[|\\]");
-
-            if (splitString.length > 1 && splitString[1].trim().length() > 0) {
-                lblValue.setText(splitString[1]);
-                lblValue.setVisibility(View.VISIBLE);
-            }
 
             /*TODO implement*/
             if (widget.getLinkedPage() != null) {
@@ -218,9 +208,8 @@ public class BaseWidgetFactory {
         private void setName(String name){
             Log.d(TAG, "setName " + name);
 
-            String[] splitString = name.split("\\[|\\]");
-            String label = splitString[0].trim();
-            lblName.setText(label);
+            name = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & context.getResources().getColor(R.color.colorAccent)) +"'>$2</font>");
+            lblName.setText(Html.fromHtml(name));
 
             if("".equals(name.trim())) {
                 baseDataHolder.setVisibility(View.GONE);

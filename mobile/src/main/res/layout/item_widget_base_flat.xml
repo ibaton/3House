@@ -52,16 +52,6 @@
                     android:autoLink="web|email|phone"
                     android:id="@+id/lbl_widget_name" />
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/lbl_value"
-                    style="@style/WidgetSubText"
-                    android:visibility="visible"
-                    android:layout_marginLeft="@dimen/item_spacing"
-                    android:text=""
-                    android:autoLink="web|email|phone"
-                    android:layout_weight="1" />
             </LinearLayout>
 
             <LinearLayout

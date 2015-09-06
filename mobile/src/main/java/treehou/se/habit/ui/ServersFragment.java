@@ -36,6 +36,8 @@ public class ServersFragment extends Fragment {
     private ServersAdapter serversAdapter;
     private ViewGroup container;
 
+    private View viwEmpty;
+
     public static ServersFragment newInstance() {
         ServersFragment fragment = new ServersFragment();
         Bundle args = new Bundle();
@@ -53,6 +55,46 @@ public class ServersFragment extends Fragment {
 
         serversAdapter = new ServersAdapter(getActivity());
         serversAdapter.addAll(ServerDB.getServers());
+        serversAdapter.setItemListener(new ServersAdapter.ItemListener() {
+            @Override
+            public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
+                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.page_container, SetupServerFragment.newInstance(server))
+                        .addToBackStack(null)
+                        .commit();
+            }
+
+            @Override
+            public boolean onItemLongClickListener(final ServersAdapter.ServerHolder serverHolder) {
+
+                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+                new AlertDialog.Builder(getActivity())
+                        .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        getActivity().getSupportFragmentManager().beginTransaction()
+                                                .replace(container.getId(), BindingsFragment.newInstance(server))
+                                                .addToBackStack(null)
+                                                .commit();
+                                        break;
+                                    case 1:
+                                        showRemoveDialog(serverHolder, server);
+                                        break;
+                                }
+                            }
+                        })
+                        .create().show();
+                return true;
+            }
+
+            @Override
+            public void itemCountUpdated(int itemCount) {
+                updateEmptyView(itemCount);
+            }
+        });
     }
 
     @Override
@@ -64,6 +106,14 @@ public class ServersFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
 
+        viwEmpty = rootView.findViewById(R.id.empty);
+        viwEmpty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startNewServerProcess();
+            }
+        });
+
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.servers);
@@ -74,7 +124,6 @@ public class ServersFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstServer.setLayoutManager(gridLayoutManager);
         lstServer.setItemAnimator(new DefaultItemAnimator());
-        lstServer.setAdapter(serversAdapter);
 
         setHasOptionsMenu(true);
 
@@ -114,20 +163,47 @@ public class ServersFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.action_add_server:
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.page_container, SetupServerFragment.newInstance())
-                        .addToBackStack(null)
-                        .commit();
+                startNewServerProcess();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder>{
+    private void startNewServerProcess(){
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.page_container, SetupServerFragment.newInstance())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showRemoveDialog(final ServersAdapter.ServerHolder serverHolder, final ServerDB server){
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.remove_server_question)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        serversAdapter.removeItem(serverHolder.getAdapterPosition());
+                        server.delete();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    /**
+     * Show empty view if no controllers exist
+     */
+    private void updateEmptyView(int itemCount){
+        viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
+    }
+
+    public static class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder>{
 
         private List<ServerDB> items = new ArrayList<>();
         private Context context;
+
+        private ItemListener itemListener = new DummyItemListener();
 
         public class ServerHolder extends RecyclerView.ViewHolder {
             public final TextView lblName;
@@ -153,57 +229,21 @@ public class ServersFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ServerHolder serverHolder, final int position) {
-            final ServerDB server = items.get(position);
+            ServerDB server = items.get(position);
 
             serverHolder.lblName.setText(server.getDisplayName(context));
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.page_container, SetupServerFragment.newInstance(server))
-                            .addToBackStack(null)
-                            .commit();
+                    itemListener.onItemClickListener(serverHolder);
                 }
             });
             serverHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    new AlertDialog.Builder(getActivity())
-                            .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (which) {
-                                        case 0:
-                                            getActivity().getSupportFragmentManager().beginTransaction()
-                                                    .replace(container.getId(), BindingsFragment.newInstance(server))
-                                                    .addToBackStack(null)
-                                                    .commit();
-                                            break;
-                                        case 1:
-                                            showRemoveDialog(serverHolder, server);
-                                            break;
-                                    }
-                                }
-                            })
-                            .create().show();
-
-                    return true;
+                    return itemListener.onItemLongClickListener(serverHolder);
                 }
             });
-        }
-
-        private void showRemoveDialog(final ServerHolder serverHolder, final ServerDB server){
-            new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.remove_server_question)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            serversAdapter.removeItem(serverHolder.getAdapterPosition());
-                            server.delete();
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
         }
 
         @Override
@@ -215,25 +255,41 @@ public class ServersFragment extends Fragment {
             return items.get(position);
         }
 
+        interface ItemListener{
+
+            void onItemClickListener(ServerHolder serverHolder);
+
+            boolean onItemLongClickListener(ServerHolder serverHolder);
+
+            void itemCountUpdated(int itemCount);
+        }
+
+        public class DummyItemListener implements ItemListener {
+
+            @Override
+            public void onItemClickListener(ServerHolder serverHolder) {}
+
+            @Override
+            public boolean onItemLongClickListener(ServerHolder serverHolder) {
+                return false;
+            }
+
+            @Override
+            public void itemCountUpdated(int itemCount) {}
+        }
+
+        public void setItemListener(ItemListener itemListener) {
+            if(itemListener == null){
+                this.itemListener = new DummyItemListener();
+                return;
+            }
+            this.itemListener = itemListener;
+        }
+
         public void addItem(ServerDB item) {
             items.add(0, item);
             notifyItemInserted(0);
-        }
-
-        public void removeItem(int position) {
-            Log.d(TAG, "removeItem: " + position);
-            items.remove(position);
-            notifyItemRemoved(position);
-        }
-
-        public void removeItem(ServerDB item) {
-            int position = items.indexOf(item);
-            items.remove(position);
-        }
-
-        public void clear() {
-            this.items.clear();
-            notifyDataSetChanged();
+            itemListener.itemCountUpdated(items.size());
         }
 
         public void addAll(List<ServerDB> items) {
@@ -241,6 +297,26 @@ public class ServersFragment extends Fragment {
                 this.items.add(0, item);
                 notifyItemRangeInserted(0, items.size());
             }
+            itemListener.itemCountUpdated(items.size());
+        }
+
+        public void removeItem(int position) {
+            Log.d(TAG, "removeItem: " + position);
+            items.remove(position);
+            notifyItemRemoved(position);
+            itemListener.itemCountUpdated(items.size());
+        }
+
+        public void removeItem(ServerDB item) {
+            int position = items.indexOf(item);
+            items.remove(position);
+            itemListener.itemCountUpdated(items.size());
+        }
+
+        public void clear() {
+            this.items.clear();
+            notifyDataSetChanged();
+            itemListener.itemCountUpdated(items.size());
         }
     }
 }

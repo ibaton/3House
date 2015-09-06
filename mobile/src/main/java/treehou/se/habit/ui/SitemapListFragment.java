@@ -38,6 +38,8 @@ public class SitemapListFragment extends Fragment {
     private Communicator communicator;
     private SitemapDB showSitemap = null;
 
+    private SitemapsRequestCallback responseListener = new SitemapsRequestCallbackDummy();
+
     /**
      * Create fragment where user can select sitemap.
      *
@@ -102,40 +104,11 @@ public class SitemapListFragment extends Fragment {
 
         mListView.setAdapter(mSitemapAdapter);
 
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        mSitemapAdapter.clear();
-
-        List<ServerDB> servers = ServerDB.getServers();
-        for(final ServerDB server : servers){
-            requestSitemap(server);
-        }
-    }
-
-    /**
-     * Request and load sitemaps for server.
-     * Prioritize sitemaps on local network.
-     *
-     * @param server
-     */
-    private void requestSitemap(final ServerDB server){
-
-        mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
-
-        communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
+        responseListener = new SitemapsRequestCallback() {
             @Override
-            public void onSuccess(List<Sitemap> sitemaps) {
-                if(getActivity() == null || isRemoving() || isDetached()){
-                    return;
-                }
+            public void onSuccess(ServerDB server, List<Sitemap> sitemaps) {
 
                 for (Sitemap sitemap : sitemaps) {
-                    sitemap.setServer(server);
                     if (!mSitemapAdapter.contains(sitemap)) {
                         mSitemapAdapter.add(sitemap);
                     }
@@ -162,11 +135,7 @@ public class SitemapListFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(String message) {
-                if(getActivity() == null){
-                    return;
-                }
-
+            public void onFailure(ServerDB server, String message) {
                 if (message == null) {
                     Log.w(TAG, "No server to connect to");
                 } else {
@@ -174,6 +143,70 @@ public class SitemapListFragment extends Fragment {
                 }
 
                 mSitemapAdapter.setServerState(server, SitemapItem.STATE_ERROR);
+            }
+        };
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mSitemapAdapter.clear();
+
+        List<ServerDB> servers = ServerDB.getServers();
+        for(final ServerDB server : servers){
+            requestSitemap(server);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // Clear pending callbacks
+        responseListener = new SitemapsRequestCallbackDummy();
+    }
+
+    /**
+     * Handle callbacks for server sitemaps.
+     */
+    interface SitemapsRequestCallback {
+        void onSuccess(ServerDB server, List<Sitemap> sitemaps);
+        void onFailure(ServerDB server, String message);
+    }
+
+    class SitemapsRequestCallbackDummy implements SitemapsRequestCallback {
+
+        @Override
+        public void onSuccess(ServerDB server, List<Sitemap> sitemaps) {}
+
+        @Override
+        public void onFailure(ServerDB server, String message) {}
+    }
+
+    /**
+     * Request and load sitemaps for server.
+     * Prioritize sitemaps on local network.
+     *
+     * @param server
+     */
+    private void requestSitemap(final ServerDB server){
+
+        mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
+        communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
+            @Override
+            public void onSuccess(List<Sitemap> sitemaps) {
+                for(Sitemap sitemap : sitemaps){
+                    sitemap.setServer(server);
+                }
+                responseListener.onSuccess(server, sitemaps);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                responseListener.onFailure(server, message);
             }
         });
     }
@@ -263,14 +296,13 @@ public class SitemapListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(SitemapBaseHolder sitemapHolder, int position) {
+        public void onBindViewHolder(final SitemapBaseHolder sitemapHolder, int position) {
 
             int type = getItemViewType(position);
             final GetResult item = getItem(position);
 
             if(SitemapItem.STATE_SUCCESS == type){
                 SitemapHolder holder = (SitemapHolder) sitemapHolder;
-                final Sitemap sitemap = item.sitemap;
 
                 holder.lblName.setText(item.sitemap.getLabel());
                 holder.lblServer.setText(item.item.server.getDisplayName(getActivity()));
@@ -278,6 +310,9 @@ public class SitemapListFragment extends Fragment {
                 sitemapHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        GetResult item = getItem(sitemapHolder.getAdapterPosition());
+                        Sitemap sitemap = item.sitemap;
+
                         Settings settings = Settings.instance(getActivity());
                         SitemapDB sitemapDB = new SitemapDB(sitemap);
                         sitemapDB.save();
@@ -298,6 +333,7 @@ public class SitemapListFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        final GetResult item = getItem(sitemapHolder.getAdapterPosition());
                         requestSitemap(item.item.server);
                     }
                 });
@@ -344,6 +380,12 @@ public class SitemapListFragment extends Fragment {
             return count;
         }
 
+        /**
+         * Returns item at a certain position
+         *
+         * @param position item to grab item for
+         * @return
+         */
         public GetResult getItem(int position) {
             GetResult result = null;
             int count = 0;
