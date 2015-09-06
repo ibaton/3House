@@ -114,9 +114,9 @@ public class ItemDB extends Model {
 
     public String printableName(){
         if(server != null) {
-            return String.format(server + ": "  + name.replaceAll("_|-", " "));
+            return server + ": "  + name.replaceAll("_|-", " ");
         }
-        return String.format(name.replaceAll("_|-", " "));
+        return name.replaceAll("_|-", " ");
     }
 
     @Override
