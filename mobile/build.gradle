@@ -72,6 +72,14 @@ dependencies {
     compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
 
+    // Robolectric
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-core:1.1'
+    testCompile 'org.hamcrest:hamcrest-library:1.1'
+    testCompile 'org.hamcrest:hamcrest-integration:1.1'
+    testCompile "org.assertj:assertj-core:1.7.0"
+    testCompile "org.robolectric:robolectric:3.0"
+
     compile ('org.atmosphere:wasync:2.1.2')
     compile 'joda-time:joda-time:2.7'
 }
