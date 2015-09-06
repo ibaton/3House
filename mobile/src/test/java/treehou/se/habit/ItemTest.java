@@ -24,10 +24,9 @@ public class ItemTest {
     }
 
     @Test
-    public void check_formated_name_is_correct() throws Exception {
+    public void check_formated_state_is_correct() throws Exception {
 
         ItemDB item = new ItemDB();
-        item.setName("Device [%.2f]");
 
         StateDescription stateDescription = new StateDescription();
         stateDescription.setPattern("%.2f");
@@ -35,8 +34,8 @@ public class ItemTest {
 
         item.setState("12.2");
 
-        String printableName = item.printableName();
-        if(BuildConfig.DEBUG && !item.printableName().equals("Device 12.20")) {
+        String printableState = item.getFormatedValue();
+        if(BuildConfig.DEBUG && !printableState.equals("12,20")) {
             throw new AssertionError();
         }
     }
