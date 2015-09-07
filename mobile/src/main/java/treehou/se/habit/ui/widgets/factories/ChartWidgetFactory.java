@@ -23,7 +23,7 @@ public class ChartWidgetFactory implements IWidgetFactory {
         return ChartWidgetHolder.create(widgetFactory, widget, parent);
     }
 
-    static class ChartWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class ChartWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "ChartWidgetHolder";
 

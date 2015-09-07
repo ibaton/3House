@@ -21,7 +21,7 @@ public class WebWidgetFactory implements IWidgetFactory {
         return rootView;
     }
 
-    static class WebWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class WebWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "WebWidgetHolder";
 

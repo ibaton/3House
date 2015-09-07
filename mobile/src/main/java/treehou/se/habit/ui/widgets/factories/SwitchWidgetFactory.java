@@ -55,7 +55,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget rollershutters
      */
-    static class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "RollerShutterWidgetHold";
 
@@ -134,7 +134,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget with single button
      */
-    static class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "PickerWidgetHolder";
 
@@ -208,7 +208,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget with single button
      */
-    static class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "SingleButtonBuilder";
 
@@ -280,7 +280,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget with switch
      */
-    static class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "SwitchWidgetHolder";
 

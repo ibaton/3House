@@ -88,7 +88,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
     /**
      * Color widget
      */
-    static class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "PickerWidgetHolder";
 
