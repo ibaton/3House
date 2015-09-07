@@ -22,16 +22,16 @@ public class ItemDB extends Model {
     private ServerDB server;
 
     @Column(name = "type")
-    private String type;
+    private String type = "";
 
     @Column(name = "name")
-    private String name;
+    private String name = "";
 
     @Column(name = "link")
-    private String link;
+    private String link = "";
 
     @Column(name = "state")
-    private String state;
+    private String state = "";
 
     private StateDescription stateDescription;
 

@@ -32,7 +32,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
         if(widget.getMapping() == null || widget.getMapping().size() <= 0) {
             final ItemDB item = widget.getItem();
-            if (item == null){
+            if (item == null || item.getType() == null) {
                 Log.w(TAG, "Null switch created");
                 return new NullWidgetFactory().build(widgetFactory, page, widget, parent);
             }
@@ -330,7 +330,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         public void update(final Widget widget) {
             Log.d(TAG, "update " + widget);
 
-            if (widget == null) {
+            if (widget == null || widget.getItem() == null) {
                 return;
             }
 

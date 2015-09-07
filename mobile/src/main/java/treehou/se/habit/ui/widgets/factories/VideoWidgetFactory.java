@@ -2,6 +2,7 @@ package treehou.se.habit.ui.widgets.factories;
 
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.MediaController;
@@ -70,7 +71,9 @@ public class VideoWidgetFactory implements IWidgetFactory {
         }
 
         private void setVideoUri(String uri) {
-            mVideoView.setVideoURI(Uri.parse(uri));
+            if(!TextUtils.isEmpty(uri)){
+                mVideoView.setVideoURI(Uri.parse(uri));
+            }
         }
 
         private void launchVideo(){

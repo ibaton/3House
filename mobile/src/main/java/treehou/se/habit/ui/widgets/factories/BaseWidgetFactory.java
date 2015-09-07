@@ -211,7 +211,7 @@ public class BaseWidgetFactory {
             name = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & context.getResources().getColor(R.color.colorAccent)) +"'>$2</font>");
             lblName.setText(Html.fromHtml(name));
 
-            if("".equals(name.trim())) {
+            if(baseDataHolder != null && "".equals(name.trim())) {
                 baseDataHolder.setVisibility(View.GONE);
             }
         }
@@ -245,7 +245,7 @@ public class BaseWidgetFactory {
                 }
             } else {
                 imgIcon.setVisibility(View.GONE);
-                if (widget.getLabel() == null || "".equals(widget.getLabel().trim())) {
+                if (baseDataHolder != null && (widget.getLabel() == null || "".equals(widget.getLabel().trim()))) {
                     baseDataHolder.setVisibility(View.GONE);
                 }
             }

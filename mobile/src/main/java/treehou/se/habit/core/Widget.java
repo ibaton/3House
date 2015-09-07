@@ -121,7 +121,7 @@ public class Widget {
         try {
             return new URL(ConnectorUtil.getBaseUrl(item.getLink())).toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Failed to generate base url", e);
         }
         return "";
     }

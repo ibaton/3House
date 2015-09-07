@@ -18,8 +18,12 @@ public class ConnectorUtil {
 
     public static String buildChartRequestString(String baseUrl, Widget widget){
 
+        if(widget.getItem() == null){
+            return "";
+        }
+
         Random random = new Random();
-        String type = (widget.getItem() != null && widget.getItem().getType().equals(ItemDB.TYPE_GROUP)) ? "groups" : "items";
+        String type = widget.getItem().getType().equals(ItemDB.TYPE_GROUP) ? "groups" : "items";
         Uri.Builder uriBuilder = Uri.parse(widget.getBaseUrl()+Constants.CHART_URL).buildUpon()
                 .appendQueryParameter(type, widget.getItem().getName())
                 .appendQueryParameter("period", widget.getPeriod())
