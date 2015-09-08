@@ -32,7 +32,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
         if(widget.getMapping() == null || widget.getMapping().size() <= 0) {
             final ItemDB item = widget.getItem();
-            if (item == null){
+            if (item == null || item.getType() == null) {
                 Log.w(TAG, "Null switch created");
                 return new NullWidgetFactory().build(widgetFactory, page, widget, parent);
             }
@@ -55,7 +55,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget rollershutters
      */
-    static class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "RollerShutterWidgetHold";
 
@@ -134,7 +134,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget with single button
      */
-    static class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "PickerWidgetHolder";
 
@@ -208,7 +208,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget with single button
      */
-    static class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "SingleButtonBuilder";
 
@@ -280,7 +280,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
     /**
      * Widget with switch
      */
-    static class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "SwitchWidgetHolder";
 
@@ -330,7 +330,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         public void update(final Widget widget) {
             Log.d(TAG, "update " + widget);
 
-            if (widget == null) {
+            if (widget == null || widget.getItem() == null) {
                 return;
             }
 

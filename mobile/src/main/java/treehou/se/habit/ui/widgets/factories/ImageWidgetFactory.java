@@ -21,7 +21,7 @@ public class ImageWidgetFactory implements IWidgetFactory {
         return new ImageWidgetHolder(widget, parent, widgetFactory);
     }
 
-    static class ImageWidgetHolder implements WidgetFactory.IWidgetHolder {
+    public static class ImageWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "ImageWidgetHolder";
 
@@ -29,7 +29,7 @@ public class ImageWidgetFactory implements IWidgetFactory {
         private ImageView imgImage;
         private WidgetFactory factory;
 
-        private ImageWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        ImageWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
             this.factory = factory;
 
             View itemView = factory.getInflater().inflate(R.layout.item_widget_image, null);
