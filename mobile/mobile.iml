@@ -193,8 +193,8 @@
     <orderEntry type="library" exported="" name="async-http-client-1.9.20" level="project" />
     <orderEntry type="library" exported="" name="wasync-2.1.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-7.8.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="robolectric-utils-3.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-analysis-5.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="robolectric-utils-3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-appstate-7.8.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wearable-7.8.0" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
