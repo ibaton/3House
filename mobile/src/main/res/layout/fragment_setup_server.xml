@@ -112,21 +112,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.cengalabs.flatui.views.FlatButton
+    <android.support.v7.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:text="@string/back"
-        android:id="@+id/btn_back"
-        flatui:fl_theme="@array/custom_theme"
-        flatui:fl_textAppearance="fl_dark"
-        flatui:fl_blockButtonEffectHeight="3dp"
-        flatui:fl_fontFamily="roboto"
-        flatui:fl_touchEffect="fl_ripple"
-        flatui:fl_fontWeight="light"
-        flatui:fl_fontExtension="ttf"
-        flatui:fl_borderWidth="2dp"
-        flatui:fl_cornerRadius="0dp"
-        flatui:fl_size="20dp" />
+        android:id="@+id/btn_back"/>
 
 </LinearLayout>
