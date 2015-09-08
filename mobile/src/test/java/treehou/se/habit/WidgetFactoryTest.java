@@ -1,5 +1,7 @@
 package treehou.se.habit;
 
+import android.widget.TextView;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -289,11 +291,19 @@ public class WidgetFactoryTest {
 
         Widget widget = new Widget();
         widget.setType(Widget.TYPE_TEXT);
+        widget.setLabel("WidgetText");
 
         widgetHolder = factory.createWidget(widget, null);
 
-        if(BuildConfig.DEBUG && !(widgetHolder instanceof TextWidgetFactory.TextWidgetHolder)) {
-            throw new AssertionError();
+        if(BuildConfig.DEBUG) {
+
+            if(!(widgetHolder instanceof TextWidgetFactory.TextWidgetHolder)) {
+                throw new AssertionError();
+            }
+
+            if(((TextView) widgetHolder.getView().findViewById(R.id.lbl_widget_name)).getText().equals("WidgetText") ) {
+                throw new AssertionError();
+            }
         }
     }
 
