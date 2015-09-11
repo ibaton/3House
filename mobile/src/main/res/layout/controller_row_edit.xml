@@ -19,6 +19,5 @@
         android:id="@+id/btn_add_column"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:background="?android:attr/selectableItemBackground"
         android:src="@drawable/add_row" />
 </LinearLayout>

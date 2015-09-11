@@ -11,29 +11,39 @@
         android:orientation="vertical"
         android:id="@+id/viw_background">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/colorPrimaryDark"
-            android:id="@+id/lou_title_holder"
-            android:padding="10dp">
+            android:theme="@style/DarkActionbar"
+            android:elevation="@dimen/item_elevation">
 
-            <android.support.v7.widget.AppCompatEditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/controller_name"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:id="@+id/txt_name"
-                android:layout_weight="1" />
+                android:orientation="horizontal"
+                android:background="@color/colorPrimary"
+                android:id="@+id/lou_title_holder"
+                android:padding="10dp">
 
-            <android.support.v7.widget.AppCompatButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/color"
-                android:id="@+id/btn_color" />
-        </LinearLayout>
+                <android.support.v7.widget.AppCompatEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/controller_name"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:id="@+id/txt_name"
+                    android:layout_weight="1" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/color"
+                    android:id="@+id/btn_color" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
 
         <android.support.v4.widget.DrawerLayout
             android:id="@+id/drawer_layout"
@@ -63,7 +73,6 @@
                         android:layout_height="@dimen/controller_button_space"
                         android:id="@+id/btn_add_row"
                         android:padding="10dp"
-                        android:background="?android:attr/selectableItemBackground"
                         android:src="@drawable/add_row"
                         android:layout_weight="1" />
 

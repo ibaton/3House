@@ -3,6 +3,7 @@ package treehou.se.habit.ui.control;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -256,9 +258,18 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        cell.delete();
-                        row.deleteCell(cell);
-                        redrawController();
+                        new AlertDialog.Builder(getActivity())
+                                .setMessage(activity.getString(R.string.delete_cell))
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        cell.delete();
+                                        row.deleteCell(cell);
+                                        redrawController();
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, null)
+                                .show();
 
                         return true;
                     }
@@ -284,7 +295,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
      */
     public void updateColorPalette(int color){
 
-        int[] pallete;
+        /*int[] pallete;
         if(Colour.alpha(color) < 100){
             pallete = Util.generatePallete(getResources().getColor(R.color.colorPrimary));
         }else{
@@ -302,7 +313,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
             if(actionBar != null) {
                 actionBar.setBackgroundDrawable(new ColorDrawable(pallete[0]));
             }
-        }
+        }*/
 
         redrawController();
     }

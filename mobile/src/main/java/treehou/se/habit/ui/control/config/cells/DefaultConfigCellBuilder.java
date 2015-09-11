@@ -21,7 +21,6 @@ public class DefaultConfigCellBuilder implements CellFactory.CellBuilder {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View rootView = inflater.inflate(R.layout.cell_conf_button, null);
-        rootView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
 
         ImageButton imgView = (ImageButton) rootView.findViewById(R.id.img_icon_button);
 
