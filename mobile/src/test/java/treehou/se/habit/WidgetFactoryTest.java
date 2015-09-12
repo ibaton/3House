@@ -143,6 +143,8 @@ public class WidgetFactoryTest {
         Widget widget = new Widget();
         widget.setType(Widget.TYPE_IMAGE);
 
+        widget.setUrl("https://www.google.se/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png");
+
         widgetHolder = factory.createWidget(widget, null);
 
         if(BuildConfig.DEBUG && !(widgetHolder instanceof ImageWidgetFactory.ImageWidgetHolder)) {
@@ -199,10 +201,36 @@ public class WidgetFactoryTest {
         Widget widget = new Widget();
         widget.setType(Widget.TYPE_SLIDER);
 
+        ItemDB item = new ItemDB();
+        item.setType(ItemDB.TYPE_DIMMER);
+        item.setState("43.0");
+
+        widget.setItem(item);
+
         widgetHolder = factory.createWidget(widget, null);
 
         if(BuildConfig.DEBUG && !(widgetHolder instanceof SliderWidgetFactory.SliderWidgetHolder)) {
             throw new AssertionError();
+        }
+        SliderWidgetFactory.SliderWidgetHolder sliderWidgetHolder = (SliderWidgetFactory.SliderWidgetHolder) widgetHolder;
+
+        widgetHolder = factory.createWidget(widget, null);
+
+        sliderWidgetHolder.getSeekbarView();
+        if(BuildConfig.DEBUG && sliderWidgetHolder.getSeekbarView().getProgress() != 43) {
+            throw new AssertionError("Slider showing value " + sliderWidgetHolder.getSeekbarView().getProgress() + " should be 43");
+        }
+
+        item.setState("60.1");
+        sliderWidgetHolder.update(widget);
+        if(BuildConfig.DEBUG && sliderWidgetHolder.getSeekbarView().getProgress() != 60) {
+            throw new AssertionError("Slider update showing value " + sliderWidgetHolder.getSeekbarView().getProgress() + " should be 60");
+        }
+
+        item.setState("65");
+        sliderWidgetHolder.update(widget);
+        if(BuildConfig.DEBUG && sliderWidgetHolder.getSeekbarView().getProgress() != 65) {
+            throw new AssertionError("Slider update with int value " + sliderWidgetHolder.getSeekbarView().getProgress() + " should be 65");
         }
     }
 
