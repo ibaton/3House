@@ -1,5 +1,6 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -11,6 +12,8 @@ import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class SliderWidgetFactory implements IWidgetFactory {
+
+    private static final String TAG = "SliderWidgetFactory";
 
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
@@ -57,10 +60,12 @@ public class SliderWidgetFactory implements IWidgetFactory {
             skbDim.setOnSeekBarChangeListener(null);
             try {
                 if(widget.getItem() != null) {
-                    int progress = Integer.valueOf(widget.getItem().getState());
-                    skbDim.setProgress(progress);
+                    float progress = Float.valueOf(widget.getItem().getState());
+                    skbDim.setProgress((int) progress);
                 }
-            }catch (NumberFormatException e){}
+            }catch (Exception e){
+                Log.e(TAG, "Failed to update progress", e);
+            }
 
             skbDim.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -81,6 +86,15 @@ public class SliderWidgetFactory implements IWidgetFactory {
             });
 
             baseHolder.update(widget);
+        }
+
+        /**
+         * Returns the holders slider view.
+         *
+         * @return sliders.
+         */
+        public SeekBar getSeekbarView() {
+            return skbDim;
         }
     }
 }

@@ -87,10 +87,10 @@ public class SetpointWidgetFactory implements IWidgetFactory {
 
             lblValue.setText("" + value);
 
-            int setpointValue = widget.getMinValue();
+            float setpointValue = widget.getMinValue();
             try {
                 if(widget.getItem() != null) {
-                    setpointValue = Integer.valueOf(widget.getItem().getState())+value;
+                    setpointValue = Float.valueOf(widget.getItem().getState())+value;
                 }
             }catch (NumberFormatException e){
                 return;
@@ -101,7 +101,7 @@ public class SetpointWidgetFactory implements IWidgetFactory {
             setValue(widget, setpointValue);
         }
 
-        private void setValue(Widget widget, int value) {
+        private void setValue(Widget widget, float value) {
 
             String state = String.valueOf(value);
             if(widget.getItem() != null) {
