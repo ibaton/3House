@@ -3,9 +3,11 @@ package treehou.se.habit.ui.control.config.cells;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
+import android.widget.SeekBar;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.controller.CellDB;
@@ -28,6 +30,14 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_conf_slider, null);
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+
+        SeekBar sbrValue = (SeekBar) cellView.findViewById(R.id.sbr_value);
+        sbrValue.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         Drawable icon = Util.getIconDrawable(context, numberCell.getIcon());
         if(icon != null) {

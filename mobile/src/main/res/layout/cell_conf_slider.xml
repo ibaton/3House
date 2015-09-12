@@ -21,7 +21,8 @@
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/seekBar" />
+            android:progress="50"
+            android:id="@+id/sbr_value" />
 
     </LinearLayout>
 </LinearLayout>
