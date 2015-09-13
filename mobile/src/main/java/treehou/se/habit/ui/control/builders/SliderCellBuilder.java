@@ -79,7 +79,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         Intent intent = new Intent(context.getApplicationContext(), SliderActivity.class);
         intent.setAction(SliderActivity.ACTION_NUMBER);
         intent.putExtra(SliderActivity.ARG_CELL, cell.getId());
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NO_ANIMATION );
 
         //TODO give intent unique id
         PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_UPDATE_CURRENT);

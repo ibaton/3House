@@ -18,7 +18,9 @@
     <color name="background">#ffdcdcdc</color>
 
     <color name="item_background">#ffffffff</color>
-    <color name="item_background_boder">#ff424242</color>
+    <color name="item_background_border">#8c8c8c</color>
+
+    <color name="button_background">#ffcccccc</color>
 
     <color name="image_background">#ffc6c6c6</color>
 
@@ -33,7 +35,7 @@
 
     <color name="frame_header">#ff686868</color>
 
-    <color name="transparent_dark">#22000000</color>
+    <color name="transparent_dark">#77000000</color>
 
     <color name="load">#cacac5</color>
 </resources>

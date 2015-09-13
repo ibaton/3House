@@ -50,9 +50,7 @@
 
     <style name="TransparentTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="android:background">@color/transparent_dark</item>
-        <item name="background">@color/transparent_dark</item>
-        <item name="android:windowBackground">@color/transparent_dark</item>
+        <item name="android:windowBackground">@drawable/transparent</item>
         <item name="android:colorBackgroundCacheHint">@color/transparent_dark</item>
         <item name="android:windowContentOverlay">@color/transparent_dark</item>
         <item name="android:windowIsTranslucent">true</item>

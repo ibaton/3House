@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageButton
+        android:background="@drawable/conf_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"

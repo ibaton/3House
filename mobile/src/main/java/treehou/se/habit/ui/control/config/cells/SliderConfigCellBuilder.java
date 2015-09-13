@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.control.config.cells;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,7 +30,8 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_conf_slider, null);
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+        View viwBackground = cellView.findViewById(R.id.viw_background);
+        viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         SeekBar sbrValue = (SeekBar) cellView.findViewById(R.id.sbr_value);
         sbrValue.setOnTouchListener(new View.OnTouchListener() {

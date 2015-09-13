@@ -95,4 +95,5 @@
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="delete_cell">Delete cell?</string>
+    <string name="name">Name</string>
 </resources>
