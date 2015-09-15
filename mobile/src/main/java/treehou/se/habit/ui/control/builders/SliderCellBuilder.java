@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,7 +34,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_slider, null);
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+        View viwBackground = cellView.findViewById(R.id.viw_background);
+        viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon_button);
         imgIcon.setImageDrawable(Util.getIconDrawable(context, numberCell.getIcon()));

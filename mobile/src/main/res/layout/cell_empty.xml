@@ -9,6 +9,6 @@
     <ImageButton
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground"
+        android:background="@drawable/conf_button"
         android:id="@+id/img_icon_button" />
 </LinearLayout>
