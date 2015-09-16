@@ -9,6 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingRight="@dimen/margin_controller_cell"
+        android:paddingLeft="@dimen/margin_controller_cell"
+        android:paddingTop="@dimen/margin_controller_cell"
+        android:paddingBottom="@dimen/margin_controller_cell"
         android:orientation="vertical"
         android:id="@+id/lou_rows"/>
 

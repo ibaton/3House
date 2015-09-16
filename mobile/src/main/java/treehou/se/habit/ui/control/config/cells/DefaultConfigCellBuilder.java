@@ -23,7 +23,6 @@ public class DefaultConfigCellBuilder implements CellFactory.CellBuilder {
         View rootView = inflater.inflate(R.layout.cell_conf_button, null);
 
         ImageButton imgView = (ImageButton) rootView.findViewById(R.id.img_icon_button);
-
         imgView.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         return rootView;
