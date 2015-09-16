@@ -18,6 +18,7 @@ import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.controller.IncDecCellDB;
 import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.CommandService;
@@ -36,8 +37,6 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         View cellView = inflater.inflate(R.layout.cell_button, null);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
-
         ImageButton imgIcon = (ImageButton) cellView.findViewById(R.id.img_icon_button);
         imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
@@ -64,7 +63,9 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         final IncDecCellDB buttonCell = cell.incDecCell();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
-        cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());
+
+        int[] pallete = ControllerUtil.generateColor(controller, cell);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
         Bitmap icon = Util.getIconBitmap(context, buttonCell.getIcon());
         if(icon != null) {
             cellView.setImageViewBitmap(R.id.img_icon_button, icon);

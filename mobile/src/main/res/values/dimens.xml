@@ -44,4 +44,5 @@
     <dimen name="margin_controller_cell">15dp</dimen>
     <dimen name="margin_controller_row">2.5dp</dimen>
 
+    <dimen name="cell_border">0.25dp</dimen>
 </resources>

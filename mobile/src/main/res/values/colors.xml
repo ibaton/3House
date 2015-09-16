@@ -20,7 +20,8 @@
     <color name="item_background">#ffffffff</color>
     <color name="item_background_border">#8c8c8c</color>
 
-    <color name="button_background">#ffcccccc</color>
+    <color name="button_background">#ffffffff</color>
+    <color name="button_background_active">#ffaaaaaa</color>
 
     <color name="image_background">#ffc6c6c6</color>
 

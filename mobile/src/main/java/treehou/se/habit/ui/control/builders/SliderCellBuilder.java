@@ -4,11 +4,16 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
@@ -16,6 +21,7 @@ import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -33,7 +39,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_slider, null);
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+        cellView.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon_button);
         imgIcon.setImageDrawable(Util.getIconDrawable(context, numberCell.getIcon()));
@@ -70,7 +76,9 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         final SliderCellDB numberCell = cell.sliderCell();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
-        cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());
+
+        int[] pallete = ControllerUtil.generateColor(controller, cell);
+        ViewHelper.colorRemoteDrawable(cellView,R.id.img_icon_button,pallete[ControllerUtil.INDEX_BUTTON]);
 
         Bitmap icon = Util.getIconBitmap(context, numberCell.getIcon());
         if(icon != null) {

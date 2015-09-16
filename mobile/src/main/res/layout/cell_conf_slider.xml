@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:id="@+id/viw_background"
-        android:background="@drawable/conf_button"
+        android:background="@drawable/cell_passive_conf"
         android:orientation="vertical">
 
         <ImageView

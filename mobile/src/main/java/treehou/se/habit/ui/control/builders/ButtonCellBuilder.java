@@ -17,6 +17,7 @@ import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.controller.ButtonCellDB;
+import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.CommandService;
@@ -62,7 +63,10 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         final ButtonCellDB buttonCell = cell.buttonCell();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
-        cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());
+
+        int[] pallete = ControllerUtil.generateColor(controller, cell);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
+
         cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, buttonCell.getIcon()));
         Intent intent = CommandService.getActionCommand(context, buttonCell.getCommand(), buttonCell.getItem());
 

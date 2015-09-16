@@ -78,7 +78,7 @@
                     android:padding="10dp"
                     android:src="@drawable/add_row"
                     android:layout_weight="1"
-                    android:background="@drawable/conf_button"
+                    android:background="@drawable/cell_button_conf"
                     android:layout_marginRight="@dimen/margin_controller_cell"
                     android:layout_marginLeft="@dimen/margin_controller_cell"/>
 
