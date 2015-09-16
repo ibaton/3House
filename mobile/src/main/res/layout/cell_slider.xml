@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:background="@drawable/cell_passive"
     android:gravity="center_vertical">
 
     <LinearLayout
@@ -12,7 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:id="@+id/viw_background"
-        android:background="@drawable/conf_button"
+        android:background="@drawable/cell_passive"
         android:orientation="vertical">
 
         <ImageView

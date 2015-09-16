@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,7 +75,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        ViewHelper.colorRemoteDrawable(cellView,R.id.img_icon_button,pallete[ControllerUtil.INDEX_BUTTON]);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
 
         Bitmap icon = Util.getIconBitmap(context, numberCell.getIcon());
         if(icon != null) {
