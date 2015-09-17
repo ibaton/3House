@@ -202,7 +202,8 @@ public class CellSliderConfigFragment extends Fragment {
                 resultCode == Activity.RESULT_OK &&
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
-            numberCell.setIcon(data.getStringExtra(IconPickerActivity.RESULT_ICON));
+            String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
+            numberCell.setIcon(iconName.equals("") ? null : iconName);
             numberCell.save();
             updateIconImage();
         }

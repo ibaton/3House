@@ -164,7 +164,8 @@ public class CellVoiceConfigFragment extends Fragment {
                 resultCode == Activity.RESULT_OK &&
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
-            voiceCell.setIcon(data.getStringExtra(IconPickerActivity.RESULT_ICON));
+            String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
+            voiceCell.setIcon(iconName.equals("") ? null : iconName);
             voiceCell.save();
             updateIconImage();
         }

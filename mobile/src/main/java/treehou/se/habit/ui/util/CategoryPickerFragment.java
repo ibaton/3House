@@ -1,6 +1,8 @@
 package treehou.se.habit.ui.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -55,6 +57,7 @@ public class CategoryPickerFragment extends Fragment {
 
         // Hookup list of categories
         adapter = new CategoryAdapter(getActivity());
+        adapter.add(new CategoryPicker(null, getString(R.string.empty), Util.IconCategory.MEDIA));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_play, getString(R.string.media), Util.IconCategory.MEDIA));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_power, getString(R.string.command), Util.IconCategory.COMMANDS));
@@ -147,21 +150,34 @@ public class CategoryPickerFragment extends Fragment {
             final CategoryPicker item = categories.get(position);
             CategoryHolder catHolder = (CategoryHolder) holder;
 
-            IconicsDrawable drawable = new IconicsDrawable(getActivity(), item.getIcon()).color(Color.BLACK).sizeDp(50);
-
-            catHolder.imgIcon.setImageDrawable(drawable);
             catHolder.lblCategory.setText(item.getCategory());
+            if(item.getId() != Util.IconCategory.EMPTY) {
+                IconicsDrawable drawable = new IconicsDrawable(getActivity(), item.getIcon()).color(Color.BLACK).sizeDp(50);
+                catHolder.imgIcon.setImageDrawable(drawable);
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(container.getId(), IconPickerFragment.newInstance(item.getId()))
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+            }
+            else {
+                catHolder.imgIcon.setImageDrawable(null);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.putExtra(IconPickerFragment.RESULT_ICON, "");
 
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(container.getId(), IconPickerFragment.newInstance(item.getId()))
-                            .addToBackStack(null)
-                            .commit();
-                }
-            });
+                        getActivity().setResult(Activity.RESULT_OK, intent);
+                        getActivity().finish();
+                    }
+                });
+            }
         }
 
         @Override
