@@ -6,15 +6,25 @@
     android:layout_weight="1"
     android:gravity="center_vertical">
 
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_icon_button" />
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/viw_background"
+        android:background="@drawable/cell_passive"
+        android:orientation="vertical">
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:id="@+id/sbrNumber"
-        android:indeterminate="false" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_icon_button" />
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:id="@+id/sbrNumber"
+            android:indeterminate="false" />
+
+    </LinearLayout>
 </LinearLayout>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -9,7 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lou_btn_holder"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginRight="@dimen/margin_controller_cell"
+        android:layout_marginTop="@dimen/margin_controller_row"
+        android:layout_marginBottom="@dimen/margin_controller_row">
 
     </LinearLayout>
 
@@ -17,8 +21,7 @@
         android:layout_width="@dimen/controller_button_space"
         android:layout_height="match_parent"
         android:id="@+id/btn_add_column"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:background="?android:attr/selectableItemBackground"
+        android:padding="10dp"
+        android:background="@drawable/cell_button_conf"
         android:src="@drawable/add_row" />
 </LinearLayout>

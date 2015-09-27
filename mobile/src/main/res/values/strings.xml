@@ -94,4 +94,7 @@
     <string name="empty_servers">No servers found. Press here to add your first server.</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+    <string name="delete_cell">Delete cell?</string>
+    <string name="name">Name</string>
+    <string name="empty">Empty</string>
 </resources>

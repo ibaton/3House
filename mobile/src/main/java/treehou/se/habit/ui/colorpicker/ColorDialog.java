@@ -1,5 +1,6 @@
 package treehou.se.habit.ui.colorpicker;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -24,8 +25,30 @@ public class ColorDialog extends DialogFragment {
 
     public static final String EXTRA_COLOR = "color";
 
+    private ColorDialogCallback colorCallback;
+
     public static ColorDialog instance(){
         return new ColorDialog();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+
+        if(getTargetFragment() != null && getTargetFragment() instanceof ColorDialogCallback){
+            colorCallback = (ColorDialogCallback) getTargetFragment();
+        }
+        else if(activity instanceof ColorDialogCallback){
+            colorCallback = (ColorDialogCallback) activity;
+        }
+
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onDetach() {
+        colorCallback = null;
+
+        super.onDetach();
     }
 
     @Override
@@ -46,8 +69,9 @@ public class ColorDialog extends DialogFragment {
         lstColors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ColorDialogCallback colorCallback = (ColorDialogCallback) getTargetFragment();
-                colorCallback.setColor((int)view.getTag());
+                if(colorCallback != null) {
+                    colorCallback.setColor((int) view.getTag());
+                }
                 ColorDialog.this.dismiss();
             }
         });
@@ -84,6 +108,6 @@ public class ColorDialog extends DialogFragment {
     }
 
     public interface ColorDialogCallback{
-        public void setColor(int color);
+        void setColor(int color);
     }
 }

@@ -5,8 +5,10 @@
     android:layout_height="match_parent">
 
     <ImageButton
+        android:background="@drawable/cell_button_conf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false"
-        android:id="@+id/img_icon_button" />
+        android:id="@+id/img_icon_button"
+        android:adjustViewBounds="false" />
 </LinearLayout>

@@ -164,7 +164,6 @@ public class ControllsFragment extends Fragment {
         ControllerDB controller = new ControllerDB();
         String name = "Controller";
         Long id = controller.save();
-        name += getId();
         controller.setName(name);
         controller.save();
         controller.addRow();

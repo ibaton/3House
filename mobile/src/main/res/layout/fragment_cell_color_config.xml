@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/cell_button_conf"
     tools:context="treehou.se.habit.ui.control.config.CellButtonConfigFragment">
 
     <!-- TODO: Update blank fragment layout -->

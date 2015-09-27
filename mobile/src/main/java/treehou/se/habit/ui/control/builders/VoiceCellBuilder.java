@@ -3,6 +3,7 @@ package treehou.se.habit.ui.control.builders;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.controller.VoiceCellDB;
+import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -29,10 +31,10 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_button, null);
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
 
         ImageButton imgIcon = (ImageButton) cellView.findViewById(R.id.img_icon_button);
         imgIcon.setImageDrawable(Util.getIconDrawable(context, voiceCell.getIcon()));
+        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         imgIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +72,9 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         final VoiceCellDB voiceCell = cell.voiceCell();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
-        cellView.setInt(R.id.cell_button, "setBackgroundColor", cell.getColor());
+
+        int[] pallete = ControllerUtil.generateColor(controller, cell);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
 
         cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, voiceCell.getIcon()));
 

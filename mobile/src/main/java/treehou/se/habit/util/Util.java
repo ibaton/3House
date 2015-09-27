@@ -45,7 +45,7 @@ public class Util {
     }
 
     public enum IconCategory {
-        SENSORS, MEDIA, COMMANDS, ARROWS, ALL
+        EMPTY, SENSORS, MEDIA, COMMANDS, ARROWS, ALL
     }
 
     public final static Map<IconCategory, List<IIcon>> CAT_ICONS = new HashMap<>();

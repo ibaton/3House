@@ -39,5 +39,10 @@
     <dimen name="menu_item_image_size">80dp</dimen>
     <dimen name="color_spacer">5dp</dimen>
     <dimen name="full_page_empty_padding">10dp</dimen>
+    <dimen name="dialog_margin">50dp</dimen>
+    <dimen name="space_separator">10dp</dimen>
+    <dimen name="margin_controller_cell">15dp</dimen>
+    <dimen name="margin_controller_row">2.5dp</dimen>
 
+    <dimen name="cell_border">0.25dp</dimen>
 </resources>

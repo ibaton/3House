@@ -49,6 +49,12 @@ public class SliderActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */

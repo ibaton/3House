@@ -3,6 +3,7 @@ package treehou.se.habit.ui.control;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,13 +54,9 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     public static final int REQUEST_COLOR = 3117;
 
     private LinearLayout louController;
-    private EditText txtName;
-    private Button btnColor;
     private View titleHolder;
     private View viwBackground;
-    private View lblSettingsContainer;
-    private CheckBox cbxAsNotification;
-    private CheckBox cbxShowTitle;
+
     private DrawerLayout drwLayout;
 
     private ActionBar actionBar;
@@ -110,61 +108,11 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         View rootView = inflater.inflate(R.layout.fragment_edit_control, container, false);
 
         actionBar = activity.getSupportActionBar();
-
         drwLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
-
-        titleHolder = rootView.findViewById(R.id.lou_title_holder);
-
-        txtName = (EditText) rootView.findViewById(R.id.txt_name);
-        txtName.setText(controller.getName());
-
-        lblSettingsContainer = rootView.findViewById(R.id.settings_container);
-
-        cbxAsNotification = (CheckBox) rootView.findViewById(R.id.as_notification);
-        cbxAsNotification.setChecked(controller.showNotification());
-        cbxAsNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                controller.showNotification(isChecked);
-                controller.save();
-
-                if(controller.showNotification()) {
-                    ControlHelper.showNotification(getActivity(), controller);
-                }else {
-                    ControlHelper.hideNotification(getActivity(), controller);
-                }
-            }
-        });
-
-        cbxShowTitle = (CheckBox) rootView.findViewById(R.id.show_title);
-        cbxShowTitle.setChecked(controller.showTitle());
-        cbxShowTitle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                controller.showTitle(isChecked);
-                controller.save();
-            }
-        });
-
         louController = (LinearLayout) rootView.findViewById(R.id.lou_btn_holder);
-
         viwBackground = rootView.findViewById(R.id.viw_background);
 
-        btnColor = (Button) rootView.findViewById(R.id.btn_color);
         updateColorPalette(controller.getColor());
-        btnColor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-                Fragment fragment = ColorDialog.instance();
-                fragment.setTargetFragment(EditControlFragment.this, REQUEST_COLOR);
-
-                fragmentManager.beginTransaction()
-                        .add(fragment, "colordialog")
-                        .commit();
-            }
-        });
 
         ImageButton btnAddRow = (ImageButton) rootView.findViewById(R.id.btn_add_row);
         btnAddRow.setOnClickListener(new View.OnClickListener() {
@@ -193,26 +141,36 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
         switch (item.getItemId()) {
             case R.id.action_more:
-                toggleSettings();
+                openExtraSettings();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void toggleSettings(){
-        if(drwLayout.isDrawerOpen(lblSettingsContainer)) {
-            drwLayout.closeDrawer(lblSettingsContainer);
-        } else {
-            drwLayout.openDrawer(lblSettingsContainer);
-        }
+    public void openExtraSettings(){
+        Intent intent = new Intent(getActivity(), EditControllerSettingsActivity.class);
+        Bundle extras = new Bundle();
+
+        extras.putLong(ARG_ID, controller.getId());
+        intent.putExtras(extras);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+        startActivity(intent);
+        getActivity().overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        redrawController();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        controller.setName(txtName.getText().toString());
 
         Intent intent = new Intent(getActivity(), ControllerWidget.class);
         intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
@@ -256,9 +214,18 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        cell.delete();
-                        row.deleteCell(cell);
-                        redrawController();
+                        new AlertDialog.Builder(getActivity())
+                                .setMessage(activity.getString(R.string.delete_cell))
+                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        cell.delete();
+                                        row.deleteCell(cell);
+                                        redrawController();
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, null)
+                                .show();
 
                         return true;
                     }
@@ -284,7 +251,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
      */
     public void updateColorPalette(int color){
 
-        int[] pallete;
+        /*int[] pallete;
         if(Colour.alpha(color) < 100){
             pallete = Util.generatePallete(getResources().getColor(R.color.colorPrimary));
         }else{
@@ -302,7 +269,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
             if(actionBar != null) {
                 actionBar.setBackgroundDrawable(new ColorDrawable(pallete[0]));
             }
-        }
+        }*/
 
         redrawController();
     }
