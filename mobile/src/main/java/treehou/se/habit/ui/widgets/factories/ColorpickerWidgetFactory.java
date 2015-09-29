@@ -13,9 +13,12 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action0;
+import rx.functions.Action1;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
@@ -38,38 +41,47 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
 
         private static final int DEFAULT_TICK_TIME=200;
 
-        private int tickTime;
         private int tick=0;
-        private Timer timer;
-
+        private Observable<Long> timer;
+        private Subscription subscribe = null;
         private OnHoldListener listener;
+        private Action1<Long> touchSubject;
 
         public HoldListener(@NotNull OnHoldListener listener) {
             this(listener, DEFAULT_TICK_TIME);
         }
 
-        public HoldListener(@NotNull OnHoldListener listener, int tickTime) {
-            this.tickTime = tickTime;
+        public HoldListener(@NotNull final OnHoldListener listener, int tickTime) {
             this.listener = listener;
+
+            timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS);
+
+            touchSubject = new Action1<Long>() {
+                @Override
+                public void call(Long time) {
+                    updateTick();
+                }
+            };
+            timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS).doOnUnsubscribe(new Action0() {
+                @Override
+                public void call() {
+                    listener.onRelease(tick);
+                }
+            });
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                tick = 0;
-                timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        updateTick();
-                    }
-                }, tickTime, tickTime);
+                subscribe = timer.subscribe(touchSubject);
             } else if (event.getAction() == MotionEvent.ACTION_UP ||
                     event.getAction() == MotionEvent.ACTION_CANCEL ||
                     event.getAction() == MotionEvent.ACTION_OUTSIDE) {
 
-                timer.cancel();
-                listener.onRelease(tick);
+                if (!subscribe.isUnsubscribed()) {
+                    subscribe.unsubscribe();
+                }
             }
             return true;
         }
