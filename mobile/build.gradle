@@ -71,6 +71,8 @@ dependencies {
     compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
 
+    compile 'io.reactivex:rxjava:1.0.14'
+
     // Robolectric
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-core:1.1'
