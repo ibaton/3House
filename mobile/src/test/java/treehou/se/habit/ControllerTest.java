@@ -6,8 +6,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
-import treehou.se.habit.ui.settings.SetupServerFragment;
-
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, packageName = "treehou.se.habit", sdk = 21)
 public class ControllerTest {

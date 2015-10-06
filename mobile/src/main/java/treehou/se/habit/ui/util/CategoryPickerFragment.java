@@ -57,7 +57,7 @@ public class CategoryPickerFragment extends Fragment {
 
         // Hookup list of categories
         adapter = new CategoryAdapter(getActivity());
-        adapter.add(new CategoryPicker(null, getString(R.string.empty), Util.IconCategory.MEDIA));
+        adapter.add(new CategoryPicker(null, getString(R.string.empty), Util.IconCategory.EMPTY));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_play, getString(R.string.media), Util.IconCategory.MEDIA));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
         adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_power, getString(R.string.command), Util.IconCategory.COMMANDS));
