@@ -39,7 +39,7 @@ public class Widget {
 
     private int minValue=0;
     private int maxValue=100;
-    private int step=1;
+    private float step=1;
 
     private String url;
     private ItemDB item;
@@ -150,11 +150,11 @@ public class Widget {
         this.mapping = mapping;
     }
 
-    public int getStep() {
+    public float getStep() {
         return step;
     }
 
-    public void setStep(int step) {
+    public void setStep(float step) {
         this.step = step;
     }
 

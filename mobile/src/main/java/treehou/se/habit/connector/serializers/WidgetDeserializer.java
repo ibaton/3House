@@ -1,5 +1,7 @@
 package treehou.se.habit.connector.serializers;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -54,8 +56,12 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
             widget.setMaxValue(jObject.get("maxValue").getAsInt());
         }
 
-        if(jObject.has("step")){
-            widget.setStep(jObject.get("step").getAsInt());
+        if(jObject.has("step") && jObject.get("step") != null){
+            try {
+                widget.setStep(jObject.get("step").getAsFloat());
+            } catch (NumberFormatException nfe) {
+                Log.e(TAG, "Cannot parse " + jObject.get("step").getAsString() + " as float.");
+            }
         }
 
         if(jObject.has(KEY_LINKED_PAGE)){
