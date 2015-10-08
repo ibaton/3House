@@ -80,7 +80,7 @@ public class SetpointWidgetFactory implements IWidgetFactory {
             baseHolder.update(widget);
         }
 
-        private void setValueRelative(Widget widget, int value) {
+        private void setValueRelative(Widget widget, float value) {
             if(widget.getItem() == null) {
                 return;
             }
