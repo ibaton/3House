@@ -104,6 +104,15 @@ public class SitemapListFragment extends Fragment {
 
         mListView.setAdapter(mSitemapAdapter);
 
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mSitemapAdapter.clear();
+
         responseListener = new SitemapsRequestCallback() {
             @Override
             public void onSuccess(ServerDB server, List<Sitemap> sitemaps) {
@@ -117,7 +126,7 @@ public class SitemapListFragment extends Fragment {
                         mSitemapAdapter.add(sitemap);
                     }
 
-                    if (showSitemap != null &&
+                    if (showSitemap != null && showSitemap.getServer() != null && showSitemap.getName() != null &&
                             showSitemap.getServer().equals(sitemap.getServer()) &&
                             showSitemap.getName().equals(sitemap.getName())) {
 
@@ -146,15 +155,6 @@ public class SitemapListFragment extends Fragment {
             }
         };
 
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        mSitemapAdapter.clear();
-
         List<ServerDB> servers = ServerDB.getServers();
         for(final ServerDB server : servers){
             requestSitemap(server);
@@ -162,8 +162,8 @@ public class SitemapListFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onPause() {
+        super.onPause();
 
         // Clear pending callbacks
         responseListener = new SitemapsRequestCallbackDummy();
