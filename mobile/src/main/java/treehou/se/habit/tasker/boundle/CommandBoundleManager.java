@@ -14,6 +14,8 @@ public class CommandBoundleManager {
 
     public static final int TYPE_COMMAND = 1;
 
+    private static final String BUNDLE_KEY_VARIABLE_REPLACE_STRINGS = "net.dinglisch.android.tasker.extras.VARIABLE_REPLACE_KEYS";
+
     /**
      * @param context Application context.
      * @param command The toast message to be displayed by the plug-in. Cannot be null.
@@ -26,6 +28,8 @@ public class CommandBoundleManager {
         final Bundle result = new Bundle();
         result.putInt(IFireReciever.BUNDLE_EXTRA_TYPE, TYPE_COMMAND);
         result.putString(CommandReciever.BUNDLE_EXTRA_COMMAND, command);
+        // Instruct tasker to perform variable substitutions in the command
+        result.putString(BUNDLE_KEY_VARIABLE_REPLACE_STRINGS, CommandReciever.BUNDLE_EXTRA_COMMAND);
         result.putLong(CommandReciever.BUNDLE_EXTRA_ITEM, item.getId());
 
         return result;
