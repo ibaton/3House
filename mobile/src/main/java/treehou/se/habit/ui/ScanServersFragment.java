@@ -3,7 +3,8 @@ package treehou.se.habit.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -11,45 +12,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import treehou.se.habit.Constants;
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
+
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.settings.SetupServerFragment;
+import treehou.se.habit.util.ThreadPool;
 
-public class ServersFragment extends Fragment {
+public class ScanServersFragment extends Fragment {
 
-    private static final String TAG = "ServersFragment";
+    private static final String TAG = "ScanServersFragment";
 
-    private static final String STATE_INITIALIZED = "state_initialized";
+    private static final String SERVICE_TYPE = "_openhab-server._tcp.local.";
 
     private ServersAdapter serversAdapter;
-    private ViewGroup container;
 
     private View viwEmpty;
 
-    private boolean initialized = false;
+    private JmDNS dnsService;
+    private WifiManager.MulticastLock lock;
 
-    public static ServersFragment newInstance() {
-        ServersFragment fragment = new ServersFragment();
+    public static ScanServersFragment newInstance() {
+        ScanServersFragment fragment = new ScanServersFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ServersFragment() {
+    public ScanServersFragment() {
         // Required empty public constructor
     }
 
@@ -57,45 +61,15 @@ public class ServersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null){
-            initialized = savedInstanceState.getBoolean(STATE_INITIALIZED, false);
-        }
-
         serversAdapter = new ServersAdapter(getActivity());
         serversAdapter.addAll(ServerDB.getServers());
         serversAdapter.setItemListener(new ServersAdapter.ItemListener() {
             @Override
             public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
                 final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.page_container, SetupServerFragment.newInstance(server))
-                        .addToBackStack(null)
-                        .commit();
-            }
+                server.save();
 
-            @Override
-            public boolean onItemLongClickListener(final ServersAdapter.ServerHolder serverHolder) {
-
-                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
-                new AlertDialog.Builder(getActivity())
-                        .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        getActivity().getSupportFragmentManager().beginTransaction()
-                                                .replace(container.getId(), BindingsFragment.newInstance(server))
-                                                .addToBackStack(null)
-                                                .commit();
-                                        break;
-                                    case 1:
-                                        showRemoveDialog(serverHolder, server);
-                                        break;
-                                }
-                            }
-                        })
-                        .create().show();
-                return true;
+                getFragmentManager().popBackStack();
             }
 
             @Override
@@ -110,21 +84,13 @@ public class ServersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        this.container = container;
-
-        View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_scan_servers, container, false);
 
         viwEmpty = rootView.findViewById(R.id.empty);
-        viwEmpty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startNewServerProcess();
-            }
-        });
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
-            actionBar.setTitle(R.string.servers);
+            actionBar.setTitle(R.string.scan_for_server);
         }
 
         final RecyclerView lstServer = (RecyclerView) rootView.findViewById(R.id.list);
@@ -133,8 +99,6 @@ public class ServersFragment extends Fragment {
         lstServer.setLayoutManager(gridLayoutManager);
         lstServer.setItemAnimator(new DefaultItemAnimator());
 
-        setHasOptionsMenu(true);
-
         return rootView;
     }
 
@@ -142,86 +106,81 @@ public class ServersFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        setup();
-    }
-
-    private void setup(){
         serversAdapter.clear();
-        serversAdapter.addAll(ServerDB.getServers());
-
-        if(!initialized && serversAdapter.getItemCount() <= 0){
-            showScanServerFlow();
-        }
-        initialized = true;
-    }
-
-    private void showScanServerFlow() {
-        new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.start_scan_question)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openServerScan();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
-
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.servers, menu);
+        startScan();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public void onPause() {
+        super.onPause();
 
-        switch (item.getItemId()) {
-            case R.id.action_add_server:
-                startNewServerProcess();
-                break;
-            case R.id.action_scan_for_server:
-                openServerScan();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
+        stopScan();
     }
 
-    private void startNewServerProcess(){
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.page_container, SetupServerFragment.newInstance())
-                .addToBackStack(null)
-                .commit();
+    private void startScan(){
+        ThreadPool.instance().submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    WifiManager wifi = (android.net.wifi.WifiManager) getActivity().getSystemService(android.content.Context.WIFI_SERVICE);
+                    lock = wifi.createMulticastLock("JmdnsLock");
+                    lock.setReferenceCounted(true);
+                    lock.acquire();
+
+                    WifiInfo wifiinfo = wifi.getConnectionInfo();
+                    int intaddr = wifiinfo.getIpAddress();
+                    byte[] byteaddr = BigInteger.valueOf(intaddr).toByteArray();
+                    InetAddress addr = InetAddress.getByAddress(byteaddr);
+
+                    dnsService = JmDNS.create(addr);
+                    dnsService.addServiceListener(SERVICE_TYPE, new ServiceListener() {
+                        @Override
+                        public void serviceAdded(ServiceEvent event) {
+                            dnsService.requestServiceInfo(event.getType(), event.getName());
+                        }
+
+                        @Override
+                        public void serviceRemoved(ServiceEvent event) {}
+
+                        @Override
+                        public void serviceResolved(ServiceEvent event) {
+
+                            String[] serviceUrls = event.getInfo().getURLs();
+                            final ServerDB server = new ServerDB();
+                            server.setName(event.getName());
+                            server.setLocalUrl(serviceUrls[0]);
+
+                            if(isAdded()){
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        serversAdapter.addItem(server);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    private void openServerScan(){
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.page_container, ScanServersFragment.newInstance())
-                .addToBackStack(null)
-                .commit();
-    }
+    private void stopScan(){
 
-    private void showRemoveDialog(final ServersAdapter.ServerHolder serverHolder, final ServerDB server){
-        new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.remove_server_question)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        serversAdapter.removeItem(serverHolder.getAdapterPosition());
-                        server.delete();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_INITIALIZED, true);
-        super.onSaveInstanceState(outState);
+        ThreadPool.instance().submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    dnsService.unregisterAllServices();
+                    dnsService.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (lock != null) lock.release();
+            }
+        });
     }
 
     /**
@@ -240,10 +199,12 @@ public class ServersFragment extends Fragment {
 
         public class ServerHolder extends RecyclerView.ViewHolder {
             public final TextView lblName;
+            public final TextView lblHost;
 
             public ServerHolder(View view) {
                 super(view);
                 lblName = (TextView) view.findViewById(R.id.lbl_server);
+                lblHost = (TextView) view.findViewById(R.id.lbl_host);
             }
         }
 
@@ -255,7 +216,7 @@ public class ServersFragment extends Fragment {
         public ServerHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
 
             LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_server, null);
+            View itemView = inflater.inflate(R.layout.item_scan_server, null);
 
             return new ServerHolder(itemView);
         }
@@ -265,16 +226,11 @@ public class ServersFragment extends Fragment {
             ServerDB server = items.get(position);
 
             serverHolder.lblName.setText(server.getDisplayName(context));
+            serverHolder.lblHost.setText(server.getUrl());
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemListener.onItemClickListener(serverHolder);
-                }
-            });
-            serverHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return itemListener.onItemLongClickListener(serverHolder);
                 }
             });
         }
@@ -292,8 +248,6 @@ public class ServersFragment extends Fragment {
 
             void onItemClickListener(ServerHolder serverHolder);
 
-            boolean onItemLongClickListener(ServerHolder serverHolder);
-
             void itemCountUpdated(int itemCount);
         }
 
@@ -301,11 +255,6 @@ public class ServersFragment extends Fragment {
 
             @Override
             public void onItemClickListener(ServerHolder serverHolder) {}
-
-            @Override
-            public boolean onItemLongClickListener(ServerHolder serverHolder) {
-                return false;
-            }
 
             @Override
             public void itemCountUpdated(int itemCount) {}

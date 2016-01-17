@@ -61,14 +61,6 @@ public class MainActivity extends AppCompatActivity
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, ServersFragment.newInstance())
                         .commit();
-                SetupServerFragment ssf = new SetupServerFragment();
-                Bundle args = new Bundle();
-                args.putInt(SetupServerFragment.ARG_BUTTON_TEXT_ID, R.string.next);
-                ssf.setArguments(args);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.page_container, ssf)
-                        .addToBackStack(null)
-                        .commit();
             }else {
                 // Load default sitemap if any
                 SitemapDB defaultSitemap = Settings.instance(this).getDefaultSitemap();

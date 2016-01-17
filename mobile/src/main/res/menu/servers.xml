@@ -8,4 +8,10 @@
         android:icon="@drawable/action_add_server"
         app:showAsAction="ifRoom"
         android:orderInCategory="100"/>
+
+    <item android:id="@+id/action_scan_for_server"
+        android:title="@string/scan_for_server"
+        android:icon="@drawable/action_scan"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="100"/>
 </menu>

@@ -81,7 +81,7 @@ public class ServerDB extends Model {
     }
 
     public String getUrl(){
-        return localUrl!=null?localUrl:remoteUrl;
+        return !TextUtils.isEmpty(localUrl)?localUrl:remoteUrl;
     }
 
     public boolean requiresAuth() {

@@ -1,7 +1,7 @@
 package treehou.se.habit;
 
 import android.content.Context;
-import android.support.multidex.MultiDex;
+//import android.support.multidex.MultiDex;
 
 import treehou.se.habit.connector.TrustModifier;
 
@@ -20,7 +20,7 @@ public class HabitApplication extends com.activeandroid.app.Application {
         super.attachBaseContext(base);
 
         try {
-            MultiDex.install(this);
+            //MultiDex.install(this);
         } catch (RuntimeException multiDexException) {
             // Work around Robolectric causing multi dex installation to fail, see
             // https://code.google.com/p/android/issues/detail?id=82007.
