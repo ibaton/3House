@@ -20,7 +20,7 @@ public class SitemapDB extends Model {
     @Column(name = "link", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private String link;
 
-    @Column(name = "server")
+    @Column(name = "server", onDelete = Column.ForeignKeyAction.CASCADE)
     private ServerDB server;
 
     public SitemapDB() {}
