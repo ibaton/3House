@@ -1,8 +1,7 @@
 package treehou.se.habit.ui;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -21,6 +20,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetAddress;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,6 @@ import javax.jmdns.ServiceListener;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.ui.settings.SetupServerFragment;
 import treehou.se.habit.util.ThreadPool;
 
 public class ScanServersFragment extends Fragment {
@@ -38,6 +38,7 @@ public class ScanServersFragment extends Fragment {
     private static final String TAG = "ScanServersFragment";
 
     private static final String SERVICE_TYPE = "_openhab-server._tcp.local.";
+    private static final String SERVICE_TYPE_SSL = "_openhab-server-ssl._tcp.local.";
 
     private ServersAdapter serversAdapter;
 
@@ -132,8 +133,7 @@ public class ScanServersFragment extends Fragment {
                     byte[] byteaddr = BigInteger.valueOf(intaddr).toByteArray();
                     InetAddress addr = InetAddress.getByAddress(byteaddr);
 
-                    dnsService = JmDNS.create(addr);
-                    dnsService.addServiceListener(SERVICE_TYPE, new ServiceListener() {
+                    ServiceListener serviceListener = new ServiceListener() {
                         @Override
                         public void serviceAdded(ServiceEvent event) {
                             dnsService.requestServiceInfo(event.getType(), event.getName());
@@ -146,9 +146,17 @@ public class ScanServersFragment extends Fragment {
                         public void serviceResolved(ServiceEvent event) {
 
                             String[] serviceUrls = event.getInfo().getURLs();
+                            String url = serviceUrls[0];
+                            if (url == null){
+                                return;
+                            }
+
+                            String proto = event.getType().contains("ssl") ? "https" : "http";
+                            Uri serverUri = Uri.parse(serviceUrls[0]).buildUpon().scheme(proto).build();
+
                             final ServerDB server = new ServerDB();
                             server.setName(event.getName());
-                            server.setLocalUrl(serviceUrls[0]);
+                            server.setLocalUrl(serverUri.toString());
 
                             if(isAdded()){
                                 getActivity().runOnUiThread(new Runnable() {
@@ -159,7 +167,11 @@ public class ScanServersFragment extends Fragment {
                                 });
                             }
                         }
-                    });
+                    };
+
+                    dnsService = JmDNS.create(addr);
+                    dnsService.addServiceListener(SERVICE_TYPE, serviceListener);
+                    dnsService.addServiceListener(SERVICE_TYPE_SSL, serviceListener);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
