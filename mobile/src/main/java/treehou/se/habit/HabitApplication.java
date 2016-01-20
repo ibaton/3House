@@ -3,6 +3,7 @@ package treehou.se.habit;
 import android.content.Context;
 //import android.support.multidex.MultiDex;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.TrustModifier;
 
 public class HabitApplication extends com.activeandroid.app.Application {
@@ -18,6 +19,8 @@ public class HabitApplication extends com.activeandroid.app.Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+
+        Openhab.setup(base);
 
         try {
             //MultiDex.install(this);

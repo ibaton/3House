@@ -42,9 +42,6 @@ android {
     }
 }
 
-
-
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     wearApp project(':wear')
@@ -79,4 +76,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
     compile 'javax.jmdns:jmdns:3.4.1'
+    compile project(':ohcom')
 }

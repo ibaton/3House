@@ -1,60 +1,20 @@
-package treehou.se.habit.core.db;
+package se.treehou.ng.ohcommunicator.core;
 
-import android.app.Application;
-import android.content.Context;
 import android.text.TextUtils;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
+public class OHServer {
 
-import java.util.List;
-
-import se.treehou.ng.ohcommunicator.core.OHServer;
-import treehou.se.habit.R;
-
-@Table(name = "Server")
-public class ServerDB extends Model {
-
-    @Column(name = "name")
     private String name = "";
-
-    @Column(name = "username")
     private String username = "";
-
-    @Column(name = "password")
     private String password = "";
-
-    @Column(name = "localUrl")
     private String localUrl = "";
-
-    @Column(name = "remoteUrl")
     private String remoteUrl = "";
-
-    @Column(name = "majorVersion")
     private int majorVersion = 0;
 
-    public ServerDB(){}
-
-    public static ServerDB createFrom(OHServer server){
-        ServerDB serverDB = new ServerDB();
-        serverDB.setLocalUrl(server.getLocalUrl());
-        serverDB.setRemoteUrl(server.getRemoteUrl());
-        serverDB.setName(server.getName());
-        serverDB.setMajorVersion(server.getMajorVersion());
-        serverDB.setPassword(server.getPassword());
-        serverDB.setUsername(server.getUsername());
-
-        return serverDB;
-    }
+    public OHServer(){}
 
     public String getName() {
         return name;
-    }
-
-    public String getDisplayName(Context context){
-        return TextUtils.isEmpty(name) ? context.getString(R.string.home) : name;
     }
 
     public void setName(String name) {
@@ -113,12 +73,6 @@ public class ServerDB extends Model {
         return majorVersion;
     }
 
-    public static List<ServerDB> getServers(){
-        return new Select()
-                .from(ServerDB.class)
-                .execute();
-    }
-
     public boolean haveRemote(){
         return (getRemoteUrl()!=null && !getRemoteUrl().trim().equals(""));
     }
@@ -134,8 +88,8 @@ public class ServerDB extends Model {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ServerDB){
-            ServerDB server = (ServerDB) obj;
+        if(obj instanceof OHServer){
+            OHServer server = (OHServer) obj;
 
             return ((getUsername() != null || this.getPassword().equals(server.getUsername())) &&
                     (getPassword() == null || getPassword().equals(server.getPassword())) &&

@@ -1,9 +1,6 @@
 package treehou.se.habit.ui;
 
 import android.content.Context;
-import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -17,35 +14,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceListener;
-
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.services.OHScanner;
+import se.treehou.ng.ohcommunicator.core.OHServer;
+import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.util.ThreadPool;
 
 public class ScanServersFragment extends Fragment {
 
     private static final String TAG = "ScanServersFragment";
 
-    private static final String SERVICE_TYPE = "_openhab-server._tcp.local.";
-    private static final String SERVICE_TYPE_SSL = "_openhab-server-ssl._tcp.local.";
-
     private ServersAdapter serversAdapter;
 
     private View viwEmpty;
 
-    private JmDNS dnsService;
-    private WifiManager.MulticastLock lock;
+    private Callback1<List<OHServer>> discoveryListener;
 
     public static ScanServersFragment newInstance() {
         ScanServersFragment fragment = new ScanServersFragment();
@@ -108,91 +96,29 @@ public class ScanServersFragment extends Fragment {
         super.onResume();
 
         serversAdapter.clear();
-        startScan();
+        discoveryListener = new Callback1<List<OHServer>>() {
+            @Override
+            public void onUpdate(final List<OHServer> servers) {
+                if(isAdded()){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (OHServer server : servers) {
+                                serversAdapter.addItem(ServerDB.createFrom(server));
+                            }
+                        }
+                    });
+                }
+            }
+        };
+        Openhab.registerServerDiscoveryListener(discoveryListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        stopScan();
-    }
-
-    private void startScan(){
-        ThreadPool.instance().submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    WifiManager wifi = (android.net.wifi.WifiManager) getActivity().getSystemService(android.content.Context.WIFI_SERVICE);
-                    lock = wifi.createMulticastLock("JmdnsLock");
-                    lock.setReferenceCounted(true);
-                    lock.acquire();
-
-                    WifiInfo wifiinfo = wifi.getConnectionInfo();
-                    int intaddr = wifiinfo.getIpAddress();
-                    byte[] byteaddr = BigInteger.valueOf(intaddr).toByteArray();
-                    InetAddress addr = InetAddress.getByAddress(byteaddr);
-
-                    ServiceListener serviceListener = new ServiceListener() {
-                        @Override
-                        public void serviceAdded(ServiceEvent event) {
-                            dnsService.requestServiceInfo(event.getType(), event.getName());
-                        }
-
-                        @Override
-                        public void serviceRemoved(ServiceEvent event) {}
-
-                        @Override
-                        public void serviceResolved(ServiceEvent event) {
-
-                            String[] serviceUrls = event.getInfo().getURLs();
-                            String url = serviceUrls[0];
-                            if (url == null){
-                                return;
-                            }
-
-                            String proto = event.getType().contains("ssl") ? "https" : "http";
-                            Uri serverUri = Uri.parse(serviceUrls[0]).buildUpon().scheme(proto).build();
-
-                            final ServerDB server = new ServerDB();
-                            server.setName(event.getName());
-                            server.setLocalUrl(serverUri.toString());
-
-                            if(isAdded()){
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        serversAdapter.addItem(server);
-                                    }
-                                });
-                            }
-                        }
-                    };
-
-                    dnsService = JmDNS.create(addr);
-                    dnsService.addServiceListener(SERVICE_TYPE, serviceListener);
-                    dnsService.addServiceListener(SERVICE_TYPE_SSL, serviceListener);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void stopScan(){
-
-        ThreadPool.instance().submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    dnsService.unregisterAllServices();
-                    dnsService.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (lock != null) lock.release();
-            }
-        });
+        Openhab.deregisterServerDiscoveryListener(discoveryListener);
     }
 
     /**
@@ -281,16 +207,27 @@ public class ScanServersFragment extends Fragment {
         }
 
         public void addItem(ServerDB item) {
+            if(items.contains(item)){
+                return;
+            }
             items.add(0, item);
             notifyItemInserted(0);
             itemListener.itemCountUpdated(items.size());
         }
 
         public void addAll(List<ServerDB> items) {
+            Iterator<ServerDB> serverIterator = items.iterator();
+            while (serverIterator.hasNext()) {
+                ServerDB serverDB = serverIterator.next();
+                if(this.items.contains(serverDB)){
+                    serverIterator.remove();
+                }
+            }
+
             for(ServerDB item : items) {
                 this.items.add(0, item);
-                notifyItemRangeInserted(0, items.size());
             }
+            notifyItemRangeInserted(0, items.size());
             itemListener.itemCountUpdated(items.size());
         }
 
