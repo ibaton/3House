@@ -19,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.services.OHScanner;
 import se.treehou.ng.ohcommunicator.core.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
 import treehou.se.habit.R;

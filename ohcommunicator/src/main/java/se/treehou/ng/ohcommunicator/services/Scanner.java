@@ -24,7 +24,7 @@ import se.treehou.ng.ohcommunicator.core.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
 import se.treehou.ng.ohcommunicator.util.ThreadPool;
 
-public class OHScanner {
+public class Scanner {
 
     private static final String SERVICE_TYPE = "_openhab-server._tcp.local.";
     private static final String SERVICE_TYPE_SSL = "_openhab-server-ssl._tcp.local.";
@@ -41,7 +41,7 @@ public class OHScanner {
 
     private Set<OHServer> servers = new HashSet<>();
 
-    public OHScanner(Context context) {
+    public Scanner(Context context) {
         this.context = context;
 
         broadcastReceiver = new BroadcastReceiver() {

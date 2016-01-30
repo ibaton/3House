@@ -53,6 +53,7 @@
 
     <string-array name="server_manager">
         <item>Bindings</item>
+        <item>Inbox</item>
         <item>Delete</item>
     </string-array>
 </resources>

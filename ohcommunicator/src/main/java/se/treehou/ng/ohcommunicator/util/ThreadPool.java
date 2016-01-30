@@ -7,7 +7,7 @@ public class ThreadPool {
 
     private ThreadPool() {}
 
-    public static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
 
     public static ExecutorService instance(){
         return executorService;

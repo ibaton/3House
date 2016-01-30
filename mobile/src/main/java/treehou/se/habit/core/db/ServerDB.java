@@ -49,6 +49,18 @@ public class ServerDB extends Model {
         return serverDB;
     }
 
+    public static OHServer toGeneric(ServerDB server){
+        OHServer ohServer = new OHServer();
+        ohServer.setLocalUrl(server.getLocalUrl());
+        ohServer.setRemoteUrl(server.getRemoteUrl());
+        ohServer.setName(server.getName());
+        ohServer.setMajorVersion(server.getMajorVersion());
+        ohServer.setPassword(server.getPassword());
+        ohServer.setUsername(server.getUsername());
+
+        return ohServer;
+    }
+
     public String getName() {
         return name;
     }
