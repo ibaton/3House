@@ -22,7 +22,7 @@ public class BasicAuthServiceGenerator {
     // No need to instantiate this class.
     private BasicAuthServiceGenerator() {}
 
-    public static <S> S createService(Class<S> serviceClass, final OHServer server) {
+    public static <S> S createService(Class<S> serviceClass, final OHServer server, final String url) {
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
@@ -45,7 +45,7 @@ public class BasicAuthServiceGenerator {
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(server.getUrl())
+                .baseUrl(url)
                 .client(client.build());
 
         Retrofit retrofit = builder.build();
