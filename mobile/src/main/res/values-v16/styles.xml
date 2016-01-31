@@ -16,7 +16,7 @@
         <item name="android:fontFamily">"sans-serif"</item>
     </style>
 
-    <style name="draver_item_text">
+    <style name="drawer_item_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>

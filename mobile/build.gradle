@@ -42,6 +42,10 @@ android {
     }
 }
 
+
+
+
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     wearApp project(':wear')
@@ -52,6 +56,7 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-integration:1.1'
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.robolectric:robolectric:3.0'
+    compile project(':ohcom')
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.larswerkman:HoloColorPicker:1.5'
@@ -76,5 +81,4 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
     compile 'javax.jmdns:jmdns:3.4.1'
-    compile project(':ohcom')
 }

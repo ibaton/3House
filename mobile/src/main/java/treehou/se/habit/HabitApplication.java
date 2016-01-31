@@ -42,4 +42,11 @@ public class HabitApplication extends com.activeandroid.app.Application {
             }
         }
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        Openhab.stop();
+    }
 }

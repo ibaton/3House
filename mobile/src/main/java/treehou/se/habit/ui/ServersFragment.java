@@ -89,6 +89,12 @@ public class ServersFragment extends Fragment {
                                                 .commit();
                                         break;
                                     case 1:
+                                        getActivity().getSupportFragmentManager().beginTransaction()
+                                                .replace(container.getId(), InboxListFragment.newInstance(ServerDB.toGeneric(server)))
+                                                .addToBackStack(null)
+                                                .commit();
+                                        break;
+                                    case 2:
                                         showRemoveDialog(serverHolder, server);
                                         break;
                                 }

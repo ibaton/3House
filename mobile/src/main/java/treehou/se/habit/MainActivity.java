@@ -14,10 +14,12 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.core.OHServer;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.gcm.GCMHelper;
+import treehou.se.habit.ui.InboxListFragment;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.settings.SetupServerFragment;

@@ -1,7 +1,6 @@
 package treehou.se.habit.connector;
 
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
@@ -14,8 +13,6 @@ import java.lang.reflect.Type;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.SSLSocketFactory;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -59,6 +56,7 @@ public class BasicAuthServiceGenerator {
                 }
             });
         }
+
         builder.setConverter(new OpenHabConverter());
         RestAdapter adapter = builder.build();
 
