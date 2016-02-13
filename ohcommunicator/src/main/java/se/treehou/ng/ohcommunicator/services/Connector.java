@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import se.treehou.ng.ohcommunicator.connector.BasicAuthServiceGenerator;
@@ -71,7 +72,7 @@ public class Connector {
         public ServerHandler(OHServer server, Context context) {
             this.server = server;
             this.context = context;
-            openHabService = generateOpenHabService(server, server.getRemoteUrl());
+            openHabService = generateOpenHabService(server, server.getUrl());
         }
 
         public void addInboxListener(Callback1<List<OHInboxItem>> inboxCallback){
@@ -140,10 +141,14 @@ public class Connector {
 
             service.approveInboxItems(inboxItem.getThingUID()).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Response<Void> response) {}
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
 
                 @Override
-                public void onFailure(Throwable t) {}
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
             });
             lastInboxItems.remove(inboxItem);
             update(lastInboxItems);
@@ -161,10 +166,14 @@ public class Connector {
 
             service.ignoreInboxItems(inboxItem.getThingUID()).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Response<Void> response) {}
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
 
                 @Override
-                public void onFailure(Throwable t) {}
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
             });
             inboxItem.setFlag(OHInboxItem.FLAG_IGNORED);
             update(lastInboxItems);
@@ -182,10 +191,14 @@ public class Connector {
 
             service.unignoreInboxItems(inboxItem.getThingUID()).enqueue(new Callback<Void>() {
                 @Override
-                public void onResponse(Response<Void> response) {}
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
 
                 @Override
-                public void onFailure(Throwable t) {}
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
             });
             inboxItem.setFlag(OHInboxItem.FLAG_NEW);
             update(lastInboxItems);
@@ -214,6 +227,23 @@ public class Connector {
             }
         }
 
+        public void sendCommand(final String item, final String command){
+            OpenHabService service = getService();
+            if(service == null) return;
+
+            service.sendCommand(command, item).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Log.d(TAG, "Sent sendCommand " + command);
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable e) {
+                    Log.e(TAG, "Error: sending command " + server.getUrl() + " body: " + command, e);
+                }
+            });
+        }
+
         /**
          * Get the number of listeners added to service handler.
          *
@@ -238,14 +268,15 @@ public class Connector {
 
                         Log.d(TAG, "Requesting inbox update");
                         service.listInboxItems().enqueue(new Callback<List<OHInboxItem>>() {
+
                             @Override
-                            public void onResponse(Response<List<OHInboxItem>> response) {
+                            public void onResponse(Call<List<OHInboxItem>> call, Response<List<OHInboxItem>> response) {
                                 Log.d(TAG, "Inbox updated size " + response.body().size());
                                 update(response.body());
                             }
 
                             @Override
-                            public void onFailure(Throwable e) {
+                            public void onFailure(Call<List<OHInboxItem>> call, Throwable e) {
                                 Log.e(TAG, "Error requesting inbox", e);
                             }
                         });

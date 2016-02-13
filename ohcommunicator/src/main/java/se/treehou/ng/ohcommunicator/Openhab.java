@@ -67,4 +67,8 @@ public class Openhab {
     public static List<OHInboxItem> getInboxItems(OHServer server){
         return instance.connector.getServerHandler(server).getInboxItems();
     }
+
+    public static void sendCommand(OHServer server, String item, String command){
+        instance.connector.getServerHandler(server).sendCommand(item, command);
+    }
 }

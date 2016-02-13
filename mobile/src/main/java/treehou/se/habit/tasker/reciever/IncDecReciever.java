@@ -54,7 +54,7 @@ public class IncDecReciever implements IFireReciever {
             ItemDB item = ItemDB.load(ItemDB.class, itemId);
             if(item != null){
                 Communicator.instance(context).incDec(item.getServer(), item, value, min, max);
-                Log.d(TAG, "Sent command " + value + " to item " + item.getName());
+                Log.d(TAG, "Sent sendCommand " + value + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");
             }

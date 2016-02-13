@@ -7,11 +7,13 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class TextWidgetFactory implements IWidgetFactory {
@@ -81,7 +83,7 @@ public class TextWidgetFactory implements IWidgetFactory {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String text = input.getText().toString();
-                                Communicator.instance(context).command(factory.getServer(), widget.getItem(), text);
+                                Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), text);
                             }
                         });
                         builder.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {

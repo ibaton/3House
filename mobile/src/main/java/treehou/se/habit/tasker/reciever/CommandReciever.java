@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 public class CommandReciever implements IFireReciever {
@@ -52,13 +55,13 @@ public class CommandReciever implements IFireReciever {
 
             ItemDB item = ItemDB.load(ItemDB.class, itemId);
             if(item != null){
-                Communicator.instance(context).command(item.getServer(), item, command);
-                Log.d(TAG, "Sent command " + command + " to item " + item.getName());
+                Openhab.sendCommand(ServerDB.toGeneric(item.getServer()), item.getName(), command);
+                Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");
             }
 
-            Log.d(TAG, "Sending command " + command);
+            Log.d(TAG, "Sending sendCommand " + command);
         }else {
             Log.d(TAG, "Boundle not valid.");
         }

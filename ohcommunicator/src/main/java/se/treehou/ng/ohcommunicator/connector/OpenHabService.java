@@ -3,6 +3,7 @@ package se.treehou.ng.ohcommunicator.connector;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -26,4 +27,11 @@ public interface OpenHabService {
     @Headers("Accept: application/json")
     @POST("/rest/inbox/{thingUID}/approve")
     Call<Void> approveInboxItems(@Path("thingUID") String thingUID);
+
+    @Headers({
+            "Accept: application/text",
+            "Content-Type: text/plain"
+    })
+    @POST("/rest/items/{id}")
+    Call<Void> sendCommand(@Body String command, @Path("id") String id);
 }

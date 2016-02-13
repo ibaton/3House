@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
@@ -49,8 +49,7 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
                 ItemDB item = buttonCell.getItem();
                 if(item != null) {
                     ServerDB server = item.getServer();
-                    Communicator communicator = Communicator.instance(context);
-                    communicator.command(server, item, buttonCell.getCommand());
+                    Openhab.sendCommand(ServerDB.toGeneric(server), item.getName(), buttonCell.getCommand());
                 }
             }
         });

@@ -13,8 +13,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
 import se.treehou.ng.ohcommunicator.core.OHServer;
 
 public class BasicAuthServiceGenerator {
@@ -44,6 +46,7 @@ public class BasicAuthServiceGenerator {
         }
 
         Retrofit.Builder builder = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(url)
                 .client(client.build());

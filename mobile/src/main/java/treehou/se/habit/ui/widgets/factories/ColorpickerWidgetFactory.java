@@ -19,12 +19,13 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -124,14 +125,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0){
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_INCREMENT);
+                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_INCREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0){
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_ON);
+                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_ON);
                     }
                 }
             }));
@@ -141,14 +142,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0) {
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_DECREMENT);
+                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_DECREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0) {
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_OFF);
+                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_OFF);
                     }
                 }
             }));

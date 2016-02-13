@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import treehou.se.habit.connector.Communicator;
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.core.db.ServerDB;
@@ -46,7 +46,7 @@ public class ListenerService extends WearableListenerService {
         }
 
         if(server != null) {
-            Communicator.instance(this).command(server, Constants.ITEM_VOICE_COMMAND, message.getMessage());
+            Openhab.sendCommand(ServerDB.toGeneric(server), Constants.ITEM_VOICE_COMMAND, message.getMessage());
         }
     }
 

@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit.RetrofitError;
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.models.Binding;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.ItemDB;
@@ -89,56 +89,6 @@ public class Communicator {
         return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
     }
 
-    public void command(ServerDB server, ItemDB item, final String command){
-        command(server, item.getName(), command);
-    }
-
-    public void command(final ServerDB server, final String item, final String command){
-
-        final retrofit.Callback<retrofit.client.Response> callback = new retrofit.Callback<retrofit.client.Response>() {
-            @Override
-            public void success(retrofit.client.Response body, retrofit.client.Response response) {
-                Log.d(TAG, "Sent command " + command);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "Error: " + error.getCause() + " " + error.getUrl());
-                Log.e(TAG, "Error: " + error);
-            }
-        };
-
-        // Make remote request if not connected to wifi.
-        if(!isConnectedWifi(context) || !server.haveLocal()) {
-            if (server.haveRemote()){
-                OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                service.sendCommand(command, item, callback);
-            }
-            return;
-        }
-
-        final OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.sendCommand(command, item, new retrofit.Callback<retrofit.client.Response>() {
-
-            @Override
-            public void success(retrofit.client.Response body, retrofit.client.Response response) {
-                Log.d(TAG, "Sent command " + command);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "Error: " + error.getCause() + " " + error.getUrl());
-                Log.e(TAG, "Error: " + error);
-                if (server.haveRemote()) {
-                    OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                    service.sendCommand(command, item, callback);
-                } else {
-                    callback.failure(error);
-                }
-            }
-        });
-    }
-
     private int scrubNumberValue(int number, final int min, final int max){
         return Math.max(Math.min(number, max), min);
     }
@@ -152,17 +102,17 @@ public class Communicator {
                 if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.getType())) {
                     if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
                         if (value > 0) {
-                            command(server, newItem, String.valueOf(scrubNumberValue(min + value, min, max)));
+                            Openhab.sendCommand(ServerDB.toGeneric(server), newItem.getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
                         }
                     } else if (Constants.COMMAND_ON.equals(state)) {
                         if (value < 0) {
-                            command(server, newItem, String.valueOf(scrubNumberValue(max + value, min, max)));
+                            Openhab.sendCommand(ServerDB.toGeneric(server), newItem.getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
                         }
                     } else {
                         try {
                             int itemVal = scrubNumberValue(Integer.parseInt(newItem.getState()) + value, min, max);
-                            Log.e(TAG, "Sending command " + itemVal + " value " + value);
-                            command(server, newItem, String.valueOf(itemVal));
+                            Log.e(TAG, "Sending sendCommand " + itemVal + " value " + value);
+                            Openhab.sendCommand(ServerDB.toGeneric(server), newItem.getName(), String.valueOf(itemVal));
                         } catch (NumberFormatException e) {
                             Log.e(TAG, "Could not parse state " + newItem.getState(), e);
                         }

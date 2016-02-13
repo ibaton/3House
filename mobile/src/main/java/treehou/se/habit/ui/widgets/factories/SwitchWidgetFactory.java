@@ -11,12 +11,14 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
 import treehou.se.habit.core.Widget;
+import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -81,8 +83,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
-                        Communicator communicator = Communicator.instance(factory.getContext());
-                        communicator.command(factory.getServer(), widget.getItem(), Constants.COMMAND_UP);
+                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), Constants.COMMAND_UP);
                     }
                 }
             });
@@ -92,8 +93,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
-                        Communicator communicator = Communicator.instance(factory.getContext());
-                        communicator.command(factory.getServer(), item, Constants.COMMAND_STOP);
+                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), item.getName(), Constants.COMMAND_STOP);
                     }
                 }
             });
@@ -104,7 +104,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
                         Communicator communicator = Communicator.instance(factory.getContext());
-                        communicator.command(factory.getServer(), item, Constants.COMMAND_DOWN);
+                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), item.getName(), Constants.COMMAND_DOWN);
                     }
                 }
             });
@@ -187,8 +187,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            Communicator communicator = Communicator.instance(factory.getContext());
-                            communicator.command(factory.getServer(), widget.getItem(), mapping.getCommand());
+                            Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), mapping.getCommand());
                         }
                     }
                 });
@@ -262,8 +261,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
             btnSingle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Communicator communicator = Communicator.instance(factory.getContext());
-                    communicator.command(factory.getServer(), widget.getItem(), mapSingle.getCommand());
+                    Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), mapSingle.getCommand());
                 }
             });
 
@@ -316,8 +314,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     Log.d(TAG, widget.getLabel() + " " + newState);
                     if (widget.getItem() != null) {
                         swtSwitch.setChecked(newState);
-                        Communicator communicator = Communicator.instance(factory.getContext());
-                        communicator.command(factory.getServer(), widget.getItem(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
+                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
                     }
                 }
             });

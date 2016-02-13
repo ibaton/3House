@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.controller.CellDB;
@@ -60,8 +61,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
                 }
 
                 ServerDB server = numberCell.getItem().getServer();
-                Communicator communicator = Communicator.instance(context);
-                communicator.command(server, numberCell.getItem(), ""+seekBar.getProgress());
+                Openhab.sendCommand(ServerDB.toGeneric(server), numberCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });
 

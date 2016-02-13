@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.util.Log;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.ItemDB;
@@ -86,8 +87,7 @@ public class CommandService extends IntentService {
 
     private void handleActionCommand(String command, ItemDB item) {
 
-        Communicator communicator = Communicator.instance(this);
         ServerDB server = item.getServer();
-        communicator.command(server, item, command);
+        Openhab.sendCommand(ServerDB.toGeneric(server), item.getName(), command);
     }
 }

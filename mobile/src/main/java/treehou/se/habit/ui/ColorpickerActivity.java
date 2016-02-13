@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
@@ -138,10 +139,9 @@ public class ColorpickerActivity extends AppCompatActivity {
                         Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                         Communicator communicator = Communicator.instance(getActivity());
                         if(hsv[2] > 5) {
-                            communicator.command(server, widget.getItem()
-                                    , String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
+                            Openhab.sendCommand(ServerDB.toGeneric(server), widget.getItem().getName(), String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                         }else {
-                            communicator.command(server, widget.getItem(), Constants.COMMAND_OFF);
+                            Openhab.sendCommand(ServerDB.toGeneric(server), widget.getItem().getName(), Constants.COMMAND_OFF);
                         }
                     }
                 },300);

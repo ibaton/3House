@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.ServerDB;
 
@@ -49,8 +50,7 @@ public class VoiceService extends IntentService {
             Log.d(TAG, "Received " + results.size() + " voice results.");
 
             String command = results.get(0);
-            Communicator communicator = Communicator.instance(this);
-            communicator.command(server, VOICE_ITEM, command);
+            Openhab.sendCommand(ServerDB.toGeneric(server), VOICE_ITEM, command);
         }
     }
 }

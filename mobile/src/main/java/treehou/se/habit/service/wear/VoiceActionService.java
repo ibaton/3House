@@ -8,7 +8,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import treehou.se.habit.connector.Communicator;
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.ServerDB;
 
@@ -29,7 +29,7 @@ public class VoiceActionService extends IntentService {
 
         String command = getMessageText(intent);
         if(command != null){
-            Log.d(TAG, "Received command " + intent);
+            Log.d(TAG, "Received sendCommand " + intent);
 
             ServerDB server = null;
             List<ServerDB> servers = ServerDB.getServers();
@@ -38,7 +38,7 @@ public class VoiceActionService extends IntentService {
             }
 
             if(server != null) {
-                Communicator.instance(this).command(server, Constants.ITEM_VOICE_COMMAND, command);
+                Openhab.sendCommand(ServerDB.toGeneric(server), Constants.ITEM_VOICE_COMMAND, command);
             }
         }
     }

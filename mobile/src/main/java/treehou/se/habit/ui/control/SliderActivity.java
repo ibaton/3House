@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.controller.SliderCellDB;
@@ -98,8 +98,7 @@ public class SliderActivity extends AppCompatActivity {
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         if (numberCell != null) {
                             ServerDB server = numberCell.getItem().getServer();
-                            Communicator communicator = Communicator.instance(getActivity());
-                            communicator.command(server, numberCell.getItem(), "" + seekBar.getProgress());
+                            Openhab.sendCommand(ServerDB.toGeneric(server), numberCell.getItem().getName(), "" + seekBar.getProgress());
                         }
                     }
                 });
