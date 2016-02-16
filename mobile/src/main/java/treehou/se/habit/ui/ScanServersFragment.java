@@ -109,6 +109,9 @@ public class ScanServersFragment extends Fragment {
                     });
                 }
             }
+
+            @Override
+            public void onError() {}
         };
         Openhab.registerServerDiscoveryListener(discoveryListener);
     }

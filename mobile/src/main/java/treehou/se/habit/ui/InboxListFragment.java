@@ -73,6 +73,9 @@ public class InboxListFragment extends Fragment {
             public void onUpdate(List<OHInboxItem> items) {
                 setItems(items, showIgnored);
             }
+
+            @Override
+            public void onError() {}
         };
     }
 

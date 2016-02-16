@@ -47,6 +47,9 @@ public class BindingsFragment extends Fragment {
             bindings = newBindings;
             bindingAdapter.setBindings(bindings);
         }
+
+        @Override
+        public void onError() {}
     };
 
     public static BindingsFragment newInstance(ServerDB serverDB) {
