@@ -47,7 +47,7 @@ public class BasicAuthServiceGenerator {
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(GsonHelper.createGsonBuilder()))
                 .baseUrl(url)
                 .client(client.build());
 

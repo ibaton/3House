@@ -421,36 +421,6 @@ public class Communicator {
         });
     }
 
-    public void listBindings(final ServerDB server, final  retrofit.Callback<List<Binding>> callback){
-
-        // Make remote request if not connected to wifi.
-        if(!isConnectedWifi(context) || !server.haveLocal()) {
-            if (server.haveRemote()){
-                OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                service.getBindings(callback);
-            }
-            return;
-        }
-
-        OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.getBindings(new retrofit.Callback<List<Binding>>() {
-            @Override
-            public void success(List<Binding> bindings, retrofit.client.Response response) {
-                callback.success(bindings, response);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (server.haveRemote()) {
-                    OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                    service.getBindings(callback);
-                } else {
-                    callback.failure(error);
-                }
-            }
-        });
-    }
-
     public void registerMyOpenhabGCM(final ServerDB server, String deviceId, String deviceModel, String regId, retrofit.Callback<String> callback){
         MyOpenHabService service = generateMyOpenHabService(server);
         service.registerGCM(deviceId, deviceModel, regId, callback);

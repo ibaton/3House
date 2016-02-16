@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.List;
 import java.util.Map;
 
+import se.treehou.ng.ohcommunicator.core.OHBinding;
 import se.treehou.ng.ohcommunicator.core.OHInboxItem;
 import se.treehou.ng.ohcommunicator.core.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
@@ -42,6 +43,14 @@ public class Openhab {
 
     public static void deregisterServerDiscoveryListener(Callback1<List<OHServer>> listener){
         instance.scanner.deregisterServerDiscoveryListener(listener);
+    }
+
+    public static void registerBindingListener(OHServer server, Callback1<List<OHBinding>> listener) {
+        instance.connector.getServerHandler(server).addBindingListener(listener);
+    }
+
+    public static void deregisterBindingListener(OHServer server, Callback1<List<OHBinding>> listener) {
+        instance.connector.getServerHandler(server).removeBindingListener(listener);
     }
 
     public static void registerInboxListener(OHServer server, Callback1<List<OHInboxItem>> listener) {

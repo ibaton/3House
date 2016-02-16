@@ -28,10 +28,6 @@ public interface OpenHabService {
     void getPage(retrofit.Callback<LinkedPage> callback);
 
     @Headers("Accept: application/json")
-    @GET("/rest/bindings")
-    void getBindings(retrofit.Callback<List<Binding>> callback);
-
-    @Headers("Accept: application/json")
     @GET("/rest/items/")
     void getItems(retrofit.Callback<List<ItemDB>> callback);
 

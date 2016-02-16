@@ -8,9 +8,14 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import se.treehou.ng.ohcommunicator.core.OHBinding;
 import se.treehou.ng.ohcommunicator.core.OHInboxItem;
 
 public interface OpenHabService {
+
+    @Headers("Accept: application/json")
+    @GET("/rest/bindings")
+    Call<List<OHBinding>> listBindings();
 
     @Headers("Accept: application/json")
     @GET("/rest/inbox")

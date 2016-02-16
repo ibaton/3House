@@ -8,24 +8,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import se.treehou.ng.ohcommunicator.connector.models.ThingType;
+import se.treehou.ng.ohcommunicator.core.OHBinding;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.GsonHelper;
-import treehou.se.habit.connector.models.Binding;
-import treehou.se.habit.connector.models.ThingType;
-import treehou.se.habit.core.db.ServerDB;
 
 public class BindingFragment extends Fragment {
 
-    private static final String ARG_SERVER  = "ARG_SERVER";
     private static final String ARG_BINDING = "ARG_BINDING";
 
-    private ServerDB serverDB;
-    private Binding binding;
+    private OHBinding binding;
 
-    public static BindingFragment newInstance(ServerDB serverDB, Binding binding) {
+    public static BindingFragment newInstance(OHBinding binding) {
         BindingFragment fragment = new BindingFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_SERVER, serverDB.getId());
         args.putString(ARG_BINDING, GsonHelper.createGsonBuilder().toJson(binding));
         fragment.setArguments(args);
         return fragment;
@@ -39,9 +35,8 @@ public class BindingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         if(getArguments() != null){
-            if(getArguments().containsKey(ARG_SERVER)){
-                serverDB = ServerDB.load(ServerDB.class, getArguments().getLong(ARG_SERVER));
-                binding = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_BINDING), Binding.class);
+            if(getArguments().containsKey(ARG_BINDING)){
+                binding = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_BINDING), OHBinding.class);
             }
         }
 

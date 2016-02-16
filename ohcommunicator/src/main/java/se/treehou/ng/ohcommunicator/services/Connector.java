@@ -17,6 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import se.treehou.ng.ohcommunicator.connector.BasicAuthServiceGenerator;
 import se.treehou.ng.ohcommunicator.connector.OpenHabService;
+import se.treehou.ng.ohcommunicator.core.OHBinding;
 import se.treehou.ng.ohcommunicator.core.OHInboxItem;
 import se.treehou.ng.ohcommunicator.core.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
@@ -66,8 +67,11 @@ public class Connector {
 
         private OpenHabService openHabService;
 
-        private List<OHInboxItem> lastInboxItems = new ArrayList<>();
-        private List<Callback1<List<OHInboxItem>>> callbacks = new ArrayList<>();
+        private List<OHInboxItem> inboxItems = new ArrayList<>();
+        private List<Callback1<List<OHInboxItem>>> inboxCallbacks = new ArrayList<>();
+
+        private List<OHBinding> bindings = new ArrayList<>();
+        private List<Callback1<List<OHBinding>>> bindingCallbacks = new ArrayList<>();
 
         public ServerHandler(OHServer server, Context context) {
             this.server = server;
@@ -75,17 +79,32 @@ public class Connector {
             openHabService = generateOpenHabService(server, server.getUrl());
         }
 
+        public void addBindingListener(Callback1<List<OHBinding>> bindingCallback){
+            if(bindingCallback == null){
+                return;
+            }
+            bindingCallbacks.add(bindingCallback);
+            bindingCallback.onUpdate(new ArrayList<>(bindings));
+        }
+
+        public void removeBindingListener(Callback1<List<OHBinding>> binidngCallback){
+            bindingCallbacks.remove(binidngCallback);
+            if(bindingCallbacks.size() <= 0){
+                scheduler.cancel();
+            }
+        }
+
         public void addInboxListener(Callback1<List<OHInboxItem>> inboxCallback){
             if(inboxCallback == null){
                 return;
             }
-            callbacks.add(inboxCallback);
-            inboxCallback.onUpdate(new ArrayList<>(lastInboxItems));
+            inboxCallbacks.add(inboxCallback);
+            inboxCallback.onUpdate(new ArrayList<>(inboxItems));
         }
 
         public void removeInboxListener(Callback1<List<OHInboxItem>> inboxCallback){
-            callbacks.remove(inboxCallback);
-            if(callbacks.size() <= 0){
+            bindingCallbacks.remove(inboxCallback);
+            if(inboxCallbacks.size() <= 0){
                 scheduler.cancel();
             }
         }
@@ -150,8 +169,8 @@ public class Connector {
 
                 }
             });
-            lastInboxItems.remove(inboxItem);
-            update(lastInboxItems);
+            bindings.remove(inboxItem);
+            updateInboxItems(inboxItems);
         }
 
         /**
@@ -176,7 +195,7 @@ public class Connector {
                 }
             });
             inboxItem.setFlag(OHInboxItem.FLAG_IGNORED);
-            update(lastInboxItems);
+            updateInboxItems(inboxItems);
         }
 
         /**
@@ -201,29 +220,45 @@ public class Connector {
                 }
             });
             inboxItem.setFlag(OHInboxItem.FLAG_NEW);
-            update(lastInboxItems);
+            updateInboxItems(inboxItems);
         }
 
         /**
          * Get all inbox items.
          */
         public List<OHInboxItem> getInboxItems(){
-            return new ArrayList<>(lastInboxItems);
+            return new ArrayList<>(inboxItems);
         }
 
         /**
          * Update all listeners {@link Callback1<List<OHInboxItem>>} with provided items.
          *
-         * @param items update all listeners.
+         * @param items updateInboxItems all listeners.
          */
-        private void update(List<OHInboxItem> items){
+        private void updateInboxItems(List<OHInboxItem> items){
             if(items == null){
                 items = new ArrayList<>();
             }
 
-            lastInboxItems = new ArrayList<>(items);
-            for(Callback1<List<OHInboxItem>> callback : callbacks){
+            inboxItems = new ArrayList<>(items);
+            for(Callback1<List<OHInboxItem>> callback : inboxCallbacks){
                 callback.onUpdate(new ArrayList<>(items));
+            }
+        }
+
+        /**
+         * Update all listeners {@link Callback1<List<OHInboxItem>>} with provided items.
+         *
+         * @param items update Bindings for all listeners.
+         */
+        private void updateBindings(List<OHBinding> items){
+            if(items == null){
+                items = new ArrayList<>();
+            }
+
+            bindings = new ArrayList<>(items);
+            for(Callback1<List<OHBinding>> callback : bindingCallbacks){
+                callback.onUpdate(new ArrayList<>(bindings));
             }
         }
 
@@ -244,15 +279,6 @@ public class Connector {
             });
         }
 
-        /**
-         * Get the number of listeners added to service handler.
-         *
-         * @return number of listeners.
-         */
-        public int getListenerCount(){
-            return callbacks.size();
-        }
-
         private void start(){
             if(scheduler == null) {
                 scheduler = new Timer();
@@ -261,25 +287,43 @@ public class Connector {
                     public void run() {
                         OpenHabService service = getService();
 
-                        if(service == null || getListenerCount() <= 0) {
-                            Log.d(TAG, "Requesting inbox paused, listeners: " + getListenerCount() + " " + service);
+                        if(service == null) {
                             return;
                         }
 
-                        Log.d(TAG, "Requesting inbox update");
-                        service.listInboxItems().enqueue(new Callback<List<OHInboxItem>>() {
+                        if (inboxCallbacks.size() > 0) {
+                            Log.d(TAG, "Requesting inbox updateInboxItems");
+                            service.listInboxItems().enqueue(new Callback<List<OHInboxItem>>() {
 
-                            @Override
-                            public void onResponse(Call<List<OHInboxItem>> call, Response<List<OHInboxItem>> response) {
-                                Log.d(TAG, "Inbox updated size " + response.body().size());
-                                update(response.body());
-                            }
+                                @Override
+                                public void onResponse(Call<List<OHInboxItem>> call, Response<List<OHInboxItem>> response) {
+                                    Log.d(TAG, "Inbox updated size " + response.body().size());
+                                    updateInboxItems(response.body());
+                                }
 
-                            @Override
-                            public void onFailure(Call<List<OHInboxItem>> call, Throwable e) {
-                                Log.e(TAG, "Error requesting inbox", e);
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<List<OHInboxItem>> call, Throwable e) {
+                                    Log.e(TAG, "Error requesting inbox", e);
+                                }
+                            });
+                        }
+
+                        if (bindingCallbacks.size() > 0) {
+                            Log.d(TAG, "Requesting inbox updateInboxItems");
+                            service.listBindings().enqueue(new Callback<List<OHBinding>>() {
+
+                                @Override
+                                public void onResponse(Call<List<OHBinding>> call, Response<List<OHBinding>> response) {
+                                    Log.d(TAG, "Inbox updated size " + response.body().size());
+                                    updateBindings(response.body());
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<OHBinding>> call, Throwable e) {
+                                    Log.e(TAG, "Error requesting bindings", e);
+                                }
+                            });
+                        }
                     }
                 }, 0, UPDATE_FREQUENCY);
             }

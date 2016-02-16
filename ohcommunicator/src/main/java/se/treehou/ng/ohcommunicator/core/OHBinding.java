@@ -1,8 +1,10 @@
-package se.treehou.ng.ohcommunicator.connector.models;
+package se.treehou.ng.ohcommunicator.core;
 
 import java.util.List;
 
-public class Binding {
+import se.treehou.ng.ohcommunicator.connector.models.ThingType;
+
+public class OHBinding {
 
     private String id;
     private String name;

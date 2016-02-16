@@ -1,9 +1,7 @@
 package treehou.se.habit.ui;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -20,11 +18,11 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHBinding;
+import se.treehou.ng.ohcommunicator.core.OHServer;
+import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.models.Binding;
 import treehou.se.habit.core.db.ServerDB;
@@ -37,9 +35,19 @@ public class BindingsFragment extends Fragment {
 
     private BindingAdapter bindingAdapter;
     private ServerDB serverDB;
+    private OHServer genericServer;
     private ViewGroup container;
 
-    private List<Binding> bindings = new ArrayList<>();
+    private List<OHBinding> bindings = new ArrayList<>();
+
+    private Callback1<List<OHBinding>> bindingListener = new Callback1<List<OHBinding>>(){
+
+        @Override
+        public void onUpdate(List<OHBinding> newBindings) {
+            bindings = newBindings;
+            bindingAdapter.setBindings(bindings);
+        }
+    };
 
     public static BindingsFragment newInstance(ServerDB serverDB) {
         BindingsFragment fragment = new BindingsFragment();
@@ -59,6 +67,7 @@ public class BindingsFragment extends Fragment {
         if(getArguments() != null){
             if(getArguments().containsKey(ARG_SERVER)){
                 serverDB = ServerDB.load(ServerDB.class, getArguments().getLong(ARG_SERVER));
+                genericServer = ServerDB.toGeneric(serverDB);
             }
         }
 
@@ -102,21 +111,21 @@ public class BindingsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        Communicator.instance(getActivity()).listBindings(serverDB, new Callback<List<Binding>>() {
-            @Override
-            public void success(List<Binding> newBindings, Response response) {
-                bindings = newBindings;
-                bindingAdapter.setBindings(bindings);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), R.string.failed_list_bindings, Toast.LENGTH_LONG).show();
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-            }
-        });
-
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Openhab.registerBindingListener(genericServer, bindingListener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Openhab.deregisterBindingListener(genericServer, bindingListener);
     }
 
     @Override
@@ -128,7 +137,7 @@ public class BindingsFragment extends Fragment {
 
     public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder>{
 
-        private List<Binding> bindings = new ArrayList<>();
+        private List<OHBinding> bindings = new ArrayList<>();
 
         public class BindingHolder extends RecyclerView.ViewHolder {
 
@@ -160,7 +169,7 @@ public class BindingsFragment extends Fragment {
         @Override
         public void onBindViewHolder(final BindingHolder holder, int position) {
 
-            final Binding binding = bindings.get(position);
+            final OHBinding binding = bindings.get(position);
             holder.lblName.setText(binding.getName());
             holder.lblAuthor.setText(binding.getAuthor());
             holder.lblDescription.setText(binding.getDescription());
@@ -169,7 +178,7 @@ public class BindingsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    Fragment fragment = BindingFragment.newInstance(serverDB, binding);
+                    Fragment fragment = BindingFragment.newInstance(binding);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(container.getId(), fragment)
                             .addToBackStack(null)
@@ -183,12 +192,12 @@ public class BindingsFragment extends Fragment {
             return bindings.size();
         }
 
-        public void addBinding(Binding binding){
+        public void addBinding(OHBinding binding){
             bindings.add(binding);
             notifyItemInserted(bindings.size()-1);
         }
 
-        public void setBindings(List<Binding> newBindings){
+        public void setBindings(List<OHBinding> newBindings){
             bindings.clear();
             bindings.addAll(newBindings);
             notifyDataSetChanged();
