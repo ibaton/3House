@@ -34,18 +34,4 @@ public interface OpenHabService {
     @Headers("Accept: application/json")
     @GET("/rest/items/{id}")
     void getItem(@Path("id") String id, retrofit.Callback<ItemDB> callback);
-
-    @Headers({
-        "Accept: application/text",
-        "Content-Type: text/plain"
-    })
-    @POST("/rest/items/{id}")
-    void sendCommand(@Body String command, @Path("id") String id, retrofit.Callback<Response> callback);
-
-    @Headers({
-            "Accept: application/text",
-            "Content-Type: text/plain"
-    })
-    @POST("/rest/items/{id}")
-    Response sendCommand(@Body String command, @Path("id") String id);
 }
