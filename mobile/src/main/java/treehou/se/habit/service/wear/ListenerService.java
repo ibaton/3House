@@ -46,7 +46,7 @@ public class ListenerService extends WearableListenerService {
         }
 
         if(server != null) {
-            Openhab.sendCommand(ServerDB.toGeneric(server), Constants.ITEM_VOICE_COMMAND, message.getMessage());
+            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(Constants.ITEM_VOICE_COMMAND, message.getMessage());
         }
     }
 

@@ -37,47 +37,15 @@ public class Openhab {
         }
     }
 
+    public static Connector.ServerHandler instance(OHServer server){
+        return instance.connector.getServerHandler(server);
+    }
+
     public static void registerServerDiscoveryListener(Callback1<List<OHServer>> listener){
         instance.scanner.registerServerDiscoveryListener(listener);
     }
 
     public static void deregisterServerDiscoveryListener(Callback1<List<OHServer>> listener){
         instance.scanner.deregisterServerDiscoveryListener(listener);
-    }
-
-    public static void registerBindingListener(OHServer server, Callback1<List<OHBinding>> listener) {
-        instance.connector.getServerHandler(server).addBindingListener(listener);
-    }
-
-    public static void deregisterBindingListener(OHServer server, Callback1<List<OHBinding>> listener) {
-        instance.connector.getServerHandler(server).removeBindingListener(listener);
-    }
-
-    public static void registerInboxListener(OHServer server, Callback1<List<OHInboxItem>> listener) {
-        instance.connector.getServerHandler(server).addInboxListener(listener);
-    }
-
-    public static void deregisterInboxListener(OHServer server, Callback1<List<OHInboxItem>> listener) {
-        instance.connector.getServerHandler(server).removeInboxListener(listener);
-    }
-
-    public static void approveInboxItem(OHServer server, OHInboxItem inboxItem){
-        instance.connector.getServerHandler(server).approveInboxItem(inboxItem);
-    }
-
-    public static void ignoreInboxItem(OHServer server, OHInboxItem inboxItem){
-        instance.connector.getServerHandler(server).ignoreInboxItem(inboxItem);
-    }
-
-    public static void unignoreInboxItem(OHServer server, OHInboxItem inboxItem){
-        instance.connector.getServerHandler(server).unignoreInboxItem(inboxItem);
-    }
-
-    public static List<OHInboxItem> getInboxItems(OHServer server){
-        return instance.connector.getServerHandler(server).getInboxItems();
-    }
-
-    public static void sendCommand(OHServer server, String item, String command){
-        instance.connector.getServerHandler(server).sendCommand(item, command);
     }
 }

@@ -80,7 +80,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     if(widget.getItem() != null) {
                         try {
-                            Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), String.valueOf(skbDim.getProgress()));
+                            Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), String.valueOf(skbDim.getProgress()));
                         } catch (Exception e) {}
                     }
                 }

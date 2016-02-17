@@ -88,6 +88,6 @@ public class CommandService extends IntentService {
     private void handleActionCommand(String command, ItemDB item) {
 
         ServerDB server = item.getServer();
-        Openhab.sendCommand(ServerDB.toGeneric(server), item.getName(), command);
+        Openhab.instance(ServerDB.toGeneric(server)).sendCommand(item.getName(), command);
     }
 }

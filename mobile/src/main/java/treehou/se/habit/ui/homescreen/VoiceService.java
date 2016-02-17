@@ -50,7 +50,7 @@ public class VoiceService extends IntentService {
             Log.d(TAG, "Received " + results.size() + " voice results.");
 
             String command = results.get(0);
-            Openhab.sendCommand(ServerDB.toGeneric(server), VOICE_ITEM, command);
+            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(VOICE_ITEM, command);
         }
     }
 }

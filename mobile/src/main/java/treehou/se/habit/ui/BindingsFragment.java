@@ -121,14 +121,14 @@ public class BindingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Openhab.registerBindingListener(genericServer, bindingListener);
+        Openhab.instance(genericServer).registerBindingListener(bindingListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        Openhab.deregisterBindingListener(genericServer, bindingListener);
+        Openhab.instance(genericServer).deregisterBindingListener(bindingListener);
     }
 
     @Override

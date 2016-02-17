@@ -55,7 +55,7 @@ public class CommandReciever implements IFireReciever {
 
             ItemDB item = ItemDB.load(ItemDB.class, itemId);
             if(item != null){
-                Openhab.sendCommand(ServerDB.toGeneric(item.getServer()), item.getName(), command);
+                Openhab.instance(ServerDB.toGeneric(item.getServer())).sendCommand(item.getName(), command);
                 Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");

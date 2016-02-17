@@ -83,7 +83,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
-                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), Constants.COMMAND_UP);
+                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_UP);
                     }
                 }
             });
@@ -93,7 +93,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
-                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), item.getName(), Constants.COMMAND_STOP);
+                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(item.getName(), Constants.COMMAND_STOP);
                     }
                 }
             });
@@ -104,7 +104,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
                         Communicator communicator = Communicator.instance(factory.getContext());
-                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), item.getName(), Constants.COMMAND_DOWN);
+                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(item.getName(), Constants.COMMAND_DOWN);
                     }
                 }
             });
@@ -187,7 +187,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), mapping.getCommand());
+                            Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), mapping.getCommand());
                         }
                     }
                 });
@@ -261,7 +261,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
             btnSingle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), mapSingle.getCommand());
+                    Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), mapSingle.getCommand());
                 }
             });
 
@@ -314,7 +314,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     Log.d(TAG, widget.getLabel() + " " + newState);
                     if (widget.getItem() != null) {
                         swtSwitch.setChecked(newState);
-                        Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
+                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
                     }
                 }
             });

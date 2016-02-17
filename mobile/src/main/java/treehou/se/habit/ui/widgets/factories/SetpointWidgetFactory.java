@@ -113,7 +113,7 @@ public class SetpointWidgetFactory implements IWidgetFactory {
                         lblValue.setText(widget.getItem().getFormatedValue());
                     }
 
-                    Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), String.valueOf(value));
+                    Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), String.valueOf(value));
                 } catch (Exception e) {}
             }
         }

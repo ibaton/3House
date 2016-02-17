@@ -102,17 +102,17 @@ public class Communicator {
                 if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.getType())) {
                     if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
                         if (value > 0) {
-                            Openhab.sendCommand(ServerDB.toGeneric(server), newItem.getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
                         }
                     } else if (Constants.COMMAND_ON.equals(state)) {
                         if (value < 0) {
-                            Openhab.sendCommand(ServerDB.toGeneric(server), newItem.getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
                         }
                     } else {
                         try {
                             int itemVal = scrubNumberValue(Integer.parseInt(newItem.getState()) + value, min, max);
                             Log.e(TAG, "Sending sendCommand " + itemVal + " value " + value);
-                            Openhab.sendCommand(ServerDB.toGeneric(server), newItem.getName(), String.valueOf(itemVal));
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.getName(), String.valueOf(itemVal));
                         } catch (NumberFormatException e) {
                             Log.e(TAG, "Could not parse state " + newItem.getState(), e);
                         }

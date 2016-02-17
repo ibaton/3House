@@ -125,14 +125,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0){
-                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_INCREMENT);
+                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_INCREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0){
-                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_ON);
+                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_ON);
                     }
                 }
             }));
@@ -142,14 +142,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0) {
-                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_DECREMENT);
+                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_DECREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0) {
-                        Openhab.sendCommand(ServerDB.toGeneric(widgetFactory.getServer()), widget.getItem().getName(), Constants.COMMAND_OFF);
+                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
                     }
                 }
             }));

@@ -83,7 +83,7 @@ public class TextWidgetFactory implements IWidgetFactory {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String text = input.getText().toString();
-                                Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), text);
+                                Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), text);
                             }
                         });
                         builder.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {

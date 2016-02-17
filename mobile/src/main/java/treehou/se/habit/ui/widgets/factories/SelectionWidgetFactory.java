@@ -86,7 +86,7 @@ public class SelectionWidgetFactory implements IWidgetFactory {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if(position != lastPosition) {
                                 Widget.Mapping mapping = mappings.get(position);
-                                Openhab.sendCommand(ServerDB.toGeneric(factory.getServer()), widget.getItem().getName(), mapping.getCommand());
+                                Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), mapping.getCommand());
                                 lastPosition = position;
                             }
                         }

@@ -79,7 +79,7 @@ public class Connector {
             openHabService = generateOpenHabService(server, server.getUrl());
         }
 
-        public void addBindingListener(Callback1<List<OHBinding>> bindingCallback){
+        public void registerBindingListener(Callback1<List<OHBinding>> bindingCallback){
             if(bindingCallback == null){
                 return;
             }
@@ -87,14 +87,14 @@ public class Connector {
             bindingCallback.onUpdate(new ArrayList<>(bindings));
         }
 
-        public void removeBindingListener(Callback1<List<OHBinding>> binidngCallback){
+        public void deregisterBindingListener(Callback1<List<OHBinding>> binidngCallback){
             bindingCallbacks.remove(binidngCallback);
             if(bindingCallbacks.size() <= 0){
                 scheduler.cancel();
             }
         }
 
-        public void addInboxListener(Callback1<List<OHInboxItem>> inboxCallback){
+        public void registerInboxListener(Callback1<List<OHInboxItem>> inboxCallback){
             if(inboxCallback == null){
                 return;
             }
@@ -102,7 +102,7 @@ public class Connector {
             inboxCallback.onUpdate(new ArrayList<>(inboxItems));
         }
 
-        public void removeInboxListener(Callback1<List<OHInboxItem>> inboxCallback){
+        public void deregisterInboxListener(Callback1<List<OHInboxItem>> inboxCallback){
             bindingCallbacks.remove(inboxCallback);
             if(inboxCallbacks.size() <= 0){
                 scheduler.cancel();

@@ -89,7 +89,7 @@ public class VideoWidgetFactory implements IWidgetFactory {
                 }
             });
 
-            //Binding media controller with VideoView
+            //OHBinding media controller with VideoView
             mVideoView.setMediaController(controller);
         }
     }

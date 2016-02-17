@@ -146,7 +146,7 @@ public class InboxListFragment extends Fragment {
     private void showIgnoredItems(boolean showIgnored){
 
         this.showIgnored = showIgnored;
-        setItems(Openhab.getInboxItems(server), showIgnored);
+        setItems(Openhab.instance(server).getInboxItems(), showIgnored);
         updateIgnoreButtons(showIgnored);
 
         final View rootView = getView();
@@ -193,7 +193,7 @@ public class InboxListFragment extends Fragment {
      */
     private void ignoreInboxItem(final OHInboxItem item){
         adapter.removeItem(item);
-        Openhab.ignoreInboxItem(server, item);
+        Openhab.instance(server).ignoreInboxItem(item);
 
         final View rootView = getView();
         if(rootView != null) {
@@ -216,21 +216,21 @@ public class InboxListFragment extends Fragment {
      * @param item the item to hide.
      */
     private void unignoreInboxItem(final OHInboxItem item) {
-        Openhab.unignoreInboxItem(server, item);
+        Openhab.instance(server).unignoreInboxItem(item);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Openhab.registerInboxListener(server, inboxCallback);
+        Openhab.instance(server).registerInboxListener(inboxCallback);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        Openhab.deregisterInboxListener(server, inboxCallback);
+        Openhab.instance(server).deregisterInboxListener(inboxCallback);
     }
 
     public static class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>{
@@ -304,7 +304,7 @@ public class InboxListFragment extends Fragment {
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Openhab.approveInboxItem(server, inboxItem);
+                                    Openhab.instance(server).approveInboxItem(inboxItem);
                                 }
                             })
                             .setNegativeButton(R.string.cancel, null)

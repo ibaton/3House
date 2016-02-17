@@ -49,7 +49,7 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
                 ItemDB item = buttonCell.getItem();
                 if(item != null) {
                     ServerDB server = item.getServer();
-                    Openhab.sendCommand(ServerDB.toGeneric(server), item.getName(), buttonCell.getCommand());
+                    Openhab.instance(ServerDB.toGeneric(server)).sendCommand(item.getName(), buttonCell.getCommand());
                 }
             }
         });

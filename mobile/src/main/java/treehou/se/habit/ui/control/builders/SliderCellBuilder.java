@@ -61,7 +61,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
                 }
 
                 ServerDB server = numberCell.getItem().getServer();
-                Openhab.sendCommand(ServerDB.toGeneric(server), numberCell.getItem().getName(), ""+seekBar.getProgress());
+                Openhab.instance(ServerDB.toGeneric(server)).sendCommand(numberCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });
 

@@ -139,9 +139,9 @@ public class ColorpickerActivity extends AppCompatActivity {
                         Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                         Communicator communicator = Communicator.instance(getActivity());
                         if(hsv[2] > 5) {
-                            Openhab.sendCommand(ServerDB.toGeneric(server), widget.getItem().getName(), String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(widget.getItem().getName(), String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                         }else {
-                            Openhab.sendCommand(ServerDB.toGeneric(server), widget.getItem().getName(), Constants.COMMAND_OFF);
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
                         }
                     }
                 },300);

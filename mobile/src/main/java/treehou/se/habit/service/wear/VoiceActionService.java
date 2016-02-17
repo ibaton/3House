@@ -38,7 +38,7 @@ public class VoiceActionService extends IntentService {
             }
 
             if(server != null) {
-                Openhab.sendCommand(ServerDB.toGeneric(server), Constants.ITEM_VOICE_COMMAND, command);
+                Openhab.instance(ServerDB.toGeneric(server)).sendCommand(Constants.ITEM_VOICE_COMMAND, command);
             }
         }
     }
