@@ -7,27 +7,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.List;
-
-import se.treehou.ng.ohcommunicator.core.OHServer;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.SitemapDB;
-import treehou.se.habit.gcm.GCMHelper;
-import treehou.se.habit.ui.InboxListFragment;
+import io.realm.Realm;
+import io.realm.RealmResults;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
-import treehou.se.habit.ui.settings.SetupServerFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.ServersFragment;
 import treehou.se.habit.ui.SitemapFragment;
 import treehou.se.habit.ui.SitemapListFragment;
-import treehou.se.habit.util.Settings;
 
 
 public class MainActivity extends AppCompatActivity
@@ -37,10 +29,14 @@ public class MainActivity extends AppCompatActivity
 
     public static final String EXTRA_SHOW_SITEMAP = "showSitemap";
 
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        realm = Realm.getDefaultInstance();
 
         ControlHelper.showNotifications(this);
 
@@ -58,37 +54,45 @@ public class MainActivity extends AppCompatActivity
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {
 
             // Load server setup server fragment if no server found
-            List<ServerDB> servers = ServerDB.getServers();
-            if(servers.size() <= 0) {
+            RealmResults<ServerDB> serverDBs = realm.allObjects(ServerDB.class);
+
+            if(serverDBs.size() <= 0) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, ServersFragment.newInstance())
                         .commit();
             }else {
                 // Load default sitemap if any
-                SitemapDB defaultSitemap = Settings.instance(this).getDefaultSitemap();
+                /*OHSitemap defaultSitemap = Settings.instance(this).getDefaultSitemap();
                 if(savedInstanceState == null && defaultSitemap != null) {
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap.getId()))
                             .commit();
-                }else {
+                }else {*/
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance())
                             .commit();
-                }
+                //}
             }
         }
 
-        if (GCMHelper.checkPlayServices(this)) {
+        /*if (GCMHelper.checkPlayServices(this)) {
             GCMHelper.gcmRegisterBackground(this);
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        for(ControllerDB controller : ControllerDB.getControllers()){
-            if (controller.showNotification()) {
+        for(ControllerDB controller : OHTreehouseRealm.realm().allObjects(ControllerDB.class)){
+            if (controller.isShowNotification()) {
                 ControlHelper.showNotification(this, controller);
             }
-        }
+        }*/
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     @Override

@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
-import com.ning.http.client.Realm;
 
 import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.ClientFactory;
@@ -33,17 +32,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.ConnectorUtil;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.TrustModifier;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.Widget;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ThreadPool;
 
@@ -58,13 +58,15 @@ public class PageFragment extends Fragment {
 
     private static final String STATE_PAGE = "STATE_PAGE";
 
+    private Realm realm;
+
     private ServerDB server;
-    private LinkedPage page;
+    private OHLinkedPage page;
 
     private LinearLayout louFragments;
 
     private WidgetFactory widgetFactory;
-    private List<Widget> widgets = new ArrayList<>();
+    private List<OHWidget> widgets = new ArrayList<>();
     private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
 
     private AsyncTask<Void, Void, Void> longPoller;
@@ -81,7 +83,7 @@ public class PageFragment extends Fragment {
      *
      * @return Fragment visualazing a page
      */
-    public static PageFragment newInstance(ServerDB server, LinkedPage page) {
+    public static PageFragment newInstance(ServerDB server, OHLinkedPage page) {
         Gson gson = GsonHelper.createGsonBuilder();
 
         Bundle args = new Bundle();
@@ -100,19 +102,21 @@ public class PageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         Bundle args = getArguments();
         Gson gson = GsonHelper.createGsonBuilder();
 
         long serverId = args.getLong(ARG_SERVER);
-        server = ServerDB.load(ServerDB.class, serverId);
-
         String jPage = args.getString(ARG_PAGE);
-        page = gson.fromJson(jPage, LinkedPage.class);
+
+        server = ServerDB.load(realm, serverId);
+        page = gson.fromJson(jPage, OHLinkedPage.class);
 
         initialized = false;
         if(savedInstanceState != null && savedInstanceState.containsKey(STATE_PAGE)) {
             jPage = savedInstanceState.getString(STATE_PAGE);
-            LinkedPage savedPage = gson.fromJson(jPage, LinkedPage.class);
+            OHLinkedPage savedPage = gson.fromJson(jPage, OHLinkedPage.class);
             if(savedPage.getId().equals(page.getId())) {
                 page = savedPage;
                 initialized = true;
@@ -137,12 +141,11 @@ public class PageFragment extends Fragment {
     }
 
     private void requestPageUpdate(){
-        Communicator communicator = Communicator.instance(getActivity());
-        communicator.requestPage(server, page, new Callback<LinkedPage>() {
+        Openhab.instance(server.toGeneric()).requestPage(page, new OHCallback<OHLinkedPage>() {
             @Override
-            public void success(final LinkedPage linkedPage, final retrofit.client.Response response) {
-                //TODO update instead of reset.
-                Log.d(TAG, "Received update " + linkedPage.getWidget().size() + " widgets from  " + page.getLink());
+            public void onUpdate(OHResponse<OHLinkedPage> response) {
+                final OHLinkedPage linkedPage = response.body();
+                Log.d(TAG, "Received update " + linkedPage.getWidgets().size() + " widgets from  " + page.getLink());
                 ThreadPool.instance().submit(new Runnable() {
                     @Override
                     public void run() {
@@ -152,9 +155,7 @@ public class PageFragment extends Fragment {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "error " + error.getCause() + " " + error.getMessage());
-
+            public void onError() {
                 if(getActivity() != null) {
 
                     // TODO Check type of error.
@@ -168,26 +169,30 @@ public class PageFragment extends Fragment {
 
     // TODO extract to separate class
     private AsyncTask<Void, Void, Void> createLongPoller() {
+
+        final long serverId = server.getId();
         AsyncTask<Void, Void, Void> longPoller = new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
 
+                Realm realm = Realm.getDefaultInstance();
+                ServerDB server = ServerDB.load(realm, serverId);
 
-                Realm realm = null;
+                com.ning.http.client.Realm clientRealm = null;
                 if(server.requiresAuth()){
-                    realm = new Realm.RealmBuilder()
+                    clientRealm = new com.ning.http.client.Realm.RealmBuilder()
                             .setPrincipal(server.getUsername())
                             .setPassword(server.getPassword())
                             .setUsePreemptiveAuth(true)
-                            .setScheme(Realm.AuthScheme.BASIC)
+                            .setScheme(com.ning.http.client.Realm.AuthScheme.BASIC)
                             .build();
                 }
 
                 AsyncHttpClient asyncHttpClient = new AsyncHttpClient(
                     new AsyncHttpClientConfig.Builder().setAcceptAnyCertificate(true)
                         .setHostnameVerifier(new TrustModifier.NullHostNameVerifier())
-                        .setRealm(realm)
+                        .setRealm(clientRealm)
                         .build()
                 );
 
@@ -206,15 +211,16 @@ public class PageFragment extends Fragment {
                     .encoder(new Encoder<String, Reader>() {        // Stream the request body
                         @Override
                         public Reader encode(String s) {
-                            Log.d(TAG, "RequestBuilder encode");
+                            Log.d(TAG, "wasync RequestBuilder encode");
                             return new StringReader(s);
                         }
                     })
-                    .decoder(new Decoder<String, LinkedPage>() {
+                    .decoder(new Decoder<String, OHLinkedPage>() {
                         @Override
-                        public LinkedPage decode(Event e, String s) {
+                        public OHLinkedPage decode(Event e, String s) {
+                            Log.d(TAG, "wasync Decoder " + s);
                             Gson gson = GsonHelper.createGsonBuilder();
-                            return gson.fromJson(s, LinkedPage.class);
+                            return gson.fromJson(s, OHLinkedPage.class);
                         }
                     })
                     .transport(org.atmosphere.wasync.Request.TRANSPORT.LONG_POLLING);                    // Fallback to Long-Polling
@@ -225,20 +231,22 @@ public class PageFragment extends Fragment {
 
                 pollSocket = client.create(optBuilder.build());
                 try {
-                    Log.d(TAG, "Socket " + pollSocket + " " + request.uri());
-                    pollSocket.on(new Function<LinkedPage>() {
+                    Log.d(TAG, "wasync Socket " + pollSocket + " " + request.uri());
+                    pollSocket.on(new Function<OHLinkedPage>() {
                         @Override
-                        public void on(LinkedPage page) {
-                            Log.d(TAG, "Socket received");
+                        public void on(OHLinkedPage page) {
+                            Log.d(TAG, "wasync Socket received");
                             updatePage(page);
                         }
                     })
                     .open(request.build());
                 } catch (IOException | ExceptionInInitializerError e) {
-                    Log.d(TAG, "Got error " + e);
+                    Log.d(TAG, "wasync Got error " + e);
                 }
 
-                Log.d(TAG,"Poller started");
+                Log.d(TAG,"wasync Poller started");
+
+                realm.close();
 
                 return null;
             }
@@ -275,17 +283,17 @@ public class PageFragment extends Fragment {
      *
      * @param page
      */
-    private synchronized void updatePage(final LinkedPage page){
-        Log.d(TAG, "Updating page " + page.getTitle() + " widgets " + widgets.size() + " : " + page.getWidget().size());
+    private synchronized void updatePage(final OHLinkedPage page){
+        Log.d(TAG, "Updating page " + page.getTitle() + " widgets " + widgets.size() + " : " + page.getWidgets().size());
         this.page = page;
         widgetFactory = new WidgetFactory(getActivity(), server, page);
 
-        final List<Widget> pageWidgets = page.getWidget();
+        final List<OHWidget> pageWidgets = page.getWidgets();
         boolean invalidate = pageWidgets.size() != widgets.size();
         if(!invalidate){
             for(int i=0; i < widgets.size(); i++) {
-                Widget currentWidget = widgets.get(i);
-                Widget newWidget = pageWidgets.get(i);
+                OHWidget currentWidget = widgets.get(i);
+                OHWidget newWidget = pageWidgets.get(i);
 
                 if(currentWidget.needUpdate(newWidget)){
                     Log.d(TAG, "Widget " + currentWidget.getType() + " " + currentWidget.getLabel() + " needs update");
@@ -305,7 +313,7 @@ public class PageFragment extends Fragment {
                     widgetHolders.clear();
                     louFragments.removeAllViews();
 
-                    for (Widget widget : pageWidgets) {
+                    for (OHWidget widget : pageWidgets) {
                         try {
                             WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
                             widgetHolders.add(result);
@@ -325,7 +333,7 @@ public class PageFragment extends Fragment {
                             WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
 
                             Log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
-                            Widget newWidget = pageWidgets.get(i);
+                            OHWidget newWidget = pageWidgets.get(i);
 
                             holder.update(newWidget);
                         } catch (Exception e) {

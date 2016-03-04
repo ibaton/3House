@@ -12,10 +12,12 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 /**
  * The configuration screen for the {@link ControllerWidget ControllerWidget} AppWidget.
@@ -30,6 +32,8 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     private Spinner sprControllers;
     private CheckBox cbxShowTitle;
 
+    private Realm realm;
+
     public ControllerWidgetConfigureActivity() {
         super();
     }
@@ -38,6 +42,8 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        realm = Realm.getDefaultInstance();
+
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
@@ -45,9 +51,11 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.controller_widget_configure);
 
         sprControllers = (Spinner) findViewById(R.id.spr_controller);
-        List<ControllerDB> controllers = ControllerDB.getControllers();
-        ArrayAdapter mAdapter = new ArrayAdapter<>(this
-                , android.R.layout.simple_list_item_1, controllers);
+        List<ControllerDB> controllers = realm.allObjects(ControllerDB.class);
+        List<ControllerItem> controllerItems = new ArrayList<>();
+        for(ControllerDB controllerDB : controllers) controllerItems.add(new ControllerItem(controllerDB));
+
+        ArrayAdapter<ControllerItem> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, controllerItems);
         sprControllers.setAdapter(mAdapter);
 
         cbxShowTitle = (CheckBox) findViewById(R.id.cbx_show_title);
@@ -66,14 +74,37 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
+    }
+
+    class ControllerItem{
+        private ControllerDB controllerDB;
+
+        public ControllerItem(ControllerDB controllerDB) {
+            this.controllerDB = controllerDB;
+        }
+
+        public ControllerDB getControllerDB() {
+            return controllerDB;
+        }
+
+        @Override
+        public String toString() {
+            return controllerDB.getName();
+        }
     }
 
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             final Context context = ControllerWidgetConfigureActivity.this;
 
-            ControllerDB controller = (ControllerDB) sprControllers.getSelectedItem();
+            ControllerDB controller = ((ControllerItem) sprControllers.getSelectedItem()).getControllerDB();
             if(controller == null){
                 Toast.makeText(ControllerWidgetConfigureActivity.this, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show();
                 setResult(RESULT_CANCELED);

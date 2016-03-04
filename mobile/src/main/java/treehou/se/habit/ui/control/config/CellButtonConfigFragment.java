@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +19,18 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.controller.ButtonCellDB;
+import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.controller.ButtonCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -45,8 +49,11 @@ public class CellButtonConfigFragment extends Fragment {
     private TextView txtCommand;
     private ImageView btnSetIcon;
 
-    private ArrayAdapter<ItemDB> mItemAdapter;
-    private ArrayList<ItemDB> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
+    private OHItem item;
+
+    private Realm realm;
 
     public static CellButtonConfigFragment newInstance(CellDB cell) {
         CellButtonConfigFragment fragment = new CellButtonConfigFragment();
@@ -64,14 +71,23 @@ public class CellButtonConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(CellDB.class, id);
-            if((buttonCell=cell.buttonCell())==null){
+            long id = getArguments().getLong(ARG_CELL_ID);
+            cell = CellDB.load(realm, id);
+            buttonCell = ButtonCellDB.getCell(realm, cell);
+
+            if (buttonCell == null){
                 buttonCell = new ButtonCellDB();
                 buttonCell.setCell(cell);
                 buttonCell.setCommand(Constants.COMMAND_ON);
-                buttonCell.save();
+                ButtonCellDB.save(realm, buttonCell);
+            }
+
+            ItemDB itemDB = buttonCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
             }
         }
     }
@@ -90,24 +106,23 @@ public class CellButtonConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ItemDB item = mItems.get(position);
+                realm.beginTransaction();
+                OHItem item = mItems.get(position);
                 if(item != null) {
-                    item.save();
-
-                    buttonCell.setItem(item);
-                    buttonCell.save();
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    buttonCell.setItem(itemDB);
                     switch (item.getType()) {
-                        case ItemDB.TYPE_STRING:
+                        case OHItem.TYPE_STRING:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_TEXT);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case ItemDB.TYPE_NUMBER:
+                        case OHItem.TYPE_NUMBER:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_NUMBER);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case ItemDB.TYPE_CONTACT:
+                        case OHItem.TYPE_CONTACT:
                             txtCommand.setVisibility(View.GONE);
                             tglOnOff.setVisibility(View.VISIBLE);
                             break;
@@ -117,6 +132,7 @@ public class CellButtonConfigFragment extends Fragment {
                             break;
                     }
                 }
+                realm.commitTransaction();
             }
 
             @Override
@@ -129,31 +145,39 @@ public class CellButtonConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        Communicator communicator = Communicator.instance(getActivity());
-        List<ServerDB> servers = ServerDB.getServers();
+        List<ServerDB> servers = realm.allObjects(ServerDB.class);
         mItems.clear();
 
-        if(buttonCell.getItem() != null) {
-            mItems.add(buttonCell.getItem());
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
         }
 
         if(buttonCell.getItem() != null) {
-            mItems.add(buttonCell.getItem());
+            //mItems.add(new OHItem(buttonCell.getItem()));
         }
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
+
+        if(buttonCell.getItem() != null) {
+            //mItems.add(new OHItem(buttonCell.getItem()));
+        }
+        for(final ServerDB serverDB : servers) {
+            final OHServer server = serverDB.toGeneric();
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
                 }
 
                 @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
+                public void onError() {
+
                 }
-            });
+            };
+
+            Openhab.instance(server).requestItem(callback);
         }
 
         tglOnOff.setChecked(
@@ -178,16 +202,16 @@ public class CellButtonConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), buttonCell.getIcon()));
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
-            if(item.getType().equals(ItemDB.TYPE_SWITCH) ||
-               item.getType().equals(ItemDB.TYPE_GROUP) ||
-               item.getType().equals(ItemDB.TYPE_STRING) ||
-               item.getType().equals(ItemDB.TYPE_NUMBER) ||
-               item.getType().equals(ItemDB.TYPE_CONTACT) ||
-               item.getType().equals(ItemDB.TYPE_COLOR)){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(item.getType().equals(OHItem.TYPE_SWITCH) ||
+               item.getType().equals(OHItem.TYPE_GROUP) ||
+               item.getType().equals(OHItem.TYPE_STRING) ||
+               item.getType().equals(OHItem.TYPE_NUMBER) ||
+               item.getType().equals(OHItem.TYPE_CONTACT) ||
+               item.getType().equals(OHItem.TYPE_COLOR)){
                 tempItems.add(item);
             }
         }
@@ -201,16 +225,17 @@ public class CellButtonConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        realm.beginTransaction();
         if(buttonCell.getItem() == null) {
             buttonCell.setCommand("");
-        } else if (buttonCell.getItem().getType().equals(ItemDB.TYPE_STRING) || buttonCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)) {
+        } else if (buttonCell.getItem().getType().equals(OHItem.TYPE_STRING) || buttonCell.getItem().getType().equals(OHItem.TYPE_NUMBER)) {
             buttonCell.setCommand(txtCommand.getText().toString());
-        } else if (buttonCell.getItem().getType().equals(ItemDB.TYPE_CONTACT)) {
+        } else if (buttonCell.getItem().getType().equals(OHItem.TYPE_CONTACT)) {
             buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_OPEN : Constants.COMMAND_CLOSE);
         } else {
             buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
         }
-        buttonCell.save();
+        realm.commitTransaction();
     }
 
     @Override
@@ -220,8 +245,9 @@ public class CellButtonConfigFragment extends Fragment {
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
+            realm.beginTransaction();
             buttonCell.setIcon(iconName.equals("") ? null : iconName);
-            buttonCell.save();
+            realm.commitTransaction();
             updateIconImage();
         }
     }

@@ -1,16 +1,13 @@
 package treehou.se.habit.core.db.settings;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.PrimaryKey;
 import treehou.se.habit.Constants;
+import treehou.se.habit.core.db.model.OHRealm;
 
-@Table(name = "WidgetSettings")
-public class WidgetSettingsDB extends Model {
+public class WidgetSettingsDB extends RealmObject {
 
     private static final String TAG = "WidgetSettings";
     public static final String PREF_GLOBAL = "NotificationSettings";
@@ -22,25 +19,23 @@ public class WidgetSettingsDB extends Model {
     public static final int LIGHT_VIBRANT_COLOR = 4;
     public static final int DARK_VIBRANT_COLOR = 5;
 
-    @Column(name = "textSize")
-    private int textSize;
+    public static final int DEFAULT_TEXT_SIZE = 100;
+    public static final int DEFAULT_ICON_SIZE = 100;
 
-    @Column(name = "imageBackground")
+    @PrimaryKey
+    private long id = -1;
+    private int textSize = DEFAULT_TEXT_SIZE;
     private int imageBackground;
-
-    @Column(name = "iconSize")
-    private int iconSize = 100;
-
-    @Column(name = "compressedSingleButton")
+    private int iconSize = DEFAULT_ICON_SIZE;
     private boolean compressedSingleButton = true;
-
-    @Column(name = "compressedSlider")
     private boolean compressedSlider = true;
 
-    public WidgetSettingsDB() {
-        super();
-        textSize = Constants.DEFAULT_TEXT_ADDON;
-        imageBackground = DARK_MUTED_COLOR;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getTextSize() {
@@ -73,7 +68,6 @@ public class WidgetSettingsDB extends Model {
 
     public void setCompressedSingleButton(boolean compressedSingleButton) {
         this.compressedSingleButton = compressedSingleButton;
-        save();
     }
 
     public boolean isCompressedSlider() {
@@ -82,29 +76,43 @@ public class WidgetSettingsDB extends Model {
 
     public void setCompressedSlider(boolean compressedSingleButton) {
         this.compressedSlider = compressedSingleButton;
-        save();
     }
 
-    public static WidgetSettingsDB loadGlobal(Context context){
+    public static void save(WidgetSettingsDB item){
+        Realm realm = OHRealm.realm();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
+        }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+    }
 
-        SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_SERVER, Context.MODE_PRIVATE);
-        long id = preferences.getLong(PREF_GLOBAL,-1);
+    public static long getUniqueId() {
+        Realm realm = OHRealm.realm();
+        Number num = realm.where(WidgetSettingsDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
+    }
 
-        WidgetSettingsDB notificationSettings = null;
+    public static WidgetSettingsDB loadGlobal(Realm realm){
 
-        if(id != -1) {
-            notificationSettings = WidgetSettingsDB.load(WidgetSettingsDB.class, id);
+        RealmResults<WidgetSettingsDB> result = realm.allObjects(WidgetSettingsDB.class);
+        WidgetSettingsDB widgetSettingsDB;
+        if(result.size() <= 0){
+            realm.beginTransaction();
+            widgetSettingsDB = realm.createObject(WidgetSettingsDB.class);
+            widgetSettingsDB.setId(WidgetSettingsDB.getUniqueId());
+            widgetSettingsDB.setTextSize(DEFAULT_TEXT_SIZE);
+            widgetSettingsDB.setIconSize(DEFAULT_ICON_SIZE);
+
+            realm.commitTransaction();
+        } else {
+            widgetSettingsDB = result.first();
         }
 
-        if(notificationSettings == null) {
-            notificationSettings = new WidgetSettingsDB();
-            notificationSettings.save();
-
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(PREF_GLOBAL, notificationSettings.getId());
-            editor.apply();
-        }
-
-        return notificationSettings;
+        return widgetSettingsDB;
     }
 }

@@ -1,5 +1,6 @@
 package treehou.se.habit.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,12 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.db.SitemapDB;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.util.Settings;
 
 public class SitemapListFragment extends Fragment {
@@ -34,11 +40,12 @@ public class SitemapListFragment extends Fragment {
     private static final String VOLLEY_TAG_SITEMAPS = "SitemapListFragmentSitemaps";
     private static final String ARG_SHOW_SITEMAP    = "showSitemap";
 
+    private Realm realm;
+
     private SitemapAdapter mSitemapAdapter;
     private Communicator communicator;
-    private SitemapDB showSitemap = null;
-
-    private SitemapsRequestCallback responseListener = new SitemapsRequestCallbackDummy();
+    private long showSitemapId = -1;
+    private ServerDB server;
 
     /**
      * Create fragment where user can select sitemap.
@@ -77,14 +84,12 @@ public class SitemapListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null){
-            showSitemap = null;
-        }else {
-            showSitemap = getArguments().containsKey(ARG_SHOW_SITEMAP) ? SitemapDB.load(SitemapDB.class, getArguments().getLong(ARG_SHOW_SITEMAP)) : null;
-        }
+        realm = Realm.getDefaultInstance();
+
+        if(savedInstanceState != null) showSitemapId = -1;
+        else showSitemapId = getArguments().getLong(ARG_SHOW_SITEMAP);
 
         communicator = Communicator.instance(getActivity());
-        mSitemapAdapter = new SitemapAdapter();
     }
 
     @Override
@@ -92,98 +97,46 @@ public class SitemapListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sitemaplist, container, false);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.sitemaps);
-        }
+        setupActionBar();
 
         RecyclerView mListView = (RecyclerView) view.findViewById(R.id.list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         mListView.setLayoutManager(gridLayoutManager);
         mListView.setItemAnimator(new DefaultItemAnimator());
 
+        mSitemapAdapter = new SitemapAdapter(getContext());
         mListView.setAdapter(mSitemapAdapter);
 
         return view;
+    }
+
+    /**
+     * Setup actionbar.
+     */
+    private void setupActionBar(){
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.sitemaps);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
+        Log.d(TAG, "Requesting sitemaps for " + servers.size() + " servers");
+
         mSitemapAdapter.clear();
-
-        responseListener = new SitemapsRequestCallback() {
-            @Override
-            public void onSuccess(ServerDB server, List<Sitemap> sitemaps) {
-
-                for (Sitemap sitemap : sitemaps) {
-                    if (!mSitemapAdapter.contains(sitemap)) {
-                        mSitemapAdapter.add(sitemap);
-                    }
-                    else if (sitemap.isLocal()) { // Prioritize sitemap on local sitemap if found.
-                        mSitemapAdapter.remove(sitemap);
-                        mSitemapAdapter.add(sitemap);
-                    }
-
-                    if (showSitemap != null && showSitemap.getServer() != null && showSitemap.getName() != null &&
-                            showSitemap.getServer().equals(sitemap.getServer()) &&
-                            showSitemap.getName().equals(sitemap.getName())) {
-
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.page_container, SitemapFragment.newInstance(sitemap))
-                                .addToBackStack(null)
-                                .commit();
-
-                        showSitemap = null;
-                    }
-                }
-                mSitemapAdapter.notifyDataSetChanged();
-                Log.d(TAG, "Received " + sitemaps.size() + " servers");
-            }
-
-            @Override
-            public void onFailure(ServerDB server, String message) {
-                if (message == null) {
-                    Log.w(TAG, "No server to connect to");
-                } else {
-                    Log.w(TAG, "Failed to connect to server " + message + " " + server.getUrl());
-                }
-
-                mSitemapAdapter.setServerState(server, SitemapItem.STATE_ERROR);
-            }
-        };
-
-        List<ServerDB> servers = ServerDB.getServers();
         for(final ServerDB server : servers){
             requestSitemap(server);
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        // Clear pending callbacks
-        responseListener = new SitemapsRequestCallbackDummy();
-    }
-
-    /**
-     * Handle callbacks for server sitemaps.
-     */
-    interface SitemapsRequestCallback {
-        void onSuccess(ServerDB server, List<Sitemap> sitemaps);
-        void onFailure(ServerDB server, String message);
-    }
-
-    class SitemapsRequestCallbackDummy implements SitemapsRequestCallback {
-
-        @Override
-        public void onSuccess(ServerDB server, List<Sitemap> sitemaps) {}
-
-        @Override
-        public void onFailure(ServerDB server, String message) {}
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     /**
@@ -194,19 +147,21 @@ public class SitemapListFragment extends Fragment {
      */
     private void requestSitemap(final ServerDB server){
 
+        Log.d(TAG, "Requesting Sitemap " + server.getName());
         mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
-        communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
+        Openhab.instance(server.toGeneric()).requestSitemaps(new OHCallback<List<OHSitemap>>() {
             @Override
-            public void onSuccess(List<Sitemap> sitemaps) {
-                for(Sitemap sitemap : sitemaps){
-                    sitemap.setServer(server);
+            public void onUpdate(final OHResponse<List<OHSitemap>> sitemaps) {
+                Log.d(TAG, "Received response sitemaps " + sitemaps.body().size());
+                for(OHSitemap sitemap : sitemaps.body()) {
+                    sitemap.setServer(server.toGeneric());
+                    mSitemapAdapter.add(server, sitemap);
                 }
-                responseListener.onSuccess(server, sitemaps);
             }
 
             @Override
-            public void onFailure(String message) {
-                responseListener.onFailure(server, message);
+            public void onError() {
+                Log.d(TAG, "Error Request sitemaps");
             }
         });
     }
@@ -218,19 +173,22 @@ public class SitemapListFragment extends Fragment {
 
         public ServerDB server;
         public int state = STATE_LOADING;
-        public List<Sitemap> sitemaps = new ArrayList<>();
+        public List<OHSitemap> sitemaps = new ArrayList<>();
 
         public SitemapItem(ServerDB server) {
             this.server = server;
         }
 
-        public void addItem(Sitemap sitemap){
+        public void addItem(OHSitemap sitemap){
             sitemaps.add(sitemap);
             state = STATE_SUCCESS;
         }
     }
 
     private class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>{
+
+        protected LayoutInflater inflater;
+        protected Context context;
 
         private Map<ServerDB, SitemapItem> items = new HashMap<>();
 
@@ -269,15 +227,21 @@ public class SitemapListFragment extends Fragment {
         public class GetResult {
 
             public SitemapItem item;
-            public Sitemap sitemap;
+            public OHSitemap sitemap;
 
-            public GetResult(SitemapItem item, Sitemap sitemap) {
+            public GetResult(SitemapItem item, OHSitemap sitemap) {
                 this.sitemap = sitemap;
                 this.item = item;
             }
         }
 
-        public SitemapAdapter() {}
+        public SitemapAdapter(Context context) {
+            if (context == null) {
+                throw new IllegalArgumentException("Context cannot be null");
+            }
+            this.context = context;
+            this.inflater = LayoutInflater.from(context);
+        }
 
         @Override
         public SitemapBaseHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
@@ -301,40 +265,37 @@ public class SitemapListFragment extends Fragment {
             int type = getItemViewType(position);
             final GetResult item = getItem(position);
 
+            final OHSitemap sitemap = item.sitemap;
+            final ServerDB server = item.item.server;
             if(SitemapItem.STATE_SUCCESS == type){
                 SitemapHolder holder = (SitemapHolder) sitemapHolder;
 
-                holder.lblName.setText(item.sitemap.getLabel());
-                holder.lblServer.setText(item.item.server.getDisplayName(getActivity()));
+                holder.lblName.setText(sitemap.getDisplayName());
+                holder.lblServer.setText(server.getDisplayName());
 
                 sitemapHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        GetResult item = getItem(sitemapHolder.getAdapterPosition());
-                        Sitemap sitemap = item.sitemap;
-
                         Settings settings = Settings.instance(getActivity());
-                        SitemapDB sitemapDB = new SitemapDB(sitemap);
-                        sitemapDB.save();
-                        settings.setDefaultSitemap(sitemapDB);
+                        settings.setDefaultSitemap(sitemap);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
-                                .replace(R.id.page_container, SitemapFragment.newInstance(sitemap))
+                                .replace(R.id.page_container, SitemapFragment.newInstance(server, sitemap))
                                 .addToBackStack(null)
                                 .commit();
                     }
                 });
             }else if(SitemapItem.STATE_LOADING == type){
                 SitemapLoadHolder holder = (SitemapLoadHolder) sitemapHolder;
-                holder.lblServer.setText(item.item.server.getDisplayName(getActivity()));
+                holder.lblServer.setText(server.getDisplayName());
             }else if(SitemapItem.STATE_ERROR == type){
                 SitemapErrorHolder holder = (SitemapErrorHolder) sitemapHolder;
-                holder.lblServer.setText(item.item.server.getDisplayName(getActivity()));
+                holder.lblServer.setText(server.getDisplayName());
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final GetResult item = getItem(sitemapHolder.getAdapterPosition());
-                        requestSitemap(item.item.server);
+                        /*final OHServer serverDB = OHServer.load(item.item.serverId);
+                        requestSitemap(serverDB);*/
                     }
                 });
             }
@@ -391,7 +352,7 @@ public class SitemapListFragment extends Fragment {
             int count = 0;
             for(SitemapItem item : items.values()){
                 if(SitemapItem.STATE_SUCCESS == item.state){
-                    for(Sitemap sitemap : item.sitemaps){
+                    for(OHSitemap sitemap : item.sitemaps){
                         if(count == position){
                             result = new GetResult(item, sitemap);
                             return result;
@@ -410,33 +371,39 @@ public class SitemapListFragment extends Fragment {
             return result;
         }
 
-        public void addAll(List<Sitemap> sitemaps){
-            for(Sitemap sitemap : sitemaps){
-                add(sitemap);
+        public void addAll(ServerDB server, List<OHSitemap> sitemapIds){
+            for(OHSitemap sitemap : sitemapIds){
+                add(server, sitemap);
             }
         }
 
-        public void add(Sitemap sitemap) {
-            SitemapItem item = items.get(sitemap.getServer());
+        public void add(ServerDB server, OHSitemap sitemap) {
+            SitemapItem item = items.get(server);
             if(item == null){
-                item = new SitemapItem(sitemap.getServer());
+                item = new SitemapItem(server);
                 items.put(item.server, item);
             }
-
-            int count = getItemCount();
             item.addItem(sitemap);
 
             notifyDataSetChanged();
         }
 
-        public void remove(Sitemap sitemap) {
+        /**
+         * Remove all sitemap entries from adapter.
+         */
+        public void clear(){
+            items.clear();
+            notifyItemRangeRemoved(0, items.size()-1);
+        }
+
+        public void remove(OHSitemap sitemap) {
             int pos = findPosition(sitemap);
             remove(sitemap, pos);
         }
 
-        public void remove(Sitemap sitemap, int position) {
-            SitemapItem item = items.get(sitemap.getServer());
-            if(item == null){
+        public void remove(OHSitemap sitemap, int position) {
+            SitemapItem item = null; // TODO items.get(serverDB.getId());
+            if(sitemap == null){
                 return;
             }
 
@@ -444,12 +411,12 @@ public class SitemapListFragment extends Fragment {
             notifyItemRemoved(position);
         }
 
-        private int findPosition(final Sitemap pSitemap){
+        private int findPosition(final OHSitemap sitemap){
             int count = 0;
             for(SitemapItem item : items.values()){
                 if(SitemapItem.STATE_SUCCESS == item.state){
-                    for(Sitemap sitemap : item.sitemaps){
-                        if(sitemap == pSitemap){
+                    for(OHSitemap sitemapIter : item.sitemaps){
+                        if(sitemap == sitemapIter){
                             return count;
                         }
                         count++;
@@ -461,25 +428,29 @@ public class SitemapListFragment extends Fragment {
             return -1;
         }
 
-        public void setServerState(ServerDB server, int state) {
+        /**
+         * Get a sitemap item. Creates a new server item if no item exists.
+         * @param server server to get sitemap item for.
+         * @return
+         */
+        private SitemapItem getItem(ServerDB server){
             SitemapItem item = items.get(server);
             if(item == null){
                 item = new SitemapItem(server);
                 items.put(server, item);
             }
+            return item;
+        }
+
+        public void setServerState(ServerDB server, int state) {
+            SitemapItem item = getItem(server);
             item.state = state;
 
             notifyDataSetChanged();
         }
 
-        public boolean contains(Sitemap sitemap){
+        public boolean contains(OHSitemap sitemap){
             return items.containsKey(sitemap.getServer()) && items.get(sitemap.getServer()).sitemaps.contains(sitemap);
-        }
-
-        public void clear(){
-            int last = items.size()-1;
-            items.clear();
-            notifyItemRangeRemoved(0, last);
         }
     }
 }

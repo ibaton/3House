@@ -16,10 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.Sitemap;
 
 public class SitemapSelectorFragment extends Fragment {
 
@@ -67,7 +70,7 @@ public class SitemapSelectorFragment extends Fragment {
     }
 
     public interface OnSitemapSelectListener {
-        void onSitemapSelect(Sitemap sitemap);
+        void onSitemapSelect(OHSitemap sitemap);
     }
 
     @Override
@@ -76,23 +79,24 @@ public class SitemapSelectorFragment extends Fragment {
 
         mSitemapAdapter.clear();
 
-        List<ServerDB> servers = ServerDB.getServers();
-        for(final ServerDB server : servers){
+        /*test List<OHSitemap> servers = OHSitemap.loadAll();
+        for(final OHSitemap server : servers){
             requestSitemap(server);
-        }
+        }*/
     }
 
-    private void requestSitemap(final ServerDB server){
+    private void requestSitemap(final OHServer server){
 
         mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
-        communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
+        Openhab.instance(server).requestSitemaps(new OHCallback<List<OHSitemap>>() {
             @Override
-            public void onSuccess(List<Sitemap> sitemaps) {
-                for (Sitemap sitemap : sitemaps) {
+            public void onUpdate(OHResponse<List<OHSitemap>> items) {
+                List<OHSitemap> sitemaps = items.body();
+                for (OHSitemap sitemap : sitemaps) {
                     sitemap.setServer(server);
                     if (!mSitemapAdapter.contains(sitemap)) {
                         mSitemapAdapter.add(sitemap);
-                    } else if (sitemap.isLocal()) {
+                    } else if (OHSitemap.isLocal(sitemap)) {
                         mSitemapAdapter.remove(sitemap);
                         mSitemapAdapter.add(sitemap);
                     }
@@ -102,13 +106,7 @@ public class SitemapSelectorFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(String message) {
-                if (message == null) {
-                    Log.w(TAG, "No server to connect to");
-                } else {
-                    Log.w(TAG, "Failed to connect to server " + message + " " + server.getUrl());
-                }
-
+            public void onError() {
                 mSitemapAdapter.setServerState(server, SitemapItem.STATE_ERROR);
             }
         });
@@ -120,15 +118,15 @@ public class SitemapSelectorFragment extends Fragment {
         public static final int STATE_LOADING = 1;
         public static final int STATE_ERROR = 2;
 
-        public ServerDB server;
+        public OHServer server;
         public int state = STATE_LOADING;
-        public List<Sitemap> sitemaps = new ArrayList<>();
+        public List<OHSitemap> sitemaps = new ArrayList<>();
 
-        public SitemapItem(ServerDB server) {
+        public SitemapItem(OHServer server) {
             this.server = server;
         }
 
-        public void addItem(Sitemap sitemap){
+        public void addItem(OHSitemap sitemap){
             sitemaps.add(sitemap);
             state = STATE_SUCCESS;
         }
@@ -136,7 +134,7 @@ public class SitemapSelectorFragment extends Fragment {
 
     class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>{
 
-        private Map<ServerDB, SitemapItem> items = new HashMap<>();
+        private Map<OHServer, SitemapItem> items = new HashMap<>();
 
         public class SitemapBaseHolder extends RecyclerView.ViewHolder {
 
@@ -173,9 +171,9 @@ public class SitemapSelectorFragment extends Fragment {
         public class GetResult {
 
             public SitemapItem item;
-            public Sitemap sitemap;
+            public OHSitemap sitemap;
 
-            public GetResult(SitemapItem item, Sitemap sitemap) {
+            public GetResult(SitemapItem item, OHSitemap sitemap) {
                 this.sitemap = sitemap;
                 this.item = item;
             }
@@ -207,7 +205,7 @@ public class SitemapSelectorFragment extends Fragment {
 
             if(SitemapItem.STATE_SUCCESS == type){
                 SitemapHolder holder = (SitemapHolder) sitemapHolder;
-                final Sitemap sitemap = item.sitemap;
+                final OHSitemap sitemap = item.sitemap;
 
                 holder.lblName.setText(item.sitemap.getName());
                 holder.lblServer.setText(item.sitemap.getServer().getName());
@@ -282,7 +280,7 @@ public class SitemapSelectorFragment extends Fragment {
             int count = 0;
             for(SitemapItem item : items.values()){
                 if(SitemapItem.STATE_SUCCESS == item.state){
-                    for(Sitemap sitemap : item.sitemaps){
+                    for(OHSitemap sitemap : item.sitemaps){
                         if(count == position){
                             result = new GetResult(item, sitemap);
                             return result;
@@ -301,13 +299,13 @@ public class SitemapSelectorFragment extends Fragment {
             return result;
         }
 
-        public void addAll(List<Sitemap> sitemaps){
-            for(Sitemap sitemap : sitemaps){
+        public void addAll(List<OHSitemap> sitemaps){
+            for(OHSitemap sitemap : sitemaps){
                 add(sitemap);
             }
         }
 
-        public void add(Sitemap sitemap) {
+        public void add(OHSitemap sitemap) {
             SitemapItem item = items.get(sitemap.getServer());
             if(item == null){
                 item = new SitemapItem(sitemap.getServer());
@@ -321,12 +319,12 @@ public class SitemapSelectorFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public void remove(Sitemap sitemap) {
+        public void remove(OHSitemap sitemap) {
             int pos = findPosition(sitemap);
             remove(sitemap, pos);
         }
 
-        public void remove(Sitemap sitemap, int position) {
+        public void remove(OHSitemap sitemap, int position) {
             SitemapItem item = items.get(sitemap.getServer());
             if(item == null){
                 return;
@@ -336,11 +334,11 @@ public class SitemapSelectorFragment extends Fragment {
             notifyItemRemoved(position);
         }
 
-        private int findPosition(final Sitemap pSitemap){
+        private int findPosition(final OHSitemap pSitemap){
             int count = 0;
             for(SitemapItem item : items.values()){
                 if(SitemapItem.STATE_SUCCESS == item.state){
-                    for(Sitemap sitemap : item.sitemaps){
+                    for(OHSitemap sitemap : item.sitemaps){
                         if(sitemap == pSitemap){
                             return count;
                         }
@@ -353,7 +351,7 @@ public class SitemapSelectorFragment extends Fragment {
             return -1;
         }
 
-        public void setServerState(ServerDB server, int state) {
+        public void setServerState(OHServer server, int state) {
             SitemapItem item = items.get(server);
             if(item == null){
                 item = new SitemapItem(server);
@@ -364,7 +362,7 @@ public class SitemapSelectorFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public boolean contains(Sitemap sitemap){
+        public boolean contains(OHSitemap sitemap){
             return items.containsKey(sitemap.getServer()) && items.get(sitemap.getServer()).sitemaps.contains(sitemap);
         }
 

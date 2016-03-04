@@ -44,6 +44,7 @@
                     <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lines="1"
                         android:id="@+id/txt_server_name" />
 
                     <android.support.v7.widget.AppCompatTextView
@@ -57,24 +58,26 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/server_local"
-                        android:inputType="textUri"
                         android:id="@+id/hdr_server_local"/>
 
                     <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textUri"
+                        android:lines="1"
                         android:id="@+id/txt_server_local"/>
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/server_remote"
-                        android:inputType="textUri"
                         android:id="@+id/hdr_server_remote"/>
 
                     <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:inputType="textUri"
                         android:id="@+id/txt_server_remote" />
 
                     <android.support.v7.widget.AppCompatTextView
@@ -93,6 +96,7 @@
                     <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:lines="1"
                         android:id="@+id/txt_username"/>
 
                     <android.support.v7.widget.AppCompatTextView
@@ -105,6 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
+                        android:lines="1"
                         android:id="@+id/txt_password"/>
 
                 </LinearLayout>

@@ -2,7 +2,8 @@ package treehou.se.habit.tasker.boundle;
 
 import android.os.Bundle;
 
-import treehou.se.habit.core.db.SitemapDB;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.OpenSitemapReciever;
 

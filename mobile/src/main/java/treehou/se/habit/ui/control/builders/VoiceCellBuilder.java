@@ -10,22 +10,25 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.VoiceCellDB;
-import treehou.se.habit.ui.ViewHelper;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.VoiceCellDB;
+import treehou.se.habit.ui.homescreen.VoiceService;
+import treehou.se.habit.ui.util.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
-import treehou.se.habit.ui.homescreen.VoiceService;
 
 public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "VoiceCellBuilder";
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
-        final VoiceCellDB voiceCell = cell.voiceCell();
+        Realm realm = Realm.getDefaultInstance();
+        final VoiceCellDB voiceCell = VoiceCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -44,7 +47,9 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
                     return;
                 }
 
-                Intent callbackIntent = VoiceService.createVoiceCommand(context, voiceCell.getItem().getServer());
+                ServerDB server = voiceCell.getItem().getServer();
+
+                Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
                 PendingIntent openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -69,7 +74,8 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
-        final VoiceCellDB voiceCell = cell.voiceCell();
+        Realm realm = Realm.getDefaultInstance();
+        final VoiceCellDB voiceCell = VoiceCellDB.getCell(realm, cell);
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
@@ -82,7 +88,9 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
             return cellView;
         }
 
-        Intent callbackIntent = VoiceService.createVoiceCommand(context, voiceCell.getItem().getServer());
+        ServerDB server = voiceCell.getItem().getServer();
+
+        Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);

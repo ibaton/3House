@@ -1,10 +1,15 @@
 package se.treehou.ng.ohcommunicator.connector;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Random;
+
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 
 public class ConnectorUtil {
 
@@ -34,4 +39,27 @@ public class ConnectorUtil {
         return auth;
     }
 
+    public static String buildChartRequestString(String baseUrl, OHWidget widget){
+
+        if(widget.getItem() == null){
+            return "";
+        }
+
+        Random random = new Random();
+        String type = widget.getItem().getType().equals(OHWidget.TYPE_GROUP) ? "groups" : "items";
+        Uri.Builder uriBuilder = Uri.parse(baseUrl+Constants.CHART_URL).buildUpon()
+                .appendQueryParameter(type, widget.getItem().getName())
+                .appendQueryParameter("period", widget.getPeriod())
+                .appendQueryParameter("random",String.valueOf(Math.abs(random.nextInt())));
+
+        if(!TextUtils.isEmpty(widget.getService())){
+            uriBuilder.appendQueryParameter("service", widget.getService());
+        }
+        Uri builtUri = uriBuilder.build();
+        builtUri = changeHostUrl(builtUri, Uri.parse(widget.getItem().getLink()));
+
+        Log.d(TAG, "Creating chart url " + builtUri.toString());
+
+        return builtUri.toString();
+    }
 }

@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 public class CellFactory<T> {
 

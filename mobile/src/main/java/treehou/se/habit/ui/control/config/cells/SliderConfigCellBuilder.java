@@ -10,10 +10,11 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -23,8 +24,8 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
     private static final String TAG = "SliderConfigCellBuilder";
 
     public View build(Context context, ControllerDB controller, CellDB cell){
-
-        SliderCellDB numberCell = cell.sliderCell();
+        Realm realm = Realm.getDefaultInstance();
+        SliderCellDB numberCell = SliderCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -46,6 +47,7 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
             ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon);
             imgIcon.setImageDrawable(icon);
         }
+        realm.close();
 
         return cellView;
     }

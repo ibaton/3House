@@ -1,17 +1,15 @@
 package treehou.se.habit.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,14 +17,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import treehou.se.habit.Constants;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.adapter.ServersAdapter;
 import treehou.se.habit.ui.settings.SetupServerFragment;
 
 public class ServersFragment extends Fragment {
@@ -35,12 +32,17 @@ public class ServersFragment extends Fragment {
 
     private static final String STATE_INITIALIZED = "state_initialized";
 
-    private ServersAdapter serversAdapter;
     private ViewGroup container;
 
+    private RecyclerView lstServer;
     private View viwEmpty;
 
+    private ServersAdapter serversAdapter;
+
+    private FloatingActionButton fabAdd;
+
     private boolean initialized = false;
+    private Realm realm;
 
     public static ServersFragment newInstance() {
         ServersFragment fragment = new ServersFragment();
@@ -49,26 +51,89 @@ public class ServersFragment extends Fragment {
         return fragment;
     }
 
-    public ServersFragment() {
-        // Required empty public constructor
-    }
+    public ServersFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         if(savedInstanceState != null){
             initialized = savedInstanceState.getBoolean(STATE_INITIALIZED, false);
         }
+    }
 
-        serversAdapter = new ServersAdapter(getActivity());
-        serversAdapter.addAll(ServerDB.getServers());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        this.container = container;
+
+        View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
+
+        viwEmpty = rootView.findViewById(R.id.empty);
+        viwEmpty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startNewServerFlow();
+            }
+        });
+
+        fabAdd = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startNewServerFlow();
+            }
+        });
+
+        setupActionbar();
+
+        lstServer = (RecyclerView) rootView.findViewById(R.id.list);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
+        lstServer.setLayoutManager(gridLayoutManager);
+        lstServer.setItemAnimator(new DefaultItemAnimator());
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setup();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
+    /**
+     * Hookup actionbar
+     */
+    private void setupActionbar(){
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.servers);
+        }
+        setHasOptionsMenu(true);
+    }
+
+
+    private void setup(){
+        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
+        Log.d(TAG, "Loaded " + servers.size() + " servers");
+
+        serversAdapter = new ServersAdapter(getContext(), servers);
         serversAdapter.setItemListener(new ServersAdapter.ItemListener() {
             @Override
             public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
                 final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.page_container, SetupServerFragment.newInstance(server))
+                        .replace(R.id.page_container, SetupServerFragment.newInstance(server.getId()))
                         .addToBackStack(null)
                         .commit();
             }
@@ -90,7 +155,7 @@ public class ServersFragment extends Fragment {
                                         break;
                                     case 1:
                                         getActivity().getSupportFragmentManager().beginTransaction()
-                                                .replace(container.getId(), InboxListFragment.newInstance(ServerDB.toGeneric(server)))
+                                                .replace(container.getId(), InboxListFragment.newInstance(server))
                                                 .addToBackStack(null)
                                                 .commit();
                                         break;
@@ -109,51 +174,7 @@ public class ServersFragment extends Fragment {
                 updateEmptyView(itemCount);
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        this.container = container;
-
-        View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
-
-        viwEmpty = rootView.findViewById(R.id.empty);
-        viwEmpty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startNewServerProcess();
-            }
-        });
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.servers);
-        }
-
-        final RecyclerView lstServer = (RecyclerView) rootView.findViewById(R.id.list);
         lstServer.setAdapter(serversAdapter);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
-        lstServer.setLayoutManager(gridLayoutManager);
-        lstServer.setItemAnimator(new DefaultItemAnimator());
-
-        setHasOptionsMenu(true);
-
-        return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        setup();
-    }
-
-    private void setup(){
-        serversAdapter.clear();
-        serversAdapter.addAll(ServerDB.getServers());
 
         if(!initialized && serversAdapter.getItemCount() <= 0){
             showScanServerFlow();
@@ -174,8 +195,6 @@ public class ServersFragment extends Fragment {
                 .show();
     }
 
-
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.servers, menu);
@@ -185,9 +204,6 @@ public class ServersFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_add_server:
-                startNewServerProcess();
-                break;
             case R.id.action_scan_for_server:
                 openServerScan();
                 break;
@@ -196,13 +212,19 @@ public class ServersFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startNewServerProcess(){
+    /**
+     * Launch flow for creating new server.
+     */
+    private void startNewServerFlow(){
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.page_container, SetupServerFragment.newInstance())
                 .addToBackStack(null)
                 .commit();
     }
 
+    /**
+     * Launch flow used to scan for server on network.
+     */
     private void openServerScan(){
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.page_container, ScanServersFragment.newInstance())
@@ -210,14 +232,24 @@ public class ServersFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * Launchs flow asking user to remove or keep server.
+     * @param serverHolder holder that triggered flow.
+     * @param server the server to remove.
+     */
     private void showRemoveDialog(final ServersAdapter.ServerHolder serverHolder, final ServerDB server){
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.remove_server_question)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        serversAdapter.removeItem(serverHolder.getAdapterPosition());
-                        server.delete();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                server.removeFromRealm();
+                                serversAdapter.notifyItemRemoved(serverHolder.getAdapterPosition());
+                            }
+                        });
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -237,125 +269,4 @@ public class ServersFragment extends Fragment {
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 
-    public static class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder>{
-
-        private List<ServerDB> items = new ArrayList<>();
-        private Context context;
-
-        private ItemListener itemListener = new DummyItemListener();
-
-        public class ServerHolder extends RecyclerView.ViewHolder {
-            public final TextView lblName;
-
-            public ServerHolder(View view) {
-                super(view);
-                lblName = (TextView) view.findViewById(R.id.lbl_server);
-            }
-        }
-
-        public ServersAdapter(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public ServerHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_server, null);
-
-            return new ServerHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final ServerHolder serverHolder, final int position) {
-            ServerDB server = items.get(position);
-
-            serverHolder.lblName.setText(server.getDisplayName(context));
-            serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.onItemClickListener(serverHolder);
-                }
-            });
-            serverHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return itemListener.onItemLongClickListener(serverHolder);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        public ServerDB getItem(int position) {
-            return items.get(position);
-        }
-
-        interface ItemListener{
-
-            void onItemClickListener(ServerHolder serverHolder);
-
-            boolean onItemLongClickListener(ServerHolder serverHolder);
-
-            void itemCountUpdated(int itemCount);
-        }
-
-        public class DummyItemListener implements ItemListener {
-
-            @Override
-            public void onItemClickListener(ServerHolder serverHolder) {}
-
-            @Override
-            public boolean onItemLongClickListener(ServerHolder serverHolder) {
-                return false;
-            }
-
-            @Override
-            public void itemCountUpdated(int itemCount) {}
-        }
-
-        public void setItemListener(ItemListener itemListener) {
-            if(itemListener == null){
-                this.itemListener = new DummyItemListener();
-                return;
-            }
-            this.itemListener = itemListener;
-        }
-
-        public void addItem(ServerDB item) {
-            items.add(0, item);
-            notifyItemInserted(0);
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void addAll(List<ServerDB> items) {
-            for(ServerDB item : items) {
-                this.items.add(0, item);
-                notifyItemRangeInserted(0, items.size());
-            }
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void removeItem(int position) {
-            Log.d(TAG, "removeItem: " + position);
-            items.remove(position);
-            notifyItemRemoved(position);
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void removeItem(ServerDB item) {
-            int position = items.indexOf(item);
-            items.remove(position);
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void clear() {
-            this.items.clear();
-            notifyDataSetChanged();
-            itemListener.itemCountUpdated(items.size());
-        }
-    }
 }

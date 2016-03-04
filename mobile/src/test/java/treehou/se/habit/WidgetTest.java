@@ -10,13 +10,11 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.StateDescription;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
-import treehou.se.habit.ui.widgets.factories.SwitchWidgetFactory;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, packageName = "treehou.se.habit", sdk = 21)
@@ -28,16 +26,16 @@ public class WidgetTest {
     @Before
     public void setUp() {
         MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().get();
-        ServerDB server = new ServerDB();
+        OHServer server = new OHServer();
         server.setName("Home");
 
-        LinkedPage page = new LinkedPage();
+        OHLinkedPage page = new OHLinkedPage();
         page.setId("");
         page.setLink("");
         page.setTitle("");
-        page.setWidgets(new ArrayList<Widget>());
+        page.setWidgets(new ArrayList<OHWidget>());
 
-        factory = new WidgetFactory(activity, server, page);
+        //factory = new WidgetFactory(activity, server, page);
     }
 
     @After
@@ -47,10 +45,10 @@ public class WidgetTest {
     @Test
     public void check_name_is_correct() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_SWITCH);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_SWITCH);
 
-        ItemDB item = new ItemDB();
+        OHItem item = new OHItem();
         widget.setItem(item);
 
         widget.setLabel("Widget Name");
