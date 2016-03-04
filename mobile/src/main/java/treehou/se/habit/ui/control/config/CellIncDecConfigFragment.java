@@ -17,8 +17,11 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHItem;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.db.ServerDB;
@@ -42,8 +45,8 @@ public class CellIncDecConfigFragment extends Fragment {
     private EditText txtValue;
     private ImageButton btnSetIcon;
 
-    private ArrayAdapter<ItemDB> mItemAdapter ;
-    private ArrayList<ItemDB> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
 
     public static CellIncDecConfigFragment newInstance(CellDB cell) {
         CellIncDecConfigFragment fragment = new CellIncDecConfigFragment();
@@ -72,7 +75,6 @@ public class CellIncDecConfigFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,8 +94,9 @@ public class CellIncDecConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ItemDB item = mItems.get(position);
-                if(item != null) {
+                OHItem genericItem = mItems.get(position);
+                if(genericItem != null) {
+                    ItemDB item = ItemDB.createFrom(genericItem);
                     item.save();
 
                     numberCell.setItem(item);
@@ -111,26 +114,28 @@ public class CellIncDecConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        Communicator communicator = Communicator.instance(getActivity());
         List<ServerDB> servers = ServerDB.getServers();
         mItems.clear();
         if(numberCell.getItem() != null) {
-            mItems.add(numberCell.getItem());
+            mItems.add(ItemDB.toGeneric(numberCell.getItem()));
         }
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
+        for(final ServerDB server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
+                    Openhab.instance(ServerDB.toGeneric(server)).deregisterItemsListener(this);
                 }
 
                 @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
+                public void onError() {
+
                 }
-            });
+            };
+
+            Openhab.instance(ServerDB.toGeneric(server)).registerItemsListener(callback);
         }
 
         btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
@@ -150,10 +155,10 @@ public class CellIncDecConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
             if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }

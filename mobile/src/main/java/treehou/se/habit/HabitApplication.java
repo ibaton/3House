@@ -1,12 +1,14 @@
 package treehou.se.habit;
 
+import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 //import android.support.multidex.MultiDex;
 
 import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.TrustModifier;
 
-public class HabitApplication extends com.activeandroid.app.Application {
+public class HabitApplication extends Application /*com.activeandroid.app.Application*/ {
 
     @Override
     public void onCreate() {
@@ -23,7 +25,7 @@ public class HabitApplication extends com.activeandroid.app.Application {
         Openhab.setup(base);
 
         try {
-            //MultiDex.install(this);
+            MultiDex.install(this);
         } catch (RuntimeException multiDexException) {
             // Work around Robolectric causing multi dex installation to fail, see
             // https://code.google.com/p/android/issues/detail?id=82007.

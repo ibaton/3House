@@ -30,7 +30,8 @@ import java.util.Map;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.core.OHInboxItem;
 import se.treehou.ng.ohcommunicator.core.OHServer;
-import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.GsonHelper;
 
@@ -42,7 +43,7 @@ public class InboxListFragment extends Fragment {
 
     private OHServer server;
     private InboxAdapter adapter;
-    private Callback1<List<OHInboxItem>> inboxCallback;
+    private OHCallback<List<OHInboxItem>> inboxCallback;
 
     private boolean showIgnored = false;
     private MenuItem actionHide;
@@ -68,10 +69,10 @@ public class InboxListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         server = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_SERVER), OHServer.class);
-        inboxCallback = new Callback1<List<OHInboxItem>>() {
+        inboxCallback = new OHCallback<List<OHInboxItem>>() {
             @Override
-            public void onUpdate(List<OHInboxItem> items) {
-                setItems(items, showIgnored);
+            public void onUpdate(OHResponse<List<OHInboxItem>> response) {
+                setItems(response.body(), showIgnored);
             }
 
             @Override
@@ -173,6 +174,9 @@ public class InboxListFragment extends Fragment {
      * @param showIgnored true to filter out ignored items.
      */
     private void setItems(List<OHInboxItem> items, boolean showIgnored){
+
+        Log.d(TAG, "Received items " + items);
+
         adapter.clear();
         if (!showIgnored) {
             for (Iterator<OHInboxItem> it = items.iterator(); it.hasNext();) {

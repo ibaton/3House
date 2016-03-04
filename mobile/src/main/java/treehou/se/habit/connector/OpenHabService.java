@@ -26,12 +26,4 @@ public interface OpenHabService {
     @Headers("Accept: application/json")
     @GET("/")
     void getPage(retrofit.Callback<LinkedPage> callback);
-
-    @Headers("Accept: application/json")
-    @GET("/rest/items/")
-    void getItems(retrofit.Callback<List<ItemDB>> callback);
-
-    @Headers("Accept: application/json")
-    @GET("/rest/items/{id}")
-    void getItem(@Path("id") String id, retrofit.Callback<ItemDB> callback);
 }

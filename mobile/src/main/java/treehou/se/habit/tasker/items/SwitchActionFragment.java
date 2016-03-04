@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,11 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHItem;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.ItemDB;
@@ -29,8 +31,8 @@ public class SwitchActionFragment extends Fragment {
     private Spinner sprItems;
     private ToggleButton tglOnOff;
 
-    private ArrayAdapter<ItemDB> itemAdapter;
-    private List<ItemDB> filteredItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> itemAdapter;
+    private List<OHItem> filteredItems = new ArrayList<>();
 
     public static SwitchActionFragment newInstance() {
         SwitchActionFragment fragment = new SwitchActionFragment();
@@ -63,24 +65,26 @@ public class SwitchActionFragment extends Fragment {
                 sprItems.setAdapter(itemAdapter);
             }
         });
-        Communicator communicator = Communicator.instance(getActivity());
         List<ServerDB> servers = ServerDB.getServers();
         filteredItems.clear();
 
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
+        for(final ServerDB server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
+                    Openhab.instance(ServerDB.toGeneric(server)).deregisterItemsListener(this);
                 }
 
                 @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
+                public void onError() {
+
                 }
-            });
+            };
+
+            Openhab.instance(ServerDB.toGeneric(server)).registerItemsListener(callback);
         }
 
         tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);
@@ -97,10 +101,10 @@ public class SwitchActionFragment extends Fragment {
         return rootView;
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
             if(treehou.se.habit.Constants.SUPPORT_SWITCH.contains(item.getType())){
                 tempItems.add(item);
             }

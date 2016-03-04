@@ -38,7 +38,9 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'org.atmosphere:wasync:2.1.2'
+    compile 'com.koushikdutta.async:androidasync:2.1.7'
+    compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'javax.jmdns:jmdns:3.4.1'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.4'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'

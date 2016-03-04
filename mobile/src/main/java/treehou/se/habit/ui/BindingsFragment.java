@@ -21,7 +21,8 @@ import java.util.List;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.core.OHBinding;
 import se.treehou.ng.ohcommunicator.core.OHServer;
-import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.models.Binding;
@@ -40,11 +41,11 @@ public class BindingsFragment extends Fragment {
 
     private List<OHBinding> bindings = new ArrayList<>();
 
-    private Callback1<List<OHBinding>> bindingListener = new Callback1<List<OHBinding>>(){
+    private OHCallback<List<OHBinding>> bindingListener = new OHCallback<List<OHBinding>>(){
 
         @Override
-        public void onUpdate(List<OHBinding> newBindings) {
-            bindings = newBindings;
+        public void onUpdate(OHResponse<List<OHBinding>> response) {
+            bindings = response.body();
             bindingAdapter.setBindings(bindings);
         }
 

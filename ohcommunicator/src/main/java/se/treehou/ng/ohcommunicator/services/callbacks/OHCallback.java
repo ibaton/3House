@@ -1,5 +1,6 @@
 package se.treehou.ng.ohcommunicator.services.callbacks;
 
-public interface Callback {
+public interface OHCallback<G> {
+    void onUpdate(OHResponse<G> items);
     void onError();
 }

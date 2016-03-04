@@ -5,12 +5,10 @@ import android.content.Context;
 import java.util.List;
 import java.util.Map;
 
-import se.treehou.ng.ohcommunicator.core.OHBinding;
-import se.treehou.ng.ohcommunicator.core.OHInboxItem;
 import se.treehou.ng.ohcommunicator.core.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.Scanner;
-import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 
 public class Openhab {
 
@@ -41,11 +39,11 @@ public class Openhab {
         return instance.connector.getServerHandler(server);
     }
 
-    public static void registerServerDiscoveryListener(Callback1<List<OHServer>> listener){
+    public static void registerServerDiscoveryListener(OHCallback<List<OHServer>> listener){
         instance.scanner.registerServerDiscoveryListener(listener);
     }
 
-    public static void deregisterServerDiscoveryListener(Callback1<List<OHServer>> listener){
+    public static void deregisterServerDiscoveryListener(OHCallback<List<OHServer>> listener){
         instance.scanner.deregisterServerDiscoveryListener(listener);
     }
 }

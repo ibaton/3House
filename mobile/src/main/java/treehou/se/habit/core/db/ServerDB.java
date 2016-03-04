@@ -1,23 +1,16 @@
 package treehou.se.habit.core.db;
 
-import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
-
 import java.util.List;
 
+import io.realm.RealmObject;
 import se.treehou.ng.ohcommunicator.core.OHServer;
 import treehou.se.habit.R;
 
-@Table(name = "Server")
-public class ServerDB extends Model {
+public class ServerDB extends RealmObject {
 
-    @Column(name = "name")
     private String name = "";
 
     @Column(name = "username")

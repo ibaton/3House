@@ -1,16 +1,6 @@
-package treehou.se.habit.core.db;
+package se.treehou.ng.ohcommunicator.core;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-
-import java.util.List;
-
-import se.treehou.ng.ohcommunicator.core.OHItem;
-import se.treehou.ng.ohcommunicator.core.OHServer;
-
-@Table(name = "Items")
-public class ItemDB extends Model {
+public class OHItem {
 
     public static final String TYPE_SWITCH          = "SwitchItem";
     public static final String TYPE_STRING          = "StringItem";
@@ -21,51 +11,21 @@ public class ItemDB extends Model {
     public static final String TYPE_GROUP           = "GroupItem";
     public static final String TYPE_DIMMER          = "DimmerItem";
 
-    @Column(name = "Server", onDelete = Column.ForeignKeyAction.CASCADE)
-    private ServerDB server;
-
-    @Column(name = "type")
+    private OHServer server;
     private String type = "";
-
-    @Column(name = "name")
     private String name = "";
-
-    @Column(name = "link")
     private String link = "";
-
-    @Column(name = "state")
     private String state = "";
 
-    private StateDescription stateDescription;
+    private OHStateDescription stateDescription;
 
-    public ItemDB() {}
+    public OHItem() {}
 
-    public static ItemDB createFrom(OHItem item){
-        ItemDB itemDB = new ItemDB();
-        itemDB.setName(item.getName());
-        itemDB.setType(item.getType());
-        itemDB.setLink(item.getLink());
-        itemDB.setState(item.getState());
-
-        return itemDB;
-    }
-
-    public static OHItem toGeneric(ItemDB item){
-        OHItem ohItem = new OHItem();
-        ohItem.setName(item.getName());
-        ohItem.setType(item.getType());
-        ohItem.setLink(item.getLink());
-        ohItem.setState(item.getState());
-
-        return ohItem;
-    }
-
-
-    public ServerDB getServer() {
+    public OHServer getServer() {
         return server;
     }
 
-    public void setServer(ServerDB server) {
+    public void setServer(OHServer server) {
         this.server = server;
     }
 
@@ -101,16 +61,12 @@ public class ItemDB extends Model {
         this.state = state;
     }
 
-    public StateDescription getStateDescription() {
+    public OHStateDescription getStateDescription() {
         return stateDescription;
     }
 
-    public void setStateDescription(StateDescription stateDescription) {
+    public void setStateDescription(OHStateDescription stateDescription) {
         this.stateDescription = stateDescription;
-    }
-
-    public class ItemHolder{
-        public List<ItemDB> item;
     }
 
     public String getFormatedValue(){
@@ -151,9 +107,9 @@ public class ItemDB extends Model {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof ItemDB))return false;
+        if (!(obj instanceof OHItem))return false;
 
-        ItemDB item = (ItemDB) obj;
+        OHItem item = (OHItem) obj;
         return type.equals(item.getType()) && name.equals(item.getName());
     }
 }

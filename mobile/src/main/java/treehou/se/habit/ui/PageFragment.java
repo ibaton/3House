@@ -206,13 +206,14 @@ public class PageFragment extends Fragment {
                     .encoder(new Encoder<String, Reader>() {        // Stream the request body
                         @Override
                         public Reader encode(String s) {
-                            Log.d(TAG, "RequestBuilder encode");
+                            Log.d(TAG, "wasync RequestBuilder encode");
                             return new StringReader(s);
                         }
                     })
                     .decoder(new Decoder<String, LinkedPage>() {
                         @Override
                         public LinkedPage decode(Event e, String s) {
+                            Log.d(TAG, "wasync Decoder " + s);
                             Gson gson = GsonHelper.createGsonBuilder();
                             return gson.fromJson(s, LinkedPage.class);
                         }
@@ -225,20 +226,20 @@ public class PageFragment extends Fragment {
 
                 pollSocket = client.create(optBuilder.build());
                 try {
-                    Log.d(TAG, "Socket " + pollSocket + " " + request.uri());
+                    Log.d(TAG, "wasync Socket " + pollSocket + " " + request.uri());
                     pollSocket.on(new Function<LinkedPage>() {
                         @Override
                         public void on(LinkedPage page) {
-                            Log.d(TAG, "Socket received");
+                            Log.d(TAG, "wasync Socket received");
                             updatePage(page);
                         }
                     })
                     .open(request.build());
                 } catch (IOException | ExceptionInInitializerError e) {
-                    Log.d(TAG, "Got error " + e);
+                    Log.d(TAG, "wasync Got error " + e);
                 }
 
-                Log.d(TAG,"Poller started");
+                Log.d(TAG,"wasync Poller started");
 
                 return null;
             }

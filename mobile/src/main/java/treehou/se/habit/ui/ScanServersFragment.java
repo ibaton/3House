@@ -20,7 +20,8 @@ import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.core.OHServer;
-import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.ServerDB;
 
@@ -32,7 +33,7 @@ public class ScanServersFragment extends Fragment {
 
     private View viwEmpty;
 
-    private Callback1<List<OHServer>> discoveryListener;
+    private OHCallback<List<OHServer>> discoveryListener;
 
     public static ScanServersFragment newInstance() {
         ScanServersFragment fragment = new ScanServersFragment();
@@ -95,14 +96,14 @@ public class ScanServersFragment extends Fragment {
         super.onResume();
 
         serversAdapter.clear();
-        discoveryListener = new Callback1<List<OHServer>>() {
+        discoveryListener = new OHCallback<List<OHServer>>() {
             @Override
-            public void onUpdate(final List<OHServer> servers) {
+            public void onUpdate(final OHResponse<List<OHServer>> response) {
                 if(isAdded()){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            for (OHServer server : servers) {
+                            for (OHServer server : response.body()) {
                                 serversAdapter.addItem(ServerDB.createFrom(server));
                             }
                         }

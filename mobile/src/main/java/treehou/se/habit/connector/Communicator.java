@@ -26,7 +26,9 @@ import java.util.Map;
 
 import retrofit.RetrofitError;
 import se.treehou.ng.ohcommunicator.Openhab;
-import treehou.se.habit.connector.models.Binding;
+import se.treehou.ng.ohcommunicator.core.OHItem;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.LinkedPage;
@@ -94,37 +96,40 @@ public class Communicator {
     }
 
     public void incDec(final ServerDB server, final ItemDB item, final int value, final int min, final int max){
-        requestItem(server, item.getName(), new ItemRequestListener() {
+
+        OHCallback<OHItem> callback = new OHCallback<OHItem>() {
             @Override
-            public void onSuccess(ItemDB newItem) {
-                Log.d(TAG, "Item state " + newItem.getState() + " " + newItem.getType());
-                String state = newItem.getState();
-                if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.getType())) {
+            public void onUpdate(OHResponse<OHItem> newItem) {
+                Log.d(TAG, "Item state " + newItem.body().getState() + " " + newItem.body().getType());
+                String state = newItem.body().getState();
+                if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.body().getType())) {
                     if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
                         if (value > 0) {
-                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
                         }
                     } else if (Constants.COMMAND_ON.equals(state)) {
                         if (value < 0) {
-                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
                         }
                     } else {
                         try {
-                            int itemVal = scrubNumberValue(Integer.parseInt(newItem.getState()) + value, min, max);
+                            int itemVal = scrubNumberValue(Integer.parseInt(newItem.body().getState()) + value, min, max);
                             Log.e(TAG, "Sending sendCommand " + itemVal + " value " + value);
-                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.getName(), String.valueOf(itemVal));
+                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(newItem.body().getName(), String.valueOf(itemVal));
                         } catch (NumberFormatException e) {
-                            Log.e(TAG, "Could not parse state " + newItem.getState(), e);
+                            Log.e(TAG, "Could not parse state " + newItem.body().getState(), e);
                         }
                     }
                 }
+                Openhab.instance(ServerDB.toGeneric(server)).deregisterItemListener(this);
             }
 
             @Override
-            public void onFailure(String message) {
-                Log.e(TAG, "incDec " + message);
+            public void onError() {
+
             }
-        });
+        };
+        Openhab.instance(ServerDB.toGeneric(server)).registerItemListener(item.getName(), callback);
     }
 
     public Picasso buildPicasso(Context context, final ServerDB server){
@@ -309,11 +314,11 @@ public class Communicator {
         }
     };
 
-    public void requestItems(final ServerDB server, final ItemsRequestListener listener){
+    /*public void requestItems(final ServerDB server, final ItemsRequestListener listener){
 
-        final retrofit.Callback<List<ItemDB>> callback = new retrofit.Callback<List<ItemDB>>() {
+        final retrofit.OHCallback<List<ItemDB>> callback = new retrofit.OHCallback<List<ItemDB>>() {
             @Override
-            public void success(List<ItemDB> items, retrofit.client.Response response) {
+            public void success(List<ItemDB> items, retrofit.client.OHResponse response) {
                 for(ItemDB item : items){
                     item.setServer(server);
                 }
@@ -336,9 +341,9 @@ public class Communicator {
         }
 
         OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.getItems(new retrofit.Callback<List<ItemDB>>() {
+        service.getItems(new retrofit.OHCallback<List<ItemDB>>() {
             @Override
-            public void success(List<ItemDB> items, retrofit.client.Response response) {
+            public void success(List<ItemDB> items, retrofit.client.OHResponse response) {
                 callback.success(items, response);
             }
 
@@ -357,9 +362,9 @@ public class Communicator {
 
     public void requestItem(final ServerDB server, final String item, final ItemRequestListener listener){
 
-        final retrofit.Callback<ItemDB> callback = new retrofit.Callback<ItemDB>() {
+        final retrofit.OHCallback<ItemDB> callback = new retrofit.OHCallback<ItemDB>() {
             @Override
-            public void success(ItemDB item, retrofit.client.Response response) {
+            public void success(ItemDB item, retrofit.client.OHResponse response) {
                 listener.onSuccess(item);
             }
 
@@ -379,9 +384,10 @@ public class Communicator {
         }
 
         OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.getItem(item, new retrofit.Callback<ItemDB>() {
+        Openhab.instance(ServerDB.toGeneric(server)).re;
+        service.getItem(item, new retrofit.OHCallback<ItemDB>() {
             @Override
-            public void success(ItemDB itemHolder, retrofit.client.Response response) {
+            public void success(ItemDB itemHolder, retrofit.client.OHResponse response) {
                 callback.success(itemHolder, response);
             }
 
@@ -395,7 +401,7 @@ public class Communicator {
                 }
             }
         });
-    }
+    }*/
 
     public void requestSitemap(final Sitemap sitemap, final SitemapRequestListener listener){
 
