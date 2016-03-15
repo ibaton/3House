@@ -14,15 +14,14 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-import se.treehou.ng.ohcommunicator.core.OHServer;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
+import treehou.se.habit.core.db.OHTreehouseRealm;
 import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.gcm.GCMHelper;
-import treehou.se.habit.ui.InboxListFragment;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
-import treehou.se.habit.ui.settings.SetupServerFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.ServersFragment;
 import treehou.se.habit.ui.SitemapFragment;
@@ -42,6 +41,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        OHTreehouseRealm.setup(this);
+        Realm.deleteRealm(OHTreehouseRealm.configuration());
+
         ControlHelper.showNotifications(this);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -54,18 +56,18 @@ public class MainActivity extends AppCompatActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        /*FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {
 
             // Load server setup server fragment if no server found
-            List<ServerDB> servers = ServerDB.getServers();
+            List<OHServerWrapper> servers = OHServerWrapper.loadAll();
             if(servers.size() <= 0) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, ServersFragment.newInstance())
                         .commit();
             }else {
                 // Load default sitemap if any
-                SitemapDB defaultSitemap = Settings.instance(this).getDefaultSitemap();
+                OHSitemapWrapper defaultSitemap = Settings.instance(this).getDefaultSitemap();
                 if(savedInstanceState == null && defaultSitemap != null) {
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap.getId()))
@@ -84,11 +86,11 @@ public class MainActivity extends AppCompatActivity
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        for(ControllerDB controller : ControllerDB.getControllers()){
-            if (controller.showNotification()) {
+        for(ControllerDB controller : OHTreehouseRealm.realm().allObjects(ControllerDB.class)){
+            if (controller.isShowNotification()) {
                 ControlHelper.showNotification(this, controller);
             }
-        }
+        }*/
     }
 
     @Override

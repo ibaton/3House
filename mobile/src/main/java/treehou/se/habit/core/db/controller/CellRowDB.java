@@ -1,40 +1,66 @@
 package treehou.se.habit.core.db.controller;
 
-import android.util.Log;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+public class CellRowDB /*extends RealmObject*/ {
 
-import java.util.List;
+    //@PrimaryKey
+    private long id = 0;
+    private ControllerDB controller;
+    //private RealmList<CellDB> cells;
 
-@Table(name = "CellRows")
-public class CellRowDB extends Model{
-
-    private static final String TAG = "CellRow";
-
-    @Column(name = "Controller", onDelete = Column.ForeignKeyAction.CASCADE)
-    public ControllerDB controller;
-
-    public List<CellDB> cells(){
-        return getMany(CellDB.class, "CellRow");
+    public long getId() {
+        return id;
     }
 
-    public CellDB addCell(){
+    public void setId(long id) {
+        this.id = id;
+    }
+/*
+    public RealmList<CellDB> getCells() {
+        return cells;
+    }
 
-        Log.d(TAG, "Added cell to row " + getId());
+    public void setCells(RealmList<CellDB> cells) {
+        this.cells = cells;
+    }*/
 
+    public ControllerDB getController() {
+        return controller;
+    }
+
+    public void setController(ControllerDB controller) {
+        this.controller = controller;
+    }
+
+    /*public static CellDB addCell(CellRowDB cellRowDB){
         CellDB cell = new CellDB();
-        cell.cellRow = this;
-        cell.save();
+        cell.setCellRow(cellRowDB);
+        CellDB.save(cell);
 
         return cell;
     }
 
-    public void deleteCell(CellDB cell){
-        cell.delete();
-        if(cells().size() == 0){
-            delete();
+    public static void save(CellRowDB item){
+        Realm realm = OHRealm.realm();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
         }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
     }
+
+    public static long getUniqueId() {
+        Realm realm = OHRealm.realm();
+        Number num = realm.where(CellRowDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
+    }*/
 }

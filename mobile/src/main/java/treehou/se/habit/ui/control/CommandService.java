@@ -6,9 +6,9 @@ import android.content.Context;
 import android.util.Log;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -31,7 +31,7 @@ public class CommandService extends IntentService {
     private static final String ARG_MIN     = "ARG_MIN";
     private static final String ARG_VALUE   = "ARG_VALUE";
 
-    public static void startActionCommand(Context context, String command, ItemDB item) {
+    public static void startActionCommand(Context context, String command, OHItemWrapper item) {
         Intent intent = new Intent(context, CommandService.class);
         intent.setAction(ACTION_COMMAND);
         intent.putExtra(ARG_COMMAND, command);
@@ -39,7 +39,7 @@ public class CommandService extends IntentService {
         context.startService(intent);
     }
 
-    public static Intent getActionCommand(Context context, String command, ItemDB item) {
+    public static Intent getActionCommand(Context context, String command, OHItemWrapper item) {
         Intent intent = new Intent(context, CommandService.class);
         intent.setAction(ACTION_COMMAND);
         intent.putExtra(ARG_COMMAND, command);
@@ -47,7 +47,7 @@ public class CommandService extends IntentService {
         return intent;
     }
 
-    public static Intent getActionIncDec(Context context, int min, int max, int value, ItemDB item) {
+    public static Intent getActionIncDec(Context context, int min, int max, int value, OHItemWrapper item) {
         Intent intent = new Intent(context, CommandService.class);
         intent.setAction(ACTION_INC_DEC);
         intent.putExtra(ARG_MIN, min);
@@ -68,26 +68,26 @@ public class CommandService extends IntentService {
             final String action = intent.getAction();
             if (ACTION_COMMAND.equals(action)) {
                 final String command = intent.getStringExtra(ARG_COMMAND);
-                final long itemId = intent.getLongExtra(ARG_ITEM,-1);
-                ItemDB item = ItemDB.load(ItemDB.class, itemId);
+                final int itemId = intent.getIntExtra(ARG_ITEM,-1);
+                OHItemWrapper item = OHItemWrapper.load(itemId);
                 handleActionCommand(command, item);
             }else if (ACTION_INC_DEC.equals(action)) {
                 final int min = intent.getIntExtra(ARG_MIN,0);
                 final int max = intent.getIntExtra(ARG_MAX,0);
                 final int value = intent.getIntExtra(ARG_VALUE,0);
-                final long itemId = intent.getLongExtra(ARG_ITEM, -1);
-                ItemDB item = ItemDB.load(ItemDB.class, itemId);
+                final int itemId = intent.getIntExtra(ARG_ITEM, -1);
+                OHItemWrapper item = OHItemWrapper.load(itemId);
 
                 Communicator communicator = Communicator.instance(this);
-                ServerDB server = item.getServer();
+                OHServerWrapper server = item.getServer();
                 communicator.incDec(server, item, value, min, max);
             }
         }
     }
 
-    private void handleActionCommand(String command, ItemDB item) {
+    private void handleActionCommand(String command, OHItemWrapper item) {
 
-        ServerDB server = item.getServer();
-        Openhab.instance(ServerDB.toGeneric(server)).sendCommand(item.getName(), command);
+        OHServerWrapper server = item.getServer();
+        Openhab.instance(server).sendCommand(item.getName(), command);
     }
 }

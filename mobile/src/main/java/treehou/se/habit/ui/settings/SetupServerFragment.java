@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import se.treehou.ng.ohcommunicator.core.db.OHserver;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ServerDB;
 
 public class SetupServerFragment extends Fragment {
 
@@ -25,19 +25,22 @@ public class SetupServerFragment extends Fragment {
     private EditText txtUsername;
     private EditText txtPassword;
 
-    private ServerDB server;
+    private long serverId = -1;
 
     private Button btnBack;
     private int buttonTextId = R.string.back;
 
     public static SetupServerFragment newInstance() {
-        return new SetupServerFragment();
-    }
-
-    public static SetupServerFragment newInstance(ServerDB server) {
         SetupServerFragment fragment = new SetupServerFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_SERVER, server.getId());
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static SetupServerFragment newInstance(long serverId) {
+        SetupServerFragment fragment = new SetupServerFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_SERVER, serverId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,19 +53,12 @@ public class SetupServerFragment extends Fragment {
         final Bundle bundle = getArguments();
 
         if(savedInstanceState != null && savedInstanceState.containsKey(EXTRA_SERVER_ID)){
-            long serverId = savedInstanceState.getLong(EXTRA_SERVER_ID);
-            server = ServerDB.load(ServerDB.class, serverId);
+            serverId = savedInstanceState.getLong(EXTRA_SERVER_ID);
         }else if (bundle != null) {
             if (bundle.containsKey(ARG_SERVER)) {
-                long serverId = bundle.getLong(ARG_SERVER);
-                server = ServerDB.load(ServerDB.class, serverId);
+                serverId = bundle.getLong(ARG_SERVER);
             }
             buttonTextId = bundle.getInt(ARG_BUTTON_TEXT_ID, R.string.back);
-        }
-
-        if (server == null) {
-            server = new ServerDB();
-            server.save();
         }
     }
 
@@ -94,11 +90,14 @@ public class SetupServerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        txtName.setText(server.getName());
-        txtLocalUrl.setText(server.getLocalUrl());
-        txtRemoteUrl.setText(server.getRemoteUrl());
-        txtUsername.setText(server.getUsername());
-        txtPassword.setText(server.getPassword());
+        OHserver server = OHserver.load(serverId);
+        if(server != null) {
+            txtName.setText(server.getName());
+            txtLocalUrl.setText(server.getLocalurl());
+            txtRemoteUrl.setText(server.getRemoteurl());
+            txtUsername.setText(server.getUsername());
+            txtPassword.setText(server.getPassword());
+        }
     }
 
     private String toUrl(String text){
@@ -111,18 +110,27 @@ public class SetupServerFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        /*io.realm.Realm realm = io.realm.Realm.getDefaultInstance();
+        realm.beginTransaction();
+        OHserver server = new OHserver();
+        if(serverId <= 0) {
+            server.setId(OHserver.getUniqueId());
+        } else {
+            server.setId(serverId);
+        }
         server.setName(txtName.getText().toString());
-        server.setLocalUrl(toUrl(txtLocalUrl.getText().toString()));
-        server.setRemoteUrl(toUrl(txtRemoteUrl.getText().toString()));
+        server.setLocalurl(toUrl(txtLocalUrl.getText().toString()));
+        server.setRemoteurl(toUrl(txtRemoteUrl.getText().toString()));
         server.setUsername(txtUsername.getText().toString());
         server.setPassword(txtPassword.getText().toString());
-        server.save();
+        realm.copyToRealmOrUpdate(server);
+        realm.commitTransaction();*/
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putLong(EXTRA_SERVER_ID, server.getId());
+        outState.putLong(EXTRA_SERVER_ID, serverId);
 
         super.onSaveInstanceState(outState);
     }

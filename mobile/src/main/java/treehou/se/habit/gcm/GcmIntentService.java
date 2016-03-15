@@ -34,6 +34,7 @@ import treehou.se.habit.Constants;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.NotificationSettingsDB;
+import treehou.se.habit.core.wrappers.settings.NotificationSettings;
 import treehou.se.habit.service.wear.VoiceActionService;
 
 
@@ -120,8 +121,8 @@ public class GcmIntentService extends IntentService {
 
         Server server = Server.load(Server.class, serverId);*/
 
-        NotificationSettingsDB notificationSettings = NotificationSettingsDB.loadGlobal(getApplicationContext());
-        if(notificationSettings.notificationToSpeach()) {
+        NotificationSettings notificationSettings = NotificationSettings.loadGlobal();
+        if(notificationSettings.notificationToSpeech()) {
             textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {

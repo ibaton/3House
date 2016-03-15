@@ -32,8 +32,8 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_edit_controller_settings);
 
         if (getIntent().getExtras() != null) {
-            Long id = getIntent().getExtras().getLong(ARG_ID);
-            controller = ControllerDB.load(ControllerDB.class, id);
+            int id = getIntent().getExtras().getInt(ARG_ID);
+            controller = null;//ControllerDB.load(id);
         }
 
         txtName = (EditText) findViewById(R.id.txt_name);
@@ -54,14 +54,14 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
         });
 
         cbxAsNotification = (CheckBox) findViewById(R.id.as_notification);
-        cbxAsNotification.setChecked(controller.showNotification());
+        cbxAsNotification.setChecked(controller.isShowNotification());
         cbxAsNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                controller.showNotification(isChecked);
-                controller.save();
+                controller.setShowNotification(isChecked);
+                //ControllerDB.save(controller);
 
-                if(controller.showNotification()) {
+                if(controller.isShowNotification()) {
                     ControlHelper.showNotification(EditControllerSettingsActivity.this, controller);
                 }else {
                     ControlHelper.hideNotification(EditControllerSettingsActivity.this, controller);
@@ -111,7 +111,7 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
     @Override
     public void setColor(int color) {
         controller.setColor(color);
-        controller.save();
+        //ControllerDB.save(controller);
 
         btnColor.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
     }

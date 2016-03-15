@@ -22,6 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.controller.ControllerDB;
 
@@ -50,7 +51,7 @@ public class ControllsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, ""+ ControllerDB.getControllers().size());
+        //Log.d(TAG, ""+ OHRealm.realm().allObjects(ControllerDB.class).size());
     }
 
     @Override
@@ -102,7 +103,7 @@ public class ControllsFragment extends Fragment {
                                         break;
                                     case 1:
                                         mAdapter.removeItem(controllerHolder.getAdapterPosition());
-                                        controller.deleteController(getActivity());
+                                        //controller.removeFromRealm();
                                         break;
                                 }
                             }
@@ -110,7 +111,7 @@ public class ControllsFragment extends Fragment {
                 return true;
             }
         });
-        final List<ControllerDB> controllers = ControllerDB.getControllers();
+        final List<ControllerDB> controllers = null;//OHRealm.realm().allObjects(ControllerDB.class);
         mAdapter.addAll(controllers);
 
         // Set the adapter
@@ -133,7 +134,7 @@ public class ControllsFragment extends Fragment {
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 
-    public void loadController(Long id){
+    public void loadController(long id){
         getActivity().getSupportFragmentManager().beginTransaction()
             .replace(R.id.page_container, EditControlFragment.newInstance(id))
             .addToBackStack(null)
@@ -163,11 +164,11 @@ public class ControllsFragment extends Fragment {
     private void createNewController(){
         ControllerDB controller = new ControllerDB();
         String name = "Controller";
-        Long id = controller.save();
         controller.setName(name);
-        controller.save();
-        controller.addRow();
-        loadController(id);
+        //ControllerDB.save(controller);
+        //ControllerDB.addRow(controller);
+
+        loadController(controller.getId());
     }
 
     public static class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.ControllerHolder>{

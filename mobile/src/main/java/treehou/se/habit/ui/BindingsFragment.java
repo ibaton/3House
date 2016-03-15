@@ -19,14 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHBinding;
-import se.treehou.ng.ohcommunicator.core.OHServer;
+import se.treehou.ng.ohcommunicator.core.OHBindingWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHserver;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.models.Binding;
-import treehou.se.habit.core.db.ServerDB;
 
 public class BindingsFragment extends Fragment {
 
@@ -35,16 +34,15 @@ public class BindingsFragment extends Fragment {
     private static final String STATE_BINDINGS = "STATE_BINDINGS";
 
     private BindingAdapter bindingAdapter;
-    private ServerDB serverDB;
-    private OHServer genericServer;
+    private long serverId;
     private ViewGroup container;
 
-    private List<OHBinding> bindings = new ArrayList<>();
+    private List<OHBindingWrapper> bindings = new ArrayList<>();
 
-    private OHCallback<List<OHBinding>> bindingListener = new OHCallback<List<OHBinding>>(){
+    private OHCallback<List<OHBindingWrapper>> bindingListener = new OHCallback<List<OHBindingWrapper>>(){
 
         @Override
-        public void onUpdate(OHResponse<List<OHBinding>> response) {
+        public void onUpdate(OHResponse<List<OHBindingWrapper>> response) {
             bindings = response.body();
             bindingAdapter.setBindings(bindings);
         }
@@ -53,10 +51,10 @@ public class BindingsFragment extends Fragment {
         public void onError() {}
     };
 
-    public static BindingsFragment newInstance(ServerDB serverDB) {
+    public static BindingsFragment newInstance(OHserver server) {
         BindingsFragment fragment = new BindingsFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_SERVER, serverDB.getId());
+        args.putLong(ARG_SERVER, server.getId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,8 +68,7 @@ public class BindingsFragment extends Fragment {
 
         if(getArguments() != null){
             if(getArguments().containsKey(ARG_SERVER)){
-                serverDB = ServerDB.load(ServerDB.class, getArguments().getLong(ARG_SERVER));
-                genericServer = ServerDB.toGeneric(serverDB);
+                serverId = getArguments().getLong(ARG_SERVER);
             }
         }
 
@@ -93,7 +90,8 @@ public class BindingsFragment extends Fragment {
 
         this.container = container;
 
-        if(serverDB == null){
+        OHserver server = OHserver.load(serverId);
+        if(server == null){
             Toast.makeText(getActivity(), getString(R.string.failed_to_load_server), Toast.LENGTH_LONG).show();
             getActivity().getSupportFragmentManager().popBackStackImmediate();
             return rootView;
@@ -122,14 +120,14 @@ public class BindingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Openhab.instance(genericServer).registerBindingListener(bindingListener);
+        Openhab.instance(serverId).registerBindingListener(bindingListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        Openhab.instance(genericServer).deregisterBindingListener(bindingListener);
+        Openhab.instance(serverId).deregisterBindingListener(bindingListener);
     }
 
     @Override
@@ -141,7 +139,7 @@ public class BindingsFragment extends Fragment {
 
     public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder>{
 
-        private List<OHBinding> bindings = new ArrayList<>();
+        private List<OHBindingWrapper> bindings = new ArrayList<>();
 
         public class BindingHolder extends RecyclerView.ViewHolder {
 
@@ -173,7 +171,7 @@ public class BindingsFragment extends Fragment {
         @Override
         public void onBindViewHolder(final BindingHolder holder, int position) {
 
-            final OHBinding binding = bindings.get(position);
+            final OHBindingWrapper binding = bindings.get(position);
             holder.lblName.setText(binding.getName());
             holder.lblAuthor.setText(binding.getAuthor());
             holder.lblDescription.setText(binding.getDescription());
@@ -196,12 +194,12 @@ public class BindingsFragment extends Fragment {
             return bindings.size();
         }
 
-        public void addBinding(OHBinding binding){
+        public void addBinding(OHBindingWrapper binding){
             bindings.add(binding);
             notifyItemInserted(bindings.size()-1);
         }
 
-        public void setBindings(List<OHBinding> newBindings){
+        public void setBindings(List<OHBindingWrapper> newBindings){
             bindings.clear();
             bindings.addAll(newBindings);
             notifyDataSetChanged();

@@ -3,10 +3,13 @@ package treehou.se.habit;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-//import android.support.multidex.MultiDex;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.connector.TrustModifier;
+import treehou.se.habit.core.db.OHTreehouseRealm;
 
 public class HabitApplication extends Application /*com.activeandroid.app.Application*/ {
 
@@ -22,7 +25,15 @@ public class HabitApplication extends Application /*com.activeandroid.app.Applic
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        Openhab.setup(base);
+        //OHTreehouseRealm.setup(this);
+        //RealmConfiguration realmConfiguration = OHTreehouseRealm.configuration();
+        //Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
+
+        //Realm.deleteRealm(OHRealm.configuration());
+        //Realm.deleteRealm(OHTreehouseRealm.configuration());
+
+        //OHRealm.setup(OHTreehouseRealm.configuration());
+        //Openhab.setup(base);
 
         try {
             MultiDex.install(this);

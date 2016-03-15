@@ -8,15 +8,15 @@ import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class VideoWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
 
         return new VideoWidgetHolder(widget, parent, widgetFactory);
     }
@@ -30,9 +30,9 @@ public class VideoWidgetFactory implements IWidgetFactory {
 
         private View itemView;
         private VideoView mVideoView;
-        private Widget widget;
+        private OHWidgetWrapper widget;
 
-        public VideoWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        public VideoWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
             this.factory = factory;
 
             itemView = factory.getInflater().inflate(R.layout.item_widget_video, null);
@@ -49,7 +49,7 @@ public class VideoWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
@@ -89,7 +89,7 @@ public class VideoWidgetFactory implements IWidgetFactory {
                 }
             });
 
-            //OHBinding media controller with VideoView
+            //OHBindingWrapper media controller with VideoView
             mVideoView.setMediaController(controller);
         }
     }

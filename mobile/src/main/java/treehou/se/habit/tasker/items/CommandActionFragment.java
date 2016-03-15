@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItem;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 public class CommandActionFragment extends Fragment {
@@ -31,8 +29,8 @@ public class CommandActionFragment extends Fragment {
     private Spinner sprItems;
     private TextView txtCommand;
 
-    private ArrayAdapter<OHItem> itemAdapter;
-    private List<OHItem> filteredItems = new ArrayList<>();
+    private ArrayAdapter<OHItemWrapper> itemAdapter;
+    private List<OHItemWrapper> filteredItems = new ArrayList<>();
 
     public static CommandActionFragment newInstance() {
         CommandActionFragment fragment = new CommandActionFragment();
@@ -65,18 +63,18 @@ public class CommandActionFragment extends Fragment {
                 sprItems.setAdapter(itemAdapter);
             }
         });
-        List<ServerDB> servers = ServerDB.getServers();
+        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
         filteredItems.clear();
 
-        for(final ServerDB server : servers) {
+        for(final OHServerWrapper server : servers) {
 
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
+            OHCallback<List<OHItemWrapper>> callback = new OHCallback<List<OHItemWrapper>>() {
                 @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
+                public void onUpdate(OHResponse<List<OHItemWrapper>> response) {
+                    List<OHItemWrapper> items = filterItems(response.body());
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
-                    Openhab.instance(ServerDB.toGeneric(server)).deregisterItemsListener(this);
+                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -85,7 +83,7 @@ public class CommandActionFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(ServerDB.toGeneric(server)).registerItemsListener(callback);
+            Openhab.instance(server).registerItemsListener(callback);
         }
 
         txtCommand = (TextView) rootView.findViewById(R.id.txt_command);
@@ -102,9 +100,9 @@ public class CommandActionFragment extends Fragment {
         return rootView;
     }
 
-    private List<OHItem> filterItems(List<OHItem> items){
+    private List<OHItemWrapper> filterItems(List<OHItemWrapper> items){
 
-        List<OHItem> tempItems = new ArrayList<>();
+        List<OHItemWrapper> tempItems = new ArrayList<>();
         tempItems.addAll(items);
         items.clear();
         items.addAll(tempItems);
@@ -116,8 +114,7 @@ public class CommandActionFragment extends Fragment {
 
         final Intent resultIntent = new Intent();
 
-        OHItem genericItem = (OHItem) sprItems.getSelectedItem();
-        ItemDB item = ItemDB.createFrom(genericItem);
+        OHItemWrapper item = (OHItemWrapper) sprItems.getSelectedItem();
         item.save();
 
         String command = txtCommand.getText().toString();

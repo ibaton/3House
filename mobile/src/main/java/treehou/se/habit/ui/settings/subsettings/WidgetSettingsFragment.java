@@ -16,17 +16,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.Constants;
 import treehou.se.habit.R;
-import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.core.wrappers.settings.WidgetSettings;
 import treehou.se.habit.ui.widgets.DummyWidgetFactory;
 
 public class WidgetSettingsFragment extends Fragment {
 
     private static final String TAG = "WidgetSettingsFragment";
 
-    private Widget displayWidget;
+    private OHWidgetWrapper displayWidget;
     private FrameLayout widgetHolder;
     private static final int BASE_IMAGE_SIZE = 50;
 
@@ -44,8 +45,8 @@ public class WidgetSettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        displayWidget = new Widget();
-        displayWidget.setType(Widget.TYPE_DUMMY);
+        displayWidget = new OHWidgetWrapper();
+        displayWidget.setType(OHWidgetWrapper.TYPE_DUMMY);
         displayWidget.setLabel(getActivity().getString(R.string.label_widget_text));
     }
 
@@ -56,7 +57,7 @@ public class WidgetSettingsFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(getActivity().getString(R.string.settings_widget));
 
-        final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
+        final WidgetSettings settings = WidgetSettings.loadGlobal();
 
         View rootView = inflater.inflate(R.layout.fragment_settings_widget, container, false);
         widgetHolder = (FrameLayout) rootView.findViewById(R.id.widget_holder);
@@ -69,7 +70,7 @@ public class WidgetSettingsFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 settings.setTextSize(Constants.MIN_TEXT_ADDON+progress);
-                settings.save();
+                WidgetSettingsDB.save(settings.getWidgetSettingsDB());
                 redrawWidget();
             }
 
@@ -119,7 +120,7 @@ public class WidgetSettingsFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 settings.setIconSize(BASE_IMAGE_SIZE + progress);
-                settings.save();
+                WidgetSettingsDB.save(settings.getWidgetSettingsDB());
                 redrawWidget();
             }
 
@@ -159,12 +160,12 @@ public class WidgetSettingsFragment extends Fragment {
     }
 
     private void setCompressedButtonChanged(boolean isChecked){
-        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
+        WidgetSettings settings = WidgetSettings.loadGlobal();
         settings.setCompressedSingleButton(isChecked);
     }
 
     private void setCompressedSliderChanged(boolean isChecked){
-        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
+        WidgetSettings settings = WidgetSettings.loadGlobal();
         settings.setCompressedSlider(isChecked);
     }
 
@@ -187,9 +188,9 @@ public class WidgetSettingsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(getActivity());
+            WidgetSettings settings = WidgetSettings.loadGlobal();
             settings.setImageBackground(backgroundType);
-            settings.save();
+            WidgetSettingsDB.save(settings.getWidgetSettingsDB());
 
             redrawWidget();
         }

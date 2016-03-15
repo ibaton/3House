@@ -10,10 +10,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.core.wrappers.settings.WidgetSettings;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -22,7 +22,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
     private static final String TAG = "FrameWidgetFactory";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, Widget widget, Widget parent) {
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPageWrapper page, OHWidgetWrapper widget, OHWidgetWrapper parent) {
         return FrameWidget.create(widgetFactory, widget);
     }
 
@@ -35,10 +35,10 @@ public class FrameWidgetFactory implements IWidgetFactory {
         private boolean showLabel = true;
 
         private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
-        private Widget widget;
-        private List<Widget> widgets = new ArrayList<>();
+        private OHWidgetWrapper widget;
+        private List<OHWidgetWrapper> widgets = new ArrayList<>();
 
-        public static FrameWidget create(WidgetFactory factory, Widget widget){
+        public static FrameWidget create(WidgetFactory factory, OHWidgetWrapper widget){
 
             View rootView = factory.getInflater().inflate(R.layout.widget_frame, null);
             TextView lblTitle = (TextView) rootView.findViewById(R.id.lbl_widget_name);
@@ -48,7 +48,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
             FrameWidget holder = new FrameWidget(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
 
             Log.d(TAG, "update " + widget.getLabel());
-            final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
+            final WidgetSettings settings = WidgetSettings.loadGlobal();
             float percentage = Util.toPercentage(settings.getTextSize());
             holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
 
@@ -57,7 +57,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
             return holder;
         }
 
-        private FrameWidget(Context context, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, Widget widget, WidgetFactory factory) {
+        private FrameWidget(Context context, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, OHWidgetWrapper widget, WidgetFactory factory) {
             super(view);
 
             Log.d(TAG, "Crating frame " + widget.getLabel());
@@ -76,7 +76,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
 
             if(widget == null){
                 return;
@@ -92,14 +92,14 @@ public class FrameWidgetFactory implements IWidgetFactory {
             updateWidgets(widget.getWidget());
         }
 
-        private synchronized void updateWidgets(List<Widget> pageWidgets){
+        private synchronized void updateWidgets(List<OHWidgetWrapper> pageWidgets){
 
             Log.d(TAG, "frame widgets update " + pageWidgets.size() + " : " + widgets.size());
             boolean invalidate = pageWidgets.size() != widgets.size();
             if(!invalidate){
                 for(int i=0; i < widgets.size(); i++) {
-                    Widget currentWidget = widgets.get(i);
-                    Widget newWidget = pageWidgets.get(i);
+                    OHWidgetWrapper currentWidget = widgets.get(i);
+                    OHWidgetWrapper newWidget = pageWidgets.get(i);
 
                     if(currentWidget.needUpdate(newWidget)){
                         invalidate = true;
@@ -114,7 +114,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
                 widgetHolders.clear();
                 subView.removeAllViews();
 
-                for (Widget widget : pageWidgets) {
+                for (OHWidgetWrapper widget : pageWidgets) {
                     try {
                         WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, this.widget);
                         widgetHolders.add(result);
@@ -131,7 +131,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
                 for (int i=0; i < widgetHolders.size(); i++) {
                     try {
                         WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
-                        Widget newWidget = pageWidgets.get(i);
+                        OHWidgetWrapper newWidget = pageWidgets.get(i);
                         holder.update(newWidget);
                     }catch (Exception e){
                         Log.w(TAG, "Update widget failed " + e);
@@ -163,7 +163,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
          *
          * @return widget
          */
-        protected Widget getWidget(){
+        protected OHWidgetWrapper getWidget(){
             return widget;
         }
 

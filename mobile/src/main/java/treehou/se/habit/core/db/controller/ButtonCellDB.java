@@ -1,31 +1,32 @@
 package treehou.se.habit.core.db.controller;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 
-import treehou.se.habit.core.db.ItemDB;
+public class ButtonCellDB {
 
-@Table(name = "ButtonCells")
-public class ButtonCellDB extends Model {
+    private long id = 0;
+    private String icon;
+    private String command;
+    private CellDB cell;
+    private OHItemDB item;
 
-    @Column(name = "iconName")
-    public String icon;
+    public long getId() {
+        return id;
+    }
 
-    @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public CellDB cell;
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    @Column(name = "command")
-    public String command;
-
-    @Column(name = "Item")
-    public ItemDB item;
-
-    public ItemDB getItem() {
+    public OHItemDB getItem() {
         return item;
     }
 
-    public void setItem(ItemDB item) {
+    public void setItem(OHItemDB item) {
         this.item = item;
     }
 
@@ -52,4 +53,30 @@ public class ButtonCellDB extends Model {
     public void setCommand(String command) {
         this.command = command;
     }
+
+    /*public static void save(ButtonCellDB item){
+        Realm realm = OHRealm.realm();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
+        }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+    }
+
+    public static ButtonCellDB getCell(CellDB cell){
+        Realm realm = OHRealm.realm();
+        ButtonCellDB cellDB = realm.where(ButtonCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
+        realm.close();
+        return cellDB;
+    }
+
+    public static long getUniqueId() {
+        Realm realm = OHRealm.realm();
+        Number num = realm.where(ButtonCellDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
+    }*/
 }

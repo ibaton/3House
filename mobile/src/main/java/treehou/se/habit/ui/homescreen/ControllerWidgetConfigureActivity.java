@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.controller.ControllerDB;
 
@@ -45,7 +46,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.controller_widget_configure);
 
         sprControllers = (Spinner) findViewById(R.id.spr_controller);
-        List<ControllerDB> controllers = ControllerDB.getControllers();
+        List<ControllerDB> controllers = null;//OHRealm.realm().allObjects(ControllerDB.class);
         ArrayAdapter mAdapter = new ArrayAdapter<>(this
                 , android.R.layout.simple_list_item_1, controllers);
         sprControllers.setAdapter(mAdapter);

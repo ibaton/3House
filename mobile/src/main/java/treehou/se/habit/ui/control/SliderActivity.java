@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.controller.SliderCell;
 
 public class SliderActivity extends AppCompatActivity {
     public static final String TAG = "SliderActivity";
@@ -60,7 +60,7 @@ public class SliderActivity extends AppCompatActivity {
      */
     public static class SliderFragment extends Fragment {
 
-        private SliderCellDB numberCell;
+        private SliderCell numberCell;
 
         public SliderFragment() {}
 
@@ -78,9 +78,9 @@ public class SliderActivity extends AppCompatActivity {
                 View rootView = inflater.inflate(R.layout.fragment_slider, null, false);
 
                 if (getArguments() != null) {
-                    Long id = getArguments().getLong(ARG_CELL);
-                    CellDB cell = CellDB.load(CellDB.class, id);
-                    numberCell = cell.sliderCell();
+                    int id = getArguments().getInt(ARG_CELL);
+                    Cell cell = Cell.load(id);
+                    numberCell = SliderCell.getCell(cell);
                 }
 
                 SeekBar sbrNumber = (SeekBar) rootView.findViewById(R.id.sbrNumber);
@@ -97,8 +97,8 @@ public class SliderActivity extends AppCompatActivity {
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         if (numberCell != null) {
-                            ServerDB server = numberCell.getItem().getServer();
-                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
+                            OHServerWrapper server = numberCell.getItem().getServer();
+                            Openhab.instance(server).sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
                         }
                     }
                 });

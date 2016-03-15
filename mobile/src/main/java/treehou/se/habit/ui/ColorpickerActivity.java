@@ -16,12 +16,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.connector.GsonHelper;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.Widget;
 
 public class ColorpickerActivity extends AppCompatActivity {
 
@@ -36,13 +36,13 @@ public class ColorpickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_colorpicker);
 
         Bundle bundle = getIntent().getExtras();
-        long serverId = bundle.getLong(EXTRA_SERVER);
+        int serverId = bundle.getInt(EXTRA_SERVER);
         String jWidget = bundle.getString(EXTRA_WIDGET);
         int color = bundle.getInt(EXTRA_COLOR);
 
         Gson gson = GsonHelper.createGsonBuilder();
-        ServerDB server = ServerDB.load(ServerDB.class, serverId);
-        Widget widget = gson.fromJson(jWidget, Widget.class);
+        OHServerWrapper server = OHServerWrapper.load(serverId);
+        OHWidgetWrapper widget = gson.fromJson(jWidget, OHWidgetWrapper.class);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -62,14 +62,14 @@ public class ColorpickerActivity extends AppCompatActivity {
         private static final String ARG_WIDGET  = "ARG_SITEMAP";
         private static final String ARG_COLOR   = "ARG_COLOR";
 
-        private ServerDB server;
-        private Widget widget;
+        private OHServerWrapper server;
+        private OHWidgetWrapper widget;
         private int color;
         private ColorPicker pcrColor;
 
         private Timer timer = new Timer();
 
-        public static PlaceholderFragment newInstance(ServerDB server, Widget widget, int color){
+        public static PlaceholderFragment newInstance(OHServerWrapper server, OHWidgetWrapper widget, int color){
             PlaceholderFragment fragment = new PlaceholderFragment();
 
             Bundle args = new Bundle();
@@ -89,13 +89,13 @@ public class ColorpickerActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
 
             Bundle args = getArguments();
-            long serverId = args.getLong(ARG_SERVER);
+            int serverId = args.getInt(ARG_SERVER);
             String jWidget = args.getString(ARG_WIDGET);
             color = args.getInt(ARG_COLOR);
 
             Gson gson = GsonHelper.createGsonBuilder();
-            server = ServerDB.load(ServerDB.class, serverId);
-            widget = gson.fromJson(jWidget, Widget.class);
+            server = OHServerWrapper.load(serverId);
+            widget = gson.fromJson(jWidget, OHWidgetWrapper.class);
         }
 
         @Override
@@ -139,9 +139,9 @@ public class ColorpickerActivity extends AppCompatActivity {
                         Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                         Communicator communicator = Communicator.instance(getActivity());
                         if(hsv[2] > 5) {
-                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(widget.getItem().getName(), String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
+                            Openhab.instance(server).sendCommand(widget.getItem().getName(), String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                         }else {
-                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
+                            Openhab.instance(server).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
                         }
                     }
                 },300);

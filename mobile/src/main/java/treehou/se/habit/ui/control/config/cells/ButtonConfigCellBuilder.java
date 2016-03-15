@@ -22,7 +22,7 @@ public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
     private static final String TAG = "ButtonConfigCellBuilder";
 
     public View build(final Context context, ControllerDB controller, CellDB cell){
-        final ButtonCellDB buttonCell = cell.buttonCell();
+        final ButtonCellDB buttonCell = null;//ButtonCellDB.getCell(cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 

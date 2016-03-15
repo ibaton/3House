@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItem;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.core.db.controller.ButtonCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
@@ -48,8 +46,8 @@ public class CellButtonConfigFragment extends Fragment {
     private TextView txtCommand;
     private ImageView btnSetIcon;
 
-    private ArrayAdapter<OHItem> mItemAdapter;
-    private ArrayList<OHItem> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItemWrapper> mItemAdapter;
+    private ArrayList<OHItemWrapper> mItems = new ArrayList<>();
 
     public static CellButtonConfigFragment newInstance(CellDB cell) {
         CellButtonConfigFragment fragment = new CellButtonConfigFragment();
@@ -67,16 +65,17 @@ public class CellButtonConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(CellDB.class, id);
-            if((buttonCell=cell.buttonCell())==null){
+        /*if (getArguments() != null) {
+            int id = getArguments().getInt(ARG_CELL_ID);
+            cell = CellDB.load(id);
+            buttonCell = ButtonCellDB.getCell(cell);
+            if (buttonCell == null){
                 buttonCell = new ButtonCellDB();
                 buttonCell.setCell(cell);
                 buttonCell.setCommand(Constants.COMMAND_ON);
-                buttonCell.save();
+                ButtonCellDB.save(buttonCell);
             }
-        }
+        }*/
     }
 
 
@@ -93,25 +92,24 @@ public class CellButtonConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OHItem genericItem = mItems.get(position);
-                if(genericItem != null) {
-                    ItemDB item = ItemDB.createFrom(genericItem);
+                OHItemWrapper item = mItems.get(position);
+                if(item != null) {
                     item.save();
 
-                    buttonCell.setItem(item);
-                    buttonCell.save();
+                    buttonCell.setItem(item.getDB());
+                    //ButtonCellDB.save(buttonCell);
                     switch (item.getType()) {
-                        case ItemDB.TYPE_STRING:
+                        case OHItemWrapper.TYPE_STRING:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_TEXT);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case ItemDB.TYPE_NUMBER:
+                        case OHItemWrapper.TYPE_NUMBER:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_NUMBER);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case ItemDB.TYPE_CONTACT:
+                        case OHItemWrapper.TYPE_CONTACT:
                             txtCommand.setVisibility(View.GONE);
                             tglOnOff.setVisibility(View.VISIBLE);
                             break;
@@ -133,24 +131,24 @@ public class CellButtonConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        List<ServerDB> servers = ServerDB.getServers();
+        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
         mItems.clear();
 
         if(buttonCell.getItem() != null) {
-            mItems.add(ItemDB.toGeneric(buttonCell.getItem()));
+            mItems.add(new OHItemWrapper(buttonCell.getItem()));
         }
 
         if(buttonCell.getItem() != null) {
-            mItems.add(ItemDB.toGeneric(buttonCell.getItem()));
+            mItems.add(new OHItemWrapper(buttonCell.getItem()));
         }
-        for(final ServerDB server : servers) {
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
+        for(final OHServerWrapper server : servers) {
+            OHCallback<List<OHItemWrapper>> callback = new OHCallback<List<OHItemWrapper>>() {
                 @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
+                public void onUpdate(OHResponse<List<OHItemWrapper>> response) {
+                    List<OHItemWrapper> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
-                    Openhab.instance(ServerDB.toGeneric(server)).deregisterItemsListener(this);
+                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -159,7 +157,7 @@ public class CellButtonConfigFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(ServerDB.toGeneric(server)).registerItemsListener(callback);
+            Openhab.instance(server).registerItemsListener(callback);
         }
 
         tglOnOff.setChecked(
@@ -184,16 +182,16 @@ public class CellButtonConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), buttonCell.getIcon()));
     }
 
-    private List<OHItem> filterItems(List<OHItem> items){
+    private List<OHItemWrapper> filterItems(List<OHItemWrapper> items){
 
-        List<OHItem> tempItems = new ArrayList<>();
-        for(OHItem item : items){
-            if(item.getType().equals(ItemDB.TYPE_SWITCH) ||
-               item.getType().equals(ItemDB.TYPE_GROUP) ||
-               item.getType().equals(ItemDB.TYPE_STRING) ||
-               item.getType().equals(ItemDB.TYPE_NUMBER) ||
-               item.getType().equals(ItemDB.TYPE_CONTACT) ||
-               item.getType().equals(ItemDB.TYPE_COLOR)){
+        List<OHItemWrapper> tempItems = new ArrayList<>();
+        for(OHItemWrapper item : items){
+            if(item.getType().equals(OHItemWrapper.TYPE_SWITCH) ||
+               item.getType().equals(OHItemWrapper.TYPE_GROUP) ||
+               item.getType().equals(OHItemWrapper.TYPE_STRING) ||
+               item.getType().equals(OHItemWrapper.TYPE_NUMBER) ||
+               item.getType().equals(OHItemWrapper.TYPE_CONTACT) ||
+               item.getType().equals(OHItemWrapper.TYPE_COLOR)){
                 tempItems.add(item);
             }
         }
@@ -209,14 +207,14 @@ public class CellButtonConfigFragment extends Fragment {
 
         if(buttonCell.getItem() == null) {
             buttonCell.setCommand("");
-        } else if (buttonCell.getItem().getType().equals(ItemDB.TYPE_STRING) || buttonCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)) {
+        } else if (buttonCell.getItem().getType().equals(OHItemWrapper.TYPE_STRING) || buttonCell.getItem().getType().equals(OHItemWrapper.TYPE_NUMBER)) {
             buttonCell.setCommand(txtCommand.getText().toString());
-        } else if (buttonCell.getItem().getType().equals(ItemDB.TYPE_CONTACT)) {
+        } else if (buttonCell.getItem().getType().equals(OHItemWrapper.TYPE_CONTACT)) {
             buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_OPEN : Constants.COMMAND_CLOSE);
         } else {
             buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
         }
-        buttonCell.save();
+        //ButtonCellDB.save(buttonCell);
     }
 
     @Override
@@ -227,7 +225,7 @@ public class CellButtonConfigFragment extends Fragment {
 
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
             buttonCell.setIcon(iconName.equals("") ? null : iconName);
-            buttonCell.save();
+            //ButtonCellDB.save(buttonCell);
             updateIconImage();
         }
     }

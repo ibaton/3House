@@ -9,8 +9,7 @@ import android.util.Log;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 
 public class VoiceService extends IntentService {
 
@@ -21,9 +20,9 @@ public class VoiceService extends IntentService {
 
     public static final String VOICE_ITEM = "VoiceCommand";
 
-    private static final long NULL_SERVER = -1;
+    private static final int NULL_SERVER = -1;
 
-    public static Intent createVoiceCommand(Context context, ServerDB server) {
+    public static Intent createVoiceCommand(Context context, OHServerWrapper server) {
         Intent intent = new Intent(context, VoiceService.class);
         intent.setAction(ACTION_COMMAND);
         intent.putExtra(EXTRA_SERVER, server.getId());
@@ -38,19 +37,19 @@ public class VoiceService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Log.w(TAG, "onHandleIntent.");
 
-        long serverId = intent.getLongExtra(EXTRA_SERVER, NULL_SERVER);
+        int serverId = intent.getIntExtra(EXTRA_SERVER, NULL_SERVER);
         if(NULL_SERVER == serverId){
             Log.w(TAG, "No server specified.");
             return;
         }
-        ServerDB server = ServerDB.load(ServerDB.class, serverId);
+        OHServerWrapper server = OHServerWrapper.load(serverId);
 
         List<String> results = intent.getExtras().getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
         if (results != null && !results.isEmpty()) {
             Log.d(TAG, "Received " + results.size() + " voice results.");
 
             String command = results.get(0);
-            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(VOICE_ITEM, command);
+            Openhab.instance(server).sendCommand(VOICE_ITEM, command);
         }
     }
 }

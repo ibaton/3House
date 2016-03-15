@@ -7,11 +7,11 @@ import android.widget.ImageView;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.ConnectorUtil;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class ChartWidgetFactory implements IWidgetFactory {
@@ -19,7 +19,7 @@ public class ChartWidgetFactory implements IWidgetFactory {
     private static final String TAG = "ChartWidgetFactory";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
         return ChartWidgetHolder.create(widgetFactory, widget, parent);
     }
 
@@ -32,11 +32,11 @@ public class ChartWidgetFactory implements IWidgetFactory {
         private ImageView imgImage;
         private WidgetFactory factory;
 
-        public static ChartWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+        public static ChartWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
             return new ChartWidgetHolder(widget, parent, factory);
         }
 
-        private ChartWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        private ChartWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
             this.factory = factory;
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
@@ -55,7 +55,7 @@ public class ChartWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {

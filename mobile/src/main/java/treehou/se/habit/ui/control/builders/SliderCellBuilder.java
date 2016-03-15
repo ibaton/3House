@@ -12,10 +12,11 @@ import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
 import treehou.se.habit.core.db.controller.SliderCellDB;
 import treehou.se.habit.ui.ViewHelper;
@@ -30,7 +31,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
 
-        final SliderCellDB numberCell = cell.sliderCell();
+        final SliderCell numberCell = SliderCell.getCell(new Cell(cell));
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -60,8 +61,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
                     return;
                 }
 
-                ServerDB server = numberCell.getItem().getServer();
-                Openhab.instance(ServerDB.toGeneric(server)).sendCommand(numberCell.getItem().getName(), ""+seekBar.getProgress());
+                OHServerWrapper server = numberCell.getItem().getServer();
+                Openhab.instance(server).sendCommand(numberCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });
 
@@ -70,7 +71,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
-        final SliderCellDB numberCell = cell.sliderCell();
+        final SliderCellDB numberCell = null;//SliderCellDB.getCell(cell);
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 

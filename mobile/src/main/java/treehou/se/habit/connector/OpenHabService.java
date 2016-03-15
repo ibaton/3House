@@ -2,28 +2,22 @@ package treehou.se.habit.connector;
 
 import java.util.List;
 
-import retrofit.client.Response;
-import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Headers;
-import retrofit.http.POST;
 import retrofit.http.Path;
-import treehou.se.habit.connector.models.Binding;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.Sitemap;
-
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
 public interface OpenHabService {
 
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps")
-    void listSitemaps(retrofit.Callback<List<Sitemap>> callback);
+    void listSitemaps(retrofit.Callback<List<OHSitemapWrapper>> callback);
 
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps/{id}")
-    void getSitemap(@Path("id") String id, retrofit.Callback<Sitemap> callback);
+    void getSitemap(@Path("id") String id, retrofit.Callback<OHSitemapWrapper> callback);
 
     @Headers("Accept: application/json")
     @GET("/")
-    void getPage(retrofit.Callback<LinkedPage> callback);
+    void getPage(retrofit.Callback<OHLinkedPageWrapper> callback);
 }

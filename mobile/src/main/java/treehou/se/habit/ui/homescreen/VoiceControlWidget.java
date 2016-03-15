@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ServerDB;
 
 /**
  * Implementation of App Widget functionality.
@@ -47,11 +47,10 @@ public class VoiceControlWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-            int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         boolean showTitle = VoiceControlWidgetConfigureActivity.loadControllShowTitlePref(context, appWidgetId);
-        ServerDB server = ServerDB.load(ServerDB.class, VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
+        OHServerWrapper server = OHServerWrapper.load(VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
 
         if(server == null){
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.error_widget);
@@ -75,7 +74,7 @@ public class VoiceControlWidget extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    public static Intent createVoiceCommand(Context context, ServerDB server){
+    public static Intent createVoiceCommand(Context context, OHServerWrapper server){
 
         Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

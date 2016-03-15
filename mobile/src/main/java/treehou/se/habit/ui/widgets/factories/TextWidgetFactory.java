@@ -8,18 +8,16 @@ import android.view.View;
 import android.widget.EditText;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class TextWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
 
         TextWidgetHolder holder = new TextWidgetHolder(widget, parent, widgetFactory);
         return holder;
@@ -32,7 +30,7 @@ public class TextWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
-        public TextWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        public TextWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
 
             this.factory = factory;
 
@@ -51,14 +49,14 @@ public class TextWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             if (widget == null) {
                 return;
             }
 
-            final ItemDB item = widget.getItem();
+            final OHItemWrapper item = widget.getItem();
             final Context context = factory.getContext();
-            if(item != null && item.getType().equals(ItemDB.TYPE_STRING) && item.getType().equals(ItemDB.TYPE_STRING)){
+            if(item != null && item.getType().equals(OHItemWrapper.TYPE_STRING) && item.getType().equals(OHItemWrapper.TYPE_STRING)){
 
                 baseHolder.getView().setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -71,10 +69,10 @@ public class TextWidgetFactory implements IWidgetFactory {
                         final EditText input = (EditText) inputView.findViewById(R.id.txt_command);
                         input.setText(item.getState());
 
-                        if(item.getType().equals(ItemDB.TYPE_STRING)) {
+                        if(item.getType().equals(OHItemWrapper.TYPE_STRING)) {
                             input.setInputType(InputType.TYPE_CLASS_TEXT);
                         }
-                        else if (item.getType().equals(ItemDB.TYPE_NUMBER)) {
+                        else if (item.getType().equals(OHItemWrapper.TYPE_NUMBER)) {
                             input.setInputType(InputType.TYPE_CLASS_NUMBER);
                         }
                         builder.setView(inputView);
@@ -83,7 +81,7 @@ public class TextWidgetFactory implements IWidgetFactory {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String text = input.getText().toString();
-                                Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), text);
+                                Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), text);
                             }
                         });
                         builder.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {

@@ -2,7 +2,7 @@ package treehou.se.habit.tasker.boundle;
 
 import android.os.Bundle;
 
-import treehou.se.habit.core.db.SitemapDB;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.OpenSitemapReciever;
 
@@ -16,7 +16,7 @@ public class OpenSitemapBoundleManager {
      * @param sitemap The toast message to be displayed by the plug-in. Cannot be null.
      * @return A plug-in bundle.
      */
-    public static Bundle generateOpenSitemapBundle(final SitemapDB sitemap) {
+    public static Bundle generateOpenSitemapBundle(final OHSitemapWrapper sitemap) {
 
         final Bundle result = new Bundle();
         result.putInt(IFireReciever.BUNDLE_EXTRA_TYPE, TYPE_COMMAND);

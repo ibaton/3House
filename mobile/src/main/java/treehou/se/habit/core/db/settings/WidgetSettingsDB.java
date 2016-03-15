@@ -1,16 +1,12 @@
 package treehou.se.habit.core.db.settings;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.Constants;
 
-@Table(name = "WidgetSettings")
-public class WidgetSettingsDB extends Model {
+public class WidgetSettingsDB extends RealmObject {
 
     private static final String TAG = "WidgetSettings";
     public static final String PREF_GLOBAL = "NotificationSettings";
@@ -22,25 +18,20 @@ public class WidgetSettingsDB extends Model {
     public static final int LIGHT_VIBRANT_COLOR = 4;
     public static final int DARK_VIBRANT_COLOR = 5;
 
-    @Column(name = "textSize")
+    @PrimaryKey
+    private long id = 0;
     private int textSize;
-
-    @Column(name = "imageBackground")
     private int imageBackground;
-
-    @Column(name = "iconSize")
     private int iconSize = 100;
-
-    @Column(name = "compressedSingleButton")
     private boolean compressedSingleButton = true;
-
-    @Column(name = "compressedSlider")
     private boolean compressedSlider = true;
 
-    public WidgetSettingsDB() {
-        super();
-        textSize = Constants.DEFAULT_TEXT_ADDON;
-        imageBackground = DARK_MUTED_COLOR;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getTextSize() {
@@ -73,7 +64,6 @@ public class WidgetSettingsDB extends Model {
 
     public void setCompressedSingleButton(boolean compressedSingleButton) {
         this.compressedSingleButton = compressedSingleButton;
-        save();
     }
 
     public boolean isCompressedSlider() {
@@ -82,29 +72,24 @@ public class WidgetSettingsDB extends Model {
 
     public void setCompressedSlider(boolean compressedSingleButton) {
         this.compressedSlider = compressedSingleButton;
-        save();
     }
 
-    public static WidgetSettingsDB loadGlobal(Context context){
-
-        SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_SERVER, Context.MODE_PRIVATE);
-        long id = preferences.getLong(PREF_GLOBAL,-1);
-
-        WidgetSettingsDB notificationSettings = null;
-
-        if(id != -1) {
-            notificationSettings = WidgetSettingsDB.load(WidgetSettingsDB.class, id);
+    public static void save(WidgetSettingsDB item){
+        Realm realm = OHRealm.realm();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
         }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+    }
 
-        if(notificationSettings == null) {
-            notificationSettings = new WidgetSettingsDB();
-            notificationSettings.save();
-
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(PREF_GLOBAL, notificationSettings.getId());
-            editor.apply();
-        }
-
-        return notificationSettings;
+    public static long getUniqueId() {
+        Realm realm = OHRealm.realm();
+        Number num = realm.where(WidgetSettingsDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
     }
 }

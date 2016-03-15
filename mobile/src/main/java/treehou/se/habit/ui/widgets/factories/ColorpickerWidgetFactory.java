@@ -20,12 +20,11 @@ import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.connector.GsonHelper;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -34,7 +33,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
     private static final String TAG = "ColorpickerWidget";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
         return ColorWidgetHolder.create(widgetFactory, widget, parent);
     }
 
@@ -109,11 +108,11 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         private int color;
         private View clrView;
 
-        public static ColorWidgetHolder create(WidgetFactory widgetFactory, Widget widget, Widget parent){
+        public static ColorWidgetHolder create(WidgetFactory widgetFactory, OHWidgetWrapper widget, OHWidgetWrapper parent){
             return new ColorWidgetHolder(widget, parent, widgetFactory);
         }
 
-        private ColorWidgetHolder(final Widget widget, Widget parent, final WidgetFactory widgetFactory) {
+        private ColorWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory widgetFactory) {
 
             LayoutInflater inflater = widgetFactory.getInflater();
             final Context context = widgetFactory.getContext();
@@ -125,14 +124,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0){
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_INCREMENT);
+                        Openhab.instance(widgetFactory.getServer()).sendCommand(widget.getItem().getName(), Constants.COMMAND_INCREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0){
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_ON);
+                        Openhab.instance(widgetFactory.getServer()).sendCommand(widget.getItem().getName(), Constants.COMMAND_ON);
                     }
                 }
             }));
@@ -142,14 +141,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0) {
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_DECREMENT);
+                        Openhab.instance(widgetFactory.getServer()).sendCommand(widget.getItem().getName(), Constants.COMMAND_DECREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0) {
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
+                        Openhab.instance(widgetFactory.getServer()).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
                     }
                 }
             }));
@@ -189,7 +188,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {

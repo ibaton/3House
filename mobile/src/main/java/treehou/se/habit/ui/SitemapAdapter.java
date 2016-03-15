@@ -6,15 +6,15 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.db.ServerDB;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 
 public class SitemapAdapter extends FragmentStatePagerAdapter {
 
-    private List<LinkedPage> mPages;
-    private ServerDB mServer;
+    private List<OHLinkedPageWrapper> mPages;
+    private OHServerWrapper mServer;
 
-    public SitemapAdapter(ServerDB server, FragmentManager fragmentManager, List<LinkedPage> pages){
+    public SitemapAdapter(OHServerWrapper server, FragmentManager fragmentManager, List<OHLinkedPageWrapper> pages){
         super(fragmentManager);
 
         mPages = pages;

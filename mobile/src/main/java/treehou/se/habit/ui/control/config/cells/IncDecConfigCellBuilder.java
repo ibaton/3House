@@ -23,7 +23,7 @@ public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, ControllerDB controller, CellDB cell){
 
-        IncDecCellDB numberCell = cell.incDecCell();
+        IncDecCellDB numberCell = null;//IncDecCellDB.getCell(cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 

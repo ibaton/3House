@@ -1,40 +1,36 @@
 package treehou.se.habit.core.db.controller;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 
-import treehou.se.habit.core.db.ItemDB;
+public class IncDecCellDB /*extends RealmObject*/ {
 
-@Table(name = "IncDecCell")
-public class IncDecCellDB extends Model {
+    //@PrimaryKey
+    private long id = 0;
+    private String icon;
+    private CellDB cell;
+    private int type;
+    private OHItemDB item;
+    private int value = 0;
+    private int min = 0;
+    private int max = 100;
 
-    @Column(name = "iconName")
-    public String icon;
+    public long getId() {
+        return id;
+    }
 
-    @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public CellDB cell;
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    @Column(name = "type")
-    public int type;
-
-    @Column(name = "Item")
-    public ItemDB item;
-
-    @Column(name = "value")
-    public int value = 0;
-
-    @Column(name = "min")
-    public int min = 0;
-
-    @Column(name = "max")
-    public int max = 100;
-
-    public ItemDB getItem() {
+    public OHItemDB getItem() {
         return item;
     }
 
-    public void setItem(ItemDB item) {
+    public void setItem(OHItemDB item) {
         this.item = item;
     }
 
@@ -85,4 +81,27 @@ public class IncDecCellDB extends Model {
     public int getMax() {
         return max;
     }
+
+    /*public static void save(IncDecCellDB item){
+        Realm realm = OHRealm.realm();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
+        }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+    }
+
+    public static IncDecCellDB getCell(CellDB cell){
+        return OHRealm.realm().where(IncDecCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
+    }
+
+    public static long getUniqueId() {
+        Realm realm = OHRealm.realm();
+        Number num = realm.where(IncDecCellDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
+    }*/
 }

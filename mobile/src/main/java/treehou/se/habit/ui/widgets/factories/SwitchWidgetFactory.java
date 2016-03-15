@@ -12,14 +12,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHMapping;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.core.wrappers.settings.WidgetSettings;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -29,17 +29,17 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(
-            WidgetFactory widgetFactory, LinkedPage page,
-            final Widget widget, final Widget parent) {
+            WidgetFactory widgetFactory, OHLinkedPageWrapper page,
+            final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
 
         if(widget.getMapping() == null || widget.getMapping().size() <= 0) {
-            final ItemDB item = widget.getItem();
+            final OHItemWrapper item = widget.getItem();
             if (item == null || item.getType() == null) {
                 Log.w(TAG, "Null switch created");
                 return new NullWidgetFactory().build(widgetFactory, page, widget, parent);
             }
 
-            if(item.getType().equals(ItemDB.TYPE_ROLLERSHUTTER)){
+            if(item.getType().equals(OHItemWrapper.TYPE_ROLLERSHUTTER)){
                 return RollerShutterWidgetHolder.create(widgetFactory, widget, parent);
             }else{
                 return SwitchWidgetHolder.create(widgetFactory, widget, parent);
@@ -63,11 +63,11 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public static RollerShutterWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+        public static RollerShutterWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
             return new RollerShutterWidgetHolder(widget, parent, factory);
         }
 
-        private RollerShutterWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private RollerShutterWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
@@ -75,7 +75,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     .setParent(parent)
                     .build();
 
-            final ItemDB item = widget.getItem();
+            final OHItemWrapper item = widget.getItem();
             View itemView = factory.getInflater().inflate(R.layout.item_widget_rollershutters, null);
 
             ImageButton btnUp = (ImageButton) itemView.findViewById(R.id.btn_up);
@@ -83,7 +83,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
-                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_UP);
+                        Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), Constants.COMMAND_UP);
                     }
                 }
             });
@@ -93,7 +93,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
-                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(item.getName(), Constants.COMMAND_STOP);
+                        Openhab.instance(factory.getServer()).sendCommand(item.getName(), Constants.COMMAND_STOP);
                     }
                 }
             });
@@ -104,7 +104,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
                         Communicator communicator = Communicator.instance(factory.getContext());
-                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(item.getName(), Constants.COMMAND_DOWN);
+                        Openhab.instance(factory.getServer()).sendCommand(item.getName(), Constants.COMMAND_DOWN);
                     }
                 }
             });
@@ -114,7 +114,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
@@ -142,11 +142,11 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         private WidgetFactory factory;
         private RadioGroup rgpMapping;
 
-        public static PickerWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+        public static PickerWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
             return new PickerWidgetHolder(widget, parent, factory);
         }
 
-        private PickerWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private PickerWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
 
             this.factory = factory;
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
@@ -163,18 +163,18 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
                 return;
             }
 
-            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
+            WidgetSettings settings = WidgetSettings.loadGlobal();
 
             //TODO do this smother
             rgpMapping.removeAllViews();
-            for (final Widget.Mapping mapping : widget.getMapping()) {
+            for (final OHMapping mapping : widget.getMapping()) {
                 RadioButton rbtMap = (RadioButton) factory.getInflater().inflate(R.layout.radio_button, null);
                 float percentage = Util.toPercentage(settings.getTextSize());
                 rbtMap.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage*rbtMap.getTextSize());
@@ -187,7 +187,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), mapping.getCommand());
+                            Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), mapping.getCommand());
                         }
                     }
                 });
@@ -216,13 +216,13 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
         private Button btnSingle;
 
-        public static SingleButtonWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+        public static SingleButtonWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
             return new SingleButtonWidgetHolder(widget, parent, factory);
         }
 
-        private SingleButtonWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private SingleButtonWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
             this.factory = factory;
-            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
+            WidgetSettings settings = WidgetSettings.loadGlobal();
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(settings.isCompressedSingleButton())
@@ -235,7 +235,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
             btnSingle = (Button) itemView.findViewById(R.id.btnSingle);
             if(widget.getMapping().size() == 1){
 
-                Widget.Mapping mapping = widget.getMapping().get(0);
+                OHMapping mapping = widget.getMapping().get(0);
                 if(widget.getItem() != null && mapping.getCommand().equals(widget.getItem().getState())) {
                     btnSingle.getBackground().setColorFilter(factory.getContext().getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
                 }
@@ -249,19 +249,19 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
                 return;
             }
 
-            final Widget.Mapping mapSingle = widget.getMapping().get(0);
+            final OHMapping mapSingle = widget.getMapping().get(0);
             btnSingle.setText(mapSingle.getLabel());
             btnSingle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), mapSingle.getCommand());
+                    Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), mapSingle.getCommand());
                 }
             });
 
@@ -285,13 +285,13 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private SwitchCompat swtSwitch;
 
-        public static SwitchWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+        public static SwitchWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
             return new SwitchWidgetHolder(widget, parent, factory);
         }
 
-        private SwitchWidgetHolder(final Widget widget, Widget parent, final WidgetFactory factory) {
+        private SwitchWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
 
-            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
+            WidgetSettings settings = WidgetSettings.loadGlobal();
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(true)
@@ -314,7 +314,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     Log.d(TAG, widget.getLabel() + " " + newState);
                     if (widget.getItem() != null) {
                         swtSwitch.setChecked(newState);
-                        Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
+                        Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
                     }
                 }
             });
@@ -324,7 +324,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null || widget.getItem() == null) {

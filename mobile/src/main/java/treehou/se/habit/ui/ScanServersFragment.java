@@ -19,11 +19,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHServer;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ServerDB;
 
 public class ScanServersFragment extends Fragment {
 
@@ -33,7 +32,7 @@ public class ScanServersFragment extends Fragment {
 
     private View viwEmpty;
 
-    private OHCallback<List<OHServer>> discoveryListener;
+    private OHCallback<List<OHServerWrapper>> discoveryListener;
 
     public static ScanServersFragment newInstance() {
         ScanServersFragment fragment = new ScanServersFragment();
@@ -51,11 +50,11 @@ public class ScanServersFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         serversAdapter = new ServersAdapter(getActivity());
-        serversAdapter.addAll(ServerDB.getServers());
+        serversAdapter.addAll(OHServerWrapper.loadAll());
         serversAdapter.setItemListener(new ServersAdapter.ItemListener() {
             @Override
             public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
-                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+                final OHServerWrapper server = serversAdapter.getItem(serverHolder.getAdapterPosition());
                 server.save();
 
                 getFragmentManager().popBackStack();
@@ -96,15 +95,15 @@ public class ScanServersFragment extends Fragment {
         super.onResume();
 
         serversAdapter.clear();
-        discoveryListener = new OHCallback<List<OHServer>>() {
+        discoveryListener = new OHCallback<List<OHServerWrapper>>() {
             @Override
-            public void onUpdate(final OHResponse<List<OHServer>> response) {
+            public void onUpdate(final OHResponse<List<OHServerWrapper>> response) {
                 if(isAdded()){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            for (OHServer server : response.body()) {
-                                serversAdapter.addItem(ServerDB.createFrom(server));
+                            for (OHServerWrapper server : response.body()) {
+                                serversAdapter.addItem(server);
                             }
                         }
                     });
@@ -133,7 +132,7 @@ public class ScanServersFragment extends Fragment {
 
     public static class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder>{
 
-        private List<ServerDB> items = new ArrayList<>();
+        private List<OHServerWrapper> items = new ArrayList<>();
         private Context context;
 
         private ItemListener itemListener = new DummyItemListener();
@@ -164,7 +163,7 @@ public class ScanServersFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final ServerHolder serverHolder, final int position) {
-            ServerDB server = items.get(position);
+            OHServerWrapper server = items.get(position);
 
             serverHolder.lblName.setText(server.getDisplayName(context));
             serverHolder.lblHost.setText(server.getUrl());
@@ -181,7 +180,7 @@ public class ScanServersFragment extends Fragment {
             return items.size();
         }
 
-        public ServerDB getItem(int position) {
+        public OHServerWrapper getItem(int position) {
             return items.get(position);
         }
 
@@ -209,7 +208,7 @@ public class ScanServersFragment extends Fragment {
             this.itemListener = itemListener;
         }
 
-        public void addItem(ServerDB item) {
+        public void addItem(OHServerWrapper item) {
             if(items.contains(item)){
                 return;
             }
@@ -218,16 +217,16 @@ public class ScanServersFragment extends Fragment {
             itemListener.itemCountUpdated(items.size());
         }
 
-        public void addAll(List<ServerDB> items) {
-            Iterator<ServerDB> serverIterator = items.iterator();
+        public void addAll(List<OHServerWrapper> items) {
+            Iterator<OHServerWrapper> serverIterator = items.iterator();
             while (serverIterator.hasNext()) {
-                ServerDB serverDB = serverIterator.next();
+                OHServerWrapper serverDB = serverIterator.next();
                 if(this.items.contains(serverDB)){
                     serverIterator.remove();
                 }
             }
 
-            for(ServerDB item : items) {
+            for(OHServerWrapper item : items) {
                 this.items.add(0, item);
             }
             notifyItemRangeInserted(0, items.size());
@@ -241,7 +240,7 @@ public class ScanServersFragment extends Fragment {
             itemListener.itemCountUpdated(items.size());
         }
 
-        public void removeItem(ServerDB item) {
+        public void removeItem(OHServerWrapper item) {
             int position = items.indexOf(item);
             items.remove(position);
             itemListener.itemCountUpdated(items.size());

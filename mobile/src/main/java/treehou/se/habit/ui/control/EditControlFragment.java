@@ -67,11 +67,11 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     private CellFactory<Integer> cellFactory;
 
-    public static EditControlFragment newInstance(Long id) {
+    public static EditControlFragment newInstance(long id) {
         EditControlFragment fragment = new EditControlFragment();
         Bundle args = new Bundle();
 
-        args.putLong(ARG_ID,id);
+        args.putLong(ARG_ID, id);
 
         fragment.setArguments(args);
         return fragment;
@@ -93,8 +93,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         cellFactory.addBuilder(CellDB.TYPE_COLOR, new ColorConfigCellBuilder());
 
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_ID);
-            controller = ControllerDB.load(ControllerDB.class, id);
+            long id = getArguments().getLong(ARG_ID);
+            controller = null;//ControllerDB.load(id);
         }
 
         ControlHelper.showNotification(getActivity(), controller);
@@ -115,14 +115,14 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         updateColorPalette(controller.getColor());
 
         ImageButton btnAddRow = (ImageButton) rootView.findViewById(R.id.btn_add_row);
-        btnAddRow.setOnClickListener(new View.OnClickListener() {
+        /*btnAddRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                controller.addRow();
-                Log.d("Controller", "Added controller, currently " + controller.cellRows().size() + " rows");
+                ControllerDB.addRow(controller);
+                Log.d("Controller", "Added controller, currently " + controller.getCellRows().size() + " rows");
                 redrawController();
             }
-        });
+        });*/
         redrawController();
 
         Intent i = new Intent("treehou.se.UPDATE_WIDGET");
@@ -184,10 +184,10 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
         ControlHelper.showNotification(getActivity(), controller);
 
-        louController.removeAllViews();
+        /*louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        Log.d(TAG, "Drawing controller " + controller.cellRows().size());
-        for (final CellRowDB row : controller.cellRows()){
+        Log.d(TAG, "Drawing controller " + controller.getCellRows().size());
+        for (final CellRowDB row : controller.getCellRows()){
             Log.d(TAG, "Drawing row " + row.getId());
             final LinearLayout louRow = (LinearLayout) inflater.inflate(R.layout.controller_row_edit, null);
 
@@ -199,7 +199,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
             final LinearLayout louColumnHolder = (LinearLayout) louRow.findViewById(R.id.lou_btn_holder);
             final ImageButton btnAddCell = (ImageButton) louRow.findViewById(R.id.btn_add_column);
 
-            for (final CellDB cell : row.cells()) {
+            for (final CellDB cell : row.getCells()) {
                 Log.d(TAG, "Drawing cell " + cell.getId());
                 final View itemView = cellFactory.create(getActivity(), controller, cell);
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -219,8 +219,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        cell.delete();
-                                        row.deleteCell(cell);
+                                        cell.removeFromRealm();
                                         redrawController();
                                     }
                                 })
@@ -236,12 +235,12 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
             btnAddCell.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    row.addCell();
+                    CellRowDB.addCell(row);
                     redrawController();
                 }
             });
             louController.addView(louRow);
-        }
+        }*/
     }
 
     /**
@@ -293,6 +292,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     public void setColor(int color) {
         controller.setColor(color);
         updateColorPalette(color);
-        controller.save();
+        //ControllerDB.save(controller);
     }
 }

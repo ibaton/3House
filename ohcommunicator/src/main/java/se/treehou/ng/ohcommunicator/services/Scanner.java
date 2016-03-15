@@ -20,7 +20,7 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
-import se.treehou.ng.ohcommunicator.core.OHServer;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import se.treehou.ng.ohcommunicator.util.ThreadPool;
@@ -35,12 +35,12 @@ public class Scanner {
     private WifiManager.MulticastLock lock;
     private WifiManager wifi;
 
-    private Set<OHCallback<List<OHServer>>> discoveryListeners = new HashSet<>();
+    private Set<OHCallback<List<OHServerWrapper>>> discoveryListeners = new HashSet<>();
     private ServiceListener serviceListener;
 
     private BroadcastReceiver broadcastReceiver;
 
-    private Set<OHServer> servers = new HashSet<>();
+    private Set<OHServerWrapper> servers = new HashSet<>();
 
     public Scanner(Context context) {
         this.context = context;
@@ -73,7 +73,7 @@ public class Scanner {
                 String proto = event.getType().contains("ssl") ? "https" : "http";
                 Uri serverUri = Uri.parse(serviceUrls[0]).buildUpon().scheme(proto).build();
 
-                final OHServer server = new OHServer();
+                final OHServerWrapper server = new OHServerWrapper();
                 server.setName(event.getName());
                 server.setLocalUrl(serverUri.toString());
 
@@ -154,7 +154,7 @@ public class Scanner {
         });
     }
 
-    public void registerServerDiscoveryListener(OHCallback<List<OHServer>> listener){
+    public void registerServerDiscoveryListener(OHCallback<List<OHServerWrapper>> listener){
         if(listener == null){
             return;
         }
@@ -166,7 +166,7 @@ public class Scanner {
         }
     }
 
-    public void deregisterServerDiscoveryListener(OHCallback<List<OHServer>> listener){
+    public void deregisterServerDiscoveryListener(OHCallback<List<OHServerWrapper>> listener){
         discoveryListeners.remove(listener);
         if(discoveryListeners.size() <= 0){
             stopScan();
@@ -177,9 +177,9 @@ public class Scanner {
      * Update listeners that servers have been found
      * @param servers
      */
-    public void serverFound(Set<OHServer> servers){
-        List<OHServer> serverList = new ArrayList<>(servers);
-        for (OHCallback<List<OHServer>> listener : discoveryListeners) {
+    public void serverFound(Set<OHServerWrapper> servers){
+        List<OHServerWrapper> serverList = new ArrayList<>(servers);
+        for (OHCallback<List<OHServerWrapper>> listener : discoveryListeners) {
             serverFound(serverList, listener);
         }
     }
@@ -188,15 +188,15 @@ public class Scanner {
      * Update listeners that servers have been found
      * @param servers
      */
-    public void serverFound(List<OHServer> servers, OHCallback<List<OHServer>> listener){
-        listener.onUpdate(new OHResponse.Builder<List<OHServer>>(new ArrayList<>(servers)).fromCache(false).build());
+    public void serverFound(List<OHServerWrapper> servers, OHCallback<List<OHServerWrapper>> listener){
+        listener.onUpdate(new OHResponse.Builder<List<OHServerWrapper>>(new ArrayList<>(servers)).fromCache(false).build());
     }
 
     /**
      * Update listeners that servers have been found
      * @param servers
      */
-    public void serverFound(Set<OHServer> servers, OHCallback<List<OHServer>> listener){
-        listener.onUpdate(new OHResponse.Builder<List<OHServer>>(new ArrayList<>(servers)).fromCache(false).build());
+    public void serverFound(Set<OHServerWrapper> servers, OHCallback<List<OHServerWrapper>> listener){
+        listener.onUpdate(new OHResponse.Builder<List<OHServerWrapper>>(new ArrayList<>(servers)).fromCache(false).build());
     }
 }

@@ -10,21 +10,21 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import treehou.se.habit.core.db.ItemDB;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
 
-public class ItemListDeserializer implements JsonDeserializer<List<ItemDB>> {
+public class ItemListDeserializer implements JsonDeserializer<List<OHItemWrapper>> {
 
     private static final String TAG = "ItemDeserializer";
 
     @Override
-    public List<ItemDB> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public List<OHItemWrapper> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
-        List<ItemDB> itemList = new ArrayList<>();
+        List<OHItemWrapper> itemList = new ArrayList<>();
 
         if (json.isJsonArray()) {
             JsonArray jsonArray = json.getAsJsonArray();
             for (JsonElement e : jsonArray) {
-                ItemDB item = context.deserialize(e, ItemDB.class);
+                OHItemWrapper item = context.deserialize(e, OHItemWrapper.class);
                 itemList.add(item);
             }
         }

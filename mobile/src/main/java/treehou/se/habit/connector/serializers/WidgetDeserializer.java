@@ -13,19 +13,20 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ItemDB;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHMapping;
 
-public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
+public class WidgetDeserializer implements JsonDeserializer<List<OHWidgetWrapper>> {
 
     private static final String TAG = "WidgetDeserializer";
 
     private static final String KEY_LINKED_PAGE = "linkedPage";
 
-    private Widget deserializeWidget(JsonObject jObject, JsonDeserializationContext context){
+    private OHWidgetWrapper deserializeWidget(JsonObject jObject, JsonDeserializationContext context){
 
-        Widget widget = new Widget();
+        OHWidgetWrapper widget = new OHWidgetWrapper();
         widget.setType(jObject.get("type").getAsString());
         widget.setLabel(jObject.get("label").getAsString());
         widget.setWidgetId(jObject.get("widgetId").getAsString());
@@ -44,7 +45,7 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
         }
 
         if(jObject.has("item")){
-            ItemDB item = context.deserialize(jObject.get("item").getAsJsonObject(), ItemDB.class);
+            OHItemWrapper item = context.deserialize(jObject.get("item").getAsJsonObject(), OHItemWrapper.class);
             widget.setItem(item);
         }
 
@@ -66,30 +67,30 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
 
         if(jObject.has(KEY_LINKED_PAGE)){
             JsonObject jLinkedPage = jObject.getAsJsonObject(KEY_LINKED_PAGE);
-            LinkedPage linkedPage = context.deserialize(jLinkedPage, LinkedPage.class);
-            widget.setLinkedPage(linkedPage);
+            OHLinkedPageWrapper linkedPage = context.deserialize(jLinkedPage, OHLinkedPageWrapper.class);
+            widget.setLinkedPage(linkedPage.getDb());
         }
 
         if(jObject.has("widget")) {
             JsonElement jWidgetElement = jObject.get("widget");
-            List<Widget> widgets = context.deserialize(jWidgetElement, new TypeToken<List<Widget>>() {}.getType());
+            List<OHWidgetWrapper> widgets = context.deserialize(jWidgetElement, new TypeToken<List<OHWidgetWrapper>>() {}.getType());
             widget.setWidget(widgets);
         }
         else if(jObject.has("widgets")) { // openhab2 compat
             JsonElement jWidgetElement = jObject.get("widgets");
-            List<Widget> widgets = context.deserialize(jWidgetElement, new TypeToken<List<Widget>>() {}.getType());
+            List<OHWidgetWrapper> widgets = context.deserialize(jWidgetElement, new TypeToken<List<OHWidgetWrapper>>() {}.getType());
             widget.setWidget(widgets);
         }
 
         if(jObject.has("mapping")) {
             JsonElement jMappingElement = jObject.get("mapping");
-            List<Widget.Mapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<Widget.Mapping>>(){}.getType());
+            List<OHMapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<OHMapping>>(){}.getType());
             widget.setMapping(mapping);
         }
 
         if(jObject.has("mappings")) {
             JsonElement jMappingElement = jObject.get("mappings");
-            List<Widget.Mapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<Widget.Mapping>>(){}.getType());
+            List<OHMapping> mapping = context.deserialize(jMappingElement, new TypeToken<List<OHMapping>>(){}.getType());
             widget.setMapping(mapping);
         }
 
@@ -98,17 +99,17 @@ public class WidgetDeserializer implements JsonDeserializer<List<Widget>> {
     }
 
     @Override
-    public List<Widget> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public List<OHWidgetWrapper> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
-        List<Widget> widgets = new ArrayList<>();
+        List<OHWidgetWrapper> widgets = new ArrayList<>();
 
         if(json.isJsonObject()) {
-            Widget widget = deserializeWidget(json.getAsJsonObject(), context);
+            OHWidgetWrapper widget = deserializeWidget(json.getAsJsonObject(), context);
             widgets.add(widget);
         }else if(json.isJsonArray()){
             JsonArray jWidgets = json.getAsJsonArray();
             for(JsonElement e : jWidgets){
-                Widget widget = deserializeWidget(e.getAsJsonObject(), context);
+                OHWidgetWrapper widget = deserializeWidget(e.getAsJsonObject(), context);
                 widgets.add(widget);
             }
         }

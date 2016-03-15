@@ -26,6 +26,7 @@ import org.atmosphere.wasync.Socket;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,10 +45,12 @@ import se.treehou.ng.ohcommunicator.connector.Constants;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.OpenHabService;
 import se.treehou.ng.ohcommunicator.connector.TrustModifier;
-import se.treehou.ng.ohcommunicator.core.OHBinding;
-import se.treehou.ng.ohcommunicator.core.OHInboxItem;
-import se.treehou.ng.ohcommunicator.core.OHItem;
-import se.treehou.ng.ohcommunicator.core.OHServer;
+import se.treehou.ng.ohcommunicator.core.OHBindingWrapper;
+import se.treehou.ng.ohcommunicator.core.OHInboxItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHserver;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import se.treehou.ng.ohcommunicator.util.ThreadPool;
@@ -59,13 +62,13 @@ public class Connector {
     private static final int UPDATE_FREQUENCY = 5000;
 
     private Context context;
-    private Map<OHServer, ServerHandler> serverHandlers = new HashMap<>();
+    private Map<Long, ServerHandler> serverHandlers = new HashMap<>();
 
     public Connector(Context context) {
         this.context = context;
     }
 
-    public static OpenHabService generateOpenHabService(OHServer server, String url){
+    public static OpenHabService generateOpenHabService(OHServerWrapper server, String url){
         try {
             return BasicAuthServiceGenerator.createService(OpenHabService.class, server, url);
         }
@@ -75,69 +78,73 @@ public class Connector {
         return null;
     }
 
-    public ServerHandler getServerHandler(OHServer server){
-        ServerHandler serverHandler = serverHandlers.get(server);
+    public ServerHandler getServerHandler(long serverId){
+        ServerHandler serverHandler = serverHandlers.get(serverId);
         if(serverHandler == null) {
-            serverHandler = new ServerHandler(server, context);
+            serverHandler = new ServerHandler(serverId, context);
             serverHandler.start();
         }
-        serverHandlers.put(server, serverHandler);
+        serverHandlers.put(serverId, serverHandler);
         return serverHandler;
     }
 
-    public Map<OHServer, ServerHandler> getServerHandlers() {
+    public Map<Long, ServerHandler> getServerHandlers() {
         return serverHandlers;
     }
 
     public static class ServerHandler {
 
-        private OHServer server;
+        private long serverId;
         private Timer scheduler;
         private Context context;
 
         private OpenHabService openHabService;
 
-        private List<OHInboxItem> inboxItems = new ArrayList<>();
-        private List<OHCallback<List<OHInboxItem>>> inboxCallbacks = new ArrayList<>();
+        private List<OHInboxItemWrapper> inboxItems = new ArrayList<>();
+        private List<OHCallback<List<OHInboxItemWrapper>>> inboxCallbacks = new ArrayList<>();
 
-        private List<OHBinding> bindings = new ArrayList<>();
-        private List<OHCallback<List<OHBinding>>> bindingCallbacks = new ArrayList<>();
+        private List<OHBindingWrapper> bindings = new ArrayList<>();
+        private List<OHCallback<List<OHBindingWrapper>>> bindingCallbacks = new ArrayList<>();
 
-        private Map<String, List<OHCallback<OHItem>>> itemCallbacks = new HashMap<>();
+        private Map<String, List<OHCallback<OHItemWrapper>>> itemCallbacks = new HashMap<>();
 
 
-        private List<OHItem> items = new ArrayList<>();
-        private List<OHCallback<List<OHItem>>> itemsCallbacks = new ArrayList<>();
+        private List<OHItemWrapper> items = new ArrayList<>();
+        private List<OHCallback<List<OHItemWrapper>>> itemsCallbacks = new ArrayList<>();
 
-        public ServerHandler(OHServer server, Context context) {
-            this.server = server;
+        private List<OHCallback<List<OHSitemapWrapper>>> sitemapCallbacks = new ArrayList<>();
+
+        public ServerHandler(long serverId, Context context) {
+            this.serverId = serverId;
             this.context = context;
+
+            OHServerWrapper server = new OHServerWrapper(OHserver.load(serverId));
             openHabService = generateOpenHabService(server, server.getUrl());
         }
 
-        public void registerBindingListener(OHCallback<List<OHBinding>> bindingCallback){
+        public void registerBindingListener(OHCallback<List<OHBindingWrapper>> bindingCallback){
             if(bindingCallback == null){
                 return;
             }
             bindingCallbacks.add(bindingCallback);
-            bindingCallback.onUpdate(new OHResponse.Builder<List<OHBinding>>(new ArrayList<>(bindings)).fromCache(true).build());
+            bindingCallback.onUpdate(new OHResponse.Builder<List<OHBindingWrapper>>(new ArrayList<>(bindings)).fromCache(true).build());
         }
 
-        public void deregisterBindingListener(OHCallback<List<OHBinding>> binidngCallback){
+        public void deregisterBindingListener(OHCallback<List<OHBindingWrapper>> binidngCallback){
             bindingCallbacks.remove(binidngCallback);
         }
 
-        public void registerInboxListener(final OHCallback<List<OHInboxItem>> inboxCallback){
+        public void registerInboxListener(final OHCallback<List<OHInboxItemWrapper>> inboxCallback){
             if(inboxCallback == null) return;
 
             inboxCallbacks.add(inboxCallback);
-            inboxCallback.onUpdate(new OHResponse.Builder<List<OHInboxItem>>(new ArrayList<>(inboxItems)).fromCache(true).build());
+            inboxCallback.onUpdate(new OHResponse.Builder<List<OHInboxItemWrapper>>(new ArrayList<>(inboxItems)).fromCache(true).build());
 
             Uri uri = Uri.parse(getUrl()).buildUpon().appendPath(Constants.PATH_REST).appendPath(Constants.PATH_INBOX).build();
-            connectServer(uri, inboxCallback);
+            connectServer(uri, new TypeToken<List<OHInboxItemWrapper>>(){}.getType(), inboxCallback);
         }
 
-        public void deregisterInboxListener(OHCallback<List<OHInboxItem>> inboxCallback){
+        public void deregisterInboxListener(OHCallback<List<OHInboxItemWrapper>> inboxCallback){
             bindingCallbacks.remove(inboxCallback);
         }
 
@@ -147,9 +154,9 @@ public class Connector {
          * @param name the name of item.
          * @return the item if found, else null.
          */
-        private OHItem getItem(String name){
+        private OHItemWrapper getItem(String name){
 
-            for(OHItem item : items){
+            for(OHItemWrapper item : items){
                 if(item.getName().equals(name)){
                     return item;
                 }
@@ -157,12 +164,12 @@ public class Connector {
             return null;
         }
 
-        public void registerItemListener(String itemName, OHCallback<OHItem> itemCallback){
+        public void registerItemListener(String itemName, OHCallback<OHItemWrapper> itemCallback){
             if(itemCallback == null){
                 return;
             }
 
-            List<OHCallback<OHItem>> callbacks = itemCallbacks.get(itemName);
+            List<OHCallback<OHItemWrapper>> callbacks = itemCallbacks.get(itemName);
             if(callbacks == null){
                 callbacks = new ArrayList<>();
                 itemCallbacks.put(itemName, callbacks);
@@ -171,25 +178,25 @@ public class Connector {
             callbacks.add(itemCallback);
 
             // TODO Trigger request
-            OHItem item = getItem(itemName);
+            OHItemWrapper item = getItem(itemName);
             if(item != null) {
                 itemCallback.onUpdate(new OHResponse.Builder<>(item).fromCache(true).build());
             }
         }
 
-        public void deregisterItemListener(OHCallback<OHItem> inboxCallback){
+        public void deregisterItemListener(OHCallback<OHItemWrapper> inboxCallback){
             bindingCallbacks.remove(inboxCallback);
         }
 
-        public void registerItemsListener(OHCallback<List<OHItem>> itemCallback){
+        public void registerItemsListener(OHCallback<List<OHItemWrapper>> itemCallback){
             if(itemCallback == null){
                 return;
             }
             itemsCallbacks.add(itemCallback);
-            itemCallback.onUpdate(new OHResponse.Builder<List<OHItem>>(new ArrayList<>(items)).fromCache(true).build());
+            itemCallback.onUpdate(new OHResponse.Builder<List<OHItemWrapper>>(new ArrayList<>(items)).fromCache(true).build());
         }
 
-        public void deregisterItemsListener(OHCallback<List<OHItem>> itemCallback){
+        public void deregisterItemsListener(OHCallback<List<OHItemWrapper>> itemCallback){
             itemsCallbacks.remove(itemCallback);
         }
 
@@ -200,6 +207,7 @@ public class Connector {
          */
         private String getUrl(){
             // TODO determine if local or remote
+            OHServerWrapper server = OHServerWrapper.load(serverId);
             String url = server.getLocalUrl();
             NetworkInfo networkInfo = getNetworkInfo(context);
             if(networkInfo == null || !networkInfo.isConnected()){
@@ -213,6 +221,7 @@ public class Connector {
         }
 
         private OpenHabService getService(){
+            OHServerWrapper server = OHServerWrapper.load(serverId);
             openHabService = generateOpenHabService(server, getUrl());
 
             return openHabService;
@@ -246,7 +255,7 @@ public class Connector {
          *
          * @param inboxItem the inbox item to approve.
          */
-        public void approveInboxItem (OHInboxItem inboxItem){
+        public void approveInboxItem (OHInboxItemWrapper inboxItem){
             OpenHabService service = getService();
             if(service == null) return;
 
@@ -271,7 +280,7 @@ public class Connector {
          *
          * @param inboxItem the inbox item to ignore.
          */
-        public void ignoreInboxItem(OHInboxItem inboxItem){
+        public void ignoreInboxItem(OHInboxItemWrapper inboxItem){
             OpenHabService service = getService();
             if(service == null) return;
 
@@ -286,7 +295,7 @@ public class Connector {
 
                 }
             });
-            inboxItem.setFlag(OHInboxItem.FLAG_IGNORED);
+            inboxItem.setFlag(OHInboxItemWrapper.FLAG_IGNORED);
             updateInboxItems(inboxItems);
         }
 
@@ -296,7 +305,7 @@ public class Connector {
          *
          * @param inboxItem the inbox item to unignore.
          */
-        public void unignoreInboxItem(OHInboxItem inboxItem){
+        public void unignoreInboxItem(OHInboxItemWrapper inboxItem){
             OpenHabService service = getService();
             if(service == null) return;
 
@@ -311,76 +320,76 @@ public class Connector {
 
                 }
             });
-            inboxItem.setFlag(OHInboxItem.FLAG_NEW);
+            inboxItem.setFlag(OHInboxItemWrapper.FLAG_NEW);
             updateInboxItems(inboxItems);
         }
 
         /**
          * Get all inbox items.
          */
-        public List<OHInboxItem> getInboxItems(){
+        public List<OHInboxItemWrapper> getInboxItems(){
             return new ArrayList<>(inboxItems);
         }
 
         /**
-         * Update all listeners {@link OHCallback<List<OHInboxItem>>} with provided items.
+         * Update all listeners {@link OHCallback<List< OHInboxItemWrapper >>} with provided items.
          *
          * @param items updateInboxItems all listeners.
          */
-        private void updateInboxItems(List<OHInboxItem> items){
+        private void updateInboxItems(List<OHInboxItemWrapper> items){
             if(items == null){
                 items = new ArrayList<>();
             }
 
             inboxItems = new ArrayList<>(items);
-            for(OHCallback<List<OHInboxItem>> callback : inboxCallbacks){
-                callback.onUpdate(new OHResponse.Builder<List<OHInboxItem>>(new ArrayList<>(items)).fromCache(false).build());
+            for(OHCallback<List<OHInboxItemWrapper>> callback : inboxCallbacks){
+                callback.onUpdate(new OHResponse.Builder<List<OHInboxItemWrapper>>(new ArrayList<>(items)).fromCache(false).build());
             }
         }
 
         /**
-         * Update all listeners {@link OHCallback<List<OHItem>>} with provided items.
+         * Update all listeners {@link OHCallback<List< OHItemWrapper >>} with provided items.
          *
          * @param newItems updateItems all listeners.
          */
-        private void updateItems(List<OHItem> newItems){
+        private void updateItems(List<OHItemWrapper> newItems){
             if(items == null){
                 items = new ArrayList<>();
             }
 
             items = new ArrayList<>(items);
-            for(OHCallback<List<OHItem>> callback : itemsCallbacks){
-                callback.onUpdate(new OHResponse.Builder<List<OHItem>>(new ArrayList<>(items)).fromCache(false).build());
+            for(OHCallback<List<OHItemWrapper>> callback : itemsCallbacks){
+                callback.onUpdate(new OHResponse.Builder<List<OHItemWrapper>>(new ArrayList<>(items)).fromCache(false).build());
             }
         }
 
         /**
-         * Update all listeners {@link OHCallback<OHItem>} with provided items.
+         * Update all listeners {@link OHCallback< OHItemWrapper >} with provided items.
          *
          * @param newItem updateItem all listeners.
          */
-        private void updateItem(OHItem newItem){
-            List<OHCallback<OHItem>> callbacks = itemCallbacks.get(newItem.getName());
+        private void updateItem(OHItemWrapper newItem){
+            List<OHCallback<OHItemWrapper>> callbacks = itemCallbacks.get(newItem.getName());
             if(callbacks != null){
-                for(OHCallback<OHItem> callback : callbacks){
+                for(OHCallback<OHItemWrapper> callback : callbacks){
                     callback.onUpdate(new OHResponse.Builder<>(newItem).fromCache(false).build());
                 }
             }
         }
 
         /**
-         * Update all listeners {@link OHCallback<List<OHInboxItem>>} with provided items.
+         * Update all listeners {@link OHCallback<List< OHInboxItemWrapper >>} with provided items.
          *
          * @param items update Bindings for all listeners.
          */
-        private void updateBindings(List<OHBinding> items){
+        private void updateBindings(List<OHBindingWrapper> items){
             if(items == null){
                 items = new ArrayList<>();
             }
 
             bindings = new ArrayList<>(items);
-            for(OHCallback<List<OHBinding>> callback : bindingCallbacks){
-                callback.onUpdate(new OHResponse.Builder<List<OHBinding>>(new ArrayList<>(bindings)).fromCache(false).build());
+            for(OHCallback<List<OHBindingWrapper>> callback : bindingCallbacks){
+                callback.onUpdate(new OHResponse.Builder<List<OHBindingWrapper>>(new ArrayList<>(bindings)).fromCache(false).build());
             }
         }
 
@@ -396,6 +405,7 @@ public class Connector {
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable e) {
+                    OHServerWrapper server = OHServerWrapper.load(serverId);
                     Log.e(TAG, "Error: sending command " + server.getUrl() + " body: " + command, e);
                 }
             });
@@ -407,7 +417,7 @@ public class Connector {
          * @param server the server to connect to
          * @return Realm for server
          */
-        private Realm createRealm(OHServer server){
+        private Realm createRealm(OHServerWrapper server){
             Realm realm = new Realm.RealmBuilder()
                     .setPrincipal(server.getUsername())
                     .setPassword(server.getPassword())
@@ -418,11 +428,52 @@ public class Connector {
             return realm;
         }
 
-        private <G> void connectServer(final Uri url, final OHCallback<G> callback){
+        public void registerSitemapsListener(/*final OHCallback<RealmResults<OHSitemap>> sitemapsCallback*/){
+
+            /*Uri uri = Uri.parse(getUrl()).buildUpon().appendPath(Constants.PATH_REST).appendPath(Constants.PATH_SITEMAPS).build();
+            connectServer(uri, new TypeToken<List<OHSitemap>>() {}.getType(), new OHCallback<List<OHSitemap>>(){
+                @Override
+                public void onUpdate(OHResponse<List<OHSitemap>> items) {
+
+                    io.realm.Realm realm = OHRealm.realm();
+                    if(!realm.isInTransaction()) {
+                        realm.beginTransaction();
+                    }
+
+                    for(OHSitemap newSitemap : items.body()){
+                        OHserver serverDb = OHserver.load(serverId);
+                        OHSitemap sitemapDb = io.realm.Realm.getDefaultInstance().where(OHSitemap.class).equalTo("name", newSitemap.getName()).equalTo("server.id", serverId).findFirst();
+                        if(sitemapDb == null){
+                            newSitemap.setId(OHSitemap.getUniqueId());
+                            newSitemap.setServer(serverDb);
+                        } else {
+                            newSitemap.setId(sitemapDb.getId());
+                            newSitemap.setServer(serverDb);
+                        }
+                        realm.copyToRealmOrUpdate(newSitemap);
+                    }
+                    realm.commitTransaction();
+                    realm.close();
+
+                    sitemapsCallback.onUpdate(new OHResponse.Builder<>(realm.where(OHSitemap.class).findAll()).build());
+                }
+
+                @Override
+                public void onError() {
+                    Log.d(TAG, "registerSitemapsListener error");
+                }
+            });*/
+        }
+
+        private <G> void connectServer(final Uri url, final Type type, final OHCallback<G> callback){
+
+            Log.d(TAG, "Longpolling connection to url " + url);
 
             ThreadPool.instance().submit(new Runnable() {
                 @Override
                 public void run() {
+
+                    OHServerWrapper server = OHServerWrapper.load(serverId);
 
                     Realm realm = null;
                     if(server.requiresAuth()){
@@ -460,10 +511,12 @@ public class Connector {
                                 @Override
                                 public G decode(Event e, String s) {
                                     if(Event.MESSAGE == e) {
-                                        Gson gson = GsonHelper.createGsonBuilder();
-                                        G item = gson.fromJson(s, new TypeToken<G>() {}.getType());
-                                        callback.onUpdate(new OHResponse.Builder<>(item).fromCache(false).build());
+                                        Gson gson = GsonHelper.createRealmGsonBuilder();
+                                        G item = gson.fromJson(s, type);
 
+                                        Log.d(TAG, "wasync requestBuilder Updating callback " + item);
+                                        callback.onUpdate(new OHResponse.Builder<>(item).fromCache(false).build());
+                                        Log.d(TAG, "wasync requestBuilder Updated callback " + callback);
                                         return item;
                                     }
                                     return null;
@@ -490,7 +543,7 @@ public class Connector {
                         Log.d(TAG, "wasync Got error " + e);
                     }
 
-                    Log.d(TAG,"wasync Poller started");
+                    Log.d(TAG,"Longpolling Poller started");
                 }
             });
         }
@@ -509,16 +562,16 @@ public class Connector {
 
                         /*if (inboxCallbacks.size() > 0) {
                             Log.d(TAG, "Requesting inbox updateInboxItems");
-                            service.listInboxItems().enqueue(new Callback<List<OHInboxItem>>() {
+                            service.listInboxItems().enqueue(new Callback<List<OHInboxItemWrapper>>() {
 
                                 @Override
-                                public void onResponse(Call<List<OHInboxItem>> call, Response<List<OHInboxItem>> response) {
+                                public void onResponse(Call<List<OHInboxItemWrapper>> call, Response<List<OHInboxItemWrapper>> response) {
                                     Log.d(TAG, "Inbox updated size " + response.body().size());
                                     updateInboxItems(response.body());
                                 }
 
                                 @Override
-                                public void onFailure(Call<List<OHInboxItem>> call, Throwable e) {
+                                public void onFailure(Call<List<OHInboxItemWrapper>> call, Throwable e) {
                                     Log.e(TAG, "Error requesting inbox", e);
                                 }
                             });
@@ -526,16 +579,16 @@ public class Connector {
 
                         if (bindingCallbacks.size() > 0) {
                             Log.d(TAG, "Requesting inbox updateInboxItems");
-                            service.listBindings().enqueue(new Callback<List<OHBinding>>() {
+                            service.listBindings().enqueue(new Callback<List<OHBindingWrapper>>() {
 
                                 @Override
-                                public void onResponse(Call<List<OHBinding>> call, Response<List<OHBinding>> response) {
+                                public void onResponse(Call<List<OHBindingWrapper>> call, Response<List<OHBindingWrapper>> response) {
                                     Log.d(TAG, "Inbox updated size " + response.body().size());
                                     updateBindings(response.body());
                                 }
 
                                 @Override
-                                public void onFailure(Call<List<OHBinding>> call, Throwable e) {
+                                public void onFailure(Call<List<OHBindingWrapper>> call, Throwable e) {
                                     Log.e(TAG, "Error requesting bindings", e);
                                 }
                             });
@@ -543,16 +596,16 @@ public class Connector {
 
                         if (itemsCallbacks.size() > 0) {
                             Log.d(TAG, "Requesting items");
-                            service.listItems().enqueue(new Callback<List<OHItem>>() {
+                            service.listItems().enqueue(new Callback<List<OHItemWrapper>>() {
 
                                 @Override
-                                public void onResponse(Call<List<OHItem>> call, Response<List<OHItem>> response) {
+                                public void onResponse(Call<List<OHItemWrapper>> call, Response<List<OHItemWrapper>> response) {
                                     Log.d(TAG, "Items updated size " + response.body().size());
                                     updateItems(response.body());
                                 }
 
                                 @Override
-                                public void onFailure(Call<List<OHItem>> call, Throwable e) {
+                                public void onFailure(Call<List<OHItemWrapper>> call, Throwable e) {
                                     Log.e(TAG, "Error requesting items", e);
                                 }
                             });
@@ -560,18 +613,18 @@ public class Connector {
 
                         if (itemCallbacks.size() > 0) {
                             Log.d(TAG, "Requesting items");
-                            for (Map.Entry<String, List<OHCallback<OHItem>>> entry : itemCallbacks.entrySet()) {
-                                service.getItem(entry.getKey()).enqueue(new Callback<OHItem>() {
+                            for (Map.Entry<String, List<OHCallback<OHItemWrapper>>> entry : itemCallbacks.entrySet()) {
+                                service.getItem(entry.getKey()).enqueue(new Callback<OHItemWrapper>() {
 
                                     @Override
-                                    public void onResponse(Call<OHItem> call, Response<OHItem> response) {
+                                    public void onResponse(Call<OHItemWrapper> call, Response<OHItemWrapper> response) {
                                         Log.d(TAG, "Item updated size " + response.body());
-                                        OHItem item = response.body();
+                                        OHItemWrapper item = response.body();
                                         updateItem(item);
                                     }
 
                                     @Override
-                                    public void onFailure(Call<OHItem> call, Throwable e) {
+                                    public void onFailure(Call<OHItemWrapper> call, Throwable e) {
                                         Log.e(TAG, "Error requesting items", e);
                                     }
                                 });

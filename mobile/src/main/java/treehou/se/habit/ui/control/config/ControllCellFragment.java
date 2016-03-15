@@ -42,8 +42,8 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            long cellId = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(CellDB.class, cellId);
+            int cellId = getArguments().getInt(ARG_CELL_ID);
+            cell = null;//CellDB.load(cellId);
         }
 
         String[] cellTypes = getResources().getStringArray(R.array.cell_types);
@@ -93,7 +93,7 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
             int cellType = getResources().getIntArray(R.array.cell_types_values)[position];
 
             cell.setType(cellType);
-            cell.save();
+            //CellDB.save(cell);
 
             Log.d(TAG, "item selected " + cellType + " " + position);
 
@@ -147,6 +147,6 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         Log.d(TAG,"Color set: " + color);
         btnPicker.setBackgroundColor(color);
         cell.setColor(color);
-        cell.save();
+        //CellDB.save(cell);
     }
 }

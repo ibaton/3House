@@ -18,13 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItem;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 
 public class IncDecActionFragment extends Fragment {
@@ -36,8 +34,8 @@ public class IncDecActionFragment extends Fragment {
     private TextView txtMin;
     private TextView txtMax;
 
-    private ArrayAdapter<OHItem> itemAdapter;
-    private List<OHItem> filteredItems = new ArrayList<>();
+    private ArrayAdapter<OHItemWrapper> itemAdapter;
+    private List<OHItemWrapper> filteredItems = new ArrayList<>();
 
     public static IncDecActionFragment newInstance() {
         IncDecActionFragment fragment = new IncDecActionFragment();
@@ -73,17 +71,17 @@ public class IncDecActionFragment extends Fragment {
                 sprItems.setAdapter(itemAdapter);
             }
         });
-        List<ServerDB> servers = ServerDB.getServers();
+        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
         filteredItems.clear();
 
-        for(final ServerDB server : servers) {
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
+        for(final OHServerWrapper server : servers) {
+            OHCallback<List<OHItemWrapper>> callback = new OHCallback<List<OHItemWrapper>>() {
                 @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
+                public void onUpdate(OHResponse<List<OHItemWrapper>> response) {
+                    List<OHItemWrapper> items = filterItems(response.body());
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
-                    Openhab.instance(ServerDB.toGeneric(server)).deregisterItemsListener(this);
+                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -92,7 +90,7 @@ public class IncDecActionFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(ServerDB.toGeneric(server)).registerItemsListener(callback);
+            Openhab.instance(server).registerItemsListener(callback);
         }
 
         Button btnSave = (Button) rootView.findViewById(R.id.btn_save);
@@ -107,10 +105,10 @@ public class IncDecActionFragment extends Fragment {
         return rootView;
     }
 
-    private List<OHItem> filterItems(List<OHItem> items){
+    private List<OHItemWrapper> filterItems(List<OHItemWrapper> items){
 
-        List<OHItem> tempItems = new ArrayList<>();
-        for(OHItem item : items){
+        List<OHItemWrapper> tempItems = new ArrayList<>();
+        for(OHItemWrapper item : items){
             if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }
@@ -131,7 +129,7 @@ public class IncDecActionFragment extends Fragment {
             int min = Integer.parseInt(txtMin.getText().toString());
             int max = Integer.parseInt(txtMax.getText().toString());
 
-            ItemDB item = (ItemDB) sprItems.getSelectedItem();
+            OHItemWrapper item = (OHItemWrapper) sprItems.getSelectedItem();
             item.save();
 
             final Bundle resultBundle = IncDecBoundleManager.generateCommandBundle(getActivity(), item, value, min, max);

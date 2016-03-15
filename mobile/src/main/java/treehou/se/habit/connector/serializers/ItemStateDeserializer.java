@@ -9,16 +9,16 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import treehou.se.habit.core.db.StateDescription;
+import se.treehou.ng.ohcommunicator.core.OHStateDescriptionWrapper;
 
-public class ItemStateDeserializer implements JsonDeserializer<StateDescription>, JsonSerializer<StateDescription> {
+public class ItemStateDeserializer implements JsonDeserializer<OHStateDescriptionWrapper>, JsonSerializer<OHStateDescriptionWrapper> {
 
     private static final String TAG = "ItemDeserializer";
 
     @Override
-    public StateDescription deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public OHStateDescriptionWrapper deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
-        StateDescription stateDescription = new StateDescription();
+        OHStateDescriptionWrapper stateDescription = new OHStateDescriptionWrapper();
 
         JsonObject jObject = json.getAsJsonObject();
         if(jObject.has("pattern")) {
@@ -32,7 +32,7 @@ public class ItemStateDeserializer implements JsonDeserializer<StateDescription>
     }
 
     @Override
-    public JsonElement serialize(StateDescription src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(OHStateDescriptionWrapper src, Type typeOfSrc, JsonSerializationContext context) {
 
         JsonObject object = new JsonObject();
         object.addProperty("pattern", src.getPattern());

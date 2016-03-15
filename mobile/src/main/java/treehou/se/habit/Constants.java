@@ -3,7 +3,7 @@ package treehou.se.habit;
 import java.util.HashSet;
 import java.util.Set;
 
-import treehou.se.habit.core.db.ItemDB;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
 
 public class Constants {
 
@@ -25,18 +25,18 @@ public class Constants {
 
     public static final Set<String> SUPPORT_SWITCH = new HashSet<>();
     static {
-        SUPPORT_SWITCH.add(ItemDB.TYPE_GROUP);
-        SUPPORT_SWITCH.add(ItemDB.TYPE_SWITCH);
-        SUPPORT_SWITCH.add(ItemDB.TYPE_STRING);
-        SUPPORT_SWITCH.add(ItemDB.TYPE_NUMBER);
-        SUPPORT_SWITCH.add(ItemDB.TYPE_CONTACT);
-        SUPPORT_SWITCH.add(ItemDB.TYPE_COLOR);
+        SUPPORT_SWITCH.add(OHItemWrapper.TYPE_GROUP);
+        SUPPORT_SWITCH.add(OHItemWrapper.TYPE_SWITCH);
+        SUPPORT_SWITCH.add(OHItemWrapper.TYPE_STRING);
+        SUPPORT_SWITCH.add(OHItemWrapper.TYPE_NUMBER);
+        SUPPORT_SWITCH.add(OHItemWrapper.TYPE_CONTACT);
+        SUPPORT_SWITCH.add(OHItemWrapper.TYPE_COLOR);
     }
 
     public static final Set<String> SUPPORT_INC_DEC = new HashSet<>();
     static {
-        SUPPORT_SWITCH.add(ItemDB.TYPE_GROUP);
-        SUPPORT_INC_DEC.add(ItemDB.TYPE_NUMBER);
-        SUPPORT_INC_DEC.add(ItemDB.TYPE_DIMMER);
+        SUPPORT_SWITCH.add(OHItemWrapper.TYPE_GROUP);
+        SUPPORT_INC_DEC.add(OHItemWrapper.TYPE_NUMBER);
+        SUPPORT_INC_DEC.add(OHItemWrapper.TYPE_DIMMER);
     }
 }

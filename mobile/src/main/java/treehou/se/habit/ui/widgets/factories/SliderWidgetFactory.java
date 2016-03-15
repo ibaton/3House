@@ -5,12 +5,10 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.core.wrappers.settings.WidgetSettings;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class SliderWidgetFactory implements IWidgetFactory {
@@ -18,7 +16,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
     private static final String TAG = "SliderWidgetFactory";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
         return new SliderWidgetHolder(widget, parent, widgetFactory);
     }
 
@@ -29,10 +27,10 @@ public class SliderWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
-        public SliderWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        public SliderWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
 
             this.factory = factory;
-            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(factory.getContext());
+            WidgetSettings settings = WidgetSettings.loadGlobal();
             boolean flat = settings.isCompressedSlider();
 
             itemView = factory.getInflater().inflate(R.layout.item_widget_slider, null);
@@ -54,7 +52,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidgetWrapper widget) {
             if (widget == null) {
                 return;
             }
@@ -80,7 +78,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     if(widget.getItem() != null) {
                         try {
-                            Openhab.instance(ServerDB.toGeneric(factory.getServer())).sendCommand(widget.getItem().getName(), String.valueOf(skbDim.getProgress()));
+                            Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), String.valueOf(skbDim.getProgress()));
                         } catch (Exception e) {}
                     }
                 }

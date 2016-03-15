@@ -7,9 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.SitemapDB;
 
 /**
  * Implementation of App Widget functionality.
@@ -46,7 +46,7 @@ public class SitemapWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        SitemapDB sitemap = SitemapWidgetConfigureActivity.loadSitemap(context, appWidgetId);
+        OHSitemapWrapper sitemap = SitemapWidgetConfigureActivity.loadSitemap(context, appWidgetId);
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.sitemap_widget);

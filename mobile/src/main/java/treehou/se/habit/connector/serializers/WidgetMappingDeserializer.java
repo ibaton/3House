@@ -9,24 +9,24 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import treehou.se.habit.core.Widget;
+import se.treehou.ng.ohcommunicator.core.db.OHMapping;
 
-public class WidgetMappingDeserializer implements JsonDeserializer<List<Widget.Mapping>> {
+public class WidgetMappingDeserializer implements JsonDeserializer<List<OHMapping>> {
 
     private static final String TAG = "WidgetMappingDeserializer";
 
     @Override
-    public List<Widget.Mapping> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public List<OHMapping> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
         List mapping = new ArrayList();
 
         if(json.isJsonObject()) {
-            Widget.Mapping entry = context.deserialize(json.getAsJsonObject(), Widget.Mapping.class);
+            OHMapping entry = context.deserialize(json.getAsJsonObject(), OHMapping.class);
             mapping.add(entry);
         }else if(json.isJsonArray()){
             JsonArray jWidgets = json.getAsJsonArray();
             for(JsonElement e : jWidgets){
-                Widget.Mapping entry = context.deserialize(e, Widget.Mapping.class);
+                OHMapping entry = context.deserialize(e, OHMapping.class);
                 mapping.add(entry);
             }
         }

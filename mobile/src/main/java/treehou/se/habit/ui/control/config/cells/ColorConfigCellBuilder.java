@@ -21,7 +21,7 @@ public class ColorConfigCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, ControllerDB controller, CellDB cell){
 
-        ColorCellDB colorCell = cell.colorCell();
+        ColorCellDB colorCell = null;//ColorCellDB.getCell(cell);
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_conf_button, null);

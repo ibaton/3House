@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import se.treehou.ng.ohcommunicator.connector.models.ThingType;
-import se.treehou.ng.ohcommunicator.core.OHBinding;
+import se.treehou.ng.ohcommunicator.core.OHBindingWrapper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.GsonHelper;
 
@@ -17,9 +17,9 @@ public class BindingFragment extends Fragment {
 
     private static final String ARG_BINDING = "ARG_BINDING";
 
-    private OHBinding binding;
+    private OHBindingWrapper binding;
 
-    public static BindingFragment newInstance(OHBinding binding) {
+    public static BindingFragment newInstance(OHBindingWrapper binding) {
         BindingFragment fragment = new BindingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_BINDING, GsonHelper.createGsonBuilder().toJson(binding));
@@ -36,7 +36,7 @@ public class BindingFragment extends Fragment {
 
         if(getArguments() != null){
             if(getArguments().containsKey(ARG_BINDING)){
-                binding = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_BINDING), OHBinding.class);
+                binding = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_BINDING), OHBindingWrapper.class);
             }
         }
 

@@ -6,6 +6,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
+import se.treehou.ng.ohcommunicator.core.OHStateDescriptionWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHMapping;
 import treehou.se.habit.connector.serializers.ItemDeserializer;
 import treehou.se.habit.connector.serializers.ItemListDeserializer;
 import treehou.se.habit.connector.serializers.ItemStateDeserializer;
@@ -13,11 +19,6 @@ import treehou.se.habit.connector.serializers.LinkedPageDeserializer;
 import treehou.se.habit.connector.serializers.SitemapListDeserializer;
 import treehou.se.habit.connector.serializers.WidgetDeserializer;
 import treehou.se.habit.connector.serializers.WidgetMappingDeserializer;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.StateDescription;
 
 public class GsonHelper {
 
@@ -29,13 +30,13 @@ public class GsonHelper {
 
         if (gson == null) {
             GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget>>() {}.getType(), new WidgetDeserializer());
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<Sitemap>>() {}.getType(), new SitemapListDeserializer());
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<Widget.Mapping>>() {}.getType(), new WidgetMappingDeserializer());
-            gsonBuilder.registerTypeAdapter(LinkedPage.class, new LinkedPageDeserializer());
-            gsonBuilder.registerTypeAdapter(new TypeToken<List<ItemDB>>() {}.getType(), new ItemListDeserializer());
-            gsonBuilder.registerTypeAdapter(ItemDB.class, new ItemDeserializer());
-            gsonBuilder.registerTypeAdapter(StateDescription.class, new ItemStateDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHWidgetWrapper>>() {}.getType(), new WidgetDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHSitemapWrapper>>() {}.getType(), new SitemapListDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHMapping>>() {}.getType(), new WidgetMappingDeserializer());
+            gsonBuilder.registerTypeAdapter(OHLinkedPageWrapper.class, new LinkedPageDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHItemWrapper>>() {}.getType(), new ItemListDeserializer());
+            gsonBuilder.registerTypeAdapter(OHItemWrapper.class, new ItemDeserializer());
+            gsonBuilder.registerTypeAdapter(OHStateDescriptionWrapper.class, new ItemStateDeserializer());
             gson = gsonBuilder.create();
         }
 

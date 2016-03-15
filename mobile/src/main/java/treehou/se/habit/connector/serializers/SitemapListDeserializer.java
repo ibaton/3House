@@ -13,41 +13,41 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import treehou.se.habit.core.Sitemap;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
 
-public class SitemapListDeserializer implements JsonDeserializer<List<Sitemap>> {
+public class SitemapListDeserializer implements JsonDeserializer<List<OHSitemapWrapper>> {
 
     private static final String TAG = "SitemapListDeserializer";
 
     @Override
-    public List<Sitemap> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public List<OHSitemapWrapper> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
         Log.d(TAG, "Deserializing: " + json);
 
-        List<Sitemap> sitemaps = new ArrayList<>();
+        List<OHSitemapWrapper> sitemaps = new ArrayList<>();
         if(json.isJsonObject()) {
             Log.d(TAG, "Deserializing single sitemap");
             JsonObject jSitemaps = json.getAsJsonObject();
             if(jSitemaps.has("sitemap")) {
                 if(jSitemaps.get("sitemap").isJsonObject()) {
                     JsonElement jSitemap = jSitemaps.get("sitemap");
-                    sitemaps.add(context.<Sitemap>deserialize(jSitemap, Sitemap.class));
+                    sitemaps.add(context.<OHSitemapWrapper>deserialize(jSitemap, OHSitemapWrapper.class));
                     return sitemaps;
                 }
                 else {
                     JsonArray jSitemap = jSitemaps.get("sitemap").getAsJsonArray();
-                    return context.deserialize(jSitemap, new TypeToken<List<Sitemap>>() {}.getType());
+                    return context.deserialize(jSitemap, new TypeToken<List<OHSitemapWrapper>>() {}.getType());
                 }
             }
             else {
-                Sitemap sitemap = context.deserialize(json, Sitemap.class);
+                OHSitemapWrapper sitemap = context.deserialize(json, OHSitemapWrapper.class);
                 sitemaps.add(sitemap);
             }
         }else if(json.isJsonArray()){
             Log.d(TAG, "Deserializing multiple sitemap");
             JsonArray jWidgets = json.getAsJsonArray();
             for(JsonElement e : jWidgets){
-                Sitemap sitemap = context.deserialize(e, Sitemap.class);
+                OHSitemapWrapper sitemap = context.deserialize(e, OHSitemapWrapper.class);
                 sitemaps.add(sitemap);
             }
         }

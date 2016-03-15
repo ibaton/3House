@@ -32,7 +32,7 @@ public class EmptyCellBuilder implements CellFactory.CellBuilder {
 
     @Override
     public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
-        final ButtonCellDB buttonCell = cell.buttonCell();
+        final ButtonCellDB buttonCell = null;//ButtonCellDB.getCell(cell);
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_empty);
         int[] pallete = ControllerUtil.generateColor(controller, cell);

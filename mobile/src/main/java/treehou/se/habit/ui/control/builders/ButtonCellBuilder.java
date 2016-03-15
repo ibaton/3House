@@ -11,11 +11,14 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.controller.ButtonCell;
 import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.core.db.controller.ButtonCellDB;
 import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
@@ -29,7 +32,7 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
         Log.d(TAG, "Build: Button");
-        final ButtonCellDB buttonCell = cell.buttonCell();
+        final ButtonCellDB buttonCell = null;//ButtonCellDB.getCell(cell);
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_button, null);
@@ -46,10 +49,10 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         imgIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemDB item = buttonCell.getItem();
+                OHItemDB item = buttonCell.getItem();
                 if(item != null) {
-                    ServerDB server = item.getServer();
-                    Openhab.instance(ServerDB.toGeneric(server)).sendCommand(item.getName(), buttonCell.getCommand());
+                    OHServerWrapper server = new OHServerWrapper(item.getServer());
+                    Openhab.instance(server).sendCommand(item.getName(), buttonCell.getCommand());
                 }
             }
         });
@@ -59,7 +62,9 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
-        final ButtonCellDB buttonCell = cell.buttonCell();
+
+        /*OHRealm.realm().where(ButtonCellDB.class).equalTo("id", cell.getId()).findFirst();
+        final ButtonCell buttonCell = new ButtonCell(ButtonCellDB.getCell(cell));
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
@@ -67,12 +72,12 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
 
         cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, buttonCell.getIcon()));
-        Intent intent = CommandService.getActionCommand(context, buttonCell.getCommand(), buttonCell.getItem());
+        Intent intent = CommandService.getActionCommand(context, buttonCell.getCommand(), new OHItemWrapper(buttonCell.getItem()));
 
         //TODO give intent unique id
         PendingIntent pendingIntent = PendingIntent.getService(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
+        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);*/
 
-        return cellView;
+        return null;//cellView;
     }
 }

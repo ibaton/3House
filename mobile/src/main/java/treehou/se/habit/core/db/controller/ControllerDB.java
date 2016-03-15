@@ -1,38 +1,37 @@
 package treehou.se.habit.core.db.controller;
 
-import android.content.Context;
 import android.graphics.Color;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 
-import java.util.List;
+public class ControllerDB /*extends RealmObject*/ {
 
-import treehou.se.habit.ui.control.ControlHelper;
-
-@Table(name = "Controllers")
-public class ControllerDB extends Model {
-
-    @Column(name = "Name")
+    //@PrimaryKey
+    private long id = 0;
     private String name;
-
-    @Column(name = "color")
     private int color = Color.parseColor("#33000000");
-
-    @Column(name = "showNotification")
     private boolean showNotification = false;
-
-    @Column(name = "showTitle")
     private boolean showTitle = true;
+    //private RealmList<CellRowDB> cellRows;
 
-    public List<CellRowDB> cellRows(){
-        return getMany(CellRowDB.class, "Controller");
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getColor() {
@@ -43,58 +42,62 @@ public class ControllerDB extends Model {
         this.color = color;
     }
 
-    public void setName(String name) {
-        this.name = name;
-        save();
-    }
-
-    public boolean showNotification() {
+    public boolean isShowNotification() {
         return showNotification;
     }
 
-    public void showNotification(boolean showNotification) {
+    public void setShowNotification(boolean showNotification) {
         this.showNotification = showNotification;
     }
 
-    public boolean showTitle() {
+    public boolean isShowTitle() {
         return showTitle;
     }
 
-    public void showTitle(boolean showTitle) {
+    public void setShowTitle(boolean showTitle) {
         this.showTitle = showTitle;
     }
 
-    public CellRowDB addRow(){
+    /*public RealmList<CellRowDB> getCellRows() {
+        return cellRows;
+    }
+
+    public void setCellRows(RealmList<CellRowDB> cellRows) {
+        this.cellRows = cellRows;
+    }
+
+    public static ControllerDB load(long id){
+        return OHRealm.realm().where(ControllerDB.class).equalTo("id", id).findFirst();
+    }
+
+    public static void save(ControllerDB item){
+        Realm realm = OHRealm.realm();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
+        }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+    }
+
+    public static CellRowDB addRow(ControllerDB controllerDB){
         CellRowDB cellRow = new CellRowDB();
-        cellRow.controller = this;
-        cellRow.save();
+        cellRow.setController(controllerDB);
+        CellRowDB.save(cellRow);
 
         CellDB cell = new CellDB();
-        cell.cellRow = cellRow;
-        cell.save();
+        cell.setCellRow(cellRow);
+        CellDB.save(cell);
 
         return cellRow;
     }
 
-
-    public static List<ControllerDB> getControllers(){
-        return new Select()
-                .from(ControllerDB.class)
-                .execute();
-    }
-
-    /**
-     * Delete controller and hide notification.
-     *
-     * @param context
-     */
-    public void deleteController(Context context){
-        ControlHelper.hideNotification(context, this);
-        delete();
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
+    public static long getUniqueId() {
+        Realm realm = OHRealm.realm();
+        Number num = realm.where(ControllerDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
+    }*/
 }

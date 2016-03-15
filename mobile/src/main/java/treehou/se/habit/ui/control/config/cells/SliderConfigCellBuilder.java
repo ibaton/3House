@@ -24,7 +24,7 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, ControllerDB controller, CellDB cell){
 
-        SliderCellDB numberCell = cell.sliderCell();
+        SliderCellDB numberCell = null;//SliderCellDB.getCell(cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 

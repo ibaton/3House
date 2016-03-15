@@ -17,14 +17,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import se.treehou.ng.ohcommunicator.core.OHServer;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
 
 public class BasicAuthServiceGenerator {
 
     // No need to instantiate this class.
     private BasicAuthServiceGenerator() {}
 
-    public static <S> S createService(Class<S> serviceClass, final OHServer server, final String url) {
+    public static <S> S createService(Class<S> serviceClass, final OHServerWrapper server, final String url) {
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 

@@ -1,0 +1,73 @@
+package treehou.se.habit.core.controller;
+
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
+import treehou.se.habit.core.db.controller.ColorCellDB;
+
+public class ColorCell {
+
+    private ColorCellDB colorCellDB;
+
+    public ColorCell() {
+    }
+
+    public ColorCell(ColorCellDB colorCellDB) {
+        this.colorCellDB = colorCellDB;
+    }
+
+    public ColorCellDB getDB() {
+        return colorCellDB;
+    }
+
+    public void setDB(ColorCellDB colorCellDB) {
+        this.colorCellDB = colorCellDB;
+    }
+
+    public long getId() {
+        return getDB().getId();
+    }
+
+    public void setId(long id) {
+        getDB().setId(id);
+    }
+
+    public OHItemDB getItem() {
+        return getDB().getItem();
+    }
+
+    public void setItem(OHItemWrapper item) {
+        getDB().setItem(item.getDB());
+    }
+
+    public String getIcon() {
+        return getDB().getIcon();
+    }
+
+    public void setIcon(String iconOn) {
+        getDB().setIcon(iconOn);
+    }
+
+    public Cell getCell() {
+        return new Cell(getDB().getCell());
+    }
+
+    public void setCell(Cell cell) {
+        getDB().setCell(cell.getDB());
+    }
+
+    public String getCommand() {
+        return getDB().getCommand();
+    }
+
+    public void setCommand(String command) {
+        getDB().setCommand(command);
+    }
+
+    public static void save(ColorCell item){
+        //ColorCellDB.save(item.getDB());
+    }
+
+    public static ColorCell getCell(Cell cell){
+        return null;//new ColorCell(ColorCellDB.getCell(cell.getDB()));
+    }
+}

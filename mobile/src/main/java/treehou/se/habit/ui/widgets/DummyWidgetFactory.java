@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 import treehou.se.habit.R;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.core.wrappers.settings.WidgetSettings;
 import treehou.se.habit.util.Util;
 
 public class DummyWidgetFactory {
@@ -26,10 +26,10 @@ public class DummyWidgetFactory {
         this.context = context;
     }
 
-    public View createWidget(final Widget widget){
+    public View createWidget(final OHWidgetWrapper widget){
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(context);
+        WidgetSettings settings = WidgetSettings.loadGlobal();
 
         View itemView = inflater.inflate(R.layout.item_widget_base, null);
         View baseDataHolder = itemView.findViewById(R.id.lou_base_data_holder);

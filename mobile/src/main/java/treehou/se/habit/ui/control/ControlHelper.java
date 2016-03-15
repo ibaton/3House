@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.OHTreehouseRealm;
 import treehou.se.habit.core.db.controller.CellDB;
 import treehou.se.habit.core.db.controller.CellRowDB;
 import treehou.se.habit.core.db.controller.ControllerDB;
@@ -42,16 +44,16 @@ public class ControlHelper {
         cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
 
-        for (final CellRowDB row : controller.cellRows()) {
-            Log.d(TAG, "Rows " + controller.cellRows().size());
+        /*for (final CellRowDB row : controller.getCellRows()) {
+            Log.d(TAG, "Rows " + controller.getCellRows().size());
             RemoteViews rowView = new RemoteViews(context.getPackageName(), R.layout.homescreen_widget_row);
 
-            for (final CellDB cell : row.cells()) {
+            for (final CellDB cell : row.getCells()) {
                 RemoteViews itemView = cellFactory.createRemote(context, controller, cell);
                 rowView.addView(R.id.lou_row, itemView);
             }
             rows.addView(R.id.lou_rows, rowView);
-        }
+        }*/
         return rows;
     }
 
@@ -62,7 +64,7 @@ public class ControlHelper {
 
         Log.d(TAG, "Show controller as notification");
 
-        if(controller.showNotification() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if(controller.isShowNotification() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.controller_widget);
             views.removeAllViews(R.id.lou_rows);
             views.setInt(R.id.lou_widget, "setBackgroundColor", controller.getColor());
@@ -82,7 +84,7 @@ public class ControlHelper {
                 notification.bigContentView = views;
             }*/
 
-            NotificationManagerCompat.from(context).notify(controller.getId().intValue(), notification);
+            NotificationManagerCompat.from(context).notify((int) controller.getId(), notification);
         }
     }
 
@@ -96,7 +98,7 @@ public class ControlHelper {
 
         Log.d(TAG, "Hide controller notification");
 
-        NotificationManagerCompat.from(context).cancel(controller.getId().intValue());
+        NotificationManagerCompat.from(context).cancel((int) controller.getId());
     }
 
     /**
@@ -105,11 +107,11 @@ public class ControlHelper {
      * @param context
      */
     public static void showNotifications(Context context) {
-        NotificationManagerCompat.from(context).cancelAll();
-        for(ControllerDB controller : ControllerDB.getControllers()){
-            if(controller.showNotification()){
+        /*NotificationManagerCompat.from(context).cancelAll();
+        for(ControllerDB controller : OHTreehouseRealm.realm().where(ControllerDB.class).findAll()){
+            if(controller.isShowNotification()){
                 showNotification(context, controller);
             }
-        }
+        }*/
     }
 }

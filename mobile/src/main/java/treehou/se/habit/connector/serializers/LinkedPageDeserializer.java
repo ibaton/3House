@@ -12,20 +12,20 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
 
-public class LinkedPageDeserializer implements JsonDeserializer<LinkedPage> {
+public class LinkedPageDeserializer implements JsonDeserializer<OHLinkedPageWrapper> {
 
     private static final String TAG = "LinkedPageDeserializer";
 
     @Override
-    public LinkedPage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public OHLinkedPageWrapper deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
         if(json.isJsonObject()) {
             JsonObject jObject = json.getAsJsonObject();
 
-            LinkedPage linkedPage = new LinkedPage();
+            OHLinkedPageWrapper linkedPage = new OHLinkedPageWrapper();
 
             if(jObject.has("id")) {
                 linkedPage.setId(jObject.get("id").getAsString());
@@ -53,7 +53,7 @@ public class LinkedPageDeserializer implements JsonDeserializer<LinkedPage> {
             }
 
             if(jWidgets != null) {
-                linkedPage.setWidgets(context.<List<Widget>>deserialize(jWidgets, new TypeToken<List<Widget>>() {}.getType()));
+                linkedPage.setWidgets(context.<List<OHWidgetWrapper>>deserialize(jWidgets, new TypeToken<List<OHWidgetWrapper>>() {}.getType()));
             }
 
             return linkedPage;

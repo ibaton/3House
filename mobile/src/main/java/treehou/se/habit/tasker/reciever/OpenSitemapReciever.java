@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
 import treehou.se.habit.MainActivity;
-import treehou.se.habit.core.db.SitemapDB;
 import treehou.se.habit.tasker.boundle.OpenSitemapBoundleManager;
 
 public class OpenSitemapReciever implements IFireReciever {
@@ -41,7 +41,7 @@ public class OpenSitemapReciever implements IFireReciever {
     public boolean fire(Context context, Bundle bundle) {
 
         if (isBundleValid(bundle)) {
-            SitemapDB sitemap = SitemapDB.load(SitemapDB.class, bundle.getLong(BUNDLE_EXTRA_SITEMAP));
+            OHSitemapWrapper sitemap = OHSitemapWrapper.load(bundle.getInt(BUNDLE_EXTRA_SITEMAP));
             Log.d(TAG, "Open sitemap.");
             if(sitemap != null){
                 Intent intent = new Intent(context, MainActivity.class);

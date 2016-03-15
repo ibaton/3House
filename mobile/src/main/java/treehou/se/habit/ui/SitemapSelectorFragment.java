@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.Sitemap;
 
 public class SitemapSelectorFragment extends Fragment {
 
@@ -67,7 +67,7 @@ public class SitemapSelectorFragment extends Fragment {
     }
 
     public interface OnSitemapSelectListener {
-        void onSitemapSelect(Sitemap sitemap);
+        void onSitemapSelect(OHSitemapWrapper sitemap);
     }
 
     @Override
@@ -76,19 +76,19 @@ public class SitemapSelectorFragment extends Fragment {
 
         mSitemapAdapter.clear();
 
-        List<ServerDB> servers = ServerDB.getServers();
-        for(final ServerDB server : servers){
+        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
+        for(final OHServerWrapper server : servers){
             requestSitemap(server);
         }
     }
 
-    private void requestSitemap(final ServerDB server){
+    private void requestSitemap(final OHServerWrapper server){
 
         mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
         communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
             @Override
-            public void onSuccess(List<Sitemap> sitemaps) {
-                for (Sitemap sitemap : sitemaps) {
+            public void onSuccess(List<OHSitemapWrapper> sitemaps) {
+                for (OHSitemapWrapper sitemap : sitemaps) {
                     sitemap.setServer(server);
                     if (!mSitemapAdapter.contains(sitemap)) {
                         mSitemapAdapter.add(sitemap);
@@ -120,15 +120,15 @@ public class SitemapSelectorFragment extends Fragment {
         public static final int STATE_LOADING = 1;
         public static final int STATE_ERROR = 2;
 
-        public ServerDB server;
+        public OHServerWrapper server;
         public int state = STATE_LOADING;
-        public List<Sitemap> sitemaps = new ArrayList<>();
+        public List<OHSitemapWrapper> sitemaps = new ArrayList<>();
 
-        public SitemapItem(ServerDB server) {
+        public SitemapItem(OHServerWrapper server) {
             this.server = server;
         }
 
-        public void addItem(Sitemap sitemap){
+        public void addItem(OHSitemapWrapper sitemap){
             sitemaps.add(sitemap);
             state = STATE_SUCCESS;
         }
@@ -136,7 +136,7 @@ public class SitemapSelectorFragment extends Fragment {
 
     class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>{
 
-        private Map<ServerDB, SitemapItem> items = new HashMap<>();
+        private Map<OHServerWrapper, SitemapItem> items = new HashMap<>();
 
         public class SitemapBaseHolder extends RecyclerView.ViewHolder {
 
@@ -173,9 +173,9 @@ public class SitemapSelectorFragment extends Fragment {
         public class GetResult {
 
             public SitemapItem item;
-            public Sitemap sitemap;
+            public OHSitemapWrapper sitemap;
 
-            public GetResult(SitemapItem item, Sitemap sitemap) {
+            public GetResult(SitemapItem item, OHSitemapWrapper sitemap) {
                 this.sitemap = sitemap;
                 this.item = item;
             }
@@ -207,7 +207,7 @@ public class SitemapSelectorFragment extends Fragment {
 
             if(SitemapItem.STATE_SUCCESS == type){
                 SitemapHolder holder = (SitemapHolder) sitemapHolder;
-                final Sitemap sitemap = item.sitemap;
+                final OHSitemapWrapper sitemap = item.sitemap;
 
                 holder.lblName.setText(item.sitemap.getName());
                 holder.lblServer.setText(item.sitemap.getServer().getName());
@@ -282,7 +282,7 @@ public class SitemapSelectorFragment extends Fragment {
             int count = 0;
             for(SitemapItem item : items.values()){
                 if(SitemapItem.STATE_SUCCESS == item.state){
-                    for(Sitemap sitemap : item.sitemaps){
+                    for(OHSitemapWrapper sitemap : item.sitemaps){
                         if(count == position){
                             result = new GetResult(item, sitemap);
                             return result;
@@ -301,13 +301,13 @@ public class SitemapSelectorFragment extends Fragment {
             return result;
         }
 
-        public void addAll(List<Sitemap> sitemaps){
-            for(Sitemap sitemap : sitemaps){
+        public void addAll(List<OHSitemapWrapper> sitemaps){
+            for(OHSitemapWrapper sitemap : sitemaps){
                 add(sitemap);
             }
         }
 
-        public void add(Sitemap sitemap) {
+        public void add(OHSitemapWrapper sitemap) {
             SitemapItem item = items.get(sitemap.getServer());
             if(item == null){
                 item = new SitemapItem(sitemap.getServer());
@@ -321,12 +321,12 @@ public class SitemapSelectorFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public void remove(Sitemap sitemap) {
+        public void remove(OHSitemapWrapper sitemap) {
             int pos = findPosition(sitemap);
             remove(sitemap, pos);
         }
 
-        public void remove(Sitemap sitemap, int position) {
+        public void remove(OHSitemapWrapper sitemap, int position) {
             SitemapItem item = items.get(sitemap.getServer());
             if(item == null){
                 return;
@@ -336,11 +336,11 @@ public class SitemapSelectorFragment extends Fragment {
             notifyItemRemoved(position);
         }
 
-        private int findPosition(final Sitemap pSitemap){
+        private int findPosition(final OHSitemapWrapper pSitemap){
             int count = 0;
             for(SitemapItem item : items.values()){
                 if(SitemapItem.STATE_SUCCESS == item.state){
-                    for(Sitemap sitemap : item.sitemaps){
+                    for(OHSitemapWrapper sitemap : item.sitemaps){
                         if(sitemap == pSitemap){
                             return count;
                         }
@@ -353,7 +353,7 @@ public class SitemapSelectorFragment extends Fragment {
             return -1;
         }
 
-        public void setServerState(ServerDB server, int state) {
+        public void setServerState(OHServerWrapper server, int state) {
             SitemapItem item = items.get(server);
             if(item == null){
                 item = new SitemapItem(server);
@@ -364,7 +364,7 @@ public class SitemapSelectorFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public boolean contains(Sitemap sitemap){
+        public boolean contains(OHSitemapWrapper sitemap){
             return items.containsKey(sitemap.getServer()) && items.get(sitemap.getServer()).sitemaps.contains(sitemap);
         }
 

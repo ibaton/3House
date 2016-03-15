@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.NotificationSettingsDB;
+import treehou.se.habit.core.wrappers.settings.NotificationSettings;
 
 public class NotificationsSettingsFragment extends Fragment {
 
@@ -35,7 +36,7 @@ public class NotificationsSettingsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
 
-        final NotificationSettingsDB settings = NotificationSettingsDB.loadGlobal(getActivity());
+        final NotificationSettings settings = NotificationSettings.loadGlobal();
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
@@ -43,12 +44,12 @@ public class NotificationsSettingsFragment extends Fragment {
         }
 
         CheckBox cbxNotificationToSpeech = (CheckBox) rootView.findViewById(R.id.cbx_notification_to_speech);
-        cbxNotificationToSpeech.setChecked(settings.notificationToSpeach());
+        cbxNotificationToSpeech.setChecked(settings.notificationToSpeech());
         cbxNotificationToSpeech.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settings.setNotificationToSpeach(isChecked);
-                settings.save();
+                settings.setNotificationToSpeech(isChecked);
+                NotificationSettingsDB.save(settings.getNotificationSettingsDB());
             }
         });
 

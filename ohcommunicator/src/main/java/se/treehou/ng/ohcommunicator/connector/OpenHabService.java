@@ -8,19 +8,19 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import se.treehou.ng.ohcommunicator.core.OHBinding;
-import se.treehou.ng.ohcommunicator.core.OHInboxItem;
-import se.treehou.ng.ohcommunicator.core.OHItem;
+import se.treehou.ng.ohcommunicator.core.OHBindingWrapper;
+import se.treehou.ng.ohcommunicator.core.OHInboxItemWrapper;
+import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
 
 public interface OpenHabService {
 
     @Headers("Accept: application/json")
     @GET("/rest/bindings")
-    Call<List<OHBinding>> listBindings();
+    Call<List<OHBindingWrapper>> listBindings();
 
     @Headers("Accept: application/json")
     @GET("/rest/inbox")
-    Call<List<OHInboxItem>> listInboxItems();
+    Call<List<OHInboxItemWrapper>> listInboxItems();
 
     @Headers("Accept: application/json")
     @POST("/rest/inbox/{thingUID}/ignore")
@@ -36,11 +36,11 @@ public interface OpenHabService {
 
     @Headers("Accept: application/json")
     @GET("/rest/items/{id}")
-    Call<OHItem> getItem(@Path("id") String id);
+    Call<OHItemWrapper> getItem(@Path("id") String id);
 
     @Headers("Accept: application/json")
     @GET("/rest/items/")
-    Call<List<OHItem>> listItems();
+    Call<List<OHItemWrapper>> listItems();
 
     @Headers({
             "Accept: application/text",

@@ -1,42 +1,39 @@
 package treehou.se.habit.core.db.controller;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import io.realm.Realm;
+import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
+import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 
-import treehou.se.habit.core.db.ItemDB;
-
-@Table(name = "SliderCells")
-public class SliderCellDB extends Model {
+public class SliderCellDB /*extends RealmObject*/ {
 
     public static final int TYPE_MAX = 0;
     public static final int TYPE_MIN = 1;
     public static final int TYPE_SLIDER = 2;
     public static final int TYPE_CHART = 3;
 
-    @Column(name = "iconName")
-    public String icon;
+    //@PrimaryKey
+    private long id = 0;
+    private String icon;
+    private CellDB cell;
+    private int type;
+    private OHItemDB item;
+    private int min = 0;
+    private int max = 100;
 
-    @Column(name = "Cell", onDelete = Column.ForeignKeyAction.CASCADE)
-    public CellDB cell;
+    public long getId() {
+        return id;
+    }
 
-    @Column(name = "type")
-    public int type;
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    @Column(name = "Item")
-    public ItemDB item;
-
-    @Column(name = "min")
-    public int min = 0;
-
-    @Column(name = "max")
-    public int max = 100;
-
-    public ItemDB getItem() {
+    public OHItemDB getItem() {
         return item;
     }
 
-    public void setItem(ItemDB item) {
+    public void setItem(OHItemDB item) {
         this.item = item;
     }
 
@@ -79,4 +76,27 @@ public class SliderCellDB extends Model {
     public int getMax() {
         return max;
     }
+
+    /*public static void save(SliderCellDB item){
+        Realm realm = OHRealm.realm();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
+        }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+    }
+
+    public static SliderCellDB getCell(CellDB cell){
+        return OHRealm.realm().where(SliderCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
+    }
+
+    public static long getUniqueId() {
+        Realm realm = OHRealm.realm();
+        Number num = realm.where(SliderCellDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
+    }*/
 }

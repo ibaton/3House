@@ -61,8 +61,8 @@ public class ControlFragment extends Fragment {
         cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
 
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_ID);
-            controller = ControllerDB.load(ControllerDB.class, id);
+            int id = getArguments().getInt(ARG_ID);
+            controller = null;//ControllerDB.load(id);
         }
     }
 
@@ -123,7 +123,7 @@ public class ControlFragment extends Fragment {
         louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-        for (final CellRowDB row : controller.cellRows()) {
+        /*for (final CellRowDB row : controller.getCellRows()) {
             final LinearLayout louRow = (LinearLayout) inflater.inflate(R.layout.controller_row, null);
             LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -131,12 +131,12 @@ public class ControlFragment extends Fragment {
             louRow.setLayoutParams(rowParam);
 
             final LinearLayout louColumnHolder = (LinearLayout) louRow.findViewById(R.id.lou_btn_holder);
-            for (final CellDB cell : row.cells()) {
+            for (final CellDB cell : row.getCells()) {
                 final View itemView = cellFactory.create(getActivity(), controller, cell);
 
                 louColumnHolder.addView(itemView);
             }
             louController.addView(louRow);
-        }
+        }*/
     }
 }

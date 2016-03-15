@@ -18,20 +18,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
+import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
+import se.treehou.ng.ohcommunicator.core.db.OHSitemap;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.GsonHelper;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.Sitemap;
 import treehou.se.habit.ui.homescreen.VoiceService;
 
 public class SitemapFragment extends Fragment {
@@ -39,20 +37,19 @@ public class SitemapFragment extends Fragment {
     private static final String TAG = "SitemapFragment";
     private static final String ARG_SITEMAP = "ARG_SITEMAP";
 
-    private Sitemap sitemap;
+    private OHSitemapWrapper sitemap;
     private Communicator communicator;
     private SitemapAdapter sitemapAdapter;
     private ViewPager pgrSitemap;
-    private ArrayList<LinkedPage> pages = new ArrayList<>();
+    private ArrayList<OHLinkedPageWrapper> pages = new ArrayList<>();
 
     private RequestPageCallback requestPageCallback = new RequestPageDummyListener();
 
-    public static SitemapFragment newInstance(Sitemap sitemap){
+    public static SitemapFragment newInstance(OHSitemap sitemap){
         SitemapFragment fragment = new SitemapFragment();
 
         Bundle args = new Bundle();
-        Gson gson = GsonHelper.createGsonBuilder();
-        args.putString(ARG_SITEMAP, gson.toJson(sitemap));
+        args.putLong(ARG_SITEMAP, sitemap.getId());
         fragment.setArguments(args);
 
         return fragment;
@@ -64,11 +61,8 @@ public class SitemapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
-        Gson gson = GsonHelper.createGsonBuilder();
-
         communicator = Communicator.instance(getActivity());
-        sitemap = gson.fromJson(getArguments().getString(ARG_SITEMAP), Sitemap.class);
+        sitemap = OHSitemapWrapper.load(getArguments().getLong(ARG_SITEMAP));
     }
 
     @Override
@@ -99,22 +93,25 @@ public class SitemapFragment extends Fragment {
         pgrSitemap.setAdapter(sitemapAdapter);
         pgrSitemap.addOnPageChangeListener(pagerChangeListener);
 
-
         requestPageCallback = new RequestPageCallback() {
             @Override
-            public void success(LinkedPage linkedPage, Response response) {
+            public void success(OHLinkedPageWrapper linkedPage, Response response) {
+                Log.d(TAG, "Received page " + linkedPage);
                 pages.add(linkedPage);
                 sitemapAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void failure(RetrofitError error) {}
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "Received page failed");
+            }
         };
 
         if(pages.size() == 0) {
-            communicator.requestPage(sitemap.getServer(), sitemap.getHomepage(), new Callback<LinkedPage>() {
+            Log.d(TAG, "Requesting page");
+            communicator.requestPage(sitemap.getServer(), sitemap.getHomepage(), new Callback<OHLinkedPageWrapper>() {
                 @Override
-                public void success(LinkedPage linkedPage, retrofit.client.Response response) {
+                public void success(OHLinkedPageWrapper linkedPage, retrofit.client.Response response) {
                     requestPageCallback.success(linkedPage, response);
                 }
 
@@ -149,14 +146,14 @@ public class SitemapFragment extends Fragment {
      * Handle callbacks for request page.
      */
     interface RequestPageCallback {
-        void success(LinkedPage linkedPage, retrofit.client.Response response);
+        void success(OHLinkedPageWrapper linkedPage, retrofit.client.Response response);
         void failure(RetrofitError error);
     }
 
     class RequestPageDummyListener implements RequestPageCallback {
 
         @Override
-        public void success(LinkedPage linkedPage, Response response) {}
+        public void success(OHLinkedPageWrapper linkedPage, Response response) {}
 
         @Override
         public void failure(RetrofitError error) {}
@@ -194,7 +191,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param page the page to add to pager
      */
-    public void addPage(LinkedPage page) {
+    public void addPage(OHLinkedPageWrapper page) {
         Log.d(TAG, "Add page " + page.getLink());
         pages.add(page);
         sitemapAdapter.notifyDataSetChanged();
@@ -236,7 +233,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param server server to send command to.
      */
-    public void openVoiceCommand(ServerDB server){
+    public void openVoiceCommand(OHServerWrapper server){
         Intent callbackIntent = VoiceService.createVoiceCommand(getActivity(), server);
 
         PendingIntent openhabPendingIntent = PendingIntent.getService(getActivity(), 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -262,7 +259,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param event
      */
-    public void onEvent(LinkedPage event){
+    public void onEvent(OHLinkedPageWrapper event){
         addPage(event);
     }
 

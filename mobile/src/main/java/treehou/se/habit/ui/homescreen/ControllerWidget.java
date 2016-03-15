@@ -47,7 +47,7 @@ public class ControllerWidget extends AppWidgetProvider {
         long controllId = ControllerWidgetConfigureActivity.loadControllIdPref(context, appWidgetId);
         boolean showTitle = ControllerWidgetConfigureActivity.loadControllShowTitlePref(context, appWidgetId);
 
-        ControllerDB controller = ControllerDB.load(ControllerDB.class, controllId);
+        ControllerDB controller = null;// ControllerDB.load(controllId);
         if(controller == null){
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.error_widget);
             appWidgetManager.updateAppWidget(appWidgetId, views);

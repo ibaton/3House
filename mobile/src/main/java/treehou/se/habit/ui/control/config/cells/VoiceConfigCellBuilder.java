@@ -22,7 +22,7 @@ public class VoiceConfigCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, ControllerDB controller, CellDB cell){
 
-        VoiceCellDB voiceCell = cell.voiceCell();
+        VoiceCellDB voiceCell = null;//VoiceCellDB.getCell(cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
