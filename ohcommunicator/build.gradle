@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 23
@@ -39,9 +38,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'javax.jmdns:jmdns:3.4.1'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.4'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.squareup.retrofit2:converter-scalars:2.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
     compile 'commons-io:commons-io:2.4'
     compile 'com.google.code.gson:gson:2.5'
 }

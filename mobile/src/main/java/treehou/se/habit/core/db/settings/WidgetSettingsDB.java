@@ -2,9 +2,10 @@ package treehou.se.habit.core.db.settings;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.Constants;
+import treehou.se.habit.core.db.model.OHRealm;
 
 public class WidgetSettingsDB extends RealmObject {
 
@@ -18,11 +19,14 @@ public class WidgetSettingsDB extends RealmObject {
     public static final int LIGHT_VIBRANT_COLOR = 4;
     public static final int DARK_VIBRANT_COLOR = 5;
 
+    public static final int DEFAULT_TEXT_SIZE = 100;
+    public static final int DEFAULT_ICON_SIZE = 100;
+
     @PrimaryKey
-    private long id = 0;
-    private int textSize;
+    private long id = -1;
+    private int textSize = DEFAULT_TEXT_SIZE;
     private int imageBackground;
-    private int iconSize = 100;
+    private int iconSize = DEFAULT_ICON_SIZE;
     private boolean compressedSingleButton = true;
     private boolean compressedSlider = true;
 
@@ -91,5 +95,24 @@ public class WidgetSettingsDB extends RealmObject {
         if (num != null) newId = num.longValue() + 1;
         realm.close();
         return newId;
+    }
+
+    public static WidgetSettingsDB loadGlobal(Realm realm){
+
+        RealmResults<WidgetSettingsDB> result = realm.allObjects(WidgetSettingsDB.class);
+        WidgetSettingsDB widgetSettingsDB;
+        if(result.size() <= 0){
+            realm.beginTransaction();
+            widgetSettingsDB = realm.createObject(WidgetSettingsDB.class);
+            widgetSettingsDB.setId(WidgetSettingsDB.getUniqueId());
+            widgetSettingsDB.setTextSize(DEFAULT_TEXT_SIZE);
+            widgetSettingsDB.setIconSize(DEFAULT_ICON_SIZE);
+
+            realm.commitTransaction();
+        } else {
+            widgetSettingsDB = result.first();
+        }
+
+        return widgetSettingsDB;
     }
 }

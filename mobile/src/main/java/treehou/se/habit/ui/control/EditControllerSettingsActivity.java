@@ -12,7 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 
 public class EditControllerSettingsActivity extends AppCompatActivity implements ColorDialog.ColorDialogCallback {

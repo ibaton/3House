@@ -3,39 +3,26 @@ package treehou.se.habit.ui.control;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.mattyork.colours.Colour;
-
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.CellRowDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
-import treehou.se.habit.ui.control.config.ControllCellFragment;
 import treehou.se.habit.ui.control.config.cells.ButtonConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.ColorConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.DefaultConfigCellBuilder;
@@ -43,7 +30,6 @@ import treehou.se.habit.ui.control.config.cells.IncDecConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.SliderConfigCellBuilder;
 import treehou.se.habit.ui.control.config.cells.VoiceConfigCellBuilder;
 import treehou.se.habit.ui.homescreen.ControllerWidget;
-import treehou.se.habit.util.Util;
 
 public class EditControlFragment extends Fragment implements ColorDialog.ColorDialogCallback {
 

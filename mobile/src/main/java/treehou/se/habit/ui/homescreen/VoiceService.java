@@ -9,7 +9,7 @@ import android.util.Log;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 
 public class VoiceService extends IntentService {
 
@@ -22,10 +22,10 @@ public class VoiceService extends IntentService {
 
     private static final int NULL_SERVER = -1;
 
-    public static Intent createVoiceCommand(Context context, OHServerWrapper server) {
+    public static Intent createVoiceCommand(Context context, OHServer server) {
         Intent intent = new Intent(context, VoiceService.class);
         intent.setAction(ACTION_COMMAND);
-        intent.putExtra(EXTRA_SERVER, server.getId());
+        intent.putExtra(EXTRA_SERVER, 0 /*server.getId()*/);
         return intent;
     }
 
@@ -42,7 +42,7 @@ public class VoiceService extends IntentService {
             Log.w(TAG, "No server specified.");
             return;
         }
-        OHServerWrapper server = OHServerWrapper.load(serverId);
+        OHServer server = null; // TODO OHServer.load(serverId);
 
         List<String> results = intent.getExtras().getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
         if (results != null && !results.isEmpty()) {

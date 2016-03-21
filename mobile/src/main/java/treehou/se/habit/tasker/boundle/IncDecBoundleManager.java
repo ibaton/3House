@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.IncDecReciever;
 
@@ -19,7 +19,7 @@ public class IncDecBoundleManager {
      * @param value The toast message to be displayed by the plug-in. Cannot be null.
      * @return A plug-in bundle.
      */
-    public static Bundle generateCommandBundle(final Context context, final OHItemWrapper item, final int value, final int min, final int max) {
+    public static Bundle generateCommandBundle(final Context context, final OHItem item, final int value, final int min, final int max) {
 
         Log.d(TAG, "Item " + item + " inc/dec " + value);
 

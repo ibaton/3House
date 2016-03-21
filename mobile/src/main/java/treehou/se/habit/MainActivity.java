@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,11 +14,10 @@ import android.view.MenuItem;
 import java.util.List;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
-import treehou.se.habit.core.db.OHTreehouseRealm;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.gcm.GCMHelper;
+import io.realm.RealmResults;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
@@ -36,13 +34,14 @@ public class MainActivity extends AppCompatActivity
 
     public static final String EXTRA_SHOW_SITEMAP = "showSitemap";
 
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        OHTreehouseRealm.setup(this);
-        Realm.deleteRealm(OHTreehouseRealm.configuration());
+        realm = Realm.getDefaultInstance();
 
         ControlHelper.showNotifications(this);
 
@@ -56,31 +55,32 @@ public class MainActivity extends AppCompatActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        /*FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {
 
             // Load server setup server fragment if no server found
-            List<OHServerWrapper> servers = OHServerWrapper.loadAll();
-            if(servers.size() <= 0) {
+            RealmResults<ServerDB> serverDBs = realm.allObjects(ServerDB.class);
+
+            if(serverDBs.size() <= 0) {
                 fragmentManager.beginTransaction()
                         .replace(R.id.page_container, ServersFragment.newInstance())
                         .commit();
             }else {
                 // Load default sitemap if any
-                OHSitemapWrapper defaultSitemap = Settings.instance(this).getDefaultSitemap();
+                /*OHSitemap defaultSitemap = Settings.instance(this).getDefaultSitemap();
                 if(savedInstanceState == null && defaultSitemap != null) {
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap.getId()))
                             .commit();
-                }else {
+                }else {*/
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance())
                             .commit();
-                }
+                //}
             }
         }
 
-        if (GCMHelper.checkPlayServices(this)) {
+        /*if (GCMHelper.checkPlayServices(this)) {
             GCMHelper.gcmRegisterBackground(this);
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
@@ -91,6 +91,13 @@ public class MainActivity extends AppCompatActivity
                 ControlHelper.showNotification(this, controller);
             }
         }*/
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     @Override

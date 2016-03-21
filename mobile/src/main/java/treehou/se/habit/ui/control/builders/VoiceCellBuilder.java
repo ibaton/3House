@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.VoiceCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.VoiceCellDB;
 import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
@@ -45,7 +45,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
                     return;
                 }
 
-                Intent callbackIntent = VoiceService.createVoiceCommand(context, new OHServerWrapper(voiceCell.getItem().getServer()));
+                /*Intent callbackIntent = VoiceService.createVoiceCommand(context, new OHServer(voiceCell.getItem().getServer()));
                 PendingIntent openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -61,7 +61,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
                 intent.putExtra(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT, openhabPendingIntent);
 
                 // Instruct the widget manager to update the widget
-                context.startActivity( intent);
+                context.startActivity( intent);*/
             }
         });
 
@@ -83,7 +83,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
             return cellView;
         }
 
-        Intent callbackIntent = VoiceService.createVoiceCommand(context, new OHServerWrapper(voiceCell.getItem().getServer()));
+        /*Intent callbackIntent = VoiceService.createVoiceCommand(context, new OHServer(voiceCell.getItem().getServer()));
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -99,7 +99,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 9, intent, 0);
 
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
+        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);*/
 
         return cellView;
     }

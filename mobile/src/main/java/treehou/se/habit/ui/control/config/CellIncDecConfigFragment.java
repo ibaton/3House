@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.IncDecCell;
-import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -44,8 +44,8 @@ public class CellIncDecConfigFragment extends Fragment {
     private EditText txtValue;
     private ImageButton btnSetIcon;
 
-    private ArrayAdapter<OHItemWrapper> mItemAdapter;
-    private ArrayList<OHItemWrapper> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
 
     public static CellIncDecConfigFragment newInstance(CellDB cell) {
         CellIncDecConfigFragment fragment = new CellIncDecConfigFragment();
@@ -94,9 +94,9 @@ public class CellIncDecConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OHItemWrapper item = mItems.get(position);
+                OHItem item = mItems.get(position);
                 if(item != null) {
-                    item.save();
+                    // TODO item.save();
 
                     numberCell.setItem(item);
                     numberCell.save();
@@ -113,16 +113,16 @@ public class CellIncDecConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
+        List<OHServer> servers = null; // TODO OHServer.loadAll();
         mItems.clear();
         if(numberCell.getItem() != null) {
             mItems.add(numberCell.getItem());
         }
-        for(final OHServerWrapper server : servers) {
-            OHCallback<List<OHItemWrapper>> callback = new OHCallback<List<OHItemWrapper>>() {
+        for(final OHServer server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onUpdate(OHResponse<List<OHItemWrapper>> response) {
-                    List<OHItemWrapper> items = filterItems(response.body());
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
                     Openhab.instance(server).deregisterItemsListener(this);
@@ -154,10 +154,10 @@ public class CellIncDecConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
     }
 
-    private List<OHItemWrapper> filterItems(List<OHItemWrapper> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<OHItemWrapper> tempItems = new ArrayList<>();
-        for(OHItemWrapper item : items){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
             if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }

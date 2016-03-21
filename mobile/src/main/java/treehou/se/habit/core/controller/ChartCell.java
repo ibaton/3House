@@ -1,6 +1,6 @@
 package treehou.se.habit.core.controller;
 
-import treehou.se.habit.core.db.controller.ChartCellDB;
+import treehou.se.habit.core.db.model.controller.ChartCellDB;
 
 public class ChartCell {
 

@@ -1,7 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class GroupWidgetFactory implements IWidgetFactory {
@@ -10,7 +10,7 @@ public class GroupWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(
-            WidgetFactory widgetFactory, OHLinkedPageWrapper page, OHWidgetWrapper widget, OHWidgetWrapper parent) {
+            WidgetFactory widgetFactory, OHLinkedPage page, OHWidget widget, OHWidget parent) {
 
         WidgetFactory.IWidgetHolder itemView = new BaseWidgetFactory().build(widgetFactory, page, widget, parent);
 

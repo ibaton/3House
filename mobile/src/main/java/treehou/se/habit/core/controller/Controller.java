@@ -3,9 +3,7 @@ package treehou.se.habit.core.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmList;
-import treehou.se.habit.core.db.controller.CellRowDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 public class Controller {
 

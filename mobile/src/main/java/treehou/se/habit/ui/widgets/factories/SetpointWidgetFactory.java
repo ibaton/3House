@@ -5,16 +5,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
-import treehou.se.habit.core.wrappers.settings.WidgetSettings;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class SetpointWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
         return new SetpointWidgetHolder(widget, parent, widgetFactory);
     }
 
@@ -28,10 +27,9 @@ public class SetpointWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
-        public SetpointWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
+        public SetpointWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
 
             this.factory = factory;
-            WidgetSettings settings = WidgetSettings.loadGlobal();
 
             itemView = factory.getInflater().inflate(R.layout.item_widget_setpoint, null);
             btnDecrease = (Button) itemView.findViewById(R.id.btn_down);
@@ -54,13 +52,13 @@ public class SetpointWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             if (widget == null) {
                 return;
             }
 
             if(widget.getItem() != null) {
-                lblValue.setText(widget.getItem().getFormatedValue());
+                //lblValue.setText(widget.getItem().getFormatedValue());
             }
 
             btnIncrease.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +78,7 @@ public class SetpointWidgetFactory implements IWidgetFactory {
             baseHolder.update(widget);
         }
 
-        private void setValueRelative(OHWidgetWrapper widget, float value) {
+        private void setValueRelative(OHWidget widget, float value) {
             if(widget.getItem() == null) {
                 return;
             }
@@ -101,14 +99,14 @@ public class SetpointWidgetFactory implements IWidgetFactory {
             setValue(widget, setpointValue);
         }
 
-        private void setValue(OHWidgetWrapper widget, float value) {
+        private void setValue(OHWidget widget, float value) {
 
             String state = String.valueOf(value);
             if(widget.getItem() != null) {
                 try {
                     widget.getItem().setState(state);
                     if(widget.getItem() != null) {
-                        lblValue.setText(widget.getItem().getFormatedValue());
+                        //lblValue.setText(widget.getItem().getFormatedValue());
                     }
 
                     Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), String.valueOf(value));

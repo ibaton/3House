@@ -21,35 +21,42 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import io.realm.Realm;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHSitemap;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.homescreen.VoiceService;
 
 public class SitemapFragment extends Fragment {
 
     private static final String TAG = "SitemapFragment";
     private static final String ARG_SITEMAP = "ARG_SITEMAP";
+    private static final String ARG_SERVER = "ARG_SERVER";
 
-    private OHSitemapWrapper sitemap;
+    private Realm realm;
+
+    private ServerDB server;
+    private OHSitemap sitemap;
     private Communicator communicator;
     private SitemapAdapter sitemapAdapter;
     private ViewPager pgrSitemap;
-    private ArrayList<OHLinkedPageWrapper> pages = new ArrayList<>();
+    private ArrayList<OHLinkedPage> pages = new ArrayList<>();
 
     private RequestPageCallback requestPageCallback = new RequestPageDummyListener();
 
-    public static SitemapFragment newInstance(OHSitemap sitemap){
+    public static SitemapFragment newInstance(ServerDB serverDB, OHSitemap sitemap){
         SitemapFragment fragment = new SitemapFragment();
 
         Bundle args = new Bundle();
-        args.putLong(ARG_SITEMAP, sitemap.getId());
+        args.putString(ARG_SITEMAP, GsonHelper.createGsonBuilder().toJson(sitemap));
+        args.putLong(ARG_SERVER, serverDB.getId());
         fragment.setArguments(args);
 
         return fragment;
@@ -61,8 +68,15 @@ public class SitemapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         communicator = Communicator.instance(getActivity());
-        sitemap = OHSitemapWrapper.load(getArguments().getLong(ARG_SITEMAP));
+
+        long serverId = getArguments().getLong(ARG_SERVER);
+        server = ServerDB.load(realm, serverId);
+
+        String jSitemap = getArguments().getString(ARG_SITEMAP);
+        sitemap = GsonHelper.createGsonBuilder().fromJson(jSitemap, OHSitemap.class);
     }
 
     @Override
@@ -88,14 +102,14 @@ public class SitemapFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sitemap, null);
 
-        sitemapAdapter = new SitemapAdapter(sitemap.getServer(), getActivity().getSupportFragmentManager(), pages);
+        sitemapAdapter = new SitemapAdapter(server, getActivity().getSupportFragmentManager(), pages);
         pgrSitemap = (ViewPager) rootView.findViewById(R.id.pgr_sitemap);
         pgrSitemap.setAdapter(sitemapAdapter);
         pgrSitemap.addOnPageChangeListener(pagerChangeListener);
 
         requestPageCallback = new RequestPageCallback() {
             @Override
-            public void success(OHLinkedPageWrapper linkedPage, Response response) {
+            public void success(OHLinkedPage linkedPage, Response response) {
                 Log.d(TAG, "Received page " + linkedPage);
                 pages.add(linkedPage);
                 sitemapAdapter.notifyDataSetChanged();
@@ -109,9 +123,9 @@ public class SitemapFragment extends Fragment {
 
         if(pages.size() == 0) {
             Log.d(TAG, "Requesting page");
-            communicator.requestPage(sitemap.getServer(), sitemap.getHomepage(), new Callback<OHLinkedPageWrapper>() {
+            communicator.requestPage(sitemap.getServer(), sitemap.getHomepage(), new Callback<OHLinkedPage>() {
                 @Override
-                public void success(OHLinkedPageWrapper linkedPage, retrofit.client.Response response) {
+                public void success(OHLinkedPage linkedPage, retrofit.client.Response response) {
                     requestPageCallback.success(linkedPage, response);
                 }
 
@@ -146,14 +160,14 @@ public class SitemapFragment extends Fragment {
      * Handle callbacks for request page.
      */
     interface RequestPageCallback {
-        void success(OHLinkedPageWrapper linkedPage, retrofit.client.Response response);
+        void success(OHLinkedPage linkedPage, retrofit.client.Response response);
         void failure(RetrofitError error);
     }
 
     class RequestPageDummyListener implements RequestPageCallback {
 
         @Override
-        public void success(OHLinkedPageWrapper linkedPage, Response response) {}
+        public void success(OHLinkedPage linkedPage, Response response) {}
 
         @Override
         public void failure(RetrofitError error) {}
@@ -170,7 +184,7 @@ public class SitemapFragment extends Fragment {
         public void onPageSelected(int i) {
             index=i;
             if(pages.size() > 0 && getActivity() instanceof AppCompatActivity){
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(Html.fromHtml(pages.get(i).getActionbarTitle()));
+                // TODO ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(Html.fromHtml(pages.get(i).getActionbarTitle()));
             }
         }
 
@@ -191,7 +205,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param page the page to add to pager
      */
-    public void addPage(OHLinkedPageWrapper page) {
+    public void addPage(OHLinkedPage page) {
         Log.d(TAG, "Add page " + page.getLink());
         pages.add(page);
         sitemapAdapter.notifyDataSetChanged();
@@ -233,7 +247,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param server server to send command to.
      */
-    public void openVoiceCommand(OHServerWrapper server){
+    public void openVoiceCommand(OHServer server){
         Intent callbackIntent = VoiceService.createVoiceCommand(getActivity(), server);
 
         PendingIntent openhabPendingIntent = PendingIntent.getService(getActivity(), 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -259,7 +273,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param event
      */
-    public void onEvent(OHLinkedPageWrapper event){
+    public void onEvent(OHLinkedPage event){
         addPage(event);
     }
 
@@ -267,5 +281,7 @@ public class SitemapFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d("SitemapFragment", "SitemapFragment destroyed");
+
+        realm.close();
     }
 }

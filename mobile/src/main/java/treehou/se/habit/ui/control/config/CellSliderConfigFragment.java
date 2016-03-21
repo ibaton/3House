@@ -17,15 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.SliderCell;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -44,8 +43,8 @@ public class CellSliderConfigFragment extends Fragment {
     private ImageButton btnSetIcon;
     private View louRange;
 
-    private ArrayAdapter<OHItemWrapper> mItemAdapter ;
-    private ArrayList<OHItemWrapper> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter ;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
 
     public static CellSliderConfigFragment newInstance(CellDB cell) {
         CellSliderConfigFragment fragment = new CellSliderConfigFragment();
@@ -91,11 +90,11 @@ public class CellSliderConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OHItemWrapper item = mItems.get(position);
+                OHItem item = mItems.get(position);
                 if (item != null) {
-                    item.save();
+                    // TODO item.save();
 
-                    if (item.getType().equals(OHItemWrapper.TYPE_NUMBER) || item.getType().equals(OHItemWrapper.TYPE_GROUP)) {
+                    if (item.getType().equals(OHItem.TYPE_NUMBER) || item.getType().equals(OHItem.TYPE_GROUP)) {
                         louRange.setVisibility(View.VISIBLE);
                     } else {
                         louRange.setVisibility(View.GONE);
@@ -117,16 +116,16 @@ public class CellSliderConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
+        List<OHServer> servers = null; // TODO OHServer.loadAll();
         mItems.clear();
         if(numberCell.getItem() != null) {
             mItems.add(numberCell.getItem());
         }
-        for(final OHServerWrapper server : servers) {
-            OHCallback<List<OHItemWrapper>> callback = new OHCallback<List<OHItemWrapper>>() {
+        for(final OHServer server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onUpdate(OHResponse<List<OHItemWrapper>> response) {
-                    List<OHItemWrapper> items = filterItems(response.body());
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
                     Openhab.instance(server).deregisterItemsListener(this);
@@ -164,17 +163,17 @@ public class CellSliderConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
     }
 
-    private List<OHItemWrapper> filterItems(List<OHItemWrapper> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<OHItemWrapper> tempItems = new ArrayList<>();
-        for(OHItemWrapper item : items){
-            if(item.getType().equals(OHItemWrapper.TYPE_NUMBER)){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(item.getType().equals(OHItem.TYPE_NUMBER)){
                 tempItems.add(item);
-            }else if(item.getType().equals(OHItemWrapper.TYPE_DIMMER)){
+            }else if(item.getType().equals(OHItem.TYPE_DIMMER)){
                 tempItems.add(item);
-            }else if(item.getType().equals(OHItemWrapper.TYPE_COLOR)){
+            }else if(item.getType().equals(OHItem.TYPE_COLOR)){
                 tempItems.add(item);
-            }else if(item.getType().equals(OHItemWrapper.TYPE_GROUP)){
+            }else if(item.getType().equals(OHItem.TYPE_GROUP)){
                 tempItems.add(item);
             }
         }
@@ -192,8 +191,8 @@ public class CellSliderConfigFragment extends Fragment {
             return;
         }
 
-        if(numberCell.getItem().getType().equals(OHItemWrapper.TYPE_NUMBER)
-                || numberCell.getItem().getType().equals(OHItemWrapper.TYPE_GROUP)){
+        if(numberCell.getItem().getType().equals(OHItem.TYPE_NUMBER)
+                || numberCell.getItem().getType().equals(OHItem.TYPE_GROUP)){
             numberCell.setMin(0);
             numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
         }else{

@@ -11,15 +11,16 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.wrappers.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -29,17 +30,17 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
     @Override
     public WidgetFactory.IWidgetHolder build(
-            WidgetFactory widgetFactory, OHLinkedPageWrapper page,
-            final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
+            WidgetFactory widgetFactory, OHLinkedPage page,
+            final OHWidget widget, final OHWidget parent) {
 
         if(widget.getMapping() == null || widget.getMapping().size() <= 0) {
-            final OHItemWrapper item = widget.getItem();
+            final OHItem item = widget.getItem();
             if (item == null || item.getType() == null) {
                 Log.w(TAG, "Null switch created");
                 return new NullWidgetFactory().build(widgetFactory, page, widget, parent);
             }
 
-            if(item.getType().equals(OHItemWrapper.TYPE_ROLLERSHUTTER)){
+            if(item.getType().equals(OHItem.TYPE_ROLLERSHUTTER)){
                 return RollerShutterWidgetHolder.create(widgetFactory, widget, parent);
             }else{
                 return SwitchWidgetHolder.create(widgetFactory, widget, parent);
@@ -63,11 +64,11 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public static RollerShutterWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
+        public static RollerShutterWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
             return new RollerShutterWidgetHolder(widget, parent, factory);
         }
 
-        private RollerShutterWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
+        private RollerShutterWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
@@ -75,7 +76,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                     .setParent(parent)
                     .build();
 
-            final OHItemWrapper item = widget.getItem();
+            final OHItem item = widget.getItem();
             View itemView = factory.getInflater().inflate(R.layout.item_widget_rollershutters, null);
 
             ImageButton btnUp = (ImageButton) itemView.findViewById(R.id.btn_up);
@@ -114,7 +115,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
@@ -142,11 +143,11 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         private WidgetFactory factory;
         private RadioGroup rgpMapping;
 
-        public static PickerWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
+        public static PickerWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
             return new PickerWidgetHolder(widget, parent, factory);
         }
 
-        private PickerWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
+        private PickerWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
 
             this.factory = factory;
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
@@ -163,20 +164,22 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
                 return;
             }
 
-            WidgetSettings settings = WidgetSettings.loadGlobal();
+            Realm realm = Realm.getDefaultInstance();
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
+            float percentage = Util.toPercentage(settings.getTextSize());
+            realm.close();
 
             //TODO do this smother
             rgpMapping.removeAllViews();
             for (final OHMapping mapping : widget.getMapping()) {
                 RadioButton rbtMap = (RadioButton) factory.getInflater().inflate(R.layout.radio_button, null);
-                float percentage = Util.toPercentage(settings.getTextSize());
                 rbtMap.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage*rbtMap.getTextSize());
                 rbtMap.setText(mapping.getLabel());
                 rbtMap.setId(rbtMap.hashCode());
@@ -216,19 +219,21 @@ public class SwitchWidgetFactory implements IWidgetFactory {
 
         private Button btnSingle;
 
-        public static SingleButtonWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
+        public static SingleButtonWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
             return new SingleButtonWidgetHolder(widget, parent, factory);
         }
 
-        private SingleButtonWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
+        private SingleButtonWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
             this.factory = factory;
-            WidgetSettings settings = WidgetSettings.loadGlobal();
+            Realm realm = Realm.getDefaultInstance();
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(settings.isCompressedSingleButton())
                     .setShowLabel(true)
                     .setParent(parent)
                     .build();
+            realm.close();
 
 
             View itemView = factory.getInflater().inflate(R.layout.item_widget_switch_mapping_single, null);
@@ -249,7 +254,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
@@ -285,26 +290,28 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private SwitchCompat swtSwitch;
 
-        public static SwitchWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
+        public static SwitchWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
             return new SwitchWidgetHolder(widget, parent, factory);
         }
 
-        private SwitchWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory factory) {
+        private SwitchWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
 
-            WidgetSettings settings = WidgetSettings.loadGlobal();
+            Realm realm = Realm.getDefaultInstance();
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
                     .setFlat(true)
                     .setShowLabel(true)
                     .setParent(parent)
                     .build();
+            float percentage = Util.toPercentage(settings.getTextSize());
+            realm.close();
 
             Log.d(TAG, "Switch state " + widget.getItem().getState() + " : " + widget.getItem().getName());
 
             View itemView = factory.getInflater().inflate(R.layout.item_widget_switch, null);
 
             swtSwitch = (SwitchCompat) itemView.findViewById(R.id.swt_switch);
-            float percentage = Util.toPercentage(settings.getTextSize());
             swtSwitch.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * swtSwitch.getTextSize());
 
             getView().setOnClickListener(new View.OnClickListener() {
@@ -324,7 +331,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null || widget.getItem() == null) {

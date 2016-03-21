@@ -1,5 +1,6 @@
 package treehou.se.habit.ui;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,44 +16,61 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.ning.http.client.AsyncHttpClient;
+
+import org.atmosphere.wasync.Client;
+import org.atmosphere.wasync.Socket;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHBindingWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHserver;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.models.Binding;
+import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.model.ServerDB;
 
 public class BindingsFragment extends Fragment {
+
+    private static final String TAG = BindingsFragment.class.getSimpleName();
 
     private static final String ARG_SERVER = "ARG_SERVER";
 
     private static final String STATE_BINDINGS = "STATE_BINDINGS";
 
     private BindingAdapter bindingAdapter;
-    private long serverId;
+    private ServerDB server;
     private ViewGroup container;
 
-    private List<OHBindingWrapper> bindings = new ArrayList<>();
+    private Socket bindingClient;
 
-    private OHCallback<List<OHBindingWrapper>> bindingListener = new OHCallback<List<OHBindingWrapper>>(){
+    private List<OHBinding> bindings = new ArrayList<>();
+
+    private Realm realm;
+
+    private OHCallback<List<OHBinding>> bindingListener = new OHCallback<List<OHBinding>>(){
 
         @Override
-        public void onUpdate(OHResponse<List<OHBindingWrapper>> response) {
+        public void onUpdate(OHResponse<List<OHBinding>> response) {
+            Log.d(TAG, "onUpdate " + response.body());
             bindings = response.body();
             bindingAdapter.setBindings(bindings);
         }
 
         @Override
-        public void onError() {}
+        public void onError() {
+            Log.d(TAG, "onError");
+        }
     };
 
-    public static BindingsFragment newInstance(OHserver server) {
+    public static BindingsFragment newInstance(ServerDB server) {
         BindingsFragment fragment = new BindingsFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_SERVER, server.getId());
@@ -66,9 +85,12 @@ public class BindingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        realm = Realm.getDefaultInstance();
+
         if(getArguments() != null){
             if(getArguments().containsKey(ARG_SERVER)){
-                serverId = getArguments().getLong(ARG_SERVER);
+                long serverId = getArguments().getLong(ARG_SERVER);
+                server = Realm.getDefaultInstance().where(ServerDB.class).equalTo("id", serverId).findFirst();
             }
         }
 
@@ -85,17 +107,9 @@ public class BindingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View rootView = inflater.inflate(R.layout.fragment_bindings_list, container, false);
-
         this.container = container;
-
-        OHserver server = OHserver.load(serverId);
-        if(server == null){
-            Toast.makeText(getActivity(), getString(R.string.failed_to_load_server), Toast.LENGTH_LONG).show();
-            getActivity().getSupportFragmentManager().popBackStackImmediate();
-            return rootView;
-        }
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
@@ -119,15 +133,19 @@ public class BindingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        Openhab.instance(serverId).registerBindingListener(bindingListener);
+        bindingClient = Openhab.instance(server.toGeneric()).registerBindingListener(bindingListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        bindingClient.close();
+    }
 
-        Openhab.instance(serverId).deregisterBindingListener(bindingListener);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     @Override
@@ -139,7 +157,7 @@ public class BindingsFragment extends Fragment {
 
     public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder>{
 
-        private List<OHBindingWrapper> bindings = new ArrayList<>();
+        private List<OHBinding> bindings = new ArrayList<>();
 
         public class BindingHolder extends RecyclerView.ViewHolder {
 
@@ -171,7 +189,7 @@ public class BindingsFragment extends Fragment {
         @Override
         public void onBindViewHolder(final BindingHolder holder, int position) {
 
-            final OHBindingWrapper binding = bindings.get(position);
+            final OHBinding binding = bindings.get(position);
             holder.lblName.setText(binding.getName());
             holder.lblAuthor.setText(binding.getAuthor());
             holder.lblDescription.setText(binding.getDescription());
@@ -194,12 +212,12 @@ public class BindingsFragment extends Fragment {
             return bindings.size();
         }
 
-        public void addBinding(OHBindingWrapper binding){
+        public void addBinding(OHBinding binding){
             bindings.add(binding);
             notifyItemInserted(bindings.size()-1);
         }
 
-        public void setBindings(List<OHBindingWrapper> newBindings){
+        public void setBindings(List<OHBinding> newBindings){
             bindings.clear();
             bindings.addAll(newBindings);
             notifyDataSetChanged();

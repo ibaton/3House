@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 
@@ -51,7 +51,7 @@ public class IncDecReciever implements IFireReciever {
 
             final int value = Math.max(Math.min(bundle.getInt(BUNDLE_EXTRA_VALUE), range), -range);
 
-            OHItemWrapper item = OHItemWrapper.load(itemId);
+            OHItem item = null; // TODO OHItem.load(itemId);
             if(item != null){
                 Communicator.instance(context).incDec(item.getServer(), item, value, min, max);
                 Log.d(TAG, "Sent sendCommand " + value + " to item " + item.getName());

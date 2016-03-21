@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ButtonCellDB;
+import treehou.se.habit.core.db.model.controller.ButtonCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -46,8 +46,8 @@ public class CellButtonConfigFragment extends Fragment {
     private TextView txtCommand;
     private ImageView btnSetIcon;
 
-    private ArrayAdapter<OHItemWrapper> mItemAdapter;
-    private ArrayList<OHItemWrapper> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
 
     public static CellButtonConfigFragment newInstance(CellDB cell) {
         CellButtonConfigFragment fragment = new CellButtonConfigFragment();
@@ -92,24 +92,24 @@ public class CellButtonConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OHItemWrapper item = mItems.get(position);
+                OHItem item = mItems.get(position);
                 if(item != null) {
-                    item.save();
+                    // TODO item.save();
 
-                    buttonCell.setItem(item.getDB());
+                    //buttonCell.setItem(item.getDB());
                     //ButtonCellDB.save(buttonCell);
                     switch (item.getType()) {
-                        case OHItemWrapper.TYPE_STRING:
+                        case OHItem.TYPE_STRING:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_TEXT);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case OHItemWrapper.TYPE_NUMBER:
+                        case OHItem.TYPE_NUMBER:
                             txtCommand.setVisibility(View.VISIBLE);
                             txtCommand.setInputType(InputType.TYPE_CLASS_NUMBER);
                             tglOnOff.setVisibility(View.GONE);
                             break;
-                        case OHItemWrapper.TYPE_CONTACT:
+                        case OHItem.TYPE_CONTACT:
                             txtCommand.setVisibility(View.GONE);
                             tglOnOff.setVisibility(View.VISIBLE);
                             break;
@@ -131,21 +131,21 @@ public class CellButtonConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
+        List<OHServer> servers = null; // TODO OHServer.loadAll();
         mItems.clear();
 
         if(buttonCell.getItem() != null) {
-            mItems.add(new OHItemWrapper(buttonCell.getItem()));
+            //mItems.add(new OHItem(buttonCell.getItem()));
         }
 
         if(buttonCell.getItem() != null) {
-            mItems.add(new OHItemWrapper(buttonCell.getItem()));
+            //mItems.add(new OHItem(buttonCell.getItem()));
         }
-        for(final OHServerWrapper server : servers) {
-            OHCallback<List<OHItemWrapper>> callback = new OHCallback<List<OHItemWrapper>>() {
+        for(final OHServer server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onUpdate(OHResponse<List<OHItemWrapper>> response) {
-                    List<OHItemWrapper> items = filterItems(response.body());
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
                     Openhab.instance(server).deregisterItemsListener(this);
@@ -182,16 +182,16 @@ public class CellButtonConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), buttonCell.getIcon()));
     }
 
-    private List<OHItemWrapper> filterItems(List<OHItemWrapper> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<OHItemWrapper> tempItems = new ArrayList<>();
-        for(OHItemWrapper item : items){
-            if(item.getType().equals(OHItemWrapper.TYPE_SWITCH) ||
-               item.getType().equals(OHItemWrapper.TYPE_GROUP) ||
-               item.getType().equals(OHItemWrapper.TYPE_STRING) ||
-               item.getType().equals(OHItemWrapper.TYPE_NUMBER) ||
-               item.getType().equals(OHItemWrapper.TYPE_CONTACT) ||
-               item.getType().equals(OHItemWrapper.TYPE_COLOR)){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(item.getType().equals(OHItem.TYPE_SWITCH) ||
+               item.getType().equals(OHItem.TYPE_GROUP) ||
+               item.getType().equals(OHItem.TYPE_STRING) ||
+               item.getType().equals(OHItem.TYPE_NUMBER) ||
+               item.getType().equals(OHItem.TYPE_CONTACT) ||
+               item.getType().equals(OHItem.TYPE_COLOR)){
                 tempItems.add(item);
             }
         }
@@ -207,9 +207,9 @@ public class CellButtonConfigFragment extends Fragment {
 
         if(buttonCell.getItem() == null) {
             buttonCell.setCommand("");
-        } else if (buttonCell.getItem().getType().equals(OHItemWrapper.TYPE_STRING) || buttonCell.getItem().getType().equals(OHItemWrapper.TYPE_NUMBER)) {
+        } else if (buttonCell.getItem().getType().equals(OHItem.TYPE_STRING) || buttonCell.getItem().getType().equals(OHItem.TYPE_NUMBER)) {
             buttonCell.setCommand(txtCommand.getText().toString());
-        } else if (buttonCell.getItem().getType().equals(OHItemWrapper.TYPE_CONTACT)) {
+        } else if (buttonCell.getItem().getType().equals(OHItem.TYPE_CONTACT)) {
             buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_OPEN : Constants.COMMAND_CLOSE);
         } else {
             buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF);

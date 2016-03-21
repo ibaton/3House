@@ -4,14 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.connector.TrustModifier;
-import treehou.se.habit.core.db.OHTreehouseRealm;
+import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 
-public class HabitApplication extends Application /*com.activeandroid.app.Application*/ {
+public class HabitApplication extends Application {
 
     @Override
     public void onCreate() {
@@ -25,16 +26,20 @@ public class HabitApplication extends Application /*com.activeandroid.app.Applic
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        //OHTreehouseRealm.setup(this);
-        //RealmConfiguration realmConfiguration = OHTreehouseRealm.configuration();
-        //Realm.setDefaultConfiguration(realmConfiguration); // Make this Realm the default
+        OHRealm.setup(this);
+        /* Realm realm = Realm.getDefaultInstance();
+        WidgetSettingsDB settingsDB = realm.allObjects(WidgetSettingsDB.class).first();
+        if(settingsDB == null){
+            realm.beginTransaction();
+            WidgetSettingsDB settings = realm.createObject(WidgetSettingsDB.class);
+            settings.setId(1);
+            settings.setIconSize(25);
+            settings.setTextSize(25);
+            realm.commitTransaction();
+        }
+        realm.close();*/
 
-        //Realm.deleteRealm(OHRealm.configuration());
-        //Realm.deleteRealm(OHTreehouseRealm.configuration());
-
-        //OHRealm.setup(OHTreehouseRealm.configuration());
-        //Openhab.setup(base);
-
+        Openhab.setup(this);
         try {
             MultiDex.install(this);
         } catch (RuntimeException multiDexException) {

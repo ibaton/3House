@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 import treehou.se.habit.ui.control.config.cells.CellColorConfigFragment;
 

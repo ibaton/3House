@@ -17,15 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.VoiceCell;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.VoiceCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -42,8 +41,8 @@ public class CellVoiceConfigFragment extends Fragment {
 
     private Cell cell;
 
-    private ArrayAdapter<OHItemWrapper> mItemAdapter ;
-    private ArrayList<OHItemWrapper> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter ;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
 
     public static CellVoiceConfigFragment newInstance(CellDB cell) {
         CellVoiceConfigFragment fragment = new CellVoiceConfigFragment();
@@ -78,11 +77,11 @@ public class CellVoiceConfigFragment extends Fragment {
         }*/
     }
 
-    private List<OHItemWrapper> filterItems(List<OHItemWrapper> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<OHItemWrapper> tempItems = new ArrayList<>();
-        for(OHItemWrapper item : items){
-            if(item.getType().equals(OHItemWrapper.TYPE_STRING)){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(item.getType().equals(OHItem.TYPE_STRING)){
                 tempItems.add(item);
             }
         }
@@ -110,20 +109,20 @@ public class CellVoiceConfigFragment extends Fragment {
         sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setAdapter(mItemAdapter);
 
-        List<OHServerWrapper> servers = OHServerWrapper.loadAll();
+        List<OHServer> servers = null; //OHServer.loadAll();
         mItems.clear();
 
         if(voiceCell.getItem() != null) {
-            mItems.add(new OHItemWrapper(voiceCell.getItem()));
+            // TODO mItems.add(new OHItem(voiceCell.getItem()));
         }
 
-        for(final OHServerWrapper server : servers) {
-            OHCallback<List<OHItemWrapper>> callback = new OHCallback<List<OHItemWrapper>>() {
+        for(final OHServer server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
 
                 @Override
-                public void onUpdate(OHResponse<List<OHItemWrapper>> response) {
-                    List<OHItemWrapper> items = filterItems(response.body());
-                    mItems.addAll(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
+                    // TODO mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
                     Openhab.instance(server).deregisterItemsListener(this);
                 }
@@ -139,11 +138,11 @@ public class CellVoiceConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OHItemWrapper item = mItems.get(position);
-                item.save();
+                /* TODO  OHItem item = mItems.get(position);
+                 item.save();
 
                 voiceCell.setItem(item.getDB());
-                voiceCell.save();
+                voiceCell.save();*/
             }
 
             @Override

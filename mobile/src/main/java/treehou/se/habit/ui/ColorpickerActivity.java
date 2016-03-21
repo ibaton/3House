@@ -16,12 +16,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.connector.GsonHelper;
 
 public class ColorpickerActivity extends AppCompatActivity {
 
@@ -41,8 +41,8 @@ public class ColorpickerActivity extends AppCompatActivity {
         int color = bundle.getInt(EXTRA_COLOR);
 
         Gson gson = GsonHelper.createGsonBuilder();
-        OHServerWrapper server = OHServerWrapper.load(serverId);
-        OHWidgetWrapper widget = gson.fromJson(jWidget, OHWidgetWrapper.class);
+        OHServer server = null; // TODO OHServer.load(serverId);
+        OHWidget widget = gson.fromJson(jWidget, OHWidget.class);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -62,19 +62,19 @@ public class ColorpickerActivity extends AppCompatActivity {
         private static final String ARG_WIDGET  = "ARG_SITEMAP";
         private static final String ARG_COLOR   = "ARG_COLOR";
 
-        private OHServerWrapper server;
-        private OHWidgetWrapper widget;
+        private OHServer server;
+        private OHWidget widget;
         private int color;
         private ColorPicker pcrColor;
 
         private Timer timer = new Timer();
 
-        public static PlaceholderFragment newInstance(OHServerWrapper server, OHWidgetWrapper widget, int color){
+        public static PlaceholderFragment newInstance(OHServer server, OHWidget widget, int color){
             PlaceholderFragment fragment = new PlaceholderFragment();
 
             Bundle args = new Bundle();
             Gson gson = GsonHelper.createGsonBuilder();
-            args.putLong(ARG_SERVER , server.getId());
+            args.putLong(ARG_SERVER , 0 /* TODO server.getId() */);
             args.putString(ARG_WIDGET ,gson.toJson(widget));
             args.putInt(ARG_COLOR ,color);
             fragment.setArguments(args);
@@ -94,8 +94,8 @@ public class ColorpickerActivity extends AppCompatActivity {
             color = args.getInt(ARG_COLOR);
 
             Gson gson = GsonHelper.createGsonBuilder();
-            server = OHServerWrapper.load(serverId);
-            widget = gson.fromJson(jWidget, OHWidgetWrapper.class);
+            server = null; // TODO OHServer.load(serverId);
+            widget = gson.fromJson(jWidget, OHWidget.class);
         }
 
         @Override

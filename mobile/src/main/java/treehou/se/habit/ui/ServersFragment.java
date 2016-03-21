@@ -1,7 +1,6 @@
 package treehou.se.habit.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,17 +9,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import io.realm.RealmChangeListener;
-import se.treehou.ng.ohcommunicator.core.db.OHserver;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.adapter.ServersAdapter;
 import treehou.se.habit.ui.settings.SetupServerFragment;
 
 public class ServersFragment extends Fragment {
@@ -34,7 +36,10 @@ public class ServersFragment extends Fragment {
     private RecyclerView lstServer;
     private View viwEmpty;
 
+    private ServersAdapter serversAdapter;
+
     private boolean initialized = false;
+    private Realm realm;
 
     public static ServersFragment newInstance() {
         ServersFragment fragment = new ServersFragment();
@@ -50,6 +55,8 @@ public class ServersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        realm = Realm.getDefaultInstance();
 
         if(savedInstanceState != null){
             initialized = savedInstanceState.getBoolean(STATE_INITIALIZED, false);
@@ -69,7 +76,7 @@ public class ServersFragment extends Fragment {
         viwEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startNewServerProcess();
+                startNewServerFlow();
             }
         });
 
@@ -95,12 +102,21 @@ public class ServersFragment extends Fragment {
         setup();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
     private void setup(){
-        /*final ServersAdapter serversAdapter = new ServersAdapter(getContext(), Realm.getDefaultInstance().allObjects(OHserver.class), true);
+        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
+        Log.d(TAG, "Loaded " + servers.size() + " servers");
+
+        serversAdapter = new ServersAdapter(getContext(), servers);
         serversAdapter.setItemListener(new ServersAdapter.ItemListener() {
             @Override
             public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
-                final OHserver server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.page_container, SetupServerFragment.newInstance(server.getId()))
                         .addToBackStack(null)
@@ -110,7 +126,7 @@ public class ServersFragment extends Fragment {
             @Override
             public boolean onItemLongClickListener(final ServersAdapter.ServerHolder serverHolder) {
 
-                final OHserver server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
                 new AlertDialog.Builder(getActivity())
                         .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
                             @Override
@@ -148,7 +164,7 @@ public class ServersFragment extends Fragment {
         if(!initialized && serversAdapter.getItemCount() <= 0){
             showScanServerFlow();
         }
-        initialized = true;*/
+        initialized = true;
     }
 
     private void showScanServerFlow() {
@@ -174,7 +190,7 @@ public class ServersFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.action_add_server:
-                startNewServerProcess();
+                startNewServerFlow();
                 break;
             case R.id.action_scan_for_server:
                 openServerScan();
@@ -184,13 +200,19 @@ public class ServersFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startNewServerProcess(){
+    /**
+     * Launch flow for creating new server.
+     */
+    private void startNewServerFlow(){
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.page_container, SetupServerFragment.newInstance())
                 .addToBackStack(null)
                 .commit();
     }
 
+    /**
+     * Launch flow used to scan for server on network.
+     */
     private void openServerScan(){
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.page_container, ScanServersFragment.newInstance())
@@ -198,19 +220,28 @@ public class ServersFragment extends Fragment {
                 .commit();
     }
 
-    private void showRemoveDialog(final ServersAdapter.ServerHolder serverHolder, final OHserver server){
-        /*new AlertDialog.Builder(getActivity())
+    /**
+     * Launchs flow asking user to remove or keep server.
+     * @param serverHolder holder that triggered flow.
+     * @param server the server to remove.
+     */
+    private void showRemoveDialog(final ServersAdapter.ServerHolder serverHolder, final ServerDB server){
+        new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.remove_server_question)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        OHRealm.realm().beginTransaction();
-                        server.removeFromRealm();
-                        OHRealm.realm().commitTransaction();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                server.removeFromRealm();
+                                serversAdapter.notifyItemRemoved(serverHolder.getAdapterPosition());
+                            }
+                        });
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .show();*/
+                .show();
     }
 
     @Override
@@ -226,108 +257,4 @@ public class ServersFragment extends Fragment {
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 
-    public static class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder>{
-
-        //private RealmResults<OHserver> realmResults;
-        private Context context;
-        private ItemListener itemListener = new DummyItemListener();
-        private final RealmChangeListener listener;
-
-        public class ServerHolder extends RecyclerView.ViewHolder {
-            public final TextView lblName;
-
-            public ServerHolder(View view) {
-                super(view);
-                lblName = (TextView) view.findViewById(R.id.lbl_server);
-            }
-        }
-
-        public ServersAdapter(Context context, /*RealmResults<OHserver> realmResults, */boolean automaticUpdate) {
-            if (context == null) {
-                throw new IllegalArgumentException("Context cannot be null");
-            }
-            this.context = context;
-            //this.realmResults = realmResults;
-            this.listener = (!automaticUpdate) ? null : new RealmChangeListener() {
-                @Override
-                public void onChange() {
-                    notifyDataSetChanged();
-                }
-            };
-
-            /*if (listener != null && realmResults != null) {
-                realmResults.addChangeListener(listener);
-            }*/
-        }
-
-        @Override
-        public ServerHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_server, null);
-
-            return new ServerHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final ServerHolder serverHolder, final int position) {
-            /*OHserver server = realmResults.get(position);
-
-            serverHolder.lblName.setText(OHserver.getDisplayName(context, server));
-            serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.onItemClickListener(serverHolder);
-                }
-            });
-            serverHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return itemListener.onItemLongClickListener(serverHolder);
-                }
-            });*/
-        }
-
-        @Override
-        public int getItemCount() {
-            //return realmResults.size();
-            return 0;
-        }
-
-        public OHserver getItem(int position) {
-            //return realmResults.get(position);
-            return null;
-        }
-
-        interface ItemListener{
-
-            void onItemClickListener(ServerHolder serverHolder);
-
-            boolean onItemLongClickListener(ServerHolder serverHolder);
-
-            void itemCountUpdated(int itemCount);
-        }
-
-        public class DummyItemListener implements ItemListener {
-
-            @Override
-            public void onItemClickListener(ServerHolder serverHolder) {}
-
-            @Override
-            public boolean onItemLongClickListener(ServerHolder serverHolder) {
-                return false;
-            }
-
-            @Override
-            public void itemCountUpdated(int itemCount) {}
-        }
-
-        public void setItemListener(ItemListener itemListener) {
-            if(itemListener == null){
-                this.itemListener = new DummyItemListener();
-                return;
-            }
-            this.itemListener = itemListener;
-        }
-    }
 }

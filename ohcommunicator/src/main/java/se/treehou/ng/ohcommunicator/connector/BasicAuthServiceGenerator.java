@@ -17,22 +17,20 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-
 public class BasicAuthServiceGenerator {
 
     // No need to instantiate this class.
     private BasicAuthServiceGenerator() {}
 
-    public static <S> S createService(Class<S> serviceClass, final OHServerWrapper server, final String url) {
+    public static <S> S createService(Class<S> serviceClass, final String usernarname, final String password, final String url) {
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
-        if(!TextUtils.isEmpty(server.getUsername()) && !TextUtils.isEmpty(server.getPassword())) {
+        if(!TextUtils.isEmpty(usernarname) && !TextUtils.isEmpty(password)) {
             client.authenticator(new Authenticator() {
                 @Override
                 public Request authenticate(Route route, Response response) throws IOException {
-                    String credential = Credentials.basic(server.getUsername(), server.getPassword());
+                    String credential = Credentials.basic(usernarname, password);
                     return response.request().newBuilder().header("Authorization", credential).build();
                 }
             });

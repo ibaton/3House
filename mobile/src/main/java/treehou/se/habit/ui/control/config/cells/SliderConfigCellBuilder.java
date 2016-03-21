@@ -11,9 +11,9 @@ import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;

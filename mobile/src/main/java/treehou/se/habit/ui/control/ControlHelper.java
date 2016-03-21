@@ -9,12 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.OHTreehouseRealm;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.CellRowDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
 import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
 import treehou.se.habit.ui.control.builders.IncDecCellBuilder;

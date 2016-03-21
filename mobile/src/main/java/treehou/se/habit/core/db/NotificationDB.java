@@ -5,14 +5,14 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
+import treehou.se.habit.core.db.model.OHRealm;
 
-public class NotificationDB /*extends RealmObject*/ {
+public class NotificationDB extends RealmObject {
 
     @PrimaryKey
     private long id = 0;
     private String message = "";
-    //private Date date;
+    private Date date;
     private boolean viewed;
 
     public long getId() {
@@ -32,12 +32,11 @@ public class NotificationDB /*extends RealmObject*/ {
     }
 
     public Date getDate() {
-        return null;
-        //return date;
+        return date;
     }
 
     public void setDate(Date date) {
-        /*this.date = date;*/
+        this.date = date;
     }
 
     public boolean isViewed() {
@@ -48,7 +47,7 @@ public class NotificationDB /*extends RealmObject*/ {
         this.viewed = viewed;
     }
 
-    /*public static void save(NotificationDB item){
+    public static void save(NotificationDB item){
         Realm realm = OHRealm.realm();
         realm.beginTransaction();
         if(item.getId() <= 0) {
@@ -66,5 +65,5 @@ public class NotificationDB /*extends RealmObject*/ {
         if (num != null) newId = num.longValue() + 1;
         realm.close();
         return newId;
-    }*/
+    }
 }

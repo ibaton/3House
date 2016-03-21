@@ -1,7 +1,7 @@
 package treehou.se.habit.core.controller;
 
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 
 public class SliderCell {
 
@@ -35,12 +35,12 @@ public class SliderCell {
         sliderCellDB.setId(id);
     }
 
-    public OHItemWrapper getItem() {
-        return new OHItemWrapper(sliderCellDB.getItem());
+    public OHItem getItem() {
+        return null; //new OHItem(sliderCellDB.getItem());
     }
 
-    public void setItem(OHItemWrapper item) {
-        sliderCellDB.setItem(item.getDB());
+    public void setItem(OHItem item) {
+        //sliderCellDB.setItem(item.getDB());
     }
 
     public String getIcon() {

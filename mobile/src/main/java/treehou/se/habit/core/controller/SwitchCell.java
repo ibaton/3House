@@ -1,6 +1,6 @@
 package treehou.se.habit.core.controller;
 
-import treehou.se.habit.core.db.controller.SwitchCellDB;
+import treehou.se.habit.core.db.model.controller.SwitchCellDB;
 
 public class SwitchCell {
 

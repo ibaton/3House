@@ -1,23 +1,23 @@
 package treehou.se.habit.ui.widgets.factories;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class TextWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
 
         TextWidgetHolder holder = new TextWidgetHolder(widget, parent, widgetFactory);
         return holder;
@@ -30,7 +30,7 @@ public class TextWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
-        public TextWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
+        public TextWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
 
             this.factory = factory;
 
@@ -45,18 +45,19 @@ public class TextWidgetFactory implements IWidgetFactory {
 
         @Override
         public View getView() {
-            return baseHolder.getView();
+            //return baseHolder.getView();
+            return null;
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             if (widget == null) {
                 return;
             }
 
-            final OHItemWrapper item = widget.getItem();
+            final OHItem item = widget.getItem();
             final Context context = factory.getContext();
-            if(item != null && item.getType().equals(OHItemWrapper.TYPE_STRING) && item.getType().equals(OHItemWrapper.TYPE_STRING)){
+            if(item != null && item.getType().equals(OHItem.TYPE_STRING) && item.getType().equals(OHItem.TYPE_STRING)){
 
                 baseHolder.getView().setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -69,10 +70,10 @@ public class TextWidgetFactory implements IWidgetFactory {
                         final EditText input = (EditText) inputView.findViewById(R.id.txt_command);
                         input.setText(item.getState());
 
-                        if(item.getType().equals(OHItemWrapper.TYPE_STRING)) {
+                        if(item.getType().equals(OHItem.TYPE_STRING)) {
                             input.setInputType(InputType.TYPE_CLASS_TEXT);
                         }
-                        else if (item.getType().equals(OHItemWrapper.TYPE_NUMBER)) {
+                        else if (item.getType().equals(OHItem.TYPE_NUMBER)) {
                             input.setInputType(InputType.TYPE_CLASS_NUMBER);
                         }
                         builder.setView(inputView);
@@ -97,7 +98,7 @@ public class TextWidgetFactory implements IWidgetFactory {
                 });
             }
 
-            baseHolder.update(widget);
+            // TODO baseHolder.update(widget);
         }
     }
 }

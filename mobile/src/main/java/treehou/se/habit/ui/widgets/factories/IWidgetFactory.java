@@ -1,7 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 /**
@@ -9,5 +9,5 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
  */
 public interface IWidgetFactory {
 
-    WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPageWrapper page, OHWidgetWrapper widget, OHWidgetWrapper parent);
+    WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, OHWidget widget, OHWidget parent);
 }

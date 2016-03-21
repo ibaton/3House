@@ -1,7 +1,7 @@
 package treehou.se.habit.core.wrappers.settings;
 
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.Constants;
+import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.settings.NotificationSettingsDB;
 
 public class NotificationSettings {

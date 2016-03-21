@@ -20,11 +20,11 @@ import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.ui.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -33,7 +33,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
     private static final String TAG = "ColorpickerWidget";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
         return ColorWidgetHolder.create(widgetFactory, widget, parent);
     }
 
@@ -108,11 +108,11 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         private int color;
         private View clrView;
 
-        public static ColorWidgetHolder create(WidgetFactory widgetFactory, OHWidgetWrapper widget, OHWidgetWrapper parent){
+        public static ColorWidgetHolder create(WidgetFactory widgetFactory, OHWidget widget, OHWidget parent){
             return new ColorWidgetHolder(widget, parent, widgetFactory);
         }
 
-        private ColorWidgetHolder(final OHWidgetWrapper widget, OHWidgetWrapper parent, final WidgetFactory widgetFactory) {
+        private ColorWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory widgetFactory) {
 
             LayoutInflater inflater = widgetFactory.getInflater();
             final Context context = widgetFactory.getContext();
@@ -167,7 +167,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                     if (widget.getItem() != null) {
                         Intent intent = new Intent(context, ColorpickerActivity.class);
                         Gson gson = GsonHelper.createGsonBuilder();
-                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServer().getId());
+                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, 0 /*widgetFactory.getServer().getId()*/);
                         intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
                         intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
 
@@ -188,7 +188,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {

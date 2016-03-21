@@ -24,15 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.realm.Realm;
 import retrofit.RetrofitError;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
-import treehou.se.habit.core.wrappers.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 
 public class Communicator {
@@ -43,7 +44,7 @@ public class Communicator {
 
     private static Communicator mInstance;
     private Context context;
-    private Map<OHServerWrapper, Picasso> requestLoaders = new HashMap<>();
+    private Map<OHServer, Picasso> requestLoaders = new HashMap<>();
 
     public static synchronized Communicator instance(Context context){
         if (mInstance == null) {
@@ -56,7 +57,7 @@ public class Communicator {
         this.context = context;
     }
 
-    public static MyOpenHabService generateMyOpenHabService(OHServerWrapper server){
+    public static MyOpenHabService generateMyOpenHabService(OHServer server){
         try {
             return BasicAuthServiceGenerator.createService(MyOpenHabService.class, MY_OPENHAB_URL, server.getUsername(), server.getPassword());
         }
@@ -66,11 +67,11 @@ public class Communicator {
         return null;
     }
 
-    public static OpenHabService generateOpenHabService(OHServerWrapper server, boolean local){
+    public static OpenHabService generateOpenHabService(OHServer server, boolean local){
         return generateOpenHabService(server, local ? server.getLocalUrl() : server.getRemoteUrl());
     }
 
-    public static OpenHabService generateOpenHabService(OHServerWrapper server, String url){
+    public static OpenHabService generateOpenHabService(OHServer server, String url){
         try {
             return BasicAuthServiceGenerator.createService(OpenHabService.class, url, server.getUsername(), server.getPassword());
         }
@@ -94,11 +95,11 @@ public class Communicator {
         return Math.max(Math.min(number, max), min);
     }
 
-    public void incDec(final OHServerWrapper server, final OHItemWrapper item, final int value, final int min, final int max){
+    public void incDec(final OHServer server, final OHItem item, final int value, final int min, final int max){
 
-        OHCallback<OHItemWrapper> callback = new OHCallback<OHItemWrapper>() {
+        OHCallback<OHItem> callback = new OHCallback<OHItem>() {
             @Override
-            public void onUpdate(OHResponse<OHItemWrapper> newItem) {
+            public void onUpdate(OHResponse<OHItem> newItem) {
                 Log.d(TAG, "Item state " + newItem.body().getState() + " " + newItem.body().getType());
                 String state = newItem.body().getState();
                 if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.body().getType())) {
@@ -131,7 +132,7 @@ public class Communicator {
         Openhab.instance(server).registerItemListener(item.getName(), callback);
     }
 
-    public Picasso buildPicasso(Context context, final OHServerWrapper server){
+    public Picasso buildPicasso(Context context, final OHServer server){
 
         if(requestLoaders.containsKey(server)){
             return requestLoaders.get(server);
@@ -169,7 +170,7 @@ public class Communicator {
      * @param imageView the view to put bitmap in.
      * @param useCache set if cache should be used.
      */
-    public void loadImage(final OHServerWrapper server, final URL imageUrl, final ImageView imageView, boolean useCache){
+    public void loadImage(final OHServer server, final URL imageUrl, final ImageView imageView, boolean useCache){
 
         Log.d(TAG, "onBitmapLoaded image start " + imageUrl.toString());
         final Callback callback = new Callback() {
@@ -179,9 +180,12 @@ public class Communicator {
                 imageView.setVisibility(View.VISIBLE);
                 Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
 
-                WidgetSettings settings = WidgetSettings.loadGlobal();
+                Realm realm = Realm.getDefaultInstance();
+                WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
 
                 int imageBackground = Util.getBackground(context, bitmap, settings.getImageBackground());
+                realm.close();
+
                 imageView.setBackgroundColor(imageBackground);
             }
 
@@ -206,11 +210,11 @@ public class Communicator {
      * @param imageUrl the url of image.
      * @param imageView the view to put bitmap in.
      */
-    public void loadImage(final OHServerWrapper server, final URL imageUrl, final ImageView imageView){
+    public void loadImage(final OHServer server, final URL imageUrl, final ImageView imageView){
         loadImage(server, imageUrl, imageView, true);
     }
 
-    public void requestSitemaps(String tag, final OHServerWrapper server, final SitemapsRequestListener listener){
+    public void requestSitemaps(String tag, final OHServer server, final SitemapsRequestListener listener){
 
         Uri url = Uri.parse("http://www.dummy.com:8080");
 
@@ -252,11 +256,11 @@ public class Communicator {
      * @param page the page to fetch.
      * @param responseListener response listener.
      */
-    public void requestPage(OHServerWrapper server, OHLinkedPageWrapper page, final retrofit.Callback<OHLinkedPageWrapper> responseListener) {
+    public void requestPage(OHServer server, OHLinkedPage page, final retrofit.Callback<OHLinkedPage> responseListener) {
         OpenHabService service = generateOpenHabService(server, page.getLink());
-        service.getPage(new retrofit.Callback<OHLinkedPageWrapper>() {
+        service.getPage(new retrofit.Callback<OHLinkedPage>() {
             @Override
-            public void success(OHLinkedPageWrapper linkedPage, retrofit.client.Response response) {
+            public void success(OHLinkedPage linkedPage, retrofit.client.Response response) {
                 Log.d(TAG, "Received page " + response.getUrl());
                 responseListener.success(linkedPage, response);
             }
@@ -269,25 +273,25 @@ public class Communicator {
         });
     }
 
-    public class MultiSitemapRequest implements retrofit.Callback<List<OHSitemapWrapper>> {
+    public class MultiSitemapRequest implements retrofit.Callback<List<OHSitemap>> {
 
         private int runningRequests;
         private SitemapsRequestListener listener;
-        private OHServerWrapper server;
+        private OHServer server;
 
-        public MultiSitemapRequest(int requests, final SitemapsRequestListener listener, OHServerWrapper server) {
+        public MultiSitemapRequest(int requests, final SitemapsRequestListener listener, OHServer server) {
             this.runningRequests = requests;
             this.listener = listener;
             this.server = server;
         }
 
         @Override
-        public void success(List<OHSitemapWrapper> sitemaps, retrofit.client.Response response) {
+        public void success(List<OHSitemap> sitemaps, retrofit.client.Response response) {
             if(sitemaps == null) {
                 sitemaps = new ArrayList<>();
             }
 
-            for(OHSitemapWrapper sitemap : sitemaps) {
+            for(OHSitemap sitemap : sitemaps) {
                 Log.d(TAG, "Server " + server + " Sitemap " + sitemap);
                 sitemap.setServer(server);
             }
@@ -300,7 +304,7 @@ public class Communicator {
             if(error == null){
                 Log.w(TAG, "No server to connect to");
             }else {
-                Log.w(TAG, "Failed to connect to server " + error.getMessage() + " " + server.getUrl() + " " + error.getBody());
+                Log.w(TAG, "Failed to connect to server " + error.getMessage() + " " + getUrl(context, server) + " " + error.getBody());
             }
 
             if(runningRequests <= 0) {
@@ -313,12 +317,32 @@ public class Communicator {
         }
     };
 
-    /*public void requestItems(final OHserver server, final ItemsRequestListener listener){
+    /**
+     * Get url from server.
+     * @param context calling context.
+     * @param server the server to connect to.
+     * @return
+     */
+    private static String getUrl(Context context, OHServer server){
+        // TODO determine if local or remote
+        String url = server.getLocalUrl();
+        NetworkInfo networkInfo = getNetworkInfo(context);
+        if(networkInfo == null || !networkInfo.isConnected()){
+            return null;
+        }
+        if(!isConnectedWifi(context)){
+            url = server.getRemoteUrl();
+        }
 
-        final retrofit.OHCallback<List<OHItemDB>> callback = new retrofit.OHCallback<List<OHItemDB>>() {
+        return url;
+    }
+
+    /*public void requestItems(final OHServer server, final ItemsRequestListener listener){
+
+        final retrofit.OHCallback<List<ItemDB>> callback = new retrofit.OHCallback<List<ItemDB>>() {
             @Override
-            public void success(List<OHItemDB> items, retrofit.client.OHResponse response) {
-                for(OHItemDB item : items){
+            public void success(List<ItemDB> items, retrofit.client.OHResponse response) {
+                for(ItemDB item : items){
                     item.setServer(server);
                 }
                 listener.onSuccess(items);
@@ -333,23 +357,23 @@ public class Communicator {
         // Make remote request if not connected to wifi.
         if(!isConnectedWifi(context) || !server.haveLocal()) {
             if (server.haveRemote()){
-                OpenHabService service = generateOpenHabService(server, server.getRemoteurl());
+                OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
                 service.getItems(callback);
             }
             return;
         }
 
-        OpenHabService service = generateOpenHabService(server, server.getLocalurl());
-        service.getItems(new retrofit.OHCallback<List<OHItemDB>>() {
+        OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
+        service.getItems(new retrofit.OHCallback<List<ItemDB>>() {
             @Override
-            public void success(List<OHItemDB> items, retrofit.client.OHResponse response) {
+            public void success(List<ItemDB> items, retrofit.client.OHResponse response) {
                 callback.success(items, response);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 if (server.haveRemote()) {
-                    OpenHabService service = generateOpenHabService(server, server.getRemoteurl());
+                    OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
                     service.getItems(callback);
                 } else {
                     callback.failure(error);
@@ -359,11 +383,11 @@ public class Communicator {
         });
     }
 
-    public void requestItem(final OHserver server, final String item, final ItemRequestListener listener){
+    public void requestItem(final OHServer server, final String item, final ItemRequestListener listener){
 
-        final retrofit.OHCallback<OHItemDB> callback = new retrofit.OHCallback<OHItemDB>() {
+        final retrofit.OHCallback<ItemDB> callback = new retrofit.OHCallback<ItemDB>() {
             @Override
-            public void success(OHItemDB item, retrofit.client.OHResponse response) {
+            public void success(ItemDB item, retrofit.client.OHResponse response) {
                 listener.onSuccess(item);
             }
 
@@ -376,24 +400,24 @@ public class Communicator {
         // Make remote request if not connected to wifi.
         if(!isConnectedWifi(context) || !server.haveLocal()) {
             if (server.haveRemote()){
-                OpenHabService service = generateOpenHabService(server, server.getRemoteurl());
+                OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
                 service.getItem(item, callback);
             }
             return;
         }
 
-        OpenHabService service = generateOpenHabService(server, server.getLocalurl());
-        Openhab.instance(OHserver.toGeneric(server)).re;
-        service.getItem(item, new retrofit.OHCallback<OHItemDB>() {
+        OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
+        Openhab.instance(OHServer.toGeneric(server)).re;
+        service.getItem(item, new retrofit.OHCallback<ItemDB>() {
             @Override
-            public void success(OHItemDB itemHolder, retrofit.client.OHResponse response) {
+            public void success(ItemDB itemHolder, retrofit.client.OHResponse response) {
                 callback.success(itemHolder, response);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 if (server.haveRemote()) {
-                    OpenHabService service = generateOpenHabService(server, server.getRemoteurl());
+                    OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
                     service.getItem(item, callback);
                 } else {
                     callback.failure(error);
@@ -402,9 +426,9 @@ public class Communicator {
         });
     }*/
 
-    public void requestSitemap(final OHSitemapWrapper sitemap, final SitemapRequestListener listener){
+    public void requestSitemap(final OHSitemap sitemap, final SitemapRequestListener listener){
 
-        final OHServerWrapper server = sitemap.getServer();
+        final OHServer server = sitemap.getServer();
 
         Uri uri = Uri.parse(sitemap.getLink())
                 .buildUpon()
@@ -412,9 +436,9 @@ public class Communicator {
                 .build();
 
         OpenHabService service = generateOpenHabService(server, uri.toString());
-        service.getSitemap(sitemap.getName(), new retrofit.Callback<OHSitemapWrapper>() {
+        service.getSitemap(sitemap.getName(), new retrofit.Callback<OHSitemap>() {
             @Override
-            public void success(OHSitemapWrapper sitemap, retrofit.client.Response response) {
+            public void success(OHSitemap sitemap, retrofit.client.Response response) {
                 sitemap.setServer(server);
                 listener.onSuccess(sitemap);
             }
@@ -426,33 +450,33 @@ public class Communicator {
         });
     }
 
-    public void registerMyOpenhabGCM(final OHServerWrapper server, String deviceId, String deviceModel, String regId, retrofit.Callback<String> callback){
+    public void registerMyOpenhabGCM(final OHServer server, String deviceId, String deviceModel, String regId, retrofit.Callback<String> callback){
         MyOpenHabService service = generateMyOpenHabService(server);
         service.registerGCM(deviceId, deviceModel, regId, callback);
     }
 
     public interface ItemRequestListener{
-        void onSuccess(OHItemWrapper item);
+        void onSuccess(OHItem item);
         void onFailure(String message);
     }
 
     public interface ItemsRequestListener{
-        void onSuccess(List<OHItemWrapper> items);
+        void onSuccess(List<OHItem> items);
         void onFailure(String message);
     }
 
     public interface SitemapRequestListener{
-        void onSuccess(OHSitemapWrapper sitemap);
+        void onSuccess(OHSitemap sitemap);
         void onFailure(String message);
     }
 
     public interface SitemapsRequestListener{
-        void onSuccess(List<OHSitemapWrapper> sitemaps);
+        void onSuccess(List<OHSitemap> sitemaps);
         void onFailure(String message);
     }
 
     public static class DummySitemapsRequestListener implements SitemapsRequestListener {
-        public void onSuccess(List<OHSitemapWrapper> sitemaps){}
+        public void onSuccess(List<OHSitemap> sitemaps){}
         public void onFailure(String message){}
     }
 }

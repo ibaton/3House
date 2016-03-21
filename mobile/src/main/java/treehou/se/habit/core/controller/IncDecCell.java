@@ -1,7 +1,7 @@
 package treehou.se.habit.core.controller;
 
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import treehou.se.habit.core.db.controller.IncDecCellDB;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import treehou.se.habit.core.db.model.controller.IncDecCellDB;
 
 public class IncDecCell {
 
@@ -30,12 +30,12 @@ public class IncDecCell {
         incDecCellDB.setId(id);
     }
 
-    public OHItemWrapper getItem() {
-        return new OHItemWrapper(incDecCellDB.getItem());
+    public OHItem getItem() {
+        return null; // new OHItem(incDecCellDB.getItem());
     }
 
-    public void setItem(OHItemWrapper item) {
-        getDB().setItem(item.getDB());
+    public void setItem(OHItem item) {
+        //getDB().setItem(item.getDB());
     }
 
     public String getIcon() {

@@ -8,28 +8,24 @@ import io.realm.RealmConfiguration;
 public class OHRealm {
 
     public static Context context;
-    private static RealmConfiguration configuration;
 
     public static void setup(Context context) {
-        OHRealm.context = context;
-    }
-
-    public static void setup(RealmConfiguration configuration) {
-        OHRealm.configuration = configuration;
+        Realm.setDefaultConfiguration(configuration(context));
     }
 
     public static RealmConfiguration configuration() {
-        return configuration;
+        return OHRealm.configuration(OHRealm.context);
     }
 
-    public static Realm realm() {
+    public static RealmConfiguration configuration(Context context) {
+        return new RealmConfiguration.Builder(context)
+                .setModules(new OHRealmModule())
+                .name("treehouse.realm")
+                .build();
+    }
 
-        if (configuration == null) {
-            configuration = new RealmConfiguration.Builder(context)
-                    .setModules(new OHRealmModule())
-                    .build();
-        }
-
-        return Realm.getInstance(configuration);
+    // TODO remove
+    public static Realm realm(){
+        return Realm.getDefaultInstance();
     }
 }

@@ -11,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
-import treehou.se.habit.core.wrappers.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 
 public class DummyWidgetFactory {
@@ -26,17 +27,21 @@ public class DummyWidgetFactory {
         this.context = context;
     }
 
-    public View createWidget(final OHWidgetWrapper widget){
+    public View createWidget(final OHWidget widget){
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        WidgetSettings settings = WidgetSettings.loadGlobal();
+        Realm realm = Realm.getDefaultInstance();
+        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
+        int backgroundType = settings.getImageBackground();
+        float percentage = Util.toPercentage(settings.getTextSize());
+        float imageSizePercentage = Util.toPercentage(settings.getIconSize());
+        realm.close();
 
         View itemView = inflater.inflate(R.layout.item_widget_base, null);
         View baseDataHolder = itemView.findViewById(R.id.lou_base_data_holder);
         TextView lblName = (TextView) itemView.findViewById(R.id.lbl_widget_name);
 
         String label = widget.getLabel();
-        float percentage = Util.toPercentage(settings.getTextSize());
         lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX,lblName.getTextSize()*percentage);
         lblName.setText(widget.getLabel());
         if(label == null || label.equals("")) {
@@ -46,14 +51,11 @@ public class DummyWidgetFactory {
         View iconHolder = itemView.findViewById(R.id.img_widget_icon_holder);
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.img_widget_icon);
 
-        float imageSizePercentage = Util.toPercentage(settings.getIconSize());
         ViewGroup.LayoutParams layoutParams = imgIcon.getLayoutParams();
         layoutParams.width = (int) (((float)layoutParams.width) * imageSizePercentage);
         imgIcon.setLayoutParams(layoutParams);
 
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_item_settings_widget);
-
-        int backgroundType = settings.getImageBackground();
 
         setBackgroundColor(imgIcon, bitmap, backgroundType);
         iconHolder.setVisibility(View.VISIBLE);

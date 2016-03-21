@@ -1,8 +1,7 @@
 package treehou.se.habit.core.controller;
 
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
-import treehou.se.habit.core.db.controller.ColorCellDB;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import treehou.se.habit.core.db.model.controller.ColorCellDB;
 
 public class ColorCell {
 
@@ -31,12 +30,12 @@ public class ColorCell {
         getDB().setId(id);
     }
 
-    public OHItemDB getItem() {
-        return getDB().getItem();
+    public OHItem getItem() {
+        return null; /*getDB().getItem();*/
     }
 
-    public void setItem(OHItemWrapper item) {
-        getDB().setItem(item.getDB());
+    public void setItem(OHItem item) {
+        //getDB().setItem(item.getDB());
     }
 
     public String getIcon() {

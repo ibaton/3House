@@ -1,7 +1,7 @@
 package treehou.se.habit.core.controller;
 
-import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
-import treehou.se.habit.core.db.controller.ButtonCellDB;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 
 public class ButtonCell {
 
@@ -27,12 +27,12 @@ public class ButtonCell {
         getDB().setId(id);
     }
 
-    public OHItemDB getItem() {
-        return getDB().getItem();
+    public OHItem getItem() {
+        return null; //getDB().getItem();
     }
 
-    public void setItem(OHItemDB item) {
-        getDB().setItem(item);
+    public void setItem(OHItem item) {
+        //getDB().setItem(item);
     }
 
     public String getIcon() {

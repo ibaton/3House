@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import se.treehou.ng.ohcommunicator.core.db.OHserver;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.model.ServerDB;
 
 public class SetupServerFragment extends Fragment {
 
@@ -90,14 +93,16 @@ public class SetupServerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        OHserver server = OHserver.load(serverId);
+        Realm realm = OHRealm.realm();
+        ServerDB server = realm.where(ServerDB.class).equalTo("id", serverId).findFirst();
         if(server != null) {
             txtName.setText(server.getName());
-            txtLocalUrl.setText(server.getLocalurl());
-            txtRemoteUrl.setText(server.getRemoteurl());
+            txtLocalUrl.setText(server.getLocalUrl());
+            txtRemoteUrl.setText(server.getRemoteUrl());
             txtUsername.setText(server.getUsername());
             txtPassword.setText(server.getPassword());
         }
+        realm.close();
     }
 
     private String toUrl(String text){
@@ -110,21 +115,25 @@ public class SetupServerFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        /*io.realm.Realm realm = io.realm.Realm.getDefaultInstance();
-        realm.beginTransaction();
-        OHserver server = new OHserver();
-        if(serverId <= 0) {
-            server.setId(OHserver.getUniqueId());
-        } else {
-            server.setId(serverId);
-        }
-        server.setName(txtName.getText().toString());
-        server.setLocalurl(toUrl(txtLocalUrl.getText().toString()));
-        server.setRemoteurl(toUrl(txtRemoteUrl.getText().toString()));
-        server.setUsername(txtUsername.getText().toString());
-        server.setPassword(txtPassword.getText().toString());
-        realm.copyToRealmOrUpdate(server);
-        realm.commitTransaction();*/
+        Realm realm = OHRealm.realm();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                ServerDB server = new ServerDB();
+                if(serverId <= 0) {
+                    server.setId(ServerDB.getUniqueId());
+                } else {
+                    server.setId(serverId);
+                }
+                server.setName(txtName.getText().toString());
+                server.setLocalUrl(toUrl(txtLocalUrl.getText().toString()));
+                server.setRemoteUrl(toUrl(txtRemoteUrl.getText().toString()));
+                server.setUsername(txtUsername.getText().toString());
+                server.setPassword(txtPassword.getText().toString());
+                realm.copyToRealmOrUpdate(server);
+            }
+        });
+        realm.close();
     }
 
     @Override

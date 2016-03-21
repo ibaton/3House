@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.ConnectorUtil;
@@ -19,7 +19,7 @@ public class ChartWidgetFactory implements IWidgetFactory {
     private static final String TAG = "ChartWidgetFactory";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
         return ChartWidgetHolder.create(widgetFactory, widget, parent);
     }
 
@@ -32,11 +32,11 @@ public class ChartWidgetFactory implements IWidgetFactory {
         private ImageView imgImage;
         private WidgetFactory factory;
 
-        public static ChartWidgetHolder create(WidgetFactory factory, OHWidgetWrapper widget, OHWidgetWrapper parent){
+        public static ChartWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
             return new ChartWidgetHolder(widget, parent, factory);
         }
 
-        private ChartWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
+        private ChartWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
             this.factory = factory;
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
@@ -55,14 +55,14 @@ public class ChartWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
                 return;
             }
 
-            try {
+            /*try {
                 URL imageUrl = new URL(ConnectorUtil.buildChartRequestString(factory.getServer().getUrl(), widget));
                 Communicator communicator = Communicator.instance(factory.getContext());
                 communicator.loadImage(factory.getServer(), imageUrl, imgImage, false);
@@ -70,7 +70,7 @@ public class ChartWidgetFactory implements IWidgetFactory {
                 Log.e(TAG, "Failed to update chart", e);
             }
 
-            baseHolder.update(widget);
+            baseHolder.update(widget);*/
         }
 
         @Override

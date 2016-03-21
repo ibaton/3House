@@ -71,8 +71,8 @@ public class GCMHelper {
 
                         // Needs to have a my openhab acount for this to work
                         if (server != null &&
-                                server.getRemoteurl() != null &&
-                                !server.getRemoteurl().toLowerCase().startsWith("https://my.openhab.org")){
+                                server.getRemoteUrl() != null &&
+                                !server.getRemoteUrl().toLowerCase().startsWith("https://my.openhab.org")){
                             continue;
                         }
 

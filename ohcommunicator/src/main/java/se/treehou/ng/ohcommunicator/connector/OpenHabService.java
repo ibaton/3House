@@ -8,19 +8,19 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import se.treehou.ng.ohcommunicator.core.OHBindingWrapper;
-import se.treehou.ng.ohcommunicator.core.OHInboxItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 
 public interface OpenHabService {
 
     @Headers("Accept: application/json")
     @GET("/rest/bindings")
-    Call<List<OHBindingWrapper>> listBindings();
+    Call<List<OHBinding>> listBindings();
 
+    /*
     @Headers("Accept: application/json")
     @GET("/rest/inbox")
-    Call<List<OHInboxItemWrapper>> listInboxItems();
+    Call<List<OHInboxItemWrapper>> listInboxItems();*/
 
     @Headers("Accept: application/json")
     @POST("/rest/inbox/{thingUID}/ignore")
@@ -34,13 +34,21 @@ public interface OpenHabService {
     @POST("/rest/inbox/{thingUID}/approve")
     Call<Void> approveInboxItems(@Path("thingUID") String thingUID);
 
-    @Headers("Accept: application/json")
+    /*@Headers("Accept: application/json")
     @GET("/rest/items/{id}")
     Call<OHItemWrapper> getItem(@Path("id") String id);
 
     @Headers("Accept: application/json")
     @GET("/rest/items/")
-    Call<List<OHItemWrapper>> listItems();
+    Call<List<OHItemWrapper>> listItems();*/
+
+    @Headers("Accept: application/json")
+    @GET("/rest/sitemaps")
+    Call<List<OHSitemap>> listSitemaps();
+
+    @Headers("Accept: application/json")
+    @GET("/rest/sitemaps/{id}")
+    Call<OHSitemap> getSitemap(@Path("id") String id);
 
     @Headers({
             "Accept: application/text",

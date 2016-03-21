@@ -12,13 +12,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.IncDecCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.IncDecCellDB;
 import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
@@ -49,9 +49,9 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
             imgIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    OHServerWrapper server = new OHServerWrapper(buttonCell.getItem().getServer());
+                    OHServer server = null; // TODO new OHServer(buttonCell.getItem().getServer());
                     Communicator communicator = Communicator.instance(context);
-                    communicator.incDec(server, new OHItemWrapper(buttonCell.getItem()), buttonCell.getValue(), buttonCell.getMin(), buttonCell.getMax());
+                    //communicator.incDec(server, new OHItem(buttonCell.getItem()), buttonCell.getValue(), buttonCell.getMin(), buttonCell.getMax());
                 }
             });
         }
@@ -71,11 +71,11 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         if(icon != null) {
             cellView.setImageViewBitmap(R.id.img_icon_button, icon);
         }
-        Intent intent = CommandService.getActionIncDec(context, buttonCell.getMin(), buttonCell.getMax(), buttonCell.getValue(), new OHItemWrapper(buttonCell.getItem()));
+        /*Intent intent = CommandService.getActionIncDec(context, buttonCell.getMin(), buttonCell.getMax(), buttonCell.getValue(), new OHItem(buttonCell.getItem()));
 
         //TODO give intent unique id
         PendingIntent pendingIntent = PendingIntent.getService(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
+        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);*/
 
         return cellView;
     }

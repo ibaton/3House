@@ -9,17 +9,16 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHStateDescriptionWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 
-public class ItemDeserializer implements JsonDeserializer<OHItemWrapper>, JsonSerializer<OHItemWrapper> {
+public class ItemDeserializer implements JsonDeserializer<OHItem>, JsonSerializer<OHItem> {
 
     private static final String TAG = "ItemDeserializer";
 
     @Override
-    public OHItemWrapper deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
+    public OHItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context){
 
-        OHItemWrapper item = new OHItemWrapper();
+        OHItem item = new OHItem();
 
         JsonObject jObject = json.getAsJsonObject();
         if(jObject.has("type")) {
@@ -38,15 +37,15 @@ public class ItemDeserializer implements JsonDeserializer<OHItemWrapper>, JsonSe
             item.setLink(jObject.get("link").getAsString());
         }
 
-        if(jObject.has("stateDescription")) {
+        /*if(jObject.has("stateDescription")) {
             item.setStateDescription(context.<OHStateDescriptionWrapper>deserialize(jObject.get("stateDescription"), OHStateDescriptionWrapper.class));
-        }
+        }*/
 
         return item;
     }
 
     @Override
-    public JsonElement serialize(OHItemWrapper src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(OHItem src, Type typeOfSrc, JsonSerializationContext context) {
 
         JsonObject object = new JsonObject();
         object.addProperty("type", src.getType());
@@ -54,9 +53,9 @@ public class ItemDeserializer implements JsonDeserializer<OHItemWrapper>, JsonSe
         object.addProperty("state", src.getState());
         object.addProperty("link", src.getLink());
 
-        if(src.getStateDescription() != null) {
+        /*if(src.getStateDescription() != null) {
             object.add("stateDescription", context.serialize(src.getStateDescription(), OHStateDescriptionWrapper.class));
-        }
+        }*/
 
         return object;
     }

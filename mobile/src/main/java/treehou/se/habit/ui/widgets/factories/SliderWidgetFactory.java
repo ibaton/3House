@@ -4,11 +4,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
-import treehou.se.habit.core.wrappers.settings.WidgetSettings;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class SliderWidgetFactory implements IWidgetFactory {
@@ -16,7 +17,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
     private static final String TAG = "SliderWidgetFactory";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
         return new SliderWidgetHolder(widget, parent, widgetFactory);
     }
 
@@ -27,11 +28,13 @@ public class SliderWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
-        public SliderWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
+        public SliderWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
 
             this.factory = factory;
-            WidgetSettings settings = WidgetSettings.loadGlobal();
+            Realm realm = Realm.getDefaultInstance();
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
             boolean flat = settings.isCompressedSlider();
+            realm.close();
 
             itemView = factory.getInflater().inflate(R.layout.item_widget_slider, null);
             skbDim = (SeekBar) itemView.findViewById(R.id.skb_dim);
@@ -52,7 +55,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             if (widget == null) {
                 return;
             }

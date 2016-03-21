@@ -3,8 +3,7 @@ package treehou.se.habit.core.db.settings;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
-import treehou.se.habit.Constants;
+import treehou.se.habit.core.db.model.OHRealm;
 
 public class NotificationSettingsDB extends RealmObject {
 

@@ -14,9 +14,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 /**
  * The configuration screen for the {@link ControllerWidget ControllerWidget} AppWidget.

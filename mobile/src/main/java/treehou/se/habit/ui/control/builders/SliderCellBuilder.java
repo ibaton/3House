@@ -12,13 +12,13 @@ import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.SliderCell;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 import treehou.se.habit.ui.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
@@ -61,7 +61,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
                     return;
                 }
 
-                OHServerWrapper server = numberCell.getItem().getServer();
+                OHServer server = numberCell.getItem().getServer();
                 Openhab.instance(server).sendCommand(numberCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });

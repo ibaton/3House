@@ -3,8 +3,7 @@ package treehou.se.habit.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHSitemap;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 
 public class Settings {
 
@@ -38,9 +37,9 @@ public class Settings {
      *
      * @return default sitemap.
      */
-    public OHSitemapWrapper getDefaultSitemap(){
-        OHSitemapWrapper sitemap = OHSitemapWrapper.load(preferences.getInt(PREF_DEFAULT_SITEMAP, -1));
-        return sitemap;
+    public OHSitemap getDefaultSitemap(){
+        //OHSitemap sitemap = OHSitemap.load(preferences.getInt(PREF_DEFAULT_SITEMAP, -1));
+        return null; //sitemap;
     }
 
     /**
@@ -49,13 +48,13 @@ public class Settings {
      * @param sitemap new default sitemap
      */
     public void setDefaultSitemap(OHSitemap sitemap){
-        SharedPreferences.Editor editor = preferences.edit();
+        /*SharedPreferences.Editor editor = preferences.edit();
         if(sitemap != null) {
             editor.putLong(PREF_DEFAULT_SITEMAP, sitemap.getId());
         }
         else {
             editor.remove(PREF_DEFAULT_SITEMAP);
         }
-        editor.apply();
+        editor.apply();*/
     }
 }

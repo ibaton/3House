@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 public class CommandReciever implements IFireReciever {
@@ -50,7 +50,7 @@ public class CommandReciever implements IFireReciever {
             final int itemId = bundle.getInt(BUNDLE_EXTRA_ITEM);
             final String command = bundle.getString(BUNDLE_EXTRA_COMMAND);
 
-            OHItemWrapper item = OHItemWrapper.load(itemId);
+            OHItem item = null; // TODO OHItem.load(itemId);
             if(item != null){
                 Openhab.instance(item.getServer()).sendCommand(item.getName(), command);
                 Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());

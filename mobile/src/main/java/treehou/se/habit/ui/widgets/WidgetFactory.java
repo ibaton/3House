@@ -9,9 +9,10 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import treehou.se.habit.core.controller.StringCell;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.FrameWidgetFactory;
@@ -31,34 +32,34 @@ public class WidgetFactory {
     private static final String TAG = "WidgetFactory";
 
     private FragmentActivity context;
-    private OHServerWrapper server;
-    private OHLinkedPageWrapper page;
+    private OHServer server;
+    private OHLinkedPage page;
     private LayoutInflater inflater;
 
     private IWidgetFactory defaultBuilder = new TextWidgetFactory();
 
     private Map<String, IWidgetFactory> builders = new HashMap<>();
 
-    public WidgetFactory(FragmentActivity context, OHServerWrapper server, OHLinkedPageWrapper page){
+    public WidgetFactory(FragmentActivity context, OHServer server, OHLinkedPage page){
         this.context = context;
         this.server = server;
         this.page = page;
 
-        builders.put(OHWidgetWrapper.TYPE_FRAME, new FrameWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_CHART, new ChartWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_IMAGE, new ImageWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_VIDEO, new VideoWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_WEB, new WebWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_SLIDER, new SliderWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_SWITCH, new SwitchWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_SELECTION, new SelectionWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_SETPOINT, new SetpointWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_TEXT, new TextWidgetFactory());
-        builders.put(OHWidgetWrapper.TYPE_GROUP, new GroupWidgetFactory());
+        builders.put(OHWidget.TYPE_FRAME, new FrameWidgetFactory());
+        builders.put(OHWidget.TYPE_CHART, new ChartWidgetFactory());
+        builders.put(OHWidget.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
+        builders.put(OHWidget.TYPE_IMAGE, new ImageWidgetFactory());
+        builders.put(OHWidget.TYPE_VIDEO, new VideoWidgetFactory());
+        builders.put(OHWidget.TYPE_WEB, new WebWidgetFactory());
+        builders.put(OHWidget.TYPE_SLIDER, new SliderWidgetFactory());
+        builders.put(OHWidget.TYPE_SWITCH, new SwitchWidgetFactory());
+        builders.put(OHWidget.TYPE_SELECTION, new SelectionWidgetFactory());
+        builders.put(OHWidget.TYPE_SETPOINT, new SetpointWidgetFactory());
+        builders.put(OHWidget.TYPE_TEXT, new TextWidgetFactory());
+        builders.put(OHWidget.TYPE_GROUP, new GroupWidgetFactory());
     }
 
-    public IWidgetHolder createWidget(final OHWidgetWrapper widget , final OHWidgetWrapper parent){
+    public IWidgetHolder createWidget(final OHWidget widget , final OHWidget parent){
         inflater = LayoutInflater.from(context);
 
         IWidgetHolder itemHolder;
@@ -87,13 +88,13 @@ public class WidgetFactory {
         return inflater;
     }
 
-    public OHServerWrapper getServer() {
+    public OHServer getServer() {
         return server;
     }
 
     public interface IWidgetHolder {
         View getView();
-        void update(OHWidgetWrapper widget);
+        void update(OHWidget widget);
     }
 
     public static class WidgetHolder implements IWidgetHolder {
@@ -107,10 +108,10 @@ public class WidgetFactory {
             return view;
         }
 
-        public void update(OHWidgetWrapper widget) {}
+        public void update(OHWidget widget) {}
     }
 
-    public OHLinkedPageWrapper getPage() {
+    public OHLinkedPage getPage() {
         return page;
     }
 }

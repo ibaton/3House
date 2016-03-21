@@ -28,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHInboxItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHserver;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.GsonHelper;
+import treehou.se.habit.core.db.model.ServerDB;
 
 public class InboxListFragment extends Fragment {
 
@@ -42,15 +42,15 @@ public class InboxListFragment extends Fragment {
 
     private static final String ARG_SERVER = "argServer";
 
-    private OHServerWrapper server;
+    private OHServer server;
     private InboxAdapter adapter;
-    private OHCallback<List<OHInboxItemWrapper>> inboxCallback;
+    private OHCallback<List<OHInboxItem>> inboxCallback;
 
     private boolean showIgnored = false;
     private MenuItem actionHide;
     private MenuItem actionShow;
 
-    public static InboxListFragment newInstance(OHserver server) {
+    public static InboxListFragment newInstance(ServerDB server) {
         InboxListFragment fragment = new InboxListFragment();
         Bundle args = new Bundle();
         String jServer = GsonHelper.createGsonBuilder().toJson(server);
@@ -69,10 +69,10 @@ public class InboxListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        server = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_SERVER), OHServerWrapper.class);
-        inboxCallback = new OHCallback<List<OHInboxItemWrapper>>() {
+        server = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_SERVER), OHServer.class);
+        inboxCallback = new OHCallback<List<OHInboxItem>>() {
             @Override
-            public void onUpdate(OHResponse<List<OHInboxItemWrapper>> response) {
+            public void onUpdate(OHResponse<List<OHInboxItem>> response) {
                 setItems(response.body(), showIgnored);
             }
 
@@ -100,7 +100,7 @@ public class InboxListFragment extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 if(ItemTouchHelper.RIGHT == swipeDir){
-                    OHInboxItemWrapper item = adapter.getItem(viewHolder.getAdapterPosition());
+                    OHInboxItem item = adapter.getItem(viewHolder.getAdapterPosition());
                     ignoreInboxItem(item);
                 }
             }
@@ -174,13 +174,13 @@ public class InboxListFragment extends Fragment {
      * @param items the items to show.
      * @param showIgnored true to filter out ignored items.
      */
-    private void setItems(List<OHInboxItemWrapper> items, boolean showIgnored){
+    private void setItems(List<OHInboxItem> items, boolean showIgnored){
 
         Log.d(TAG, "Received items " + items);
 
         adapter.clear();
         if (!showIgnored) {
-            for (Iterator<OHInboxItemWrapper> it = items.iterator(); it.hasNext();) {
+            for (Iterator<OHInboxItem> it = items.iterator(); it.hasNext();) {
                 if (it.next().isIgnored()) {
                     it.remove();
                 }
@@ -196,7 +196,7 @@ public class InboxListFragment extends Fragment {
      *
      * @param item the item to hide.
      */
-    private void ignoreInboxItem(final OHInboxItemWrapper item){
+    private void ignoreInboxItem(final OHInboxItem item){
         adapter.removeItem(item);
         Openhab.instance(server).ignoreInboxItem(item);
 
@@ -220,7 +220,7 @@ public class InboxListFragment extends Fragment {
      *
      * @param item the item to hide.
      */
-    private void unignoreInboxItem(final OHInboxItemWrapper item) {
+    private void unignoreInboxItem(final OHInboxItem item) {
         Openhab.instance(server).unignoreInboxItem(item);
     }
 
@@ -240,10 +240,10 @@ public class InboxListFragment extends Fragment {
 
     public static class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>{
 
-        private List<OHInboxItemWrapper> items = new ArrayList<>();
+        private List<OHInboxItem> items = new ArrayList<>();
         private Context context;
 
-        private OHServerWrapper server;
+        private OHServer server;
         private ItemListener itemListener = new DummyItemListener();
 
         public class InboxHolder extends RecyclerView.ViewHolder {
@@ -257,7 +257,7 @@ public class InboxListFragment extends Fragment {
             }
         }
 
-        public InboxAdapter(Context context, OHServerWrapper server) {
+        public InboxAdapter(Context context, OHServer server) {
             this.context = context;
             this.server = server;
         }
@@ -272,7 +272,7 @@ public class InboxListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final InboxHolder serverHolder, final int position) {
-            final OHInboxItemWrapper inboxItem = items.get(position);
+            final OHInboxItem inboxItem = items.get(position);
 
             serverHolder.lblName.setText(inboxItem.getLabel());
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -323,7 +323,7 @@ public class InboxListFragment extends Fragment {
             return items.size();
         }
 
-        public OHInboxItemWrapper getItem(int position) {
+        public OHInboxItem getItem(int position) {
             return items.get(position);
         }
 
@@ -358,14 +358,14 @@ public class InboxListFragment extends Fragment {
             this.itemListener = itemListener;
         }
 
-        public void addItem(OHInboxItemWrapper item) {
+        public void addItem(OHInboxItem item) {
             items.add(0, item);
             notifyItemInserted(0);
             itemListener.itemCountUpdated(items.size());
         }
 
-        public void addAll(List<OHInboxItemWrapper> items) {
-            for(OHInboxItemWrapper item : items) {
+        public void addAll(List<OHInboxItem> items) {
+            for(OHInboxItem item : items) {
                 this.items.add(0, item);
                 notifyItemRangeInserted(0, items.size());
             }
@@ -379,7 +379,7 @@ public class InboxListFragment extends Fragment {
             itemListener.itemCountUpdated(items.size());
         }
 
-        public void removeItem(OHInboxItemWrapper item) {
+        public void removeItem(OHInboxItem item) {
             int position = items.indexOf(item);
             items.remove(position);
             notifyItemRemoved(position);

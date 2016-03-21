@@ -1,6 +1,6 @@
 package treehou.se.habit.core.controller;
 
-import treehou.se.habit.core.db.controller.StringCellDB;
+import treehou.se.habit.core.db.model.controller.StringCellDB;
 
 public class StringCell {
 

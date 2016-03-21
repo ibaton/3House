@@ -16,20 +16,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.Constants;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
-import treehou.se.habit.core.wrappers.settings.WidgetSettings;
 import treehou.se.habit.ui.widgets.DummyWidgetFactory;
 
 public class WidgetSettingsFragment extends Fragment {
 
     private static final String TAG = "WidgetSettingsFragment";
 
-    private OHWidgetWrapper displayWidget;
+    private OHWidget displayWidget;
     private FrameLayout widgetHolder;
     private static final int BASE_IMAGE_SIZE = 50;
+
+    private Realm realm;
 
     public static WidgetSettingsFragment newInstance() {
         WidgetSettingsFragment fragment = new WidgetSettingsFragment();
@@ -45,8 +47,10 @@ public class WidgetSettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        displayWidget = new OHWidgetWrapper();
-        displayWidget.setType(OHWidgetWrapper.TYPE_DUMMY);
+        realm = Realm.getDefaultInstance();
+
+        displayWidget = new OHWidget();
+        displayWidget.setType(OHWidget.TYPE_DUMMY);
         displayWidget.setLabel(getActivity().getString(R.string.label_widget_text));
     }
 
@@ -57,7 +61,8 @@ public class WidgetSettingsFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(getActivity().getString(R.string.settings_widget));
 
-        final WidgetSettings settings = WidgetSettings.loadGlobal();
+
+        final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
 
         View rootView = inflater.inflate(R.layout.fragment_settings_widget, container, false);
         widgetHolder = (FrameLayout) rootView.findViewById(R.id.widget_holder);
@@ -69,8 +74,9 @@ public class WidgetSettingsFragment extends Fragment {
         barTextSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                realm.beginTransaction();
                 settings.setTextSize(Constants.MIN_TEXT_ADDON+progress);
-                WidgetSettingsDB.save(settings.getWidgetSettingsDB());
+                realm.close();
                 redrawWidget();
             }
 
@@ -119,8 +125,9 @@ public class WidgetSettingsFragment extends Fragment {
         barImageSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                realm.beginTransaction();
                 settings.setIconSize(BASE_IMAGE_SIZE + progress);
-                WidgetSettingsDB.save(settings.getWidgetSettingsDB());
+                realm.commitTransaction();
                 redrawWidget();
             }
 
@@ -159,14 +166,25 @@ public class WidgetSettingsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
+    }
+
     private void setCompressedButtonChanged(boolean isChecked){
-        WidgetSettings settings = WidgetSettings.loadGlobal();
+        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
+        realm.beginTransaction();
         settings.setCompressedSingleButton(isChecked);
+        realm.commitTransaction();
     }
 
     private void setCompressedSliderChanged(boolean isChecked){
-        WidgetSettings settings = WidgetSettings.loadGlobal();
+        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
+        realm.beginTransaction();
         settings.setCompressedSlider(isChecked);
+        realm.commitTransaction();
     }
 
     private void redrawWidget(){
@@ -188,9 +206,10 @@ public class WidgetSettingsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            WidgetSettings settings = WidgetSettings.loadGlobal();
+            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
+            realm.beginTransaction();
             settings.setImageBackground(backgroundType);
-            WidgetSettingsDB.save(settings.getWidgetSettingsDB());
+            realm.commitTransaction();
 
             redrawWidget();
         }

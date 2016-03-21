@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 /**
  * Implementation of App Widget functionality.

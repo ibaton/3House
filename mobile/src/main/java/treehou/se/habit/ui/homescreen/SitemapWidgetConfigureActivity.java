@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.SitemapSelectorFragment;
 
@@ -55,7 +55,7 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSitemapSelect(OHSitemapWrapper sitemap) {
+    public void onSitemapSelect(OHSitemap sitemap) {
         saveSitemapIdPref(SitemapWidgetConfigureActivity.this, mAppWidgetId, sitemap);
 
         // It is the responsibility of the configuration activity to update the app widget
@@ -70,23 +70,23 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveSitemapIdPref(Context context, int appWidgetId, OHSitemapWrapper sitemap) {
+    static void saveSitemapIdPref(Context context, int appWidgetId, OHSitemap sitemap) {
 
-        sitemap.save();
+        /*sitemap.save();
         Log.d(TAG, "saveSitemapIdPref " + sitemap.getId());
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + appWidgetId, sitemap.getId());
-        prefs.apply();
+        prefs.apply();*/
     }
 
     // Read the prefix from the SharedPreferences object for this widget.
     // If there is no preference saved, get the default from a resource
-    static OHSitemapWrapper loadSitemap(Context context, int appWidgetId) {
+    static OHSitemap loadSitemap(Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         long sitemapId = prefs.getLong(PREF_PREFIX_KEY + appWidgetId, -1);
         Log.d(TAG, "loadSitemap " + sitemapId);
 
-        return OHSitemapWrapper.load(sitemapId);
+        return null; //OHSitemap.load(sitemapId);
     }
 
     static void deletePref(Context context, int appWidgetId) {

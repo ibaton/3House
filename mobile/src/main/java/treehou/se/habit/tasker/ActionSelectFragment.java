@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.core.OHSitemapWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.tasker.boundle.OpenSitemapBoundleManager;
 import treehou.se.habit.ui.SitemapSelectorFragment;
 import treehou.se.habit.ui.adapter.MenuAdapter;
@@ -75,19 +75,19 @@ public class ActionSelectFragment extends Fragment implements SitemapSelectorFra
     }
 
     @Override
-    public void onSitemapSelect(OHSitemapWrapper sitemap) {
+    public void onSitemapSelect(OHSitemap sitemap) {
         final Intent resultIntent = new Intent();
 
-        Realm realm = OHRealm.realm();
+        /*Realm realm = OHRealm.realm();
         realm.beginTransaction();
-        sitemap.save();
-        realm.commitTransaction();
+        realm.copyToRealm(sitemap);
+        realm.commitTransaction();*/
 
-        final Bundle resultBundle = OpenSitemapBoundleManager.generateOpenSitemapBundle(sitemap);
+        /*final Bundle resultBundle = OpenSitemapBoundleManager.generateOpenSitemapBundle(sitemap);
         resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_STRING_BLURB, getString(R.string.open_sitemap_name, sitemap.getName()));
         resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_BUNDLE, resultBundle);
 
         getActivity().setResult(Activity.RESULT_OK, resultIntent);
-        getActivity().finish();
+        getActivity().finish();*/
     }
 }

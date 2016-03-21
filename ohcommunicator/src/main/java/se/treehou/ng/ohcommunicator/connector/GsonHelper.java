@@ -1,23 +1,24 @@
 package se.treehou.ng.ohcommunicator.connector;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
+import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.connector.serializers.ItemDeserializer;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHSitemap;
+import se.treehou.ng.ohcommunicator.connector.serializers.ItemListDeserializer;
+import se.treehou.ng.ohcommunicator.connector.serializers.ItemStateDeserializer;
+import se.treehou.ng.ohcommunicator.connector.serializers.LinkedPageDeserializer;
+import se.treehou.ng.ohcommunicator.connector.serializers.SitemapListDeserializer;
+import se.treehou.ng.ohcommunicator.connector.serializers.WidgetDeserializer;
+import se.treehou.ng.ohcommunicator.connector.serializers.WidgetMappingDeserializer;
 
 public class GsonHelper {
 
@@ -29,39 +30,16 @@ public class GsonHelper {
 
         if (gson == null) {
             GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(OHItemWrapper.class, new ItemDeserializer());
+            gsonBuilder.registerTypeAdapter(OHItem.class, new ItemDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHWidget>>() {}.getType(), new WidgetDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHSitemap>>() {}.getType(), new SitemapListDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHMapping>>() {}.getType(), new WidgetMappingDeserializer());
+            gsonBuilder.registerTypeAdapter(OHLinkedPage.class, new LinkedPageDeserializer());
+            gsonBuilder.registerTypeAdapter(new TypeToken<List<OHItem>>() {}.getType(), new ItemListDeserializer());
+            gsonBuilder.registerTypeAdapter(OHStateDescription.class, new ItemStateDeserializer());
             gson = gsonBuilder.create();
         }
 
         return gson;
-    }
-
-    public synchronized static Gson createRealmGsonBuilder() {
-        /*return new GsonBuilder()
-                .setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        return f.getDeclaringClass().equals(RealmObject.class);
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                })
-                .registerTypeAdapter(new TypeToken<RealmList<OHSitemap>>() {
-                }.getType(), new JsonDeserializer<RealmList<OHSitemap>>() {
-                    @Override
-                    public RealmList<OHSitemap> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                        RealmList<OHSitemap> tags = new RealmList<>();
-                        JsonArray ja = json.getAsJsonArray();
-                        for (JsonElement je : ja) {
-                            tags.add((OHSitemap) context.deserialize(je, OHSitemap.class));
-                        }
-                        return tags;
-                    }
-                })
-                .create();*/
-        return null;
     }
 }

@@ -9,16 +9,16 @@ import android.widget.Spinner;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHLinkedPageWrapper;
-import se.treehou.ng.ohcommunicator.core.OHWidgetWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class SelectionWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPageWrapper page, final OHWidgetWrapper widget, final OHWidgetWrapper parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
 
         return new SelectWidgetHolder(widget, parent, widgetFactory);
     }
@@ -35,7 +35,7 @@ public class SelectionWidgetFactory implements IWidgetFactory {
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public SelectWidgetHolder(OHWidgetWrapper widget, OHWidgetWrapper parent, WidgetFactory factory) {
+        public SelectWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
             this.factory = factory;
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
@@ -56,7 +56,7 @@ public class SelectionWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final OHWidgetWrapper widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
             if (widget == null) {
                 return;

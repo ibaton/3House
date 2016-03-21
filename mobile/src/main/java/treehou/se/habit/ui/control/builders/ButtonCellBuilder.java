@@ -1,8 +1,6 @@
 package treehou.se.habit.ui.control.builders;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,19 +9,14 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHItemWrapper;
-import se.treehou.ng.ohcommunicator.core.OHServerWrapper;
-import se.treehou.ng.ohcommunicator.core.db.OHItemDB;
-import se.treehou.ng.ohcommunicator.core.db.OHRealm;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.ButtonCell;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.ButtonCellDB;
-import treehou.se.habit.ui.ViewHelper;
+import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.core.db.model.controller.ButtonCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
-import treehou.se.habit.ui.control.CommandService;
 import treehou.se.habit.ui.control.ControllerUtil;
 
 public class ButtonCellBuilder implements CellFactory.CellBuilder {
@@ -49,9 +42,9 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         imgIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OHItemDB item = buttonCell.getItem();
+                ItemDB item = buttonCell.getItem();
                 if(item != null) {
-                    OHServerWrapper server = new OHServerWrapper(item.getServer());
+                    OHServer server = null; // TODO new OHServer(item.getServer());
                     Openhab.instance(server).sendCommand(item.getName(), buttonCell.getCommand());
                 }
             }
@@ -59,6 +52,8 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
         return cellView;
     }
+
+
 
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
