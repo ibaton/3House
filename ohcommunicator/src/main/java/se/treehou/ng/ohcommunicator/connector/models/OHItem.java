@@ -18,6 +18,7 @@ public class OHItem {
     private String name;
     private String link;
     private String state;
+    private OHStateDescription stateDescription;
 
     public long getId() {
         return id;
@@ -67,4 +68,41 @@ public class OHItem {
         this.state = state;
     }
 
+    public OHStateDescription getStateDescription() {
+        return stateDescription;
+    }
+
+    public void setStateDescription(OHStateDescription stateDescription) {
+        this.stateDescription = stateDescription;
+    }
+
+    public String getFormatedValue(){
+        if(getStateDescription() != null && getStateDescription().getPattern() != null){
+
+            String pattern = getStateDescription().getPattern();
+            try {
+                return String.format(pattern, Float.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, Integer.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, getState());
+            }
+            catch (Exception e){}
+        }
+
+        return getState();
+    }
+
+    public String printableName(){
+        if(server != null) {
+            return server + ": "  + name.replaceAll("_|-", " ");
+        }
+        return name.replaceAll("_|-", " ");
+    }
 }

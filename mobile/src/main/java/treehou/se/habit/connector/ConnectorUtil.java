@@ -17,13 +17,13 @@ public class ConnectorUtil {
 
     public static String buildChartRequestString(String baseUrl, OHWidget widget){
 
-        /* TODO if(widget.getItem() == null){
+        if(widget.getItem() == null){
             return "";
         }
 
         Random random = new Random();
         String type = widget.getItem().getType().equals(OHWidget.TYPE_GROUP) ? "groups" : "items";
-        Uri.Builder uriBuilder = Uri.parse(widget.getBaseUrl()+Constants.CHART_URL).buildUpon()
+        Uri.Builder uriBuilder = Uri.parse(baseUrl+Constants.CHART_URL).buildUpon()
                 .appendQueryParameter(type, widget.getItem().getName())
                 .appendQueryParameter("period", widget.getPeriod())
                 .appendQueryParameter("random",String.valueOf(Math.abs(random.nextInt())));
@@ -36,8 +36,7 @@ public class ConnectorUtil {
 
         Log.d(TAG, "Creating chart url " + builtUri.toString());
 
-        return builtUri.toString();*/
-        return null;
+        return builtUri.toString();
     }
 
     public static String getBaseUrl(String link){

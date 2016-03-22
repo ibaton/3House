@@ -2,6 +2,7 @@ package treehou.se.habit.core.db.model;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 public class ItemDB extends RealmObject {
@@ -18,13 +19,14 @@ public class ItemDB extends RealmObject {
     @PrimaryKey
     private long id;
 
-    //@Ignore
+    @Ignore
     private ServerDB server;
 
     private String type;
     private String name;
     private String link;
     private String state;
+    private StateDescriptionDB stateDescription;
 
     public long getId() {
         return id;
@@ -84,13 +86,13 @@ public class ItemDB extends RealmObject {
         realm.commitTransaction();
     }
 
-    /*public StateDescriptionDB getStateDescription() {
+    public StateDescriptionDB getStateDescription() {
         return stateDescription;
     }
 
     public void setStateDescription(StateDescriptionDB stateDescription) {
         this.stateDescription = stateDescription;
-    }*/
+    }
 
     public static String printableName(ItemDB itemDB) {
         if (itemDB.server != null) {
@@ -105,5 +107,49 @@ public class ItemDB extends RealmObject {
             return 1;
         else
             return num.longValue() + 1;
+    }
+
+    public String getFormatedValue(){
+        if(getStateDescription() != null && getStateDescription().getPattern() != null){
+
+            String pattern = getStateDescription().getPattern();
+            try {
+                return String.format(pattern, Float.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, Integer.valueOf(getState()));
+            }
+            catch (Exception e){}
+
+            try {
+                return String.format(pattern, getState());
+            }
+            catch (Exception e){}
+        }
+
+        return getState();
+    }
+
+    public String printableName(){
+        if(server != null) {
+            return server + ": "  + name.replaceAll("_|-", " ");
+        }
+        return name.replaceAll("_|-", " ");
+    }
+
+    @Override
+    public String toString() {
+        return printableName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof ItemDB))return false;
+
+        ItemDB item = (ItemDB) obj;
+        return type.equals(item.getType()) && name.equals(item.getName());
     }
 }

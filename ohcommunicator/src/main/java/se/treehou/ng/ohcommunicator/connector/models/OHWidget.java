@@ -49,7 +49,7 @@ public class OHWidget {
         this.widgetId = widgetId;
     }
 
-    private String getBaseUrl(){
+    public String getBaseUrl(){
         return url;
     }
 
@@ -158,7 +158,8 @@ public class OHWidget {
     }
 
     public String getIconPath(){
-        return "";
+        String icon = getIcon();
+        return (icon != null) ? "/images/"+icon+".png" : null;
     }
 
     public boolean needUpdate(OHWidget widget){

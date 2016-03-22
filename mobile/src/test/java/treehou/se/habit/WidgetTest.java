@@ -35,7 +35,7 @@ public class WidgetTest {
         page.setTitle("");
         page.setWidgets(new ArrayList<OHWidget>());
 
-        factory = new WidgetFactory(activity, server, page);
+        //factory = new WidgetFactory(activity, server, page);
     }
 
     @After

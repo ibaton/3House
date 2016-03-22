@@ -275,7 +275,7 @@ public class SitemapListFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Settings settings = Settings.instance(getActivity());
-                        //TODO settings.setDefaultSitemap(sitemap);
+                        settings.setDefaultSitemap(sitemap);
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction()
                                 .replace(R.id.page_container, SitemapFragment.newInstance(server, sitemap))

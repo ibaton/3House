@@ -45,8 +45,7 @@ public class TextWidgetFactory implements IWidgetFactory {
 
         @Override
         public View getView() {
-            //return baseHolder.getView();
-            return null;
+            return baseHolder.getView();
         }
 
         @Override
@@ -98,7 +97,7 @@ public class TextWidgetFactory implements IWidgetFactory {
                 });
             }
 
-            // TODO baseHolder.update(widget);
+            baseHolder.update(widget);
         }
     }
 }

@@ -13,6 +13,7 @@ import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.core.controller.StringCell;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.FrameWidgetFactory;
@@ -32,7 +33,7 @@ public class WidgetFactory {
     private static final String TAG = "WidgetFactory";
 
     private FragmentActivity context;
-    private OHServer server;
+    private ServerDB server;
     private OHLinkedPage page;
     private LayoutInflater inflater;
 
@@ -40,11 +41,12 @@ public class WidgetFactory {
 
     private Map<String, IWidgetFactory> builders = new HashMap<>();
 
-    public WidgetFactory(FragmentActivity context, OHServer server, OHLinkedPage page){
+    public WidgetFactory(FragmentActivity context, ServerDB server, OHLinkedPage page){
         this.context = context;
         this.server = server;
         this.page = page;
 
+        // Populate factory
         builders.put(OHWidget.TYPE_FRAME, new FrameWidgetFactory());
         builders.put(OHWidget.TYPE_CHART, new ChartWidgetFactory());
         builders.put(OHWidget.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
@@ -89,6 +91,10 @@ public class WidgetFactory {
     }
 
     public OHServer getServer() {
+        return server.toGeneric();
+    }
+
+    public ServerDB getServerDB() {
         return server;
     }
 

@@ -167,7 +167,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                     if (widget.getItem() != null) {
                         Intent intent = new Intent(context, ColorpickerActivity.class);
                         Gson gson = GsonHelper.createGsonBuilder();
-                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, 0 /*widgetFactory.getServer().getId()*/);
+                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServerDB().getId());
                         intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
                         intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
 

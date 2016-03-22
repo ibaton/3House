@@ -3,6 +3,8 @@ package se.treehou.ng.ohcommunicator.connector.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
+
 public class OHLinkedPage {
 
     private String id;
@@ -52,6 +54,6 @@ public class OHLinkedPage {
     }
 
     public String getBaseUrl(){
-        return "";
+        return ConnectorUtil.getBaseUrl(getLink());
     }
 }

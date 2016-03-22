@@ -15,13 +15,14 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
+import treehou.se.habit.core.db.model.ServerDB;
 
 public class ColorpickerActivity extends AppCompatActivity {
 
@@ -36,31 +37,29 @@ public class ColorpickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_colorpicker);
 
         Bundle bundle = getIntent().getExtras();
-        int serverId = bundle.getInt(EXTRA_SERVER);
+        long serverId = bundle.getLong(EXTRA_SERVER);
         String jWidget = bundle.getString(EXTRA_WIDGET);
         int color = bundle.getInt(EXTRA_COLOR);
 
         Gson gson = GsonHelper.createGsonBuilder();
-        OHServer server = null; // TODO OHServer.load(serverId);
         OHWidget widget = gson.fromJson(jWidget, OHWidget.class);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, PlaceholderFragment.newInstance(server, widget, color))
+                    .add(R.id.container, LightFragment.newInstance(serverId, widget, color))
                     .commit();
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+    public static class LightFragment extends Fragment {
 
-        private static final String TAG = "PlaceholderFragment";
+        private static final String TAG = "LightFragment";
 
         private static final String ARG_SERVER  = "ARG_SERVER";
         private static final String ARG_WIDGET  = "ARG_SITEMAP";
         private static final String ARG_COLOR   = "ARG_COLOR";
+
+        private Realm realm;
 
         private OHServer server;
         private OHWidget widget;
@@ -69,12 +68,12 @@ public class ColorpickerActivity extends AppCompatActivity {
 
         private Timer timer = new Timer();
 
-        public static PlaceholderFragment newInstance(OHServer server, OHWidget widget, int color){
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static LightFragment newInstance(long serverId, OHWidget widget, int color){
+            LightFragment fragment = new LightFragment();
 
             Bundle args = new Bundle();
             Gson gson = GsonHelper.createGsonBuilder();
-            args.putLong(ARG_SERVER , 0 /* TODO server.getId() */);
+            args.putLong(ARG_SERVER, serverId);
             args.putString(ARG_WIDGET ,gson.toJson(widget));
             args.putInt(ARG_COLOR ,color);
             fragment.setArguments(args);
@@ -82,19 +81,21 @@ public class ColorpickerActivity extends AppCompatActivity {
             return fragment;
         }
 
-        public PlaceholderFragment() {}
+        public LightFragment() {}
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
+            realm = Realm.getDefaultInstance();
+
             Bundle args = getArguments();
-            int serverId = args.getInt(ARG_SERVER);
+            long serverId = args.getLong(ARG_SERVER);
             String jWidget = args.getString(ARG_WIDGET);
             color = args.getInt(ARG_COLOR);
 
             Gson gson = GsonHelper.createGsonBuilder();
-            server = null; // TODO OHServer.load(serverId);
+            server = ServerDB.load(realm, serverId).toGeneric();
             widget = gson.fromJson(jWidget, OHWidget.class);
         }
 
@@ -124,6 +125,13 @@ public class ColorpickerActivity extends AppCompatActivity {
             pcrColor.setOnColorChangeListener(null);
         }
 
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+
+            realm.close();
+        }
+
         com.chiralcode.colorpicker.ColorPicker.ColorChangeListener colorChangeListener = new com.chiralcode.colorpicker.ColorPicker.ColorChangeListener() {
             @Override
             public void onColorChange(final float[] hsv) {
@@ -137,7 +145,6 @@ public class ColorpickerActivity extends AppCompatActivity {
                         hsv[1] *= 100;
                         hsv[2] *= 100;
                         Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
-                        Communicator communicator = Communicator.instance(getActivity());
                         if(hsv[2] > 5) {
                             Openhab.instance(server).sendCommand(widget.getItem().getName(), String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                         }else {

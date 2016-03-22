@@ -27,6 +27,8 @@ public class HabitApplication extends Application {
         super.attachBaseContext(base);
 
         OHRealm.setup(this);
+        Openhab.setup(this);
+
         /* Realm realm = Realm.getDefaultInstance();
         WidgetSettingsDB settingsDB = realm.allObjects(WidgetSettingsDB.class).first();
         if(settingsDB == null){
@@ -38,8 +40,6 @@ public class HabitApplication extends Application {
             realm.commitTransaction();
         }
         realm.close();*/
-
-        Openhab.setup(this);
         try {
             MultiDex.install(this);
         } catch (RuntimeException multiDexException) {

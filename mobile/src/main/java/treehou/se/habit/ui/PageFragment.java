@@ -291,7 +291,7 @@ public class PageFragment extends Fragment {
     private synchronized void updatePage(final OHLinkedPage page){
         Log.d(TAG, "Updating page " + page.getTitle() + " widgets " + widgets.size() + " : " + page.getWidgets().size());
         this.page = page;
-        widgetFactory = new WidgetFactory(getActivity(), server.toGeneric(), page);
+        widgetFactory = new WidgetFactory(getActivity(), server, page);
 
         final List<OHWidget> pageWidgets = page.getWidgets();
         boolean invalidate = pageWidgets.size() != widgets.size();

@@ -20,11 +20,10 @@ public class OHRealm {
     public static RealmConfiguration configuration(Context context) {
         return new RealmConfiguration.Builder(context)
                 .setModules(new OHRealmModule())
-                .name("treehouse.realm")
+                .name("treehouse1.realm")
                 .build();
     }
 
-    // TODO remove
     public static Realm realm(){
         return Realm.getDefaultInstance();
     }

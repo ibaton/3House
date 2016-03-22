@@ -213,7 +213,7 @@ public class Connector {
          *
          * @return url for server.
          */
-        private String getUrl(){
+        public String getUrl(){
             return getUrl(context, server);
         }
 
@@ -223,8 +223,7 @@ public class Connector {
          * @param server the server to connect to.
          * @return
          */
-        private static String getUrl(Context context, OHServer server){
-            // TODO determine if local or remote
+        public static String getUrl(Context context, OHServer server){
             String url = server.getLocalUrl();
             NetworkInfo networkInfo = getNetworkInfo(context);
             if(networkInfo == null || !networkInfo.isConnected()){

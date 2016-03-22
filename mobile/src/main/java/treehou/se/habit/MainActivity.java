@@ -11,12 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.List;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
@@ -24,7 +20,6 @@ import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.ServersFragment;
 import treehou.se.habit.ui.SitemapFragment;
 import treehou.se.habit.ui.SitemapListFragment;
-import treehou.se.habit.util.Settings;
 
 
 public class MainActivity extends AppCompatActivity

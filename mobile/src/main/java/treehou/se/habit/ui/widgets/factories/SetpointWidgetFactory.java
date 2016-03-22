@@ -58,7 +58,7 @@ public class SetpointWidgetFactory implements IWidgetFactory {
             }
 
             if(widget.getItem() != null) {
-                //lblValue.setText(widget.getItem().getFormatedValue());
+                lblValue.setText(widget.getItem().getFormatedValue());
             }
 
             btnIncrease.setOnClickListener(new View.OnClickListener() {

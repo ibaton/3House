@@ -7,8 +7,10 @@ import android.widget.ImageView;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.ConnectorUtil;
@@ -62,15 +64,16 @@ public class ChartWidgetFactory implements IWidgetFactory {
                 return;
             }
 
-            /*try {
-                URL imageUrl = new URL(ConnectorUtil.buildChartRequestString(factory.getServer().getUrl(), widget));
+            try {
+                String url = Connector.ServerHandler.getUrl(factory.getContext(), factory.getServer());
+                URL imageUrl = new URL(ConnectorUtil.buildChartRequestString(url, widget));
                 Communicator communicator = Communicator.instance(factory.getContext());
                 communicator.loadImage(factory.getServer(), imageUrl, imgImage, false);
             } catch (MalformedURLException e) {
                 Log.e(TAG, "Failed to update chart", e);
             }
 
-            baseHolder.update(widget);*/
+            baseHolder.update(widget);
         }
 
         @Override

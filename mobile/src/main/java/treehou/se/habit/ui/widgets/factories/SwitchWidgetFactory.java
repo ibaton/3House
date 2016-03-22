@@ -104,7 +104,6 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onClick(View v) {
                     if (widget.getItem() != null) {
-                        Communicator communicator = Communicator.instance(factory.getContext());
                         Openhab.instance(factory.getServer()).sendCommand(item.getName(), Constants.COMMAND_DOWN);
                     }
                 }

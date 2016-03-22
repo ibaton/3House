@@ -10,6 +10,7 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
 
 public class ItemDeserializer implements JsonDeserializer<OHItem>, JsonSerializer<OHItem> {
 
@@ -37,9 +38,9 @@ public class ItemDeserializer implements JsonDeserializer<OHItem>, JsonSerialize
             item.setLink(jObject.get("link").getAsString());
         }
 
-        /*if(jObject.has("stateDescription")) {
-            item.setStateDescription(context.<OHStateDescriptionWrapper>deserialize(jObject.get("stateDescription"), OHStateDescriptionWrapper.class));
-        }*/
+        if(jObject.has("stateDescription")) {
+            item.setStateDescription(context.<OHStateDescription>deserialize(jObject.get("stateDescription"), OHStateDescription.class));
+        }
 
         return item;
     }
@@ -53,9 +54,9 @@ public class ItemDeserializer implements JsonDeserializer<OHItem>, JsonSerialize
         object.addProperty("state", src.getState());
         object.addProperty("link", src.getLink());
 
-        /*if(src.getStateDescription() != null) {
-            object.add("stateDescription", context.serialize(src.getStateDescription(), OHStateDescriptionWrapper.class));
-        }*/
+        if(src.getStateDescription() != null) {
+            object.add("stateDescription", context.serialize(src.getStateDescription(), OHStateDescription.class));
+        }
 
         return object;
     }
