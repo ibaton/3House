@@ -120,14 +120,21 @@ public class Connector {
             openHabService = generateOpenHabService(server, getUrl());
         }
 
-        public Socket registerBindingListener(OHCallback<List<OHBinding>> bindingCallback){
-            if(bindingCallback == null) return null;
+        public void requestBindings(final OHCallback<List<OHBinding>> bindingCallback){
+            OpenHabService service = getService();
+            if(service == null || bindingCallback == null) return;
 
-            bindingCallbacks.add(bindingCallback);
-            bindingCallback.onUpdate(new OHResponse.Builder<List<OHBinding>>(new ArrayList<>(bindings)).fromCache(true).build());
+            service.listBindings().enqueue(new Callback<List<OHBinding>>() {
+                @Override
+                public void onResponse(Call<List<OHBinding>> call, Response<List<OHBinding>> response) {
+                    bindingCallback.onUpdate(new OHResponse.Builder<>(response.body()).build());
+                }
 
-            Uri uri = Uri.parse(getUrl()).buildUpon().appendPath("rest").appendPath("bindings").build();
-            return connectServer(uri, new TypeToken<List<OHBinding>>(){}.getType(), bindingCallback);
+                @Override
+                public void onFailure(Call<List<OHBinding>> call, Throwable t) {
+                    bindingCallback.onError();
+                }
+            });
         }
 
         public void registerInboxListener(final OHCallback<List<OHInboxItem>> inboxCallback){

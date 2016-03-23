@@ -1,6 +1,5 @@
 package treehou.se.habit.ui;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -13,28 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.ning.http.client.AsyncHttpClient;
 
-import org.atmosphere.wasync.Client;
 import org.atmosphere.wasync.Socket;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.models.Binding;
-import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.ServerDB;
 
 public class BindingsFragment extends Fragment {
@@ -48,8 +41,6 @@ public class BindingsFragment extends Fragment {
     private BindingAdapter bindingAdapter;
     private ServerDB server;
     private ViewGroup container;
-
-    private Socket bindingClient;
 
     private List<OHBinding> bindings = new ArrayList<>();
 
@@ -96,8 +87,7 @@ public class BindingsFragment extends Fragment {
 
         if(savedInstanceState != null){
             if(savedInstanceState.containsKey(STATE_BINDINGS)){
-                bindings = GsonHelper.createGsonBuilder().fromJson(savedInstanceState.getString(STATE_BINDINGS), new TypeToken<List<Binding>>() {
-                }.getType());
+                bindings = GsonHelper.createGsonBuilder().fromJson(savedInstanceState.getString(STATE_BINDINGS), new TypeToken<List<Binding>>() {}.getType());
             }
         }
 
@@ -133,13 +123,7 @@ public class BindingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        bindingClient = Openhab.instance(server.toGeneric()).registerBindingListener(bindingListener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        bindingClient.close();
+        Openhab.instance(server.toGeneric()).requestBindings(bindingListener);
     }
 
     @Override
