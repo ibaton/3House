@@ -27,10 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -42,8 +41,12 @@ public class InboxListFragment extends Fragment {
 
     private static final String ARG_SERVER = "argServer";
 
-    private OHServer server;
+    private Realm relam;
+
+    private ServerDB server;
     private InboxAdapter adapter;
+
+    private List<OHInboxItem> items;
     private OHCallback<List<OHInboxItem>> inboxCallback;
 
     private boolean showIgnored = false;
@@ -53,8 +56,7 @@ public class InboxListFragment extends Fragment {
     public static InboxListFragment newInstance(ServerDB server) {
         InboxListFragment fragment = new InboxListFragment();
         Bundle args = new Bundle();
-        String jServer = GsonHelper.createGsonBuilder().toJson(server);
-        args.putString(ARG_SERVER, jServer);
+        args.putLong(ARG_SERVER, server.getId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,11 +71,14 @@ public class InboxListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        server = GsonHelper.createGsonBuilder().fromJson(getArguments().getString(ARG_SERVER), OHServer.class);
+        relam = Realm.getDefaultInstance();
+        server = ServerDB.load(relam, getArguments().getLong(ARG_SERVER));
+
         inboxCallback = new OHCallback<List<OHInboxItem>>() {
             @Override
             public void onUpdate(OHResponse<List<OHInboxItem>> response) {
-                setItems(response.body(), showIgnored);
+                items = response.body();
+                setItems(items, showIgnored);
             }
 
             @Override
@@ -148,7 +153,7 @@ public class InboxListFragment extends Fragment {
     private void showIgnoredItems(boolean showIgnored){
 
         this.showIgnored = showIgnored;
-        setItems(Openhab.instance(server).getInboxItems(), showIgnored);
+        setItems(items, showIgnored);
         updateIgnoreButtons(showIgnored);
 
         final View rootView = getView();
@@ -198,7 +203,7 @@ public class InboxListFragment extends Fragment {
      */
     private void ignoreInboxItem(final OHInboxItem item){
         adapter.removeItem(item);
-        Openhab.instance(server).ignoreInboxItem(item);
+        Openhab.instance(server.toGeneric()).ignoreInboxItem(item);
 
         final View rootView = getView();
         if(rootView != null) {
@@ -221,21 +226,19 @@ public class InboxListFragment extends Fragment {
      * @param item the item to hide.
      */
     private void unignoreInboxItem(final OHInboxItem item) {
-        Openhab.instance(server).unignoreInboxItem(item);
+        Openhab.instance(server.toGeneric()).unignoreInboxItem(item);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Openhab.instance(server).registerInboxListener(inboxCallback);
+        Openhab.instance(server.toGeneric()).requestInboxItems(inboxCallback);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        Openhab.instance(server).deregisterInboxListener(inboxCallback);
     }
 
     public static class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>{
@@ -243,7 +246,7 @@ public class InboxListFragment extends Fragment {
         private List<OHInboxItem> items = new ArrayList<>();
         private Context context;
 
-        private OHServer server;
+        private ServerDB server;
         private ItemListener itemListener = new DummyItemListener();
 
         public class InboxHolder extends RecyclerView.ViewHolder {
@@ -257,7 +260,7 @@ public class InboxListFragment extends Fragment {
             }
         }
 
-        public InboxAdapter(Context context, OHServer server) {
+        public InboxAdapter(Context context, ServerDB server) {
             this.context = context;
             this.server = server;
         }
@@ -309,7 +312,7 @@ public class InboxListFragment extends Fragment {
                             .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Openhab.instance(server).approveInboxItem(inboxItem);
+                                    Openhab.instance(server.toGeneric()).approveInboxItem(inboxItem);
                                 }
                             })
                             .setNegativeButton(R.string.cancel, null)

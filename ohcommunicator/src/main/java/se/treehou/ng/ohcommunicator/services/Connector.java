@@ -137,22 +137,26 @@ public class Connector {
             });
         }
 
-        public void registerInboxListener(final OHCallback<List<OHInboxItem>> inboxCallback){
-            if(inboxCallback == null) return;
+        /**
+         * Ask server for inbox items.
+         *
+         * @param inboxCallback server response callback.
+         */
+        public void requestInboxItems(final OHCallback<List<OHInboxItem>> inboxCallback){
+            OpenHabService service = getService();
+            if(service == null || inboxCallback == null) return;
 
-            inboxCallbacks.add(inboxCallback);
-            inboxCallback.onUpdate(new OHResponse.Builder<List<OHInboxItem>>(new ArrayList<>(inboxItems)).fromCache(true).build());
+            service.listInboxItems().enqueue(new Callback<List<OHInboxItem>>() {
+                @Override
+                public void onResponse(Call<List<OHInboxItem>> call, Response<List<OHInboxItem>> response) {
+                    inboxCallback.onUpdate(new OHResponse.Builder<>(response.body()).build());
+                }
 
-            Uri uri = Uri.parse(getUrl()).buildUpon().appendPath(Constants.PATH_REST).appendPath(Constants.PATH_INBOX).build();
-            connectServer(uri, new TypeToken<List<OHInboxItem>>(){}.getType(), inboxCallback);
-
-            start();
-        }
-
-        public void deregisterInboxListener(OHCallback<List<OHInboxItem>> inboxCallback){
-            inboxCallbacks.remove(inboxCallback);
-
-            closeIfFinnished();
+                @Override
+                public void onFailure(Call<List<OHInboxItem>> call, Throwable t) {
+                    inboxCallback.onError();
+                }
+            });
         }
 
         /**
