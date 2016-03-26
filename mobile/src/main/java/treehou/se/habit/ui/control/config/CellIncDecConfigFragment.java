@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -24,7 +25,9 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.IncDecCell;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.IncDecCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -37,7 +40,7 @@ public class CellIncDecConfigFragment extends Fragment {
 
     private Cell cell;
 
-    private IncDecCell numberCell;
+    private IncDecCell incDecCell;
     private Spinner sprItems;
     private EditText txtMax;
     private EditText txtMin;
@@ -46,6 +49,8 @@ public class CellIncDecConfigFragment extends Fragment {
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
+
+    private Realm realm;
 
     public static CellIncDecConfigFragment newInstance(CellDB cell) {
         CellIncDecConfigFragment fragment = new CellIncDecConfigFragment();
@@ -63,15 +68,21 @@ public class CellIncDecConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         if (getArguments() != null) {
-            int id = getArguments().getInt(ARG_CELL_ID);
-            cell = Cell.load(id);
-            numberCell = IncDecCell.getCell(cell);
-            if (numberCell == null) {
-                numberCell = new IncDecCell();
-                numberCell.setCell(cell);
-                numberCell.save();
+            long id = getArguments().getLong(ARG_CELL_ID);
+            cell = new Cell(CellDB.load(realm, id));
+            IncDecCellDB incDecCellDb = IncDecCellDB.getCell(realm, cell.getDB());
+            if (incDecCellDb == null) {
+                realm.beginTransaction();
+                incDecCellDb = new IncDecCellDB();
+                incDecCellDb.setId(IncDecCellDB.getUniqueId(realm));
+                incDecCellDb = realm.copyToRealm(incDecCellDb);
+                incDecCellDb.setCell(cell.getDB());
+                realm.commitTransaction();
             }
+            incDecCell = new IncDecCell(incDecCellDb);
         }
     }
 
@@ -82,13 +93,13 @@ public class CellIncDecConfigFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.inc_dec_controller_action, container, false);
 
         txtMax = (EditText) rootView.findViewById(R.id.txtMax);
-        txtMax.setText("" + numberCell.getMax());
+        txtMax.setText("" + incDecCell.getMax());
 
         txtMin = (EditText) rootView.findViewById(R.id.txtMin);
-        txtMin.setText("" + numberCell.getMin());
+        txtMin.setText("" + incDecCell.getMin());
 
         txtValue = (EditText) rootView.findViewById(R.id.txtValue);
-        txtValue.setText("" + numberCell.getValue());
+        txtValue.setText("" + incDecCell.getValue());
 
         sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -96,10 +107,9 @@ public class CellIncDecConfigFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 OHItem item = mItems.get(position);
                 if(item != null) {
-                    // TODO item.save();
-
-                    numberCell.setItem(item);
-                    numberCell.save();
+                    realm.beginTransaction();
+                    incDecCell.setItem(item);
+                    realm.commitTransaction();
                 }
             }
 
@@ -113,12 +123,13 @@ public class CellIncDecConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        List<OHServer> servers = null; // TODO OHServer.loadAll();
+        List<ServerDB> servers = realm.allObjects(ServerDB.class);
         mItems.clear();
-        if(numberCell.getItem() != null) {
-            mItems.add(numberCell.getItem());
+        if(incDecCell.getItem() != null) {
+            mItems.add(incDecCell.getItem());
         }
-        for(final OHServer server : servers) {
+        for(final ServerDB serverDB : servers) {
+            final OHServer server = serverDB.toGeneric();
             OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
                 public void onUpdate(OHResponse<List<OHItem>> response) {
@@ -151,7 +162,7 @@ public class CellIncDecConfigFragment extends Fragment {
     }
 
     private void updateIconImage(){
-        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
+        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), incDecCell.getIcon()));
     }
 
     private List<OHItem> filterItems(List<OHItem> items){
@@ -172,23 +183,30 @@ public class CellIncDecConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        realm.beginTransaction();
         try {
-            numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
+            incDecCell.setMax(Integer.parseInt(txtMax.getText().toString()));
         }catch (NumberFormatException e) {
-            numberCell.setMax(100);
+            incDecCell.setMax(100);
         }
         try {
-            numberCell.setMin(Integer.parseInt(txtMin.getText().toString()));
+            incDecCell.setMin(Integer.parseInt(txtMin.getText().toString()));
         }catch (NumberFormatException e) {
-            numberCell.setMin(0);
+            incDecCell.setMin(0);
         }
         try {
-            numberCell.setValue(Integer.parseInt(txtValue.getText().toString()));
+            incDecCell.setValue(Integer.parseInt(txtValue.getText().toString()));
         }catch (NumberFormatException e) {
-            numberCell.setValue(1);
+            incDecCell.setValue(1);
         }
+        realm.commitTransaction();
+    }
 
-        numberCell.save();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     @Override
@@ -198,8 +216,9 @@ public class CellIncDecConfigFragment extends Fragment {
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
-            numberCell.setIcon(iconName.equals("") ? null : iconName);
-            numberCell.save();
+            realm.beginTransaction();
+            incDecCell.setIcon(iconName.equals("") ? null : iconName);
+            realm.commitTransaction();
             updateIconImage();
         }
     }

@@ -90,8 +90,4 @@ public class SliderCell {
     public static SliderCell getCell(Cell cell){
         return SliderCell.getCell(cell);
     }
-
-    public void save() {
-        //SliderCellDB.save(getDB());
-    }
 }

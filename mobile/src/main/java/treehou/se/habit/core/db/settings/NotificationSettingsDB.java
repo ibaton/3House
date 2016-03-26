@@ -27,26 +27,19 @@ public class NotificationSettingsDB extends RealmObject {
         this.notificationToSpeech = notificationToSpeech;
     }
 
-    public boolean isNotificationToSpeech() {
+    public boolean notificationToSpeech() {
         return notificationToSpeech;
     }
 
-    public static void save(NotificationSettingsDB item){
-        Realm realm = OHRealm.realm();
-        realm.beginTransaction();
-        if(item.getId() <= 0) {
-            item.setId(getUniqueId());
+    public static NotificationSettingsDB loadGlobal(Realm realm){
+        NotificationSettingsDB settings = realm.where(NotificationSettingsDB.class).findFirst();
+        if(settings == null){
+            realm.beginTransaction();
+            settings = realm.createObject(NotificationSettingsDB.class);
+            settings.setId(ID_GLOBAL);
+            realm.commitTransaction();
         }
-        realm.copyToRealmOrUpdate(item);
-        realm.commitTransaction();
-    }
 
-    public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
-        Number num = realm.where(NotificationSettingsDB.class).max("id");
-        long newId = 1;
-        if (num != null) newId = num.longValue() + 1;
-        realm.close();
-        return newId;
+        return settings;
     }
 }

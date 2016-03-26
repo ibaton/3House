@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import treehou.se.habit.core.db.model.OHRealm;
 
 public class CellDB extends RealmObject {
@@ -15,6 +16,7 @@ public class CellDB extends RealmObject {
     public static final int TYPE_SLIDER        = 4;
     public static final int TYPE_INC_DEC       = 5;
 
+    @PrimaryKey
     private long id = 0;
     private CellRowDB cellRow;
     private int type = TYPE_EMPTY;
@@ -61,26 +63,25 @@ public class CellDB extends RealmObject {
         this.color = color;
     }
 
-    public static CellDB load(int id){
-        return OHRealm.realm().where(CellDB.class).equalTo("id", id).findFirst();
+    public static CellDB load(Realm realm, long id){
+        return realm.where(CellDB.class).equalTo("id", id).findFirst();
     }
 
-    public static void save(CellDB item){
-        Realm realm = OHRealm.realm();
+    public static CellDB save(Realm realm, CellDB item){
         realm.beginTransaction();
         if(item.getId() <= 0) {
-            item.setId(getUniqueId());
+            item.setId(getUniqueId(realm));
         }
-        realm.copyToRealmOrUpdate(item);
+        CellDB cell = realm.copyToRealmOrUpdate(item);
         realm.commitTransaction();
+
+        return cell;
     }
 
-    public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+    public static long getUniqueId(Realm realm) {
         Number num = realm.where(CellDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;
-        realm.close();
         return newId;
     }
 }

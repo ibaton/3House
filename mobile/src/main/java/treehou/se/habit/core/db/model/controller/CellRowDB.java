@@ -11,7 +11,7 @@ public class CellRowDB extends RealmObject {
     @PrimaryKey
     private long id = 0;
     private ControllerDB controller;
-    private RealmList<CellDB> cells;
+    private RealmList<CellDB> cells = new RealmList<>();
 
     public long getId() {
         return id;
@@ -37,30 +37,31 @@ public class CellRowDB extends RealmObject {
         this.controller = controller;
     }
 
-    public static CellDB addCell(CellRowDB cellRowDB){
+    public CellDB addCell(Realm realm){
         CellDB cell = new CellDB();
-        cell.setCellRow(cellRowDB);
-        CellDB.save(cell);
+        cell.setCellRow(this);
+        CellDB cellDB = CellDB.save(realm, cell);
+
+        realm.beginTransaction();
+        cells.add(cellDB);
+        realm.commitTransaction();
 
         return cell;
     }
 
-    public static void save(CellRowDB item){
-        Realm realm = OHRealm.realm();
+    public static void save(Realm realm, CellRowDB item){
         realm.beginTransaction();
         if(item.getId() <= 0) {
-            item.setId(getUniqueId());
+            item.setId(getUniqueId(realm));
         }
         realm.copyToRealmOrUpdate(item);
         realm.commitTransaction();
     }
 
-    public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+    public static long getUniqueId(Realm realm) {
         Number num = realm.where(CellRowDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;
-        realm.close();
         return newId;
     }
 }

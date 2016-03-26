@@ -14,6 +14,7 @@ import com.mattyork.colours.Colour;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.CellRowDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
 import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
@@ -121,7 +122,7 @@ public class ControlFragment extends Fragment {
         louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-        /*for (final CellRowDB row : controller.getCellRows()) {
+        for (final CellRowDB row : controller.getCellRows()) {
             final LinearLayout louRow = (LinearLayout) inflater.inflate(R.layout.controller_row, null);
             LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -135,6 +136,6 @@ public class ControlFragment extends Fragment {
                 louColumnHolder.addView(itemView);
             }
             louController.addView(louRow);
-        }*/
+        }
     }
 }

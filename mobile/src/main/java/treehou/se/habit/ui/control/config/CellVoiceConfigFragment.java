@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -24,7 +25,9 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.VoiceCell;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.VoiceCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -44,6 +47,8 @@ public class CellVoiceConfigFragment extends Fragment {
     private ArrayAdapter<OHItem> mItemAdapter ;
     private ArrayList<OHItem> mItems = new ArrayList<>();
 
+    private Realm realm;
+
     public static CellVoiceConfigFragment newInstance(CellDB cell) {
         CellVoiceConfigFragment fragment = new CellVoiceConfigFragment();
         Bundle args = new Bundle();
@@ -60,21 +65,90 @@ public class CellVoiceConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
 
-        /*if (getArguments() != null) {
-            int id = getArguments().getInt(ARG_CELL_ID);
-            cell = Cell.load(id);
-            VoiceCellDB voiceCellDb = VoiceCellDB.getCell(cell.getDB());
+        if (getArguments() != null) {
+            long id = getArguments().getLong(ARG_CELL_ID);
+            cell = new Cell(CellDB.load(realm, id));
+            VoiceCellDB voiceCellDb = VoiceCellDB.getCell(realm, cell.getDB());
             if(voiceCellDb == null){
-                this.voiceCell = new VoiceCell();
-                this.voiceCell.setCell(cell);
-                voiceCell.save();
+                realm.beginTransaction();
+                voiceCellDb = new VoiceCellDB();
+                voiceCellDb.setId(VoiceCellDB.getUniqueId(realm));
+                voiceCellDb = realm.copyToRealm(voiceCellDb);
+                voiceCellDb.setCell(cell.getDB());
+                realm.commitTransaction();
             }
-            else {
-                voiceCell = new VoiceCell(voiceCellDb);
+            voiceCell = new VoiceCell(voiceCellDb);
+        }
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false);
+
+        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
+        sprItems.setAdapter(mItemAdapter);
+
+        List<ServerDB> servers = realm.allObjects(ServerDB.class);
+        mItems.clear();
+
+        if(voiceCell.getItem() != null) {
+            mItems.add(voiceCell.getItem());
+        }
+
+        for(final ServerDB serverDB : servers) {
+            final OHServer server = serverDB.toGeneric();
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
+
+                @Override
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
+                    mItems.addAll(items);
+                    mItemAdapter.notifyDataSetChanged();
+                    Openhab.instance(server).deregisterItemsListener(this);
+                }
+
+                @Override
+                public void onError() {
+                    Log.d("Get Items", "Failure");
+                }
+            };
+            Openhab.instance(server).registerItemsListener(callback);
+        }
+
+        sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                OHItem item = mItems.get(position);
+                if(item != null) {
+                    realm.beginTransaction();
+                    voiceCell.setItem(item);
+                    realm.commitTransaction();
+                }
             }
-        }*/
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
+        updateIconImage();
+        btnSetIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+                startActivityForResult(intent, REQUEST_ICON);
+            }
+        });
+
+        return rootView;
     }
 
     private List<OHItem> filterItems(List<OHItem> items){
@@ -101,66 +175,10 @@ public class CellVoiceConfigFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onDestroy() {
+        super.onDestroy();
 
-        View rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false);
-
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
-        sprItems.setAdapter(mItemAdapter);
-
-        List<OHServer> servers = null; //OHServer.loadAll();
-        mItems.clear();
-
-        if(voiceCell.getItem() != null) {
-            // TODO mItems.add(new OHItem(voiceCell.getItem()));
-        }
-
-        for(final OHServer server : servers) {
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
-
-                @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
-                    // TODO mItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-                    Openhab.instance(server).deregisterItemsListener(this);
-                }
-
-                @Override
-                public void onError() {
-                    Log.d("Get Items", "Failure");
-                }
-            };
-            Openhab.instance(server).registerItemsListener(callback);
-        }
-
-        sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                /* TODO  OHItem item = mItems.get(position);
-                 item.save();
-
-                voiceCell.setItem(item.getDB());
-                voiceCell.save();*/
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
-        updateIconImage();
-        btnSetIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
-                startActivityForResult(intent, REQUEST_ICON);
-            }
-        });
-
-        return rootView;
+        realm.close();
     }
 
     private void updateIconImage(){

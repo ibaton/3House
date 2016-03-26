@@ -49,22 +49,20 @@ public class SwitchCellDB extends RealmObject {
         Realm realm = OHRealm.realm();
         realm.beginTransaction();
         if(item.getId() <= 0) {
-            item.setId(getUniqueId());
+            item.setId(getUniqueId(realm));
         }
         realm.copyToRealmOrUpdate(item);
         realm.commitTransaction();
     }
 
-    public static SwitchCellDB getCell(CellDB cell){
-        return OHRealm.realm().where(SwitchCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
+    public static SwitchCellDB getCell(Realm realm, CellDB cell){
+        return realm.where(SwitchCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
     }
 
-    public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+    public static long getUniqueId(Realm realm) {
         Number num = realm.where(SwitchCellDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;
-        realm.close();
         return newId;
     }
 }

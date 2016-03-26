@@ -45,26 +45,23 @@ public class StringCellDB extends RealmObject {
         this.icon = icon;
     }
 
-    public static void save(StringCellDB item){
-        Realm realm = OHRealm.realm();
+    public static void save(Realm realm, StringCellDB item){
         realm.beginTransaction();
         if(item.getId() <= 0) {
-            item.setId(getUniqueId());
+            item.setId(getUniqueId(realm));
         }
         realm.copyToRealmOrUpdate(item);
         realm.commitTransaction();
     }
 
-    public static StringCellDB getCell(CellDB cell){
-        return OHRealm.realm().where(StringCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
+    public static StringCellDB getCell(Realm realm, CellDB cell){
+        return realm.where(StringCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
     }
 
-    public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+    public static long getUniqueId(Realm realm) {
         Number num = realm.where(StringCellDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;
-        realm.close();
         return newId;
     }
 }

@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.control.config;
 
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
@@ -28,6 +30,8 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     private ArrayAdapter mTypeAdapter;
     private CellDB cell;
 
+    private Realm realm;
+
     public static ControllCellFragment newInstance(long cellId) {
         ControllCellFragment fragment = new ControllCellFragment();
         Bundle args = new Bundle();
@@ -41,9 +45,11 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        realm = Realm.getDefaultInstance();
         if (getArguments() != null) {
-            int cellId = getArguments().getInt(ARG_CELL_ID);
-            cell = null;//CellDB.load(cellId);
+            long cellId = getArguments().getLong(ARG_CELL_ID);
+            cell = CellDB.load(realm, cellId);
         }
 
         String[] cellTypes = getResources().getStringArray(R.array.cell_types);
@@ -60,6 +66,7 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         sprItems.setOnItemSelectedListener(itemSelectListener);
 
         btnPicker = (Button) rootView.findViewById(R.id.btn_color_picker);
+        updateColorButton(cell.getColor());
         btnPicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +78,6 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
             }
         });
         Log.d(TAG,"Color is : " + cell.getColor());
-        setColor(cell.getColor());
 
         int[] typeArray = getResources().getIntArray(R.array.cell_types_values);
         int index = 0;
@@ -86,14 +92,22 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         return rootView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
+    }
+
     private AdapterView.OnItemSelectedListener itemSelectListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
             int cellType = getResources().getIntArray(R.array.cell_types_values)[position];
 
+            realm.beginTransaction();
             cell.setType(cellType);
-            //CellDB.save(cell);
+            realm.commitTransaction();
 
             Log.d(TAG, "item selected " + cellType + " " + position);
 
@@ -142,11 +156,21 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         public void onNothingSelected(AdapterView<?> parent) {}
     };
 
+    /**
+     * Update the color of color button
+     * @param color the color to set
+     */
+    public void updateColorButton(@ColorInt int color){
+        btnPicker.setBackgroundColor(color);
+    }
+
     @Override
     public void setColor(int color) {
         Log.d(TAG,"Color set: " + color);
-        btnPicker.setBackgroundColor(color);
+        updateColorButton(color);
+
+        realm.beginTransaction();
         cell.setColor(color);
-        //CellDB.save(cell);
+        realm.commitTransaction();
     }
 }

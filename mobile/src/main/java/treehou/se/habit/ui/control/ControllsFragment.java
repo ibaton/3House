@@ -22,6 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 
@@ -37,6 +38,8 @@ public class ControllsFragment extends Fragment {
 
     private View viwEmpty;
 
+    private Realm realm;
+
     public static ControllsFragment newInstance() {
         ControllsFragment fragment = new ControllsFragment();
         Bundle args = new Bundle();
@@ -50,7 +53,7 @@ public class ControllsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Log.d(TAG, ""+ OHRealm.realm().allObjects(ControllerDB.class).size());
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -102,7 +105,15 @@ public class ControllsFragment extends Fragment {
                                         break;
                                     case 1:
                                         mAdapter.removeItem(controllerHolder.getAdapterPosition());
-                                        //controller.removeFromRealm();
+
+                                        final long id = controller.getId();
+                                        realm.executeTransactionAsync(new Realm.Transaction() {
+                                            @Override
+                                            public void execute(Realm realm) {
+                                                ControllerDB controller = ControllerDB.load(realm, id);
+                                                controller.removeFromRealm();
+                                            }
+                                        });
                                         break;
                                 }
                             }
@@ -110,7 +121,7 @@ public class ControllsFragment extends Fragment {
                 return true;
             }
         });
-        final List<ControllerDB> controllers = null;//OHRealm.realm().allObjects(ControllerDB.class);
+        final List<ControllerDB> controllers = realm.allObjects(ControllerDB.class);
         mAdapter.addAll(controllers);
 
         // Set the adapter
@@ -124,6 +135,13 @@ public class ControllsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     /**
@@ -164,8 +182,8 @@ public class ControllsFragment extends Fragment {
         ControllerDB controller = new ControllerDB();
         String name = "Controller";
         controller.setName(name);
-        //ControllerDB.save(controller);
-        //ControllerDB.addRow(controller);
+        ControllerDB.save(realm, controller);
+        controller.addRow(realm);
 
         loadController(controller.getId());
     }

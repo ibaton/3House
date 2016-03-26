@@ -16,7 +16,7 @@ public class ControllerDB extends RealmObject {
     private int color = Color.parseColor("#33000000");
     private boolean showNotification = false;
     private boolean showTitle = true;
-    private RealmList<CellRowDB> cellRows;
+    private RealmList<CellRowDB> cellRows = new RealmList<>();
 
     public long getId() {
         return id;
@@ -66,38 +66,38 @@ public class ControllerDB extends RealmObject {
         this.cellRows = cellRows;
     }
 
-    public static ControllerDB load(long id){
-        return OHRealm.realm().where(ControllerDB.class).equalTo("id", id).findFirst();
+    public static ControllerDB load(Realm realm, long id){
+        return realm.where(ControllerDB.class).equalTo("id", id).findFirst();
     }
 
-    public static void save(ControllerDB item){
-        Realm realm = OHRealm.realm();
+    public static void save(Realm realm, ControllerDB item){
         realm.beginTransaction();
         if(item.getId() <= 0) {
-            item.setId(getUniqueId());
+            item.setId(getUniqueId(realm));
         }
         realm.copyToRealmOrUpdate(item);
         realm.commitTransaction();
     }
 
-    public static CellRowDB addRow(ControllerDB controllerDB){
+    public CellRowDB addRow(Realm realm){
         CellRowDB cellRow = new CellRowDB();
-        cellRow.setController(controllerDB);
-        CellRowDB.save(cellRow);
+        cellRow.setController(this);
+        realm.beginTransaction();
+        cellRows.add(cellRow);
+        realm.commitTransaction();
+        CellRowDB.save(realm,cellRow);
 
         CellDB cell = new CellDB();
         cell.setCellRow(cellRow);
-        CellDB.save(cell);
+        CellDB.save(realm, cell);
 
         return cellRow;
     }
 
-    public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+    public static long getUniqueId(Realm realm) {
         Number num = realm.where(ControllerDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;
-        realm.close();
         return newId;
     }
 }

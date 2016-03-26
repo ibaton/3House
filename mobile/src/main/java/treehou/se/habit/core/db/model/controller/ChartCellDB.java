@@ -27,26 +27,23 @@ public class ChartCellDB extends RealmObject {
         this.cell = cell;
     }
 
-    public static void save(ChartCellDB item){
-        Realm realm = OHRealm.realm();
+    public static void save(Realm realm, ChartCellDB item){
         realm.beginTransaction();
         if(item.getId() <= 0) {
-            item.setId(getUniqueId());
+            item.setId(getUniqueId(realm));
         }
         realm.copyToRealmOrUpdate(item);
         realm.commitTransaction();
     }
 
-    public static ChartCellDB getCell(CellDB cell){
-        return OHRealm.realm().where(ChartCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
+    public static ChartCellDB getCell(Realm realm, CellDB cell){
+        return realm.where(ChartCellDB.class).equalTo("cell.id", cell.getId()).findFirst();
     }
 
-    public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+    public static long getUniqueId(Realm realm) {
         Number num = realm.where(ChartCellDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;
-        realm.close();
         return newId;
     }
 }
