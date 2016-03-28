@@ -74,7 +74,6 @@ public class SwitchActionFragment extends Fragment {
                     List<OHItem> items = filterItems(response.body());
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
-                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -83,7 +82,7 @@ public class SwitchActionFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(server).registerItemsListener(callback);
+            Openhab.instance(server).requestItem(callback);
         }
 
         tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);

@@ -203,7 +203,27 @@ public class Connector {
             closeIfFinnished();
         }
 
-        public void registerItemsListener(OHCallback<List<OHItem>> itemCallback){
+        public void requestItem(final OHCallback<List<OHItem>> itemCallback){
+            OpenHabService service = getService();
+            if(service == null || itemCallback == null){
+                return;
+            }
+
+            service.listItems().enqueue(new Callback<List<OHItem>>() {
+                @Override
+                public void onResponse(Call<List<OHItem>> call, Response<List<OHItem>> response) {
+                    for(OHItem item : response.body()) item.setServer(server);
+                    itemCallback.onUpdate(new OHResponse.Builder<>(response.body()).build());
+                }
+
+                @Override
+                public void onFailure(Call<List<OHItem>> call, Throwable t) {
+                    itemCallback.onError();
+                }
+            });
+        }
+
+        /*public void registerItemsListener(OHCallback<List<OHItem>> itemCallback){
             if(itemCallback == null){
                 return;
             }
@@ -217,7 +237,7 @@ public class Connector {
             itemsCallbacks.remove(itemCallback);
 
             closeIfFinnished();
-        }
+        }*/
 
         /**
          * Get url from server.

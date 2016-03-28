@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 public class OHServer {
 
+    private long id;
     private String name;
     private String username;
     private String password;
@@ -14,13 +15,22 @@ public class OHServer {
 
     public OHServer() {}
 
-    public OHServer(String name, String username, String password, String localurl, String remoteurl, int majorversion) {
+    public OHServer(long id, String name, String username, String password, String localurl, String remoteurl, int majorversion) {
+        this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
         this.localurl = localurl;
         this.remoteurl = remoteurl;
         this.majorversion = majorversion;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -75,8 +85,8 @@ public class OHServer {
         return majorversion;
     }
 
-    public static String getDisplayName(Context context, OHServer serverDB){
-        return serverDB.getName();
+    public String getDisplayName(){
+        return getName();
     }
 
     public boolean requiresAuth() {

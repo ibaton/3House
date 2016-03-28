@@ -81,7 +81,6 @@ public class IncDecActionFragment extends Fragment {
                     List<OHItem> items = filterItems(response.body());
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
-                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -90,7 +89,7 @@ public class IncDecActionFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(server).registerItemsListener(callback);
+            Openhab.instance(server).requestItem(callback);
         }
 
         Button btnSave = (Button) rootView.findViewById(R.id.btn_save);

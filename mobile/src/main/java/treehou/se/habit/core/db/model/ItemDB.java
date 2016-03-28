@@ -4,6 +4,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 
 public class ItemDB extends RealmObject {
 
@@ -18,10 +19,7 @@ public class ItemDB extends RealmObject {
 
     @PrimaryKey
     private long id;
-
-    @Ignore
     private ServerDB server;
-
     private String type;
     private String name;
     private String link;
@@ -76,11 +74,10 @@ public class ItemDB extends RealmObject {
         this.state = state;
     }
 
-    public static void save(ItemDB item) {
-        Realm realm = OHRealm.realm();
+    public static void save(Realm realm, ItemDB item) {
         realm.beginTransaction();
         if (item.id <= 0) {
-            item.id = uniqueId();
+            item.id = uniqueId(realm);
         }
         realm.copyToRealmOrUpdate(item);
         realm.commitTransaction();
@@ -101,8 +98,8 @@ public class ItemDB extends RealmObject {
         return itemDB.name;
     }
 
-    public static long uniqueId() {
-        Number num = OHRealm.realm().where(ItemDB.class).max("id");
+    public static long uniqueId(Realm realm) {
+        Number num = realm.where(ItemDB.class).max("id");
         if (num == null)
             return 1;
         else
@@ -151,5 +148,35 @@ public class ItemDB extends RealmObject {
 
         ItemDB item = (ItemDB) obj;
         return type.equals(item.getType()) && name.equals(item.getName());
+    }
+
+    public OHItem toGeneric(){
+        OHItem item = new OHItem();
+        item.setName(name);
+        item.setLink(link);
+        item.setState(state);
+        if(getStateDescription() != null) {
+            item.setStateDescription(getStateDescription().toGeneric());
+        }
+        if(server != null) {
+            item.setServer(server.toGeneric());
+        }
+        item.setType(type);
+        return item;
+    }
+
+    public static ItemDB createOrLoadFromGeneric(Realm realm, OHItem item){
+        ItemDB itemDB = realm.where(ItemDB.class).equalTo("name", item.getName()).findFirst();
+        if(itemDB == null){
+            itemDB = new ItemDB();
+            itemDB.setId(ItemDB.uniqueId(realm));
+            itemDB.setServer(ServerDB.load(realm, item.getServer().getId()));
+            itemDB.setType(item.getType());
+            itemDB.setName(item.getName());
+            itemDB.setLink(item.getLink());
+            itemDB.setState(item.getState());
+            itemDB = realm.copyToRealm(itemDB);
+        }
+        return itemDB;
     }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
@@ -25,7 +26,8 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
         Log.d(TAG, "Build: Button");
-        final ButtonCellDB buttonCell = null;//ButtonCellDB.getCell(cell);
+        Realm realm = Realm.getDefaultInstance();
+        final ButtonCellDB buttonCell = ButtonCellDB.getCell(realm, cell);
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_button, null);
@@ -44,11 +46,12 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
             public void onClick(View v) {
                 ItemDB item = buttonCell.getItem();
                 if(item != null) {
-                    OHServer server = null; // TODO new OHServer(item.getServer());
+                    OHServer server = item.getServer().toGeneric();
                     Openhab.instance(server).sendCommand(item.getName(), buttonCell.getCommand());
                 }
             }
         });
+        realm.close();
 
         return cellView;
     }

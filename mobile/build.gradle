@@ -27,7 +27,6 @@ android {
     }
 
     packagingOptions {
-        //exclude "lib/arm64-v8a/librealm-jni.so"
         exclude 'META-INF/services/javax.annotation.processing.Processor'
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
@@ -56,11 +55,11 @@ dependencies {
     compile project(':ohcom')
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.larswerkman:HoloColorPicker:1.5'
-    compile 'com.android.support:recyclerview-v7:24.0.0-alpha1'
-    compile 'com.android.support:appcompat-v7:24.0.0-alpha1'
-    compile 'com.android.support:cardview-v7:24.0.0-alpha1'
-    compile 'com.android.support:palette-v7:24.0.0-alpha1'
-    compile 'com.android.support:design:24.0.0-alpha1'
+    compile 'com.android.support:recyclerview-v7:23.2.1'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:cardview-v7:23.2.1'
+    compile 'com.android.support:palette-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
     compile 'com.wefika:flowlayout:0.4.0'
     compile 'com.github.matthewyork:ColoursLibrary:1.0.+@aar'
     compile 'commons-io:commons-io:2.4'

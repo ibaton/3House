@@ -101,8 +101,13 @@ public class OHItem {
 
     public String printableName(){
         if(server != null) {
-            return server + ": "  + name.replaceAll("_|-", " ");
+            return server.getDisplayName() + " \n"  + name.replaceAll("_|-", " ");
         }
         return name.replaceAll("_|-", " ");
+    }
+
+    @Override
+    public String toString() {
+        return printableName();
     }
 }

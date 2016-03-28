@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -22,7 +23,8 @@ public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
     private static final String TAG = "ButtonConfigCellBuilder";
 
     public View build(final Context context, ControllerDB controller, CellDB cell){
-        final ButtonCellDB buttonCell = null;//ButtonCellDB.getCell(cell);
+        Realm realm = Realm.getDefaultInstance();
+        final ButtonCellDB buttonCell = ButtonCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -39,6 +41,7 @@ public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
         if(icon != null) {
             imgIcon.setImageDrawable(icon);
         }
+        realm.close();
 
         return cellView;
     }

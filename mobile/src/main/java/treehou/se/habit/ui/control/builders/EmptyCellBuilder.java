@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -32,11 +33,13 @@ public class EmptyCellBuilder implements CellFactory.CellBuilder {
 
     @Override
     public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
-        final ButtonCellDB buttonCell = null;//ButtonCellDB.getCell(cell);
+        Realm realm = Realm.getDefaultInstance();
+        final ButtonCellDB buttonCell = ButtonCellDB.getCell(realm, cell);
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_empty);
         int[] pallete = ControllerUtil.generateColor(controller, cell);
         ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
+        realm.close();
 
         return cellView;
     }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
@@ -71,7 +72,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
-        final SliderCellDB numberCell = null;//SliderCellDB.getCell(cell);
+        Realm realm = Realm.getDefaultInstance();
+        final SliderCellDB numberCell = SliderCellDB.getCell(realm, cell);
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
@@ -90,6 +92,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         //TODO give intent unique id
         PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
+        realm.close();
 
         return cellView;
     }

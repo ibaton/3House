@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.mattyork.colours.Colour;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.CellRowDB;
@@ -36,6 +37,8 @@ public class ControlFragment extends Fragment {
     private ActionBar actionBar;
     private AppCompatActivity activity;
 
+    private Realm realm;
+
     public static ControlFragment newInstance(long id) {
         ControlFragment fragment = new ControlFragment();
         Bundle args = new Bundle();
@@ -52,6 +55,8 @@ public class ControlFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         cellFactory = new CellFactory<>();
         cellFactory.setDefaultBuilder(new EmptyCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonCellBuilder());
@@ -60,8 +65,8 @@ public class ControlFragment extends Fragment {
         cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
 
         if (getArguments() != null) {
-            int id = getArguments().getInt(ARG_ID);
-            controller = null;//ControllerDB.load(id);
+            long id = getArguments().getLong(ARG_ID);
+            controller = ControllerDB.load(realm, id);
         }
     }
 
@@ -115,6 +120,13 @@ public class ControlFragment extends Fragment {
         }
 
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     public void redrawController(){

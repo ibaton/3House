@@ -44,7 +44,7 @@ public class CellVoiceConfigFragment extends Fragment {
 
     private Cell cell;
 
-    private ArrayAdapter<OHItem> mItemAdapter ;
+    private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
 
     private Realm realm;
@@ -111,7 +111,6 @@ public class CellVoiceConfigFragment extends Fragment {
                     List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
-                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -119,7 +118,7 @@ public class CellVoiceConfigFragment extends Fragment {
                     Log.d("Get Items", "Failure");
                 }
             };
-            Openhab.instance(server).registerItemsListener(callback);
+            Openhab.instance(server).requestItem(callback);
         }
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -191,10 +190,12 @@ public class CellVoiceConfigFragment extends Fragment {
                 resultCode == Activity.RESULT_OK &&
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
+            realm.beginTransaction();
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
             voiceCell.setIcon(iconName.equals("") ? null : iconName);
             voiceCell.save();
             updateIconImage();
+            realm.commitTransaction();
         }
     }
 }

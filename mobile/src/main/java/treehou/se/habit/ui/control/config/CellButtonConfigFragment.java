@@ -27,6 +27,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
+import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -50,6 +51,7 @@ public class CellButtonConfigFragment extends Fragment {
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
+    private OHItem item;
 
     private Realm realm;
 
@@ -75,11 +77,17 @@ public class CellButtonConfigFragment extends Fragment {
             long id = getArguments().getLong(ARG_CELL_ID);
             cell = CellDB.load(realm, id);
             buttonCell = ButtonCellDB.getCell(realm, cell);
+
             if (buttonCell == null){
                 buttonCell = new ButtonCellDB();
                 buttonCell.setCell(cell);
                 buttonCell.setCommand(Constants.COMMAND_ON);
                 ButtonCellDB.save(realm, buttonCell);
+            }
+
+            ItemDB itemDB = buttonCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
             }
         }
     }
@@ -98,12 +106,11 @@ public class CellButtonConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                realm.beginTransaction();
                 OHItem item = mItems.get(position);
                 if(item != null) {
-                    // TODO item.save();
-
-                    //buttonCell.setItem(item.getDB());
-                    ButtonCellDB.save(realm, buttonCell);
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    buttonCell.setItem(itemDB);
                     switch (item.getType()) {
                         case OHItem.TYPE_STRING:
                             txtCommand.setVisibility(View.VISIBLE);
@@ -125,6 +132,7 @@ public class CellButtonConfigFragment extends Fragment {
                             break;
                     }
                 }
+                realm.commitTransaction();
             }
 
             @Override
@@ -139,6 +147,12 @@ public class CellButtonConfigFragment extends Fragment {
         });
         List<ServerDB> servers = realm.allObjects(ServerDB.class);
         mItems.clear();
+
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
+        }
 
         if(buttonCell.getItem() != null) {
             //mItems.add(new OHItem(buttonCell.getItem()));
@@ -155,7 +169,6 @@ public class CellButtonConfigFragment extends Fragment {
                     List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
-                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -164,7 +177,7 @@ public class CellButtonConfigFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(server).registerItemsListener(callback);
+            Openhab.instance(server).requestItem(callback);
         }
 
         tglOnOff.setChecked(

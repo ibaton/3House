@@ -150,7 +150,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
         extras.putLong(ARG_ID, controller.getId());
         intent.putExtras(extras);
-
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
         startActivity(intent);
@@ -180,7 +179,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     public void onDestroy() {
         super.onDestroy();
 
-        realm.close();;
+        realm.close();
     }
 
     public void redrawController(){

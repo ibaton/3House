@@ -10,6 +10,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 
 public interface OpenHabService {
@@ -34,13 +35,13 @@ public interface OpenHabService {
     @POST("/rest/inbox/{thingUID}/approve")
     Call<Void> approveInboxItems(@Path("thingUID") String thingUID);
 
-    /*@Headers("Accept: application/json")
+    @Headers("Accept: application/json")
     @GET("/rest/items/{id}")
-    Call<OHItemWrapper> getItem(@Path("id") String id);
+    Call<OHItem> getItem(@Path("id") String id);
 
     @Headers("Accept: application/json")
     @GET("/rest/items/")
-    Call<List<OHItemWrapper>> listItems();*/
+    Call<List<OHItem>> listItems();
 
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps")

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 
 public class ServerDB extends RealmObject {
@@ -131,6 +132,7 @@ public class ServerDB extends RealmObject {
      */
     public OHServer toGeneric() {
         return new OHServer(
+            getId(),
             getName(),
             getUsername(),
             getPassword(),

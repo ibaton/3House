@@ -165,7 +165,7 @@ public class ScanServersFragment extends Fragment {
         public void onBindViewHolder(final ServerHolder serverHolder, final int position) {
             OHServer server = items.get(position);
 
-            serverHolder.lblName.setText(OHServer.getDisplayName(context, server));
+            serverHolder.lblName.setText(server.getDisplayName());
             //serverHolder.lblHost.setText(server.getUrl());
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

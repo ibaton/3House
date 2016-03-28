@@ -116,7 +116,6 @@ public class CellColorConfigFragment extends Fragment {
                     if(position != -1){
                         sprItems.setSelection(position);
                     }
-                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -124,7 +123,7 @@ public class CellColorConfigFragment extends Fragment {
 
                 }
             };
-            Openhab.instance(server).registerItemsListener(callback);
+            Openhab.instance(server).requestItem(callback);
         }
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -74,7 +74,6 @@ public class CommandActionFragment extends Fragment {
                     List<OHItem> items = filterItems(response.body());
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
-                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -82,8 +81,7 @@ public class CommandActionFragment extends Fragment {
 
                 }
             };
-
-            Openhab.instance(server).registerItemsListener(callback);
+            Openhab.instance(server).requestItem(callback);
         }
 
         txtCommand = (TextView) rootView.findViewById(R.id.txt_command);

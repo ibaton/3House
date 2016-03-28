@@ -136,7 +136,6 @@ public class CellIncDecConfigFragment extends Fragment {
                     List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
-                    Openhab.instance(server).deregisterItemsListener(this);
                 }
 
                 @Override
@@ -145,7 +144,7 @@ public class CellIncDecConfigFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(server).registerItemsListener(callback);
+            Openhab.instance(server).requestItem(callback);
         }
 
         btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
