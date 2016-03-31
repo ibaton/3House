@@ -8,9 +8,11 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 
 public interface OpenHabService {
@@ -50,6 +52,10 @@ public interface OpenHabService {
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps/{id}")
     Call<OHSitemap> getSitemap(@Path("id") String id);
+
+    @Headers("Accept: application/json")
+    @GET
+    Call<OHLinkedPage> getPage(@Url String utl);
 
     @Headers({
             "Accept: application/text",

@@ -36,10 +36,14 @@ import io.realm.Realm;
 import io.realm.annotations.PrimaryKey;
 import retrofit.Callback;
 import retrofit.RetrofitError;
+import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.ConnectorUtil;
@@ -143,11 +147,10 @@ public class PageFragment extends Fragment {
     }
 
     private void requestPageUpdate(){
-        Communicator communicator = Communicator.instance(getActivity());
-        communicator.requestPage(server.toGeneric(), page, new Callback<OHLinkedPage>() {
+        Openhab.instance(server.toGeneric()).requestPage(page, new OHCallback<OHLinkedPage>() {
             @Override
-            public void success(final OHLinkedPage linkedPage, final retrofit.client.Response response) {
-                //TODO update instead of reset.
+            public void onUpdate(OHResponse<OHLinkedPage> response) {
+                final OHLinkedPage linkedPage = response.body();
                 Log.d(TAG, "Received update " + linkedPage.getWidgets().size() + " widgets from  " + page.getLink());
                 ThreadPool.instance().submit(new Runnable() {
                     @Override
@@ -158,9 +161,7 @@ public class PageFragment extends Fragment {
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, "error " + error.getCause() + " " + error.getMessage());
-
+            public void onError() {
                 if(getActivity() != null) {
 
                     // TODO Check type of error.

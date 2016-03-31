@@ -28,7 +28,6 @@ import io.realm.Realm;
 import retrofit.RetrofitError;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
-import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
@@ -55,30 +54,6 @@ public class Communicator {
 
     private Communicator(Context context){
         this.context = context;
-    }
-
-    public static MyOpenHabService generateMyOpenHabService(OHServer server){
-        try {
-            return BasicAuthServiceGenerator.createService(MyOpenHabService.class, MY_OPENHAB_URL, server.getUsername(), server.getPassword());
-        }
-        catch (Exception e) {
-            Log.e(TAG, "Failed to create OpenhabService ", e);
-        }
-        return null;
-    }
-
-    public static OpenHabService generateOpenHabService(OHServer server, boolean local){
-        return generateOpenHabService(server, local ? server.getLocalUrl() : server.getRemoteUrl());
-    }
-
-    public static OpenHabService generateOpenHabService(OHServer server, String url){
-        try {
-            return BasicAuthServiceGenerator.createService(OpenHabService.class, url, server.getUsername(), server.getPassword());
-        }
-        catch (Exception e) {
-            Log.e(TAG, "Failed to create OpenhabService ", e);
-        }
-        return null;
     }
 
     public static NetworkInfo getNetworkInfo(Context context){
@@ -214,65 +189,6 @@ public class Communicator {
         loadImage(server, imageUrl, imageView, true);
     }
 
-    public void requestSitemaps(String tag, final OHServer server, final SitemapsRequestListener listener){
-
-        Uri url = Uri.parse("http://www.dummy.com:8080");
-
-        boolean localRequest = server.haveLocal() && isConnectedWifi(context);
-        boolean remoteRequest = server.haveRemote();
-
-        int requests = 0;
-        if(localRequest) requests++;
-        if(remoteRequest) requests++;
-
-        MultiSitemapRequest callback = new MultiSitemapRequest(requests, listener, server);
-
-        if(localRequest) {
-            final Uri localRequestUrl = ConnectorUtil.changeHostUrl(url, Uri.parse(server.getLocalUrl()));
-            OpenHabService service = generateOpenHabService(server, localRequestUrl.toString());
-            service.listSitemaps(callback);
-            Log.d(TAG, "requestSitemaps - Fire local request " + localRequestUrl);
-        }
-
-        // Create remote request. Fallback to remote if have any
-        if(remoteRequest){
-            final Uri remoteRequestUrl = ConnectorUtil.changeHostUrl(url, Uri.parse(server.getRemoteUrl()));
-            OpenHabService service = generateOpenHabService(server, remoteRequestUrl.toString());
-            service.listSitemaps(callback);
-            Log.d(TAG, "requestSitemaps - Fire remote request " + remoteRequestUrl);
-        }
-
-        if(requests <= 0){
-            // TODO Throw callback
-            Log.e(TAG, "requestSitemaps - Didn't do any requests");
-            callback.failure(null);
-        }
-    }
-
-    /**
-     * Request page for from server
-     *
-     * @param server the credentials of server.
-     * @param page the page to fetch.
-     * @param responseListener response listener.
-     */
-    public void requestPage(OHServer server, OHLinkedPage page, final retrofit.Callback<OHLinkedPage> responseListener) {
-        OpenHabService service = generateOpenHabService(server, page.getLink());
-        service.getPage(new retrofit.Callback<OHLinkedPage>() {
-            @Override
-            public void success(OHLinkedPage linkedPage, retrofit.client.Response response) {
-                Log.d(TAG, "Received page " + response.getUrl());
-                responseListener.success(linkedPage, response);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, "Received page error " + error.getUrl(), error);
-                responseListener.failure(error);
-            }
-        });
-    }
-
     public class MultiSitemapRequest implements retrofit.Callback<List<OHSitemap>> {
 
         private int runningRequests;
@@ -337,146 +253,9 @@ public class Communicator {
         return url;
     }
 
-    /*public void requestItems(final OHServer server, final ItemsRequestListener listener){
-
-        final retrofit.OHCallback<List<ItemDB>> callback = new retrofit.OHCallback<List<ItemDB>>() {
-            @Override
-            public void success(List<ItemDB> items, retrofit.client.OHResponse response) {
-                for(ItemDB item : items){
-                    item.setServer(server);
-                }
-                listener.onSuccess(items);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                listener.onFailure(error.getMessage());
-            }
-        };
-
-        // Make remote request if not connected to wifi.
-        if(!isConnectedWifi(context) || !server.haveLocal()) {
-            if (server.haveRemote()){
-                OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                service.getItems(callback);
-            }
-            return;
-        }
-
-        OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        service.getItems(new retrofit.OHCallback<List<ItemDB>>() {
-            @Override
-            public void success(List<ItemDB> items, retrofit.client.OHResponse response) {
-                callback.success(items, response);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (server.haveRemote()) {
-                    OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                    service.getItems(callback);
-                } else {
-                    callback.failure(error);
-                    Log.e(TAG, "Request items failed " + error.getUrl(), error);
-                }
-            }
-        });
-    }
-
-    public void requestItem(final OHServer server, final String item, final ItemRequestListener listener){
-
-        final retrofit.OHCallback<ItemDB> callback = new retrofit.OHCallback<ItemDB>() {
-            @Override
-            public void success(ItemDB item, retrofit.client.OHResponse response) {
-                listener.onSuccess(item);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                listener.onFailure(error.getMessage());
-            }
-        };
-
-        // Make remote request if not connected to wifi.
-        if(!isConnectedWifi(context) || !server.haveLocal()) {
-            if (server.haveRemote()){
-                OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                service.getItem(item, callback);
-            }
-            return;
-        }
-
-        OpenHabService service = generateOpenHabService(server, server.getLocalUrl());
-        Openhab.instance(OHServer.toGeneric(server)).re;
-        service.getItem(item, new retrofit.OHCallback<ItemDB>() {
-            @Override
-            public void success(ItemDB itemHolder, retrofit.client.OHResponse response) {
-                callback.success(itemHolder, response);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (server.haveRemote()) {
-                    OpenHabService service = generateOpenHabService(server, server.getRemoteUrl());
-                    service.getItem(item, callback);
-                } else {
-                    callback.failure(error);
-                }
-            }
-        });
-    }*/
-
-    public void requestSitemap(final OHSitemap sitemap, final SitemapRequestListener listener){
-
-        final OHServer server = sitemap.getServer();
-
-        Uri uri = Uri.parse(sitemap.getLink())
-                .buildUpon()
-                .path(null)
-                .build();
-
-        OpenHabService service = generateOpenHabService(server, uri.toString());
-        service.getSitemap(sitemap.getName(), new retrofit.Callback<OHSitemap>() {
-            @Override
-            public void success(OHSitemap sitemap, retrofit.client.Response response) {
-                sitemap.setServer(server);
-                listener.onSuccess(sitemap);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                listener.onFailure(error.getMessage());
-            }
-        });
-    }
-
-    public void registerMyOpenhabGCM(final OHServer server, String deviceId, String deviceModel, String regId, retrofit.Callback<String> callback){
-        MyOpenHabService service = generateMyOpenHabService(server);
-        service.registerGCM(deviceId, deviceModel, regId, callback);
-    }
-
-    public interface ItemRequestListener{
-        void onSuccess(OHItem item);
-        void onFailure(String message);
-    }
-
-    public interface ItemsRequestListener{
-        void onSuccess(List<OHItem> items);
-        void onFailure(String message);
-    }
-
-    public interface SitemapRequestListener{
-        void onSuccess(OHSitemap sitemap);
-        void onFailure(String message);
-    }
 
     public interface SitemapsRequestListener{
         void onSuccess(List<OHSitemap> sitemaps);
         void onFailure(String message);
-    }
-
-    public static class DummySitemapsRequestListener implements SitemapsRequestListener {
-        public void onSuccess(List<OHSitemap> sitemaps){}
-        public void onFailure(String message){}
     }
 }

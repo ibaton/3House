@@ -25,10 +25,13 @@ import io.realm.Realm;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -49,7 +52,7 @@ public class SitemapFragment extends Fragment {
     private ViewPager pgrSitemap;
     private ArrayList<OHLinkedPage> pages = new ArrayList<>();
 
-    private RequestPageCallback requestPageCallback = new RequestPageDummyListener();
+    private OHCallback<OHLinkedPage> requestPageCallback = new RequestPageDummyListener();
 
     public static SitemapFragment newInstance(ServerDB serverDB, OHSitemap sitemap){
         SitemapFragment fragment = new SitemapFragment();
@@ -107,33 +110,24 @@ public class SitemapFragment extends Fragment {
         pgrSitemap.setAdapter(sitemapAdapter);
         pgrSitemap.addOnPageChangeListener(pagerChangeListener);
 
-        requestPageCallback = new RequestPageCallback() {
+        requestPageCallback = new OHCallback<OHLinkedPage>() {
             @Override
-            public void success(OHLinkedPage linkedPage, Response response) {
+            public void onUpdate(OHResponse<OHLinkedPage> items) {
+                OHLinkedPage linkedPage = items.body();
                 Log.d(TAG, "Received page " + linkedPage);
                 pages.add(linkedPage);
                 sitemapAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onError() {
                 Log.d(TAG, "Received page failed");
             }
         };
 
         if(pages.size() == 0) {
             Log.d(TAG, "Requesting page");
-            communicator.requestPage(sitemap.getServer(), sitemap.getHomepage(), new Callback<OHLinkedPage>() {
-                @Override
-                public void success(OHLinkedPage linkedPage, retrofit.client.Response response) {
-                    requestPageCallback.success(linkedPage, response);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    requestPageCallback.failure(error);
-                }
-            });
+            Openhab.instance(sitemap.getServer()).requestPage(sitemap.getHomepage(), requestPageCallback);
         }
         setHasOptionsMenu(true);
 
@@ -164,13 +158,13 @@ public class SitemapFragment extends Fragment {
         void failure(RetrofitError error);
     }
 
-    class RequestPageDummyListener implements RequestPageCallback {
+    class RequestPageDummyListener implements OHCallback<OHLinkedPage> {
 
         @Override
-        public void success(OHLinkedPage linkedPage, Response response) {}
+        public void onUpdate(OHResponse<OHLinkedPage> items) {}
 
         @Override
-        public void failure(RetrofitError error) {}
+        public void onError() {}
     }
 
     // Removes history when moving back in tabs

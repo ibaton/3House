@@ -16,8 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 
@@ -85,9 +88,10 @@ public class SitemapSelectorFragment extends Fragment {
     private void requestSitemap(final OHServer server){
 
         mSitemapAdapter.setServerState(server, SitemapItem.STATE_LOADING);
-        communicator.requestSitemaps(VOLLEY_TAG_SITEMAPS, server, new Communicator.SitemapsRequestListener() {
+        Openhab.instance(server).requestSitemaps(new OHCallback<List<OHSitemap>>() {
             @Override
-            public void onSuccess(List<OHSitemap> sitemaps) {
+            public void onUpdate(OHResponse<List<OHSitemap>> items) {
+                List<OHSitemap> sitemaps = items.body();
                 for (OHSitemap sitemap : sitemaps) {
                     sitemap.setServer(server);
                     if (!mSitemapAdapter.contains(sitemap)) {
@@ -102,13 +106,7 @@ public class SitemapSelectorFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(String message) {
-                if (message == null) {
-                    Log.w(TAG, "No server to connect to");
-                } else {
-                    //Log.w(TAG, "Failed to connect to server " + message + " " + server.getUrl());
-                }
-
+            public void onError() {
                 mSitemapAdapter.setServerState(server, SitemapItem.STATE_ERROR);
             }
         });

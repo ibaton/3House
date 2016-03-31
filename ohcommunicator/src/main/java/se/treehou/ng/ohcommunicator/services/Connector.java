@@ -48,6 +48,7 @@ import se.treehou.ng.ohcommunicator.connector.TrustModifier;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
@@ -238,6 +239,29 @@ public class Connector {
                 @Override
                 public void onFailure(Call<List<OHItem>> call, Throwable t) {
                     itemCallback.onError();
+                }
+            });
+        }
+
+        /**
+         * Request page for from server
+         *
+         * @param page the page to fetch.
+         * @param responseListener response listener.
+         */
+        public void requestPage(OHLinkedPage page, final OHCallback<OHLinkedPage> responseListener) {
+            OpenHabService service = getService();
+            service.getPage(page.getLink()).enqueue(new Callback<OHLinkedPage>() {
+                @Override
+                public void onResponse(Call<OHLinkedPage> call, Response<OHLinkedPage> response) {
+                    Log.d(TAG, "Received page " + response.message());
+                    responseListener.onUpdate(new OHResponse.Builder<>(response.body()).build());
+                }
+
+                @Override
+                public void onFailure(Call<OHLinkedPage> call, Throwable t) {
+                    Log.e(TAG, "Received page error ", t);
+                    responseListener.onError();
                 }
             });
         }

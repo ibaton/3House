@@ -6,7 +6,7 @@ buildscript {
         maven { url 'http://download.crashlytics.com/maven' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-beta7'
+        classpath 'com.android.tools.build:gradle:2.0.0-rc1'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.16.0'
         classpath "io.realm:realm-gradle-plugin:0.88.2"
         // NOTE: Do not place your application dependencies here; they belong
