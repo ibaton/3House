@@ -25,6 +25,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.IncDecCell;
+import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.IncDecCellDB;
@@ -40,7 +41,7 @@ public class CellIncDecConfigFragment extends Fragment {
 
     private Cell cell;
 
-    private IncDecCell incDecCell;
+    private IncDecCellDB incDecCell;
     private Spinner sprItems;
     private EditText txtMax;
     private EditText txtMin;
@@ -49,6 +50,8 @@ public class CellIncDecConfigFragment extends Fragment {
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
+
+    private OHItem item;
 
     private Realm realm;
 
@@ -73,16 +76,21 @@ public class CellIncDecConfigFragment extends Fragment {
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
             cell = new Cell(CellDB.load(realm, id));
-            IncDecCellDB incDecCellDb = IncDecCellDB.getCell(realm, cell.getDB());
-            if (incDecCellDb == null) {
+            incDecCell = IncDecCellDB.getCell(realm, cell.getDB());
+
+            if (incDecCell == null) {
                 realm.beginTransaction();
-                incDecCellDb = new IncDecCellDB();
-                incDecCellDb.setId(IncDecCellDB.getUniqueId(realm));
-                incDecCellDb = realm.copyToRealm(incDecCellDb);
-                incDecCellDb.setCell(cell.getDB());
+                incDecCell = new IncDecCellDB();
+                incDecCell.setId(IncDecCellDB.getUniqueId(realm));
+                incDecCell = realm.copyToRealm(incDecCell);
+                incDecCell.setCell(cell.getDB());
                 realm.commitTransaction();
             }
-            incDecCell = new IncDecCell(incDecCellDb);
+
+            ItemDB itemDB = incDecCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
+            }
         }
     }
 
@@ -105,12 +113,13 @@ public class CellIncDecConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                realm.beginTransaction();
                 OHItem item = mItems.get(position);
                 if(item != null) {
-                    realm.beginTransaction();
-                    incDecCell.setItem(item);
-                    realm.commitTransaction();
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    incDecCell.setItem(itemDB);
                 }
+                realm.commitTransaction();
             }
 
             @Override
@@ -125,8 +134,15 @@ public class CellIncDecConfigFragment extends Fragment {
         });
         List<ServerDB> servers = realm.allObjects(ServerDB.class);
         mItems.clear();
+
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
+        }
+
         if(incDecCell.getItem() != null) {
-            mItems.add(incDecCell.getItem());
+            //mItems.add(incDecCell.getItem());
         }
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();

@@ -12,7 +12,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
-import treehou.se.habit.ui.ViewHelper;
+import treehou.se.habit.ui.util.ViewHelper;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
 

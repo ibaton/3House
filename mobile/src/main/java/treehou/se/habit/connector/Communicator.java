@@ -126,10 +126,10 @@ public class Communicator {
 
             @Override
             public void onError() {
-
+                Log.d(TAG, "incDec onError");
             }
         };
-        Openhab.instance(server).registerItemListener(item.getName(), callback);
+        Openhab.instance(server).requestItem(item.getName(), callback);
     }
 
     public Picasso buildPicasso(Context context, final OHServer server){

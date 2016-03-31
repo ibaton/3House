@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.ServerDB;
 
 /**
  * Implementation of App Widget functionality.
@@ -50,9 +52,10 @@ public class VoiceControlWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         boolean showTitle = VoiceControlWidgetConfigureActivity.loadControllShowTitlePref(context, appWidgetId);
-        OHServer server = null; // TODO OHServer.load(VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
-
+        Realm realm = Realm.getDefaultInstance();
+        ServerDB server = ServerDB.load(realm, VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
         if(server == null){
+            realm.close();
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.error_widget);
             appWidgetManager.updateAppWidget(appWidgetId, views);
             return;
@@ -72,9 +75,10 @@ public class VoiceControlWidget extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+        realm.close();
     }
 
-    public static Intent createVoiceCommand(Context context, OHServer server){
+    public static Intent createVoiceCommand(Context context, ServerDB server){
 
         Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

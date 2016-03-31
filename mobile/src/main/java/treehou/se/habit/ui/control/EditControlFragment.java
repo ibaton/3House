@@ -221,7 +221,9 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        realm.beginTransaction();
                                         cell.removeFromRealm();
+                                        realm.commitTransaction();
                                         redrawController();
                                     }
                                 })

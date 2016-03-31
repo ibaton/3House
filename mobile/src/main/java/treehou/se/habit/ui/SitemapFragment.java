@@ -236,7 +236,7 @@ public class SitemapFragment extends Fragment {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_voice_command:
-                openVoiceCommand(sitemap.getServer());
+                openVoiceCommand(server);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -247,7 +247,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param server server to send command to.
      */
-    public void openVoiceCommand(OHServer server){
+    public void openVoiceCommand(ServerDB server){
         Intent callbackIntent = VoiceService.createVoiceCommand(getActivity(), server);
 
         PendingIntent openhabPendingIntent = PendingIntent.getService(getActivity(), 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);

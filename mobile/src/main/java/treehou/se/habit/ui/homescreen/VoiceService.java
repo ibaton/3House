@@ -8,8 +8,10 @@ import android.util.Log;
 
 import java.util.List;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import treehou.se.habit.core.db.model.ServerDB;
 
 public class VoiceService extends IntentService {
 
@@ -22,10 +24,10 @@ public class VoiceService extends IntentService {
 
     private static final int NULL_SERVER = -1;
 
-    public static Intent createVoiceCommand(Context context, OHServer server) {
+    public static Intent createVoiceCommand(Context context, ServerDB server) {
         Intent intent = new Intent(context, VoiceService.class);
         intent.setAction(ACTION_COMMAND);
-        intent.putExtra(EXTRA_SERVER, 0 /*server.getId()*/);
+        intent.putExtra(EXTRA_SERVER, server.getId());
         return intent;
     }
 
@@ -37,19 +39,22 @@ public class VoiceService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Log.w(TAG, "onHandleIntent.");
 
-        int serverId = intent.getIntExtra(EXTRA_SERVER, NULL_SERVER);
+        long serverId = intent.getLongExtra(EXTRA_SERVER, NULL_SERVER);
         if(NULL_SERVER == serverId){
             Log.w(TAG, "No server specified.");
             return;
         }
-        OHServer server = null; // TODO OHServer.load(serverId);
+
+        Realm realm = Realm.getDefaultInstance();
+        ServerDB server = ServerDB.load(realm, serverId);
 
         List<String> results = intent.getExtras().getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
-        if (results != null && !results.isEmpty()) {
+        if (results != null && !results.isEmpty() && server != null) {
             Log.d(TAG, "Received " + results.size() + " voice results.");
 
             String command = results.get(0);
-            Openhab.instance(server).sendCommand(VOICE_ITEM, command);
+            Openhab.instance(server.toGeneric()).sendCommand(VOICE_ITEM, command);
         }
+        realm.close();
     }
 }

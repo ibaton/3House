@@ -126,6 +126,8 @@ public class SitemapListFragment extends Fragment {
 
         RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
         Log.d(TAG, "Requesting sitemaps for " + servers.size() + " servers");
+
+        mSitemapAdapter.clear();
         for(final ServerDB server : servers){
             requestSitemap(server);
         }
@@ -384,6 +386,14 @@ public class SitemapListFragment extends Fragment {
             item.addItem(sitemap);
 
             notifyDataSetChanged();
+        }
+
+        /**
+         * Remove all sitemap entries from adapter.
+         */
+        public void clear(){
+            items.clear();
+            notifyItemRangeRemoved(0, items.size()-1);
         }
 
         public void remove(OHSitemap sitemap) {

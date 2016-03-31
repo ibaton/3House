@@ -25,6 +25,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.VoiceCell;
+import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.VoiceCellDB;
@@ -38,11 +39,13 @@ public class CellVoiceConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private VoiceCell voiceCell;
+    private VoiceCellDB voiceCell;
     private Spinner sprItems;
     private ImageButton btnSetIcon;
 
     private Cell cell;
+
+    private OHItem item;
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
@@ -72,16 +75,20 @@ public class CellVoiceConfigFragment extends Fragment {
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
             cell = new Cell(CellDB.load(realm, id));
-            VoiceCellDB voiceCellDb = VoiceCellDB.getCell(realm, cell.getDB());
-            if(voiceCellDb == null){
+            voiceCell = VoiceCellDB.getCell(realm, cell.getDB());
+            if(voiceCell == null){
                 realm.beginTransaction();
-                voiceCellDb = new VoiceCellDB();
-                voiceCellDb.setId(VoiceCellDB.getUniqueId(realm));
-                voiceCellDb = realm.copyToRealm(voiceCellDb);
-                voiceCellDb.setCell(cell.getDB());
+                voiceCell = new VoiceCellDB();
+                voiceCell.setId(VoiceCellDB.getUniqueId(realm));
+                voiceCell = realm.copyToRealm(voiceCell);
+                voiceCell.setCell(cell.getDB());
                 realm.commitTransaction();
             }
-            voiceCell = new VoiceCell(voiceCellDb);
+
+            ItemDB itemDB = voiceCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
+            }
         }
     }
 
@@ -97,10 +104,6 @@ public class CellVoiceConfigFragment extends Fragment {
 
         List<ServerDB> servers = realm.allObjects(ServerDB.class);
         mItems.clear();
-
-        if(voiceCell.getItem() != null) {
-            mItems.add(voiceCell.getItem());
-        }
 
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
@@ -127,7 +130,8 @@ public class CellVoiceConfigFragment extends Fragment {
                 OHItem item = mItems.get(position);
                 if(item != null) {
                     realm.beginTransaction();
-                    voiceCell.setItem(item);
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    voiceCell.setItem(itemDB);
                     realm.commitTransaction();
                 }
             }
@@ -136,6 +140,12 @@ public class CellVoiceConfigFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
+        }
 
         btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
         updateIconImage();
@@ -165,15 +175,6 @@ public class CellVoiceConfigFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        Log.d(TAG, "onPause");
-
-        voiceCell.save();
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
 
@@ -193,7 +194,6 @@ public class CellVoiceConfigFragment extends Fragment {
             realm.beginTransaction();
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
             voiceCell.setIcon(iconName.equals("") ? null : iconName);
-            voiceCell.save();
             updateIconImage();
             realm.commitTransaction();
         }

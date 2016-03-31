@@ -25,6 +25,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.controller.SliderCell;
+import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
@@ -40,7 +41,7 @@ public class CellSliderConfigFragment extends Fragment {
 
     private Cell cell;
 
-    private SliderCell numberCell;
+    private SliderCellDB numberCell;
     private Spinner sprItems;
     private TextView txtMax;
     private ImageButton btnSetIcon;
@@ -48,6 +49,8 @@ public class CellSliderConfigFragment extends Fragment {
 
     private ArrayAdapter<OHItem> mItemAdapter ;
     private ArrayList<OHItem> mItems = new ArrayList<>();
+
+    private OHItem item;
 
     private Realm realm;
 
@@ -72,16 +75,21 @@ public class CellSliderConfigFragment extends Fragment {
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
             cell = new Cell(CellDB.load(realm, id));
-            SliderCellDB numberCellDb = SliderCellDB.getCell(realm, cell.getDB());
+            numberCell = SliderCellDB.getCell(realm, cell.getDB());
+
             if(numberCell == null){
                 realm.beginTransaction();
-                numberCellDb = new SliderCellDB();
-                numberCellDb.setId(SliderCellDB.getUniqueId(realm));
-                numberCellDb = realm.copyToRealm(numberCellDb);
-                numberCellDb.setCell(cell.getDB());
+                numberCell = new SliderCellDB();
+                numberCell.setId(SliderCellDB.getUniqueId(realm));
+                numberCell = realm.copyToRealm(numberCell);
+                numberCell.setCell(cell.getDB());
                 realm.commitTransaction();
             }
-            numberCell = new SliderCell(numberCellDb);
+
+            ItemDB itemDB = numberCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
+            }
         }
     }
 
@@ -100,14 +108,15 @@ public class CellSliderConfigFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 OHItem item = mItems.get(position);
                 if (item != null) {
+                    realm.beginTransaction();
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
                     if (item.getType().equals(OHItem.TYPE_NUMBER) || item.getType().equals(OHItem.TYPE_GROUP)) {
                         louRange.setVisibility(View.VISIBLE);
                     } else {
                         louRange.setVisibility(View.GONE);
                     }
 
-                    realm.beginTransaction();
-                    numberCell.setItem(item);
+                    numberCell.setItem(itemDB);
                     realm.commitTransaction();
                 }
             }
@@ -125,9 +134,13 @@ public class CellSliderConfigFragment extends Fragment {
         });
         List<ServerDB> servers = realm.allObjects(ServerDB.class);
         mItems.clear();
-        if(numberCell.getItem() != null) {
-            mItems.add(numberCell.getItem());
+
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
         }
+
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
             OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {

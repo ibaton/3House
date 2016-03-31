@@ -175,6 +175,25 @@ public class Connector {
             return null;
         }
 
+        public void requestItem(String itemName, final OHCallback<OHItem> itemCallback){
+            OpenHabService service = getService();
+            if(service == null || itemCallback == null) return;
+
+            service.getItem(itemName).enqueue(
+            new Callback<OHItem>() {
+                  @Override
+                  public void onResponse(Call<OHItem> call, Response<OHItem> response) {
+                      itemCallback.onUpdate(new OHResponse.Builder<>(response.body()).build());
+                  }
+
+                  @Override
+                  public void onFailure(Call<OHItem> call, Throwable t) {
+                        itemCallback.onError();
+                  }
+              });
+
+        }
+
         public void registerItemListener(String itemName, OHCallback<OHItem> itemCallback){
             if(itemCallback == null){
                 return;

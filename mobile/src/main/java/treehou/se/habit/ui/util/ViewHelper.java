@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.util;
 
 import android.graphics.PorterDuff;
 import android.widget.RemoteViews;

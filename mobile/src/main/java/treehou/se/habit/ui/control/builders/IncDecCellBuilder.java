@@ -13,15 +13,13 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.connector.models.OHItem;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.core.db.model.controller.IncDecCellDB;
-import treehou.se.habit.ui.ViewHelper;
+import treehou.se.habit.ui.util.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.CommandService;

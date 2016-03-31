@@ -15,12 +15,10 @@ import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
-import treehou.se.habit.ui.ViewHelper;
+import treehou.se.habit.ui.util.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -32,7 +30,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
 
-        final SliderCell numberCell = SliderCell.getCell(new Cell(cell));
+        Realm realm = Realm.getDefaultInstance();
+        final SliderCellDB sliderCell = SliderCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -42,10 +41,10 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon_button);
-        imgIcon.setImageDrawable(Util.getIconDrawable(context, numberCell.getIcon()));
+        imgIcon.setImageDrawable(Util.getIconDrawable(context, sliderCell.getIcon()));
 
         SeekBar sbrNumber = (SeekBar) cellView.findViewById(R.id.sbrNumber);
-        sbrNumber.setMax(numberCell.getMax());
+        sbrNumber.setMax(sliderCell.getMax());
         sbrNumber.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -58,14 +57,15 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(numberCell.getItem() == null){
+                if(sliderCell.getItem() == null){
                     return;
                 }
 
-                OHServer server = numberCell.getItem().getServer();
-                Openhab.instance(server).sendCommand(numberCell.getItem().getName(), ""+seekBar.getProgress());
+                OHServer server = sliderCell.getItem().getServer().toGeneric();
+                Openhab.instance(server).sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });
+        realm.close();
 
         return cellView;
     }

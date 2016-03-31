@@ -48,9 +48,7 @@ public class ServersFragment extends Fragment {
         return fragment;
     }
 
-    public ServersFragment() {
-        // Required empty public constructor
-    }
+    public ServersFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,6 @@ public class ServersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         this.container = container;
 
@@ -80,17 +77,12 @@ public class ServersFragment extends Fragment {
             }
         });
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.servers);
-        }
+        setupActionbar();
 
         lstServer = (RecyclerView) rootView.findViewById(R.id.list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstServer.setLayoutManager(gridLayoutManager);
         lstServer.setItemAnimator(new DefaultItemAnimator());
-
-        setHasOptionsMenu(true);
 
         return rootView;
     }
@@ -107,6 +99,18 @@ public class ServersFragment extends Fragment {
         super.onDestroy();
         realm.close();
     }
+
+    /**
+     * Hookup actionbar
+     */
+    private void setupActionbar(){
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.servers);
+        }
+        setHasOptionsMenu(true);
+    }
+
 
     private void setup(){
         RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
