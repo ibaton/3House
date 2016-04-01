@@ -22,6 +22,7 @@ import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedOutput;
+import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 
 public class BasicAuthServiceGenerator {

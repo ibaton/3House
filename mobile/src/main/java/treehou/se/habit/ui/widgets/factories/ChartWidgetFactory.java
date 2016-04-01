@@ -7,13 +7,12 @@ import android.widget.ImageView;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.connector.ConnectorUtil;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class ChartWidgetFactory implements IWidgetFactory {

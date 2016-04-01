@@ -3,9 +3,6 @@ package treehou.se.habit.connector;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,17 +16,14 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
-import retrofit.RetrofitError;
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
@@ -54,16 +48,6 @@ public class Communicator {
 
     private Communicator(Context context){
         this.context = context;
-    }
-
-    public static NetworkInfo getNetworkInfo(Context context){
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo();
-    }
-
-    public static boolean isConnectedWifi(Context context){
-        NetworkInfo info = getNetworkInfo(context);
-        return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
     }
 
     private int scrubNumberValue(int number, final int min, final int max){
@@ -187,75 +171,5 @@ public class Communicator {
      */
     public void loadImage(final OHServer server, final URL imageUrl, final ImageView imageView){
         loadImage(server, imageUrl, imageView, true);
-    }
-
-    public class MultiSitemapRequest implements retrofit.Callback<List<OHSitemap>> {
-
-        private int runningRequests;
-        private SitemapsRequestListener listener;
-        private OHServer server;
-
-        public MultiSitemapRequest(int requests, final SitemapsRequestListener listener, OHServer server) {
-            this.runningRequests = requests;
-            this.listener = listener;
-            this.server = server;
-        }
-
-        @Override
-        public void success(List<OHSitemap> sitemaps, retrofit.client.Response response) {
-            if(sitemaps == null) {
-                sitemaps = new ArrayList<>();
-            }
-
-            for(OHSitemap sitemap : sitemaps) {
-                Log.d(TAG, "Server " + server + " Sitemap " + sitemap);
-                sitemap.setServer(server);
-            }
-            listener.onSuccess(sitemaps);
-        }
-
-        @Override
-        public void failure(RetrofitError error) {
-            runningRequests--;
-            if(error == null){
-                Log.w(TAG, "No server to connect to");
-            }else {
-                Log.w(TAG, "Failed to connect to server " + error.getMessage() + " " + getUrl(context, server) + " " + error.getBody());
-            }
-
-            if(runningRequests <= 0) {
-                if(error != null) {
-                    listener.onFailure(error.getMessage());
-                }else {
-                    listener.onFailure(null);
-                }
-            }
-        }
-    };
-
-    /**
-     * Get url from server.
-     * @param context calling context.
-     * @param server the server to connect to.
-     * @return
-     */
-    private static String getUrl(Context context, OHServer server){
-        // TODO determine if local or remote
-        String url = server.getLocalUrl();
-        NetworkInfo networkInfo = getNetworkInfo(context);
-        if(networkInfo == null || !networkInfo.isConnected()){
-            return null;
-        }
-        if(!isConnectedWifi(context)){
-            url = server.getRemoteUrl();
-        }
-
-        return url;
-    }
-
-
-    public interface SitemapsRequestListener{
-        void onSuccess(List<OHSitemap> sitemaps);
-        void onFailure(String message);
     }
 }
