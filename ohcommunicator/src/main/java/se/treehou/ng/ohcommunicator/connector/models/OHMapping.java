@@ -1,6 +1,6 @@
 package se.treehou.ng.ohcommunicator.connector.models;
 
-public class OHMapping /*extends RealmObject*/ {
+public class OHMapping {
 
     private String command;
     private String label;
@@ -22,5 +22,10 @@ public class OHMapping /*extends RealmObject*/ {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return getLabel();
     }
 }
