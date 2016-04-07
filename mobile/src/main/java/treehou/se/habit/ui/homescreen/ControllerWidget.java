@@ -6,6 +6,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.ControlHelper;
@@ -33,21 +34,22 @@ public class ControllerWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
+        Realm realm = Realm.getDefaultInstance();
+
         long controllId = ControllerWidgetConfigureActivity.loadControllIdPref(context, appWidgetId);
         boolean showTitle = ControllerWidgetConfigureActivity.loadControllShowTitlePref(context, appWidgetId);
 
-        ControllerDB controller = null;// ControllerDB.load(controllId);
+        ControllerDB controller = ControllerDB.load(realm, controllId);
         if(controller == null){
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.error_widget);
             appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -68,6 +70,8 @@ public class ControllerWidget extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+
+        realm.close();
     }
 }
 

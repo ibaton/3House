@@ -74,7 +74,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         if(icon != null) {
             cellView.setImageViewBitmap(R.id.img_icon_button, icon);
         }
-        Intent intent = CommandService.getActionIncDec(context, buttonCell.getMin(), buttonCell.getMax(), buttonCell.getValue(), buttonCell.getItem().toGeneric());
+        Intent intent = CommandService.getActionIncDec(context, buttonCell.getMin(), buttonCell.getMax(), buttonCell.getValue(), buttonCell.getItem().getId());
         PendingIntent pendingIntent = PendingIntent.getService(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
         realm.close();

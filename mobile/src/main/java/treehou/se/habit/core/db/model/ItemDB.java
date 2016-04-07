@@ -165,6 +165,10 @@ public class ItemDB extends RealmObject {
         return item;
     }
 
+    public static ItemDB load(Realm realm, long id) {
+        return realm.where(ItemDB.class).equalTo("id", id).findFirst();
+    }
+
     public static ItemDB createOrLoadFromGeneric(Realm realm, OHItem item){
         ItemDB itemDB = realm.where(ItemDB.class).equalTo("name", item.getName()).findFirst();
         if(itemDB == null){

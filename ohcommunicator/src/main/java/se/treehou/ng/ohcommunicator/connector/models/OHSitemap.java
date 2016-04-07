@@ -60,6 +60,14 @@ public class OHSitemap {
         return false;
     }
 
+    /**
+     * Get name used in lists etc.
+     * @return display name for sitemap.
+     */
+    public String getDisplayName() {
+        return name;
+    }
+
     @Override
     public boolean equals(Object o) {
         return hashCode() == o.hashCode();

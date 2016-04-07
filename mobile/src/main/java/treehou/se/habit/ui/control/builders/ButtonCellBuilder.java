@@ -1,6 +1,8 @@
 package treehou.se.habit.ui.control.builders;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,8 @@ import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.ui.control.CommandService;
+import treehou.se.habit.ui.util.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -61,8 +65,8 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
 
-        /*OHRealm.realm().where(ButtonCellDB.class).equalTo("id", cell.getId()).findFirst();
-        final ButtonCell buttonCell = new ButtonCell(ButtonCellDB.getCell(cell));
+        Realm realm = Realm.getDefaultInstance();
+        final ButtonCellDB buttonCell = ButtonCellDB.getCell(realm, cell);
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
@@ -70,12 +74,13 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
 
         cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, buttonCell.getIcon()));
-        Intent intent = CommandService.getActionCommand(context, buttonCell.getCommand(), new OHItemWrapper(buttonCell.getItem()));
+        Intent intent = CommandService.getActionCommand(context, buttonCell.getCommand(), buttonCell.getItem().getId());
 
         //TODO give intent unique id
         PendingIntent pendingIntent = PendingIntent.getService(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);*/
+        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
+        realm.close();
 
-        return null;//cellView;
+        return cellView;
     }
 }

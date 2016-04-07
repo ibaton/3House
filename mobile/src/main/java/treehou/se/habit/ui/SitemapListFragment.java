@@ -270,7 +270,7 @@ public class SitemapListFragment extends Fragment {
             if(SitemapItem.STATE_SUCCESS == type){
                 SitemapHolder holder = (SitemapHolder) sitemapHolder;
 
-                holder.lblName.setText(sitemap.getLabel());
+                holder.lblName.setText(sitemap.getDisplayName());
                 holder.lblServer.setText(server.getDisplayName());
 
                 sitemapHolder.itemView.setOnClickListener(new View.OnClickListener() {

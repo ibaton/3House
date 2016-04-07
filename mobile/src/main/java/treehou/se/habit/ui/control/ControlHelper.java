@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.CellRowDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
 import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
@@ -41,7 +42,7 @@ public class ControlHelper {
         cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
 
-        /*for (final CellRowDB row : controller.getCellRows()) {
+        for (final CellRowDB row : controller.getCellRows()) {
             Log.d(TAG, "Rows " + controller.getCellRows().size());
             RemoteViews rowView = new RemoteViews(context.getPackageName(), R.layout.homescreen_widget_row);
 
@@ -50,7 +51,7 @@ public class ControlHelper {
                 rowView.addView(R.id.lou_row, itemView);
             }
             rows.addView(R.id.lou_rows, rowView);
-        }*/
+        }
         return rows;
     }
 

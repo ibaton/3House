@@ -100,4 +100,9 @@ public class ControllerDB extends RealmObject {
         if (num != null) newId = num.longValue() + 1;
         return newId;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
