@@ -8,8 +8,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import se.treehou.ng.ohcommunicator.core.OHBinding;
-import se.treehou.ng.ohcommunicator.core.OHInboxItem;
+import retrofit2.http.Url;
+import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
+import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 
 public interface OpenHabService {
 
@@ -32,6 +36,26 @@ public interface OpenHabService {
     @Headers("Accept: application/json")
     @POST("/rest/inbox/{thingUID}/approve")
     Call<Void> approveInboxItems(@Path("thingUID") String thingUID);
+
+    @Headers("Accept: application/json")
+    @GET("/rest/items/{id}")
+    Call<OHItem> getItem(@Path("id") String id);
+
+    @Headers("Accept: application/json")
+    @GET("/rest/items/")
+    Call<List<OHItem>> listItems();
+
+    @Headers("Accept: application/json")
+    @GET("/rest/sitemaps")
+    Call<List<OHSitemap>> listSitemaps();
+
+    @Headers("Accept: application/json")
+    @GET("/rest/sitemaps/{id}")
+    Call<OHSitemap> getSitemap(@Path("id") String id);
+
+    @Headers("Accept: application/json")
+    @GET
+    Call<OHLinkedPage> getPage(@Url String utl);
 
     @Headers({
             "Accept: application/text",

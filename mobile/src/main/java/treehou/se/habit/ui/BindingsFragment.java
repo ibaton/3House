@@ -7,55 +7,64 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+
+import org.atmosphere.wasync.Socket;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.core.OHBinding;
-import se.treehou.ng.ohcommunicator.core.OHServer;
-import se.treehou.ng.ohcommunicator.services.callbacks.Callback1;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.GsonHelper;
 import treehou.se.habit.connector.models.Binding;
-import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.model.ServerDB;
 
 public class BindingsFragment extends Fragment {
+
+    private static final String TAG = BindingsFragment.class.getSimpleName();
 
     private static final String ARG_SERVER = "ARG_SERVER";
 
     private static final String STATE_BINDINGS = "STATE_BINDINGS";
 
     private BindingAdapter bindingAdapter;
-    private ServerDB serverDB;
-    private OHServer genericServer;
+    private ServerDB server;
     private ViewGroup container;
 
     private List<OHBinding> bindings = new ArrayList<>();
 
-    private Callback1<List<OHBinding>> bindingListener = new Callback1<List<OHBinding>>(){
+    private Realm realm;
+
+    private OHCallback<List<OHBinding>> bindingListener = new OHCallback<List<OHBinding>>(){
 
         @Override
-        public void onUpdate(List<OHBinding> newBindings) {
-            bindings = newBindings;
+        public void onUpdate(OHResponse<List<OHBinding>> response) {
+            Log.d(TAG, "onUpdate " + response.body());
+            bindings = response.body();
             bindingAdapter.setBindings(bindings);
         }
 
         @Override
-        public void onError() {}
+        public void onError() {
+            Log.d(TAG, "onError");
+        }
     };
 
-    public static BindingsFragment newInstance(ServerDB serverDB) {
+    public static BindingsFragment newInstance(ServerDB server) {
         BindingsFragment fragment = new BindingsFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_SERVER, serverDB.getId());
+        args.putLong(ARG_SERVER, server.getId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,17 +76,18 @@ public class BindingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        realm = Realm.getDefaultInstance();
+
         if(getArguments() != null){
             if(getArguments().containsKey(ARG_SERVER)){
-                serverDB = ServerDB.load(ServerDB.class, getArguments().getLong(ARG_SERVER));
-                genericServer = ServerDB.toGeneric(serverDB);
+                long serverId = getArguments().getLong(ARG_SERVER);
+                server = Realm.getDefaultInstance().where(ServerDB.class).equalTo("id", serverId).findFirst();
             }
         }
 
         if(savedInstanceState != null){
             if(savedInstanceState.containsKey(STATE_BINDINGS)){
-                bindings = GsonHelper.createGsonBuilder().fromJson(savedInstanceState.getString(STATE_BINDINGS), new TypeToken<List<Binding>>() {
-                }.getType());
+                bindings = GsonHelper.createGsonBuilder().fromJson(savedInstanceState.getString(STATE_BINDINGS), new TypeToken<List<Binding>>() {}.getType());
             }
         }
 
@@ -87,16 +97,9 @@ public class BindingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View rootView = inflater.inflate(R.layout.fragment_bindings_list, container, false);
-
         this.container = container;
-
-        if(serverDB == null){
-            Toast.makeText(getActivity(), getString(R.string.failed_to_load_server), Toast.LENGTH_LONG).show();
-            getActivity().getSupportFragmentManager().popBackStackImmediate();
-            return rootView;
-        }
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
@@ -120,15 +123,13 @@ public class BindingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        Openhab.instance(genericServer).registerBindingListener(bindingListener);
+        Openhab.instance(server.toGeneric()).requestBindings(bindingListener);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        Openhab.instance(genericServer).deregisterBindingListener(bindingListener);
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     @Override

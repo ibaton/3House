@@ -6,12 +6,10 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.google.gson.Gson;
 
-import java.util.List;
-
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.connector.GsonHelper;
-import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.service.wear.connector.messages.VoiceCommandMessage;
 
 public class ListenerService extends WearableListenerService {
@@ -35,18 +33,18 @@ public class ListenerService extends WearableListenerService {
         Gson gson = GsonHelper.createGsonBuilder();
         VoiceCommandMessage message = gson.fromJson(jMessage, VoiceCommandMessage.class);
 
-        ServerDB server = null;
+        OHServer server = null;
         if(message.haveServer()){
-            server = ServerDB.load(ServerDB.class, message.getServer());
+            // TODO server = OHServer.load(message.getServer());
         }else {
-            List<ServerDB> servers = ServerDB.getServers();
+            /* TODO List<OHServer> servers = OHServer.loadAll();
             if(servers.size() > 0) {
                 server = servers.get(0);
-            }
+            }*/
         }
 
         if(server != null) {
-            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(Constants.ITEM_VOICE_COMMAND, message.getMessage());
+            Openhab.instance(server).sendCommand(Constants.ITEM_VOICE_COMMAND, message.getMessage());
         }
     }
 

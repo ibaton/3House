@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.controller.SliderCell;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 
 public class SliderActivity extends AppCompatActivity {
     public static final String TAG = "SliderActivity";
@@ -61,6 +64,7 @@ public class SliderActivity extends AppCompatActivity {
     public static class SliderFragment extends Fragment {
 
         private SliderCellDB numberCell;
+        private Realm realm;
 
         public SliderFragment() {}
 
@@ -73,14 +77,21 @@ public class SliderActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            realm = Realm.getDefaultInstance();
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             try {
                 View rootView = inflater.inflate(R.layout.fragment_slider, null, false);
 
                 if (getArguments() != null) {
-                    Long id = getArguments().getLong(ARG_CELL);
-                    CellDB cell = CellDB.load(CellDB.class, id);
-                    numberCell = cell.sliderCell();
+                    long id = getArguments().getLong(ARG_CELL);
+                    CellDB cell = CellDB.load(realm, id);
+                    numberCell = SliderCellDB.getCell(realm, cell);
                 }
 
                 SeekBar sbrNumber = (SeekBar) rootView.findViewById(R.id.sbrNumber);
@@ -97,8 +108,8 @@ public class SliderActivity extends AppCompatActivity {
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         if (numberCell != null) {
-                            ServerDB server = numberCell.getItem().getServer();
-                            Openhab.instance(ServerDB.toGeneric(server)).sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
+                            OHServer server = numberCell.getItem().getServer().toGeneric();
+                            Openhab.instance(server).sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
                         }
                     }
                 });
@@ -106,6 +117,13 @@ public class SliderActivity extends AppCompatActivity {
             }catch (Exception e){
                 return inflater.inflate(R.layout.item_widget_null, null, false);
             }
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+
+            realm.close();
         }
     }
 }

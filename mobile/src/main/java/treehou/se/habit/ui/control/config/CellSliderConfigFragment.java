@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.controller.SliderCell;
+import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -33,7 +39,7 @@ public class CellSliderConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private CellDB cell;
+    private Cell cell;
 
     private SliderCellDB numberCell;
     private Spinner sprItems;
@@ -41,8 +47,12 @@ public class CellSliderConfigFragment extends Fragment {
     private ImageButton btnSetIcon;
     private View louRange;
 
-    private ArrayAdapter<ItemDB> mItemAdapter ;
-    private ArrayList<ItemDB> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter ;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
+
+    private OHItem item;
+
+    private Realm realm;
 
     public static CellSliderConfigFragment newInstance(CellDB cell) {
         CellSliderConfigFragment fragment = new CellSliderConfigFragment();
@@ -60,13 +70,25 @@ public class CellSliderConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(CellDB.class, id);
-            if((numberCell =cell.sliderCell())==null){
+            long id = getArguments().getLong(ARG_CELL_ID);
+            cell = new Cell(CellDB.load(realm, id));
+            numberCell = SliderCellDB.getCell(realm, cell.getDB());
+
+            if(numberCell == null){
+                realm.beginTransaction();
                 numberCell = new SliderCellDB();
-                numberCell.setCell(cell);
-                numberCell.save();
+                numberCell.setId(SliderCellDB.getUniqueId(realm));
+                numberCell = realm.copyToRealm(numberCell);
+                numberCell.setCell(cell.getDB());
+                realm.commitTransaction();
+            }
+
+            ItemDB itemDB = numberCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
             }
         }
     }
@@ -84,18 +106,18 @@ public class CellSliderConfigFragment extends Fragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ItemDB item = mItems.get(position);
+                OHItem item = mItems.get(position);
                 if (item != null) {
-                    item.save();
-
-                    if (item.getType().equals(ItemDB.TYPE_NUMBER) || item.getType().equals(ItemDB.TYPE_GROUP)) {
+                    realm.beginTransaction();
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    if (item.getType().equals(OHItem.TYPE_NUMBER) || item.getType().equals(OHItem.TYPE_GROUP)) {
                         louRange.setVisibility(View.VISIBLE);
                     } else {
                         louRange.setVisibility(View.GONE);
                     }
 
-                    numberCell.setItem(item);
-                    numberCell.save();
+                    numberCell.setItem(itemDB);
+                    realm.commitTransaction();
                 }
             }
 
@@ -110,26 +132,31 @@ public class CellSliderConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        Communicator communicator = Communicator.instance(getActivity());
-        List<ServerDB> servers = ServerDB.getServers();
+        List<ServerDB> servers = realm.allObjects(ServerDB.class);
         mItems.clear();
-        if(numberCell.getItem() != null) {
-            mItems.add(numberCell.getItem());
+
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
         }
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
+
+        for(final ServerDB serverDB : servers) {
+            final OHServer server = serverDB.toGeneric();
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
                 }
 
                 @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
+                public void onError() {
+
                 }
-            });
+            };
+            Openhab.instance(server).requestItem(callback);
         }
 
         btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
@@ -156,17 +183,17 @@ public class CellSliderConfigFragment extends Fragment {
         btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
-            if(item.getType().equals(ItemDB.TYPE_NUMBER)){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(item.getType().equals(OHItem.TYPE_NUMBER)){
                 tempItems.add(item);
-            }else if(item.getType().equals(ItemDB.TYPE_DIMMER)){
+            }else if(item.getType().equals(OHItem.TYPE_DIMMER)){
                 tempItems.add(item);
-            }else if(item.getType().equals(ItemDB.TYPE_COLOR)){
+            }else if(item.getType().equals(OHItem.TYPE_COLOR)){
                 tempItems.add(item);
-            }else if(item.getType().equals(ItemDB.TYPE_GROUP)){
+            }else if(item.getType().equals(OHItem.TYPE_GROUP)){
                 tempItems.add(item);
             }
         }
@@ -184,16 +211,23 @@ public class CellSliderConfigFragment extends Fragment {
             return;
         }
 
-        if(numberCell.getItem().getType().equals(ItemDB.TYPE_NUMBER)
-                || numberCell.getItem().getType().equals(ItemDB.TYPE_GROUP)){
+        realm.beginTransaction();
+        if(numberCell.getItem().getType().equals(OHItem.TYPE_NUMBER)
+                || numberCell.getItem().getType().equals(OHItem.TYPE_GROUP)){
             numberCell.setMin(0);
             numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
         }else{
             numberCell.setMin(0);
             numberCell.setMax(100);
         }
+        realm.commitTransaction();
+    }
 
-        numberCell.save();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     @Override
@@ -203,8 +237,9 @@ public class CellSliderConfigFragment extends Fragment {
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
+            realm.beginTransaction();
             numberCell.setIcon(iconName.equals("") ? null : iconName);
-            numberCell.save();
+            realm.commitTransaction();
             updateIconImage();
         }
     }

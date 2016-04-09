@@ -7,16 +7,16 @@ import android.widget.ImageView;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class ImageWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
 
         return new ImageWidgetHolder(widget, parent, widgetFactory);
     }
@@ -29,7 +29,7 @@ public class ImageWidgetFactory implements IWidgetFactory {
         private ImageView imgImage;
         private WidgetFactory factory;
 
-        ImageWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        ImageWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
             this.factory = factory;
 
             View itemView = factory.getInflater().inflate(R.layout.item_widget_image, null);
@@ -46,7 +46,7 @@ public class ImageWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {

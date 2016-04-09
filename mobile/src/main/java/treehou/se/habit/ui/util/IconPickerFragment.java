@@ -51,14 +51,10 @@ public class IconPickerFragment extends Fragment {
         lstIcons.setItemAnimator(new DefaultItemAnimator());
         lstIcons.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
-        adapter = new IconAdapter(getActivity());
         if(getArguments() != null){
-            List<IIcon> icons = Util.CAT_ICONS.get((Util.IconCategory) getArguments().getSerializable(ARG_CATEGORY));
-            for(IIcon icon : icons) {
-                adapter.add(icon);
-            }
+            List<IIcon> icons = Util.CAT_ICONS.get(getArguments().getSerializable(ARG_CATEGORY));
+            adapter = new IconAdapter(getActivity(), icons);
         }
-
         lstIcons.setAdapter(adapter);
 
 
@@ -69,7 +65,6 @@ public class IconPickerFragment extends Fragment {
 
         private Context context;
         private List<IIcon> icons = new ArrayList<>();
-
 
         class IconHolder extends RecyclerView.ViewHolder {
 
@@ -82,8 +77,9 @@ public class IconPickerFragment extends Fragment {
             }
         }
 
-        public IconAdapter(Context context) {
+        public IconAdapter(Context context, List<IIcon> icons) {
             this.context = context;
+            this.icons = icons;
         }
 
         public void add(IIcon icon){
@@ -94,7 +90,7 @@ public class IconPickerFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_icon, parent, false);
+            View itemView = inflater.inflate(R.layout.item_icon, null);
 
             return new IconHolder(itemView);
         }
@@ -108,7 +104,6 @@ public class IconPickerFragment extends Fragment {
             IconicsDrawable drawable = new IconicsDrawable(getActivity(), item).color(Color.BLACK).sizeDp(50);
 
             catHolder.imgIcon.setImageDrawable(drawable);
-
             catHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
