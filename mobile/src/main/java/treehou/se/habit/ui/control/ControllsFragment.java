@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,7 @@ public class ControllsFragment extends Fragment {
     private ControllerAdapter mAdapter;
 
     private View viwEmpty;
+    private FloatingActionButton fabAdd;
 
     private Realm realm;
 
@@ -65,6 +67,14 @@ public class ControllsFragment extends Fragment {
         viwEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createNewController();
+            }
+        });
+
+        fabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 createNewController();
             }
         });
@@ -161,18 +171,6 @@ public class ControllsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.controllers, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_add_controller:
-                createNewController();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**

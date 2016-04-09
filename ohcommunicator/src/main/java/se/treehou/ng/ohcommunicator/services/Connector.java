@@ -62,7 +62,6 @@ public class Connector {
     private static final int UPDATE_FREQUENCY = 5000;
 
     private Context context;
-    private Map<OHServer, ServerHandler> serverHandlers = new HashMap<>();
 
     public Connector(Context context) {
         this.context = context;
@@ -79,17 +78,7 @@ public class Connector {
     }
 
     public ServerHandler getServerHandler(OHServer server){
-        ServerHandler serverHandler = serverHandlers.get(server);
-        if(serverHandler == null) {
-            serverHandler = new ServerHandler(server, context);
-            serverHandler.start();
-        }
-        serverHandlers.put(server, serverHandler);
-        return serverHandler;
-    }
-
-    public Map<OHServer, ServerHandler> getServerHandlers() {
-        return serverHandlers;
+        return new ServerHandler(server, context);
     }
 
     public static class ServerHandler {
@@ -213,8 +202,6 @@ public class Connector {
             if(item != null) {
                 itemCallback.onUpdate(new OHResponse.Builder<>(item).fromCache(true).build());
             }
-
-            start();
         }
 
         public void deregisterItemListener(OHCallback<OHItem> inboxCallback){
@@ -640,103 +627,6 @@ public class Connector {
             Log.d(TAG,"Longpolling Poller started");
 
             return pollSocket;
-        }
-
-        private void start(){
-            if(scheduler == null && !shouldClose()) {
-                scheduler = new Timer();
-                scheduler.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        closeIfFinnished();
-                        OpenHabService service = getService();
-
-                        if(service == null) {
-                            return;
-                        }
-
-                        /*if (inboxCallbacks.size() > 0) {
-                            Log.d(TAG, "Requesting inbox updateInboxItems");
-                            service.listInboxItems().enqueue(new Callback<List<OHInboxItem>>() {
-
-                                @Override
-                                public void onResponse(Call<List<OHInboxItem>> call, Response<List<OHInboxItem>> response) {
-                                    Log.d(TAG, "Inbox updated size " + response.body().size());
-                                    updateInboxItems(response.body());
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<OHInboxItem>> call, Throwable e) {
-                                    Log.e(TAG, "Error requesting inbox", e);
-                                }
-                            });
-                        }*/
-
-                        if (bindingCallbacks.size() > 0) {
-                            Log.d(TAG, "Requesting inbox updateInboxItems");
-                            service.listBindings().enqueue(new Callback<List<OHBinding>>() {
-
-                                @Override
-                                public void onResponse(Call<List<OHBinding>> call, Response<List<OHBinding>> response) {
-                                    Log.d(TAG, "Inbox updated size " + response.body().size());
-                                    updateBindings(response.body());
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<OHBinding>> call, Throwable e) {
-                                    Log.e(TAG, "Error requesting bindings", e);
-                                }
-                            });
-                        }
-
-                        if (itemsCallbacks.size() > 0) {
-                            Log.d(TAG, "Requesting items");
-                            /*service.listItems().enqueue(new Callback<List<OHItem>>() {
-
-                                @Override
-                                public void onResponse(Call<List<OHItem>> call, Response<List<OHItem>> response) {
-                                    Log.d(TAG, "Items updated size " + response.body().size());
-                                    updateItems(response.body());
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<OHItem>> call, Throwable e) {
-                                    Log.e(TAG, "Error requesting items", e);
-                                }
-                            });*/
-                        }
-
-                        if (itemCallbacks.size() > 0) {
-                            Log.d(TAG, "Requesting items");
-                            for (Map.Entry<String, List<OHCallback<OHItem>>> entry : itemCallbacks.entrySet()) {
-                                /*service.getItem(entry.getKey()).enqueue(new Callback<OHItem>() {
-
-                                    @Override
-                                    public void onResponse(Call<OHItem> call, Response<OHItem> response) {
-                                        Log.d(TAG, "Item updated size " + response.body());
-                                        OHItem item = response.body();
-                                        updateItem(item);
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<OHItem> call, Throwable e) {
-                                        Log.e(TAG, "Error requesting items", e);
-                                    }
-                                });*/
-                            }
-                        }
-                    }
-                }, 0, UPDATE_FREQUENCY);
-            }else {
-                closeIfFinnished();
-            }
-        }
-
-        /**
-         * Stop the server handler.
-         */
-        public void stop(){
-            scheduler.cancel();
         }
     }
 }

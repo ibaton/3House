@@ -20,7 +20,8 @@ public class OHRealm {
     public static RealmConfiguration configuration(Context context) {
         return new RealmConfiguration.Builder(context)
                 .setModules(new OHRealmModule())
-                .name("treehouse4.realm")
+                .name("treehou.realm")
+                .schemaVersion(1)
                 .build();
     }
 

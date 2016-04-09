@@ -1,10 +1,4 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity" >
-    <item android:id="@+id/action_add_controller"
-        android:title="@string/action_add_controller"
-        android:icon="@drawable/action_controller"
-        app:showAsAction="ifRoom"
-        android:orderInCategory="100"/>
 </menu>

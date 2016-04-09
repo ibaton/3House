@@ -3,6 +3,7 @@ package treehou.se.habit.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,8 @@ public class ServersFragment extends Fragment {
     private View viwEmpty;
 
     private ServersAdapter serversAdapter;
+
+    private FloatingActionButton fabAdd;
 
     private boolean initialized = false;
     private Realm realm;
@@ -73,6 +76,14 @@ public class ServersFragment extends Fragment {
         viwEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startNewServerFlow();
+            }
+        });
+
+        fabAdd = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 startNewServerFlow();
             }
         });
@@ -193,9 +204,6 @@ public class ServersFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_add_server:
-                startNewServerFlow();
-                break;
             case R.id.action_scan_for_server:
                 openServerScan();
                 break;

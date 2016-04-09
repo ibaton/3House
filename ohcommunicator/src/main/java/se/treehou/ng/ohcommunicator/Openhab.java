@@ -26,13 +26,6 @@ public class Openhab {
         instance = new Openhab(context);
     }
 
-    public static void stop() {
-        Map<OHServer, Connector.ServerHandler> serverHandlers = instance.connector.getServerHandlers();
-        for(Connector.ServerHandler handler : serverHandlers.values()){
-            handler.stop();
-        }
-    }
-
     public static Connector.ServerHandler instance(OHServer server){
         return instance.connector.getServerHandler(server);
     }

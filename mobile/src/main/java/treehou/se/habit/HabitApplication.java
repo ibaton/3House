@@ -29,17 +29,6 @@ public class HabitApplication extends Application {
         OHRealm.setup(this);
         Openhab.setup(this);
 
-        /* Realm realm = Realm.getDefaultInstance();
-        WidgetSettingsDB settingsDB = realm.allObjects(WidgetSettingsDB.class).first();
-        if(settingsDB == null){
-            realm.beginTransaction();
-            WidgetSettingsDB settings = realm.createObject(WidgetSettingsDB.class);
-            settings.setId(1);
-            settings.setIconSize(25);
-            settings.setTextSize(25);
-            realm.commitTransaction();
-        }
-        realm.close();*/
         try {
             MultiDex.install(this);
         } catch (RuntimeException multiDexException) {
@@ -59,12 +48,5 @@ public class HabitApplication extends Application {
                 throw multiDexException;
             }
         }
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-
-        Openhab.stop();
     }
 }
