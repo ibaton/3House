@@ -84,24 +84,9 @@ public class Connector {
     public static class ServerHandler {
 
         private OHServer server;
-        private Timer scheduler;
         private Context context;
 
         private OpenHabService openHabService;
-
-        private List<OHInboxItem> inboxItems = new ArrayList<>();
-        private List<OHCallback<List<OHInboxItem>>> inboxCallbacks = new ArrayList<>();
-
-        private List<OHBinding> bindings = new ArrayList<>();
-        private List<OHCallback<List<OHBinding>>> bindingCallbacks = new ArrayList<>();
-
-        private Map<String, List<OHCallback<OHItem>>> itemCallbacks = new HashMap<>();
-
-
-        private List<OHItem> items = new ArrayList<>();
-        private List<OHCallback<List<OHItem>>> itemsCallbacks = new ArrayList<>();
-
-        private List<OHCallback<List<OHSitemap>>> sitemapCallbacks = new ArrayList<>();
 
         public ServerHandler(OHServer server, Context context) {
             this.server = server;
@@ -149,22 +134,6 @@ public class Connector {
             });
         }
 
-        /**
-         * Grab item by name from list of items.
-         *
-         * @param name the name of item.
-         * @return the item if found, else null.
-         */
-        private OHItem getItem(String name){
-
-            for(OHItem item : items){
-                if(item.getName().equals(name)){
-                    return item;
-                }
-            }
-            return null;
-        }
-
         public void requestItem(String itemName, final OHCallback<OHItem> itemCallback){
             OpenHabService service = getService();
             if(service == null || itemCallback == null) return;
@@ -182,32 +151,6 @@ public class Connector {
                   }
               });
 
-        }
-
-        public void registerItemListener(String itemName, OHCallback<OHItem> itemCallback){
-            if(itemCallback == null){
-                return;
-            }
-
-            List<OHCallback<OHItem>> callbacks = itemCallbacks.get(itemName);
-            if(callbacks == null){
-                callbacks = new ArrayList<>();
-                itemCallbacks.put(itemName, callbacks);
-            }
-
-            callbacks.add(itemCallback);
-
-            // TODO Trigger request
-            OHItem item = getItem(itemName);
-            if(item != null) {
-                itemCallback.onUpdate(new OHResponse.Builder<>(item).fromCache(true).build());
-            }
-        }
-
-        public void deregisterItemListener(OHCallback<OHItem> inboxCallback){
-            itemCallbacks.remove(inboxCallback);
-
-            closeIfFinnished();
         }
 
         public void requestItem(final OHCallback<List<OHItem>> itemCallback){
@@ -253,22 +196,6 @@ public class Connector {
             });
         }
 
-        /*public void registerItemsListener(OHCallback<List<OHItem>> itemCallback){
-            if(itemCallback == null){
-                return;
-            }
-            itemsCallbacks.add(itemCallback);
-            itemCallback.onUpdate(new OHResponse.Builder<List<OHItem>>(new ArrayList<>(items)).fromCache(true).build());
-
-            start();
-        }
-
-        public void deregisterItemsListener(OHCallback<List<OHItem>> itemCallback){
-            itemsCallbacks.remove(itemCallback);
-
-            closeIfFinnished();
-        }*/
-
         /**
          * Get url from server.
          *
@@ -301,33 +228,6 @@ public class Connector {
             openHabService = generateOpenHabService(server, getUrl());
 
             return openHabService;
-        }
-
-        /**
-         * Check if connector should be closed
-         * @return true if should be closed, else false
-         */
-        private boolean shouldClose(){
-            return inboxCallbacks.isEmpty() && itemCallbacks.isEmpty() &&
-                    itemsCallbacks.isEmpty() && sitemapCallbacks.isEmpty() &&
-                    bindingCallbacks.isEmpty();
-        }
-
-        /**
-         * Close down server
-         */
-        public void close(){
-            scheduler.cancel();
-        }
-
-        /**
-         * Close down server if needed.
-         */
-        public void closeIfFinnished(){
-            if(shouldClose() && scheduler != null) {
-                scheduler.cancel();
-                scheduler = null;
-            }
         }
 
         /**
@@ -373,8 +273,6 @@ public class Connector {
 
                 }
             });
-            bindings.remove(inboxItem);
-            updateInboxItems(inboxItems);
         }
 
         /**
@@ -399,7 +297,6 @@ public class Connector {
                 }
             });
             inboxItem.setFlag(OHInboxItem.FLAG_IGNORED);
-            updateInboxItems(inboxItems);
         }
 
         /**
@@ -424,76 +321,6 @@ public class Connector {
                 }
             });
             inboxItem.setFlag(OHInboxItem.FLAG_NEW);
-            updateInboxItems(inboxItems);
-        }
-
-        /**
-         * Get all inbox items.
-         */
-        public List<OHInboxItem> getInboxItems(){
-            return new ArrayList<>(inboxItems);
-        }
-
-        /**
-         * Update all listeners {@link OHCallback<List< OHInboxItem >>} with provided items.
-         *
-         * @param items updateInboxItems all listeners.
-         */
-        private void updateInboxItems(List<OHInboxItem> items){
-            if(items == null){
-                items = new ArrayList<>();
-            }
-
-            inboxItems = new ArrayList<>(items);
-            for(OHCallback<List<OHInboxItem>> callback : inboxCallbacks){
-                callback.onUpdate(new OHResponse.Builder<List<OHInboxItem>>(new ArrayList<>(items)).fromCache(false).build());
-            }
-        }
-
-        /**
-         * Update all listeners {@link OHCallback<List< OHItem >>} with provided items.
-         *
-         * @param newItems updateItems all listeners.
-         */
-        private void updateItems(List<OHItem> newItems){
-            if(items == null){
-                items = new ArrayList<>();
-            }
-
-            items = new ArrayList<>(items);
-            for(OHCallback<List<OHItem>> callback : itemsCallbacks){
-                callback.onUpdate(new OHResponse.Builder<List<OHItem>>(new ArrayList<>(items)).fromCache(false).build());
-            }
-        }
-
-        /**
-         * Update all listeners {@link OHCallback< OHItem >} with provided items.
-         *
-         * @param newItem updateItem all listeners.
-         */
-        private void updateItem(OHItem newItem){
-            List<OHCallback<OHItem>> callbacks = itemCallbacks.get(newItem.getName());
-            if(callbacks != null){
-                for(OHCallback<OHItem> callback : callbacks){
-                    callback.onUpdate(new OHResponse.Builder<>(newItem).fromCache(false).build());
-                }
-            }
-        }
-
-        /**
-         * Update all listeners {@link OHCallback<List< OHInboxItem >>} with provided items.
-         *
-         * @param items update Bindings for all listeners.
-         */
-        private void updateBindings(List<OHBinding> items){
-            if(items == null){
-                items = new ArrayList<>();
-            }
-
-            bindings = new ArrayList<>(items);
-            for(OHCallback<List<OHBinding>> callback : bindingCallbacks){
-                callback.onUpdate(new OHResponse.Builder<List<OHBinding>>(new ArrayList<>(bindings)).fromCache(false).build());
-            }
         }
 
         public void sendCommand(final String item, final String command){

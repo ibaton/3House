@@ -80,7 +80,6 @@ public class Communicator {
                         }
                     }
                 }
-                Openhab.instance(server).deregisterItemListener(this);
             }
 
             @Override
