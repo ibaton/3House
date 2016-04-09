@@ -30,6 +30,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.Locale;
 
+import io.realm.Realm;
 import treehou.se.habit.Constants;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
@@ -120,8 +121,9 @@ public class GcmIntentService extends IntentService {
 
         Server server = Server.load(Server.class, serverId);*/
 
-        NotificationSettingsDB notificationSettings = NotificationSettingsDB.loadGlobal(getApplicationContext());
-        if(notificationSettings.notificationToSpeach()) {
+        Realm realm = Realm.getDefaultInstance();
+        NotificationSettingsDB notificationSettings = NotificationSettingsDB.loadGlobal(realm);
+        if(notificationSettings.notificationToSpeech()) {
             textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {
@@ -132,6 +134,7 @@ public class GcmIntentService extends IntentService {
                 }
             });
         }
+        realm.close();
 
         /*NotificationDB notification = new NotificationDB(msg);
         notification.save();

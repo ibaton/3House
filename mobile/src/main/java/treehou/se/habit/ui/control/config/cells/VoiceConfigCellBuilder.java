@@ -8,10 +8,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.VoiceCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.VoiceCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -22,7 +23,9 @@ public class VoiceConfigCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, ControllerDB controller, CellDB cell){
 
-        VoiceCellDB voiceCell = cell.voiceCell();
+        Realm realm = Realm.getDefaultInstance();
+        VoiceCellDB voiceCell = VoiceCellDB.getCell(realm, cell);
+        realm.close();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 

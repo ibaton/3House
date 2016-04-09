@@ -11,8 +11,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 
 public class EditControllerSettingsActivity extends AppCompatActivity implements ColorDialog.ColorDialogCallback {
@@ -26,14 +27,18 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
 
     private ControllerDB controller;
 
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_controller_settings);
 
+        realm = Realm.getDefaultInstance();
+
         if (getIntent().getExtras() != null) {
-            Long id = getIntent().getExtras().getLong(ARG_ID);
-            controller = ControllerDB.load(ControllerDB.class, id);
+            long id = getIntent().getExtras().getLong(ARG_ID);
+            controller = ControllerDB.load(realm, id);
         }
 
         txtName = (EditText) findViewById(R.id.txt_name);
@@ -44,9 +49,7 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
-
                 Fragment fragment = ColorDialog.instance();
-
                 fragmentManager.beginTransaction()
                         .add(fragment, "colordialog")
                         .commit();
@@ -54,14 +57,15 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
         });
 
         cbxAsNotification = (CheckBox) findViewById(R.id.as_notification);
-        cbxAsNotification.setChecked(controller.showNotification());
+        cbxAsNotification.setChecked(controller.isShowNotification());
         cbxAsNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                controller.showNotification(isChecked);
-                controller.save();
+                realm.beginTransaction();
+                controller.setShowNotification(isChecked);
+                realm.commitTransaction();
 
-                if(controller.showNotification()) {
+                if(controller.isShowNotification()) {
                     ControlHelper.showNotification(EditControllerSettingsActivity.this, controller);
                 }else {
                     ControlHelper.hideNotification(EditControllerSettingsActivity.this, controller);
@@ -79,10 +83,6 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
         });
     }
 
-    private void save(){
-        controller.setName(txtName.getText().toString());
-    }
-
     /**
      * Update ui to match color set.
      *
@@ -97,9 +97,18 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        save();
+        realm.beginTransaction();
+        controller.setName(txtName.getText().toString());
+        realm.commitTransaction();
 
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     @Override
@@ -110,9 +119,9 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
 
     @Override
     public void setColor(int color) {
+        realm.beginTransaction();
         controller.setColor(color);
-        controller.save();
-
+        realm.commitTransaction();
         btnColor.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
     }
 }

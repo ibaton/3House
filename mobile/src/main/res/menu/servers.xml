@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity" >
 
-    <item android:id="@+id/action_add_server"
-        android:title="@string/add_server"
-        android:icon="@drawable/action_add_server"
-        app:showAsAction="ifRoom"
-        android:orderInCategory="100"/>
-
     <item android:id="@+id/action_scan_for_server"
         android:title="@string/scan_for_server"
         android:icon="@drawable/action_scan"

@@ -20,12 +20,12 @@ import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.connector.GsonHelper;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ServerDB;
 import treehou.se.habit.ui.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -34,7 +34,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
     private static final String TAG = "ColorpickerWidget";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
         return ColorWidgetHolder.create(widgetFactory, widget, parent);
     }
 
@@ -109,11 +109,11 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         private int color;
         private View clrView;
 
-        public static ColorWidgetHolder create(WidgetFactory widgetFactory, Widget widget, Widget parent){
+        public static ColorWidgetHolder create(WidgetFactory widgetFactory, OHWidget widget, OHWidget parent){
             return new ColorWidgetHolder(widget, parent, widgetFactory);
         }
 
-        private ColorWidgetHolder(final Widget widget, Widget parent, final WidgetFactory widgetFactory) {
+        private ColorWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory widgetFactory) {
 
             LayoutInflater inflater = widgetFactory.getInflater();
             final Context context = widgetFactory.getContext();
@@ -121,18 +121,20 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
             clrView = itemView.findViewById(R.id.clr_color);
 
             View btnIncrement = itemView.findViewById(R.id.btn_increment);
+            final OHServer server = widgetFactory.getServer();
+            final String itemName = widget.getItem().getName();
             btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0){
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_INCREMENT);
+                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_INCREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0){
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_ON);
+                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_ON);
                     }
                 }
             }));
@@ -142,14 +144,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0) {
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_DECREMENT);
+                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_DECREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0) {
-                        Openhab.instance(ServerDB.toGeneric(widgetFactory.getServer())).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
+                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_OFF);
                     }
                 }
             }));
@@ -168,7 +170,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                     if (widget.getItem() != null) {
                         Intent intent = new Intent(context, ColorpickerActivity.class);
                         Gson gson = GsonHelper.createGsonBuilder();
-                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServer().getId());
+                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServerDB().getId());
                         intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
                         intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
 
@@ -189,7 +191,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {

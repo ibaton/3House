@@ -18,10 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -30,13 +32,13 @@ public class BaseWidgetFactory {
 
     private static final String TAG = "BaseWidgetFactory";
 
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
         return build(widgetFactory, page, widget, parent, false);
     }
 
     public WidgetFactory.IWidgetHolder build(
-            WidgetFactory widgetFactory, final LinkedPage page,
-            final Widget widget, final Widget parent, boolean flat) {
+            WidgetFactory widgetFactory, final OHLinkedPage page,
+            final OHWidget widget, final OHWidget parent, boolean flat) {
 
         final LayoutInflater inflater = widgetFactory.getInflater();
         View rootView = flat ? inflater.inflate(R.layout.item_widget_base_flat, null) : inflater.inflate(R.layout.item_widget_base, null);
@@ -71,8 +73,8 @@ public class BaseWidgetFactory {
         boolean showLabel = true;
 
         private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
-        private List<Widget> widgets = new ArrayList<>();
-        private Widget widget;
+        private List<OHWidget> widgets = new ArrayList<>();
+        private OHWidget widget;
 
         public static BaseWidgetHolder create(Builder builder){
 
@@ -94,13 +96,15 @@ public class BaseWidgetFactory {
 
             BaseWidgetHolder holder = new BaseWidgetHolder(builder.getFactory().getContext(), rootView, builder.getWidget(), builder.getFactory());
 
-            final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(builder.getFactory().getContext());
+            Realm realm = Realm.getDefaultInstance();
+            final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
             float percentage = Util.toPercentage(settings.getTextSize());
+            // Set size of icon
+            float imageSizePercentage = Util.toPercentage(settings.getIconSize());
+            realm.close();
 
             holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
 
-            // Set size of icon
-            float imageSizePercentage = Util.toPercentage(settings.getIconSize());
             ViewGroup.LayoutParams layoutParams = holder.imgIcon.getLayoutParams();
             layoutParams.width = (int) (((float) layoutParams.width) * imageSizePercentage);
             holder.imgIcon.setLayoutParams(layoutParams);
@@ -110,7 +114,7 @@ public class BaseWidgetFactory {
             return holder;
         }
 
-        BaseWidgetHolder(Context context, View view, Widget widget, WidgetFactory factory) {
+        BaseWidgetHolder(Context context, View view, OHWidget widget, WidgetFactory factory) {
             super(view);
 
             this.context = context;
@@ -126,7 +130,7 @@ public class BaseWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidget widget) {
 
             if(widget == null){
                 return;
@@ -154,14 +158,14 @@ public class BaseWidgetFactory {
             this.widget = widget;
         }
 
-        private synchronized void updateWidgets(List<Widget> pageWidgets){
+        private synchronized void updateWidgets(List<OHWidget> pageWidgets){
 
             Log.d(TAG, "frame widgets update " + pageWidgets.size() + " : " + widgets.size());
             boolean invalidate = pageWidgets.size() != widgets.size();
             if(!invalidate){
                 for(int i=0; i < widgets.size(); i++) {
-                    Widget currentWidget = widgets.get(i);
-                    Widget newWidget = pageWidgets.get(i);
+                    OHWidget currentWidget = widgets.get(i);
+                    OHWidget newWidget = pageWidgets.get(i);
 
                     if(currentWidget.needUpdate(newWidget)){
                         invalidate = true;
@@ -176,7 +180,7 @@ public class BaseWidgetFactory {
                 widgetHolders.clear();
                 subView.removeAllViews();
 
-                for (Widget widget : pageWidgets) {
+                for (OHWidget widget : pageWidgets) {
                     WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
                     widgetHolders.add(result);
                     subView.addView(result.getView());
@@ -190,7 +194,7 @@ public class BaseWidgetFactory {
                     WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
 
                     Log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
-                    Widget newWidget = pageWidgets.get(i);
+                    OHWidget newWidget = pageWidgets.get(i);
 
                     holder.update(newWidget);
                 }
@@ -230,7 +234,7 @@ public class BaseWidgetFactory {
             }
         }
 
-        private void loadIcon(Widget widget) {
+        private void loadIcon(OHWidget widget) {
             if (widget.getIconPath() != null) {
                 iconHolder.setVisibility(View.VISIBLE);
                 imgIcon.setVisibility(View.GONE);
@@ -256,7 +260,7 @@ public class BaseWidgetFactory {
          *
          * @return widget
          */
-        protected Widget getWidget(){
+        protected OHWidget getWidget(){
             return widget;
         }
 
@@ -267,8 +271,8 @@ public class BaseWidgetFactory {
         public static class Builder {
 
             private WidgetFactory factory;
-            private Widget widget;
-            private Widget parent;
+            private OHWidget widget;
+            private OHWidget parent;
             private View view;
             private boolean flat = false;
             private boolean showLabel = true;
@@ -277,7 +281,7 @@ public class BaseWidgetFactory {
                 this.factory = factory;
             }
 
-            public Builder setWidget(Widget widget) {
+            public Builder setWidget(OHWidget widget) {
                 this.widget = widget;
                 return this;
             }
@@ -287,7 +291,7 @@ public class BaseWidgetFactory {
                 return this;
             }
 
-            public Builder setParent(Widget parent) {
+            public Builder setParent(OHWidget parent) {
                 this.parent = parent;
                 return this;
             }
@@ -306,11 +310,11 @@ public class BaseWidgetFactory {
                 return factory;
             }
 
-            public Widget getWidget() {
+            public OHWidget getWidget() {
                 return widget;
             }
 
-            public Widget getParent() {
+            public OHWidget getParent() {
                 return parent;
             }
 

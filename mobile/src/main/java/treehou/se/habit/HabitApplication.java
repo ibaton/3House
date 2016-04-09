@@ -1,12 +1,18 @@
 package treehou.se.habit;
 
+import android.app.Application;
 import android.content.Context;
-//import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDex;
 
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.TrustModifier;
+import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 
-public class HabitApplication extends com.activeandroid.app.Application {
+public class HabitApplication extends Application {
 
     @Override
     public void onCreate() {
@@ -20,10 +26,11 @@ public class HabitApplication extends com.activeandroid.app.Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        Openhab.setup(base);
+        OHRealm.setup(this);
+        Openhab.setup(this);
 
         try {
-            //MultiDex.install(this);
+            MultiDex.install(this);
         } catch (RuntimeException multiDexException) {
             // Work around Robolectric causing multi dex installation to fail, see
             // https://code.google.com/p/android/issues/detail?id=82007.
@@ -41,12 +48,5 @@ public class HabitApplication extends com.activeandroid.app.Application {
                 throw multiDexException;
             }
         }
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-
-        Openhab.stop();
     }
 }

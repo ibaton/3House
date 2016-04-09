@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.model.ServerDB;
 
 /**
  * Implementation of App Widget functionality.
@@ -47,13 +49,13 @@ public class VoiceControlWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-            int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         boolean showTitle = VoiceControlWidgetConfigureActivity.loadControllShowTitlePref(context, appWidgetId);
-        ServerDB server = ServerDB.load(ServerDB.class, VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
-
+        Realm realm = Realm.getDefaultInstance();
+        ServerDB server = ServerDB.load(realm, VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
         if(server == null){
+            realm.close();
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.error_widget);
             appWidgetManager.updateAppWidget(appWidgetId, views);
             return;
@@ -73,6 +75,7 @@ public class VoiceControlWidget extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+        realm.close();
     }
 
     public static Intent createVoiceCommand(Context context, ServerDB server){

@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import se.treehou.ng.ohcommunicator.connector.models.ThingType;
-import se.treehou.ng.ohcommunicator.core.OHBinding;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.GsonHelper;
 
 public class BindingFragment extends Fragment {
 

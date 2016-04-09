@@ -9,9 +9,11 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.Widget;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import treehou.se.habit.core.controller.StringCell;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.FrameWidgetFactory;
@@ -32,33 +34,34 @@ public class WidgetFactory {
 
     private FragmentActivity context;
     private ServerDB server;
-    private LinkedPage page;
+    private OHLinkedPage page;
     private LayoutInflater inflater;
 
     private IWidgetFactory defaultBuilder = new TextWidgetFactory();
 
     private Map<String, IWidgetFactory> builders = new HashMap<>();
 
-    public WidgetFactory(FragmentActivity context, ServerDB server, LinkedPage page){
+    public WidgetFactory(FragmentActivity context, ServerDB server, OHLinkedPage page){
         this.context = context;
         this.server = server;
         this.page = page;
 
-        builders.put(Widget.TYPE_FRAME, new FrameWidgetFactory());
-        builders.put(Widget.TYPE_CHART, new ChartWidgetFactory());
-        builders.put(Widget.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
-        builders.put(Widget.TYPE_IMAGE, new ImageWidgetFactory());
-        builders.put(Widget.TYPE_VIDEO, new VideoWidgetFactory());
-        builders.put(Widget.TYPE_WEB, new WebWidgetFactory());
-        builders.put(Widget.TYPE_SLIDER, new SliderWidgetFactory());
-        builders.put(Widget.TYPE_SWITCH, new SwitchWidgetFactory());
-        builders.put(Widget.TYPE_SELECTION, new SelectionWidgetFactory());
-        builders.put(Widget.TYPE_SETPOINT, new SetpointWidgetFactory());
-        builders.put(Widget.TYPE_TEXT, new TextWidgetFactory());
-        builders.put(Widget.TYPE_GROUP, new GroupWidgetFactory());
+        // Populate factory
+        builders.put(OHWidget.TYPE_FRAME, new FrameWidgetFactory());
+        builders.put(OHWidget.TYPE_CHART, new ChartWidgetFactory());
+        builders.put(OHWidget.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
+        builders.put(OHWidget.TYPE_IMAGE, new ImageWidgetFactory());
+        builders.put(OHWidget.TYPE_VIDEO, new VideoWidgetFactory());
+        builders.put(OHWidget.TYPE_WEB, new WebWidgetFactory());
+        builders.put(OHWidget.TYPE_SLIDER, new SliderWidgetFactory());
+        builders.put(OHWidget.TYPE_SWITCH, new SwitchWidgetFactory());
+        builders.put(OHWidget.TYPE_SELECTION, new SelectionWidgetFactory());
+        builders.put(OHWidget.TYPE_SETPOINT, new SetpointWidgetFactory());
+        builders.put(OHWidget.TYPE_TEXT, new TextWidgetFactory());
+        builders.put(OHWidget.TYPE_GROUP, new GroupWidgetFactory());
     }
 
-    public IWidgetHolder createWidget(final Widget widget , final Widget parent){
+    public IWidgetHolder createWidget(final OHWidget widget , final OHWidget parent){
         inflater = LayoutInflater.from(context);
 
         IWidgetHolder itemHolder;
@@ -87,13 +90,17 @@ public class WidgetFactory {
         return inflater;
     }
 
-    public ServerDB getServer() {
+    public OHServer getServer() {
+        return server.toGeneric();
+    }
+
+    public ServerDB getServerDB() {
         return server;
     }
 
     public interface IWidgetHolder {
         View getView();
-        void update(Widget widget);
+        void update(OHWidget widget);
     }
 
     public static class WidgetHolder implements IWidgetHolder {
@@ -107,10 +114,10 @@ public class WidgetFactory {
             return view;
         }
 
-        public void update(Widget widget) {}
+        public void update(OHWidget widget) {}
     }
 
-    public LinkedPage getPage() {
+    public OHLinkedPage getPage() {
         return page;
     }
 }

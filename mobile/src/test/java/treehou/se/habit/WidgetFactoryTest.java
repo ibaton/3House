@@ -13,17 +13,15 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.StateDescription;
-import treehou.se.habit.ui.settings.SetupServerFragment;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.FrameWidgetFactory;
-import treehou.se.habit.ui.widgets.factories.GroupWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ImageWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SelectionWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SetpointWidgetFactory;
@@ -43,16 +41,16 @@ public class WidgetFactoryTest {
     @Before
     public void setUp() {
         MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().get();
-        ServerDB server = new ServerDB();
+        OHServer server = new OHServer();
         server.setName("Home");
 
-        LinkedPage page = new LinkedPage();
+        OHLinkedPage page = new OHLinkedPage();
         page.setId("");
         page.setLink("");
         page.setTitle("");
-        page.setWidgets(new ArrayList<Widget>());
+        page.setWidgets(new ArrayList<OHWidget>());
 
-        factory = new WidgetFactory(activity, server, page);
+        // TODO factory = new WidgetFactory(activity, new OHServer(server), page);
     }
 
     @After
@@ -67,8 +65,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_chart_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_CHART);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_CHART);
 
         widgetHolder = factory.createWidget(widget, null);
 
@@ -85,8 +83,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_colorpicker_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_COLORPICKER);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_COLORPICKER);
 
         widgetHolder = factory.createWidget(widget, null);
 
@@ -104,8 +102,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_frame_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_FRAME);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_FRAME);
 
         widgetHolder = factory.createWidget(widget, null);
 
@@ -122,8 +120,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_group_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_GROUP);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_GROUP);
 
         widgetHolder = factory.createWidget(widget, null);
 
@@ -140,8 +138,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_image_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_IMAGE);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_IMAGE);
 
         widget.setUrl("https://www.google.se/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png");
 
@@ -161,8 +159,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_selection_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_SELECTION);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_SELECTION);
 
         widgetHolder = factory.createWidget(widget, null);
 
@@ -179,8 +177,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_setpoint_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_SETPOINT);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_SETPOINT);
 
         widgetHolder = factory.createWidget(widget, null);
 
@@ -198,11 +196,11 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_slider_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_SLIDER);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_SLIDER);
 
-        ItemDB item = new ItemDB();
-        item.setType(ItemDB.TYPE_DIMMER);
+        OHItem item = new OHItem();
+        item.setType(OHItem.TYPE_DIMMER);
         item.setState("43.0");
 
         widget.setItem(item);
@@ -244,11 +242,11 @@ public class WidgetFactoryTest {
     public void check_widget_switch_creation() throws Exception {
 
         // Test rollershutter
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_SWITCH);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_SWITCH);
 
-        ItemDB item = new ItemDB();
-        item.setType(ItemDB.TYPE_ROLLERSHUTTER);
+        OHItem item = new OHItem();
+        item.setType(OHItem.TYPE_ROLLERSHUTTER);
         widget.setItem(item);
 
         widgetHolder = factory.createWidget(widget, null);
@@ -259,11 +257,11 @@ public class WidgetFactoryTest {
 
 
         // Test Switch
-        widget = new Widget();
-        widget.setType(Widget.TYPE_SWITCH);
+        widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_SWITCH);
 
-        item = new ItemDB();
-        item.setType(ItemDB.TYPE_SWITCH);
+        item = new OHItem();
+        item.setType(OHItem.TYPE_SWITCH);
         widget.setItem(item);
 
         widgetHolder = factory.createWidget(widget, null);
@@ -274,13 +272,16 @@ public class WidgetFactoryTest {
 
 
         // Test Button switch
-        widget = new Widget();
-        List<Widget.Mapping> mappings = new ArrayList<>();
-        mappings.add(new Widget.Mapping("command", "label"));
+        widget = new OHWidget();
+        List<OHMapping> mappings = new ArrayList<>();
+        OHMapping mappingDB = new OHMapping();
+        mappingDB.setCommand("command");
+        mappingDB.setLabel("label");
+        mappings.add(mappingDB);
         widget.setMapping(mappings);
-        widget.setType(Widget.TYPE_SWITCH);
+        widget.setType(OHWidget.TYPE_SWITCH);
 
-        item = new ItemDB();
+        item = new OHItem();
         widget.setItem(item);
 
         widgetHolder = factory.createWidget(widget, null);
@@ -291,14 +292,21 @@ public class WidgetFactoryTest {
 
 
         // Test Picker switch
-        widget = new Widget();
+        widget = new OHWidget();
         mappings = new ArrayList<>();
-        mappings.add(new Widget.Mapping("command1", "label1"));
-        mappings.add(new Widget.Mapping("command2", "label2"));
+        OHMapping mappingDB1 = new OHMapping();
+        mappingDB1.setCommand("command1");
+        mappingDB1.setLabel("label1");
+        OHMapping mappingDB2 = new OHMapping();
+        mappingDB2.setCommand("command2");
+        mappingDB2.setLabel("label2");
+        mappings.add(mappingDB);
+        mappings.add(mappingDB1);
+        mappings.add(mappingDB2);
         widget.setMapping(mappings);
-        widget.setType(Widget.TYPE_SWITCH);
+        widget.setType(OHWidget.TYPE_SWITCH);
 
-        item = new ItemDB();
+        item = new OHItem();
         widget.setItem(item);
 
         widgetHolder = factory.createWidget(widget, null);
@@ -317,8 +325,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_text_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_TEXT);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_TEXT);
         widget.setLabel("WidgetText");
 
         widgetHolder = factory.createWidget(widget, null);
@@ -344,8 +352,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_video_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_VIDEO);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_VIDEO);
 
         widgetHolder = factory.createWidget(widget, null);
 
@@ -363,8 +371,8 @@ public class WidgetFactoryTest {
     @Test
     public void check_widget_web_creation() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setType(Widget.TYPE_WEB);
+        OHWidget widget = new OHWidget();
+        widget.setType(OHWidget.TYPE_WEB);
 
         widgetHolder = factory.createWidget(widget, null);
 

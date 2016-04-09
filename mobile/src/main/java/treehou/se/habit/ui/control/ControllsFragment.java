@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +23,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 /**
  * Fragment listing all app controllers.
@@ -36,6 +38,9 @@ public class ControllsFragment extends Fragment {
     private ControllerAdapter mAdapter;
 
     private View viwEmpty;
+    private FloatingActionButton fabAdd;
+
+    private Realm realm;
 
     public static ControllsFragment newInstance() {
         ControllsFragment fragment = new ControllsFragment();
@@ -50,7 +55,7 @@ public class ControllsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, ""+ ControllerDB.getControllers().size());
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -62,6 +67,14 @@ public class ControllsFragment extends Fragment {
         viwEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createNewController();
+            }
+        });
+
+        fabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 createNewController();
             }
         });
@@ -102,7 +115,15 @@ public class ControllsFragment extends Fragment {
                                         break;
                                     case 1:
                                         mAdapter.removeItem(controllerHolder.getAdapterPosition());
-                                        controller.deleteController(getActivity());
+
+                                        final long id = controller.getId();
+                                        realm.executeTransactionAsync(new Realm.Transaction() {
+                                            @Override
+                                            public void execute(Realm realm) {
+                                                ControllerDB controller = ControllerDB.load(realm, id);
+                                                controller.removeFromRealm();
+                                            }
+                                        });
                                         break;
                                 }
                             }
@@ -110,7 +131,7 @@ public class ControllsFragment extends Fragment {
                 return true;
             }
         });
-        final List<ControllerDB> controllers = ControllerDB.getControllers();
+        final List<ControllerDB> controllers = realm.allObjects(ControllerDB.class);
         mAdapter.addAll(controllers);
 
         // Set the adapter
@@ -126,6 +147,13 @@ public class ControllsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
+    }
+
     /**
      * Show empty view if no controllers exist
      */
@@ -133,7 +161,7 @@ public class ControllsFragment extends Fragment {
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 
-    public void loadController(Long id){
+    public void loadController(long id){
         getActivity().getSupportFragmentManager().beginTransaction()
             .replace(R.id.page_container, EditControlFragment.newInstance(id))
             .addToBackStack(null)
@@ -145,29 +173,17 @@ public class ControllsFragment extends Fragment {
         inflater.inflate(R.menu.controllers, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_add_controller:
-                createNewController();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * Creates a new empty controller.
      */
     private void createNewController(){
         ControllerDB controller = new ControllerDB();
         String name = "Controller";
-        Long id = controller.save();
         controller.setName(name);
-        controller.save();
-        controller.addRow();
-        loadController(id);
+        ControllerDB.save(realm, controller);
+        controller.addRow(realm);
+
+        loadController(controller.getId());
     }
 
     public static class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.ControllerHolder>{
