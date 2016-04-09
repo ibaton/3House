@@ -1,6 +1,5 @@
 package se.treehou.ng.ohcommunicator.connector.models;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 public class OHServer {
