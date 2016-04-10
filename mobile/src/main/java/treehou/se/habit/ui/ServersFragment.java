@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,28 +17,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.functions.Action1;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.ServersAdapter;
 import treehou.se.habit.ui.settings.SetupServerFragment;
 
-public class ServersFragment extends Fragment {
+public class ServersFragment extends RxFragment {
 
     private static final String TAG = "ServersFragment";
 
     private static final String STATE_INITIALIZED = "state_initialized";
 
     private ViewGroup container;
-
-    private RecyclerView lstServer;
-    private View viwEmpty;
+    @Bind(R.id.list) RecyclerView lstServer;
+    @Bind(R.id.empty) View viwEmpty;
+    @Bind(R.id.fab_add) FloatingActionButton fabAdd;
 
     private ServersAdapter serversAdapter;
-
-    private FloatingActionButton fabAdd;
 
     private boolean initialized = false;
     private Realm realm;
@@ -69,31 +71,13 @@ public class ServersFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         this.container = container;
-
         View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
+        ButterKnife.bind(this, rootView);
 
-        viwEmpty = rootView.findViewById(R.id.empty);
-        viwEmpty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startNewServerFlow();
-            }
-        });
-
-        fabAdd = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startNewServerFlow();
-            }
-        });
-
-        setupActionbar();
-
-        lstServer = (RecyclerView) rootView.findViewById(R.id.list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstServer.setLayoutManager(gridLayoutManager);
         lstServer.setItemAnimator(new DefaultItemAnimator());
+        setupActionbar();
 
         return rootView;
     }
@@ -101,8 +85,14 @@ public class ServersFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         setup();
+    }
+
+    @Override
+    public void onDestroyView() {
+        lstServer.setAdapter(null);
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -122,59 +112,18 @@ public class ServersFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-
     private void setup(){
-        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
-        Log.d(TAG, "Loaded " + servers.size() + " servers");
-
-        serversAdapter = new ServersAdapter(getContext(), servers);
-        serversAdapter.setItemListener(new ServersAdapter.ItemListener() {
-            @Override
-            public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
-                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.page_container, SetupServerFragment.newInstance(server.getId()))
-                        .addToBackStack(null)
-                        .commit();
-            }
-
-            @Override
-            public boolean onItemLongClickListener(final ServersAdapter.ServerHolder serverHolder) {
-
-                final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
-                new AlertDialog.Builder(getActivity())
-                        .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        getActivity().getSupportFragmentManager().beginTransaction()
-                                                .replace(container.getId(), BindingsFragment.newInstance(server))
-                                                .addToBackStack(null)
-                                                .commit();
-                                        break;
-                                    case 1:
-                                        getActivity().getSupportFragmentManager().beginTransaction()
-                                                .replace(container.getId(), InboxListFragment.newInstance(server))
-                                                .addToBackStack(null)
-                                                .commit();
-                                        break;
-                                    case 2:
-                                        showRemoveDialog(serverHolder, server);
-                                        break;
-                                }
-                            }
-                        })
-                        .create().show();
-                return true;
-            }
-
-            @Override
-            public void itemCountUpdated(int itemCount) {
-                updateEmptyView(itemCount);
-            }
-        });
-        lstServer.setAdapter(serversAdapter);
+        realm.allObjects(ServerDB.class).asObservable()
+                .compose(this.<RealmResults<ServerDB>>bindToLifecycle())
+                .subscribe(new Action1<RealmResults<ServerDB>>() {
+                    @Override
+                    public void call(RealmResults<ServerDB> servers) {
+                        Log.d(TAG, "Loaded " + servers.size() + " servers");
+                        serversAdapter = new ServersAdapter(getContext(), servers);
+                        serversAdapter.setItemListener(serverListener);
+                        lstServer.setAdapter(serversAdapter);
+                    }
+                });
 
         if(!initialized && serversAdapter.getItemCount() <= 0){
             showScanServerFlow();
@@ -182,10 +131,19 @@ public class ServersFragment extends Fragment {
         initialized = true;
     }
 
+    /**
+     * Launch flow for opening server scanning.
+     */
     private void showScanServerFlow() {
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.start_scan_question)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.new_server, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startNewServerFlow();
+                    }
+                })
+                .setPositiveButton(R.string.scan, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         openServerScan();
@@ -212,10 +170,58 @@ public class ServersFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private ServersAdapter.ItemListener serverListener = new ServersAdapter.ItemListener() {
+        @Override
+        public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
+            final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.page_container, SetupServerFragment.newInstance(server.getId()))
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        @Override
+        public boolean onItemLongClickListener(final ServersAdapter.ServerHolder serverHolder) {
+
+            final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+            new AlertDialog.Builder(getActivity())
+                    .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    getActivity().getSupportFragmentManager().beginTransaction()
+                                            .replace(container.getId(), BindingsFragment.newInstance(server))
+                                            .addToBackStack(null)
+                                            .commit();
+                                    break;
+                                case 1:
+                                    getActivity().getSupportFragmentManager().beginTransaction()
+                                            .replace(container.getId(), InboxListFragment.newInstance(server))
+                                            .addToBackStack(null)
+                                            .commit();
+                                    break;
+                                case 2:
+                                    showRemoveDialog(serverHolder, server);
+                                    break;
+                            }
+                        }
+                    })
+                    .create().show();
+            return true;
+        }
+
+        @Override
+        public void itemCountUpdated(int itemCount) {
+            updateEmptyView(itemCount);
+        }
+    };
+
     /**
      * Launch flow for creating new server.
      */
-    private void startNewServerFlow(){
+    @OnClick({R.id.empty, R.id.fab_add})
+    public void startNewServerFlow(){
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.page_container, SetupServerFragment.newInstance())
                 .addToBackStack(null)
@@ -268,5 +274,4 @@ public class ServersFragment extends Fragment {
     private void updateEmptyView(int itemCount){
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
-
 }

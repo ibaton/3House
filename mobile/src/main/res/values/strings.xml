@@ -113,4 +113,6 @@
     <string name="hide_ignored_items">Hide ignored items</string>
     <string name="show_ignored">Showing ignored items.</string>
     <string name="hide_ignored">Hide ignored items.</string>
+    <string name="scan">Scan</string>
+    <string name="new_server">New Server</string>
 </resources>

@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.PageFragment;
 
 public class SitemapAdapter extends FragmentStatePagerAdapter {
 

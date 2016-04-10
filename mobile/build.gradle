@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "treehou.se.habit"
-        minSdkVersion 12
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 47
         versionName "4.7.0"
@@ -64,14 +64,18 @@ dependencies {
     compile 'com.github.matthewyork:ColoursLibrary:1.0.+@aar'
     compile 'commons-io:commons-io:2.4'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.trello:rxlifecycle:0.5.0'
+    compile 'com.trello:rxlifecycle-components:0.5.0'
+
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.mikepenz.iconics:library:0.9.1@aar'
     compile 'com.mikepenz.iconics:octicons-typeface:2.2.0@aar'
     compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
-    compile 'io.reactivex:rxjava:1.0.14'
-    compile 'org.atmosphere:wasync:2.1.2'
+        compile 'org.atmosphere:wasync:2.1.2'
     compile 'joda-time:joda-time:2.7'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,19 +21,16 @@ import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import io.realm.Realm;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.adapter.SitemapAdapter;
 import treehou.se.habit.ui.homescreen.VoiceService;
 
 public class SitemapFragment extends Fragment {
@@ -148,14 +144,6 @@ public class SitemapFragment extends Fragment {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("");
         }
         super.onStop();
-    }
-
-    /**
-     * Handle callbacks for request page.
-     */
-    interface RequestPageCallback {
-        void success(OHLinkedPage linkedPage, retrofit.client.Response response);
-        void failure(RetrofitError error);
     }
 
     class RequestPageDummyListener implements OHCallback<OHLinkedPage> {
