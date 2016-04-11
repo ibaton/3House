@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -44,11 +46,11 @@ public class MainActivity extends AppCompatActivity
 
 
         // Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-        NavigationDrawerFragment mNavigationDrawerFragment = (NavigationDrawerFragment)
+        NavigationDrawerFragment navigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+        navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {

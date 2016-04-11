@@ -32,12 +32,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -63,7 +67,7 @@ public class PageFragment extends Fragment {
     private ServerDB server;
     private OHLinkedPage page;
 
-    private LinearLayout louFragments;
+    @Bind(R.id.lou_widgets) LinearLayout louFragments;
 
     private WidgetFactory widgetFactory;
     private List<OHWidget> widgets = new ArrayList<>();
@@ -128,8 +132,8 @@ public class PageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_widget, container, false);
+        ButterKnife.bind(this, view);
 
-        louFragments = (LinearLayout) view.findViewById(R.id.lou_widgets);
         updatePage(page);
 
         if(!initialized) {
@@ -171,98 +175,20 @@ public class PageFragment extends Fragment {
     private AsyncTask<Void, Void, Void> createLongPoller() {
 
         final long serverId = server.getId();
-        AsyncTask<Void, Void, Void> longPoller = new AsyncTask<Void, Void, Void>() {
+        Realm realm = Realm.getDefaultInstance();
+        OHServer server = ServerDB.load(realm, serverId).toGeneric();
+        realm.close();
 
+        return Openhab.instance(server).requestPageUpdates(server, page, new OHCallback<OHLinkedPage>() {
             @Override
-            protected Void doInBackground(Void... params) {
-
-                Realm realm = Realm.getDefaultInstance();
-                ServerDB server = ServerDB.load(realm, serverId);
-
-                com.ning.http.client.Realm clientRealm = null;
-                if(server.requiresAuth()){
-                    clientRealm = new com.ning.http.client.Realm.RealmBuilder()
-                            .setPrincipal(server.getUsername())
-                            .setPassword(server.getPassword())
-                            .setUsePreemptiveAuth(true)
-                            .setScheme(com.ning.http.client.Realm.AuthScheme.BASIC)
-                            .build();
-                }
-
-                AsyncHttpClient asyncHttpClient = new AsyncHttpClient(
-                    new AsyncHttpClientConfig.Builder().setAcceptAnyCertificate(true)
-                        .setHostnameVerifier(new TrustModifier.NullHostNameVerifier())
-                        .setRealm(clientRealm)
-                        .build()
-                );
-
-                Client client = ClientFactory.getDefault().newClient();
-                OptionsBuilder optBuilder = client.newOptionsBuilder().runtime(asyncHttpClient);
-
-                UUID atmosphereId = UUID.randomUUID();
-
-                RequestBuilder request = client.newRequestBuilder()
-                    .method(org.atmosphere.wasync.Request.METHOD.GET)
-                    .uri(page.getLink())
-                    .header("Accept", "application/json")
-                    .header("Accept-Charset", "utf-8")
-                    .header("X-Atmosphere-Transport", "long-polling")
-                    .header("X-Atmosphere-tracking-id", atmosphereId.toString())
-                    .encoder(new Encoder<String, Reader>() {        // Stream the request body
-                        @Override
-                        public Reader encode(String s) {
-                            Log.d(TAG, "wasync RequestBuilder encode");
-                            return new StringReader(s);
-                        }
-                    })
-                    .decoder(new Decoder<String, OHLinkedPage>() {
-                        @Override
-                        public OHLinkedPage decode(Event e, String s) {
-                            Log.d(TAG, "wasync Decoder " + s);
-                            Gson gson = GsonHelper.createGsonBuilder();
-                            return gson.fromJson(s, OHLinkedPage.class);
-                        }
-                    })
-                    .transport(org.atmosphere.wasync.Request.TRANSPORT.LONG_POLLING);                    // Fallback to Long-Polling
-
-                if (server.requiresAuth()){
-                    request.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
-                }
-
-                pollSocket = client.create(optBuilder.build());
-                try {
-                    Log.d(TAG, "wasync Socket " + pollSocket + " " + request.uri());
-                    pollSocket.on(new Function<OHLinkedPage>() {
-                        @Override
-                        public void on(OHLinkedPage page) {
-                            Log.d(TAG, "wasync Socket received");
-                            updatePage(page);
-                        }
-                    })
-                    .open(request.build());
-                } catch (IOException | ExceptionInInitializerError e) {
-                    Log.d(TAG, "wasync Got error " + e);
-                }
-
-                Log.d(TAG,"wasync Poller started");
-
-                realm.close();
-
-                return null;
+            public void onUpdate(OHResponse<OHLinkedPage> items) {
+                updatePage(items.body());
             }
 
             @Override
-            protected void onCancelled() {
-                super.onCancelled();
-
-                if(pollSocket != null) {
-                    pollSocket.close();
-                }
-            }
-        };
-        return longPoller;
+            public void onError() {}
+        });
     }
-
 
     @Override
     public void onResume() {
@@ -274,6 +200,12 @@ public class PageFragment extends Fragment {
             longPoller = createLongPoller();
             longPoller.execute();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     /**

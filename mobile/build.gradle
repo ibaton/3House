@@ -53,6 +53,7 @@ dependencies {
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.robolectric:robolectric:3.0'
     compile project(':ohcom')
+
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.larswerkman:HoloColorPicker:1.5'
     compile 'com.android.support:recyclerview-v7:23.2.1'
@@ -69,15 +70,15 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.trello:rxlifecycle:0.5.0'
     compile 'com.trello:rxlifecycle-components:0.5.0'
-
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.mikepenz.iconics:library:0.9.1@aar'
     compile 'com.mikepenz.iconics:octicons-typeface:2.2.0@aar'
     compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
-        compile 'org.atmosphere:wasync:2.1.2'
+    compile 'org.atmosphere:wasync:2.1.2'
     compile 'joda-time:joda-time:2.7'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
     compile 'javax.jmdns:jmdns:3.4.1'
+    compile 'com.android.support:multidex:1.0.1'
 }

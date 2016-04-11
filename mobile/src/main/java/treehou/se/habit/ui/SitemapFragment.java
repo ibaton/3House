@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
@@ -28,7 +30,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.SitemapAdapter;
 import treehou.se.habit.ui.homescreen.VoiceService;
@@ -43,10 +44,10 @@ public class SitemapFragment extends Fragment {
 
     private ServerDB server;
     private OHSitemap sitemap;
-    private Communicator communicator;
     private SitemapAdapter sitemapAdapter;
-    private ViewPager pgrSitemap;
     private ArrayList<OHLinkedPage> pages = new ArrayList<>();
+
+    @Bind(R.id.pgr_sitemap) ViewPager pgrSitemap;
 
     private OHCallback<OHLinkedPage> requestPageCallback = new RequestPageDummyListener();
 
@@ -69,8 +70,6 @@ public class SitemapFragment extends Fragment {
 
         realm = Realm.getDefaultInstance();
 
-        communicator = Communicator.instance(getActivity());
-
         long serverId = getArguments().getLong(ARG_SERVER);
         server = ServerDB.load(realm, serverId);
 
@@ -87,11 +86,7 @@ public class SitemapFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(sitemap.getLabel());
-        }
+        setupActionbar();
     }
 
     @Override
@@ -100,9 +95,9 @@ public class SitemapFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sitemap, null);
+        ButterKnife.bind(this, rootView);
 
         sitemapAdapter = new SitemapAdapter(server, getActivity().getSupportFragmentManager(), pages);
-        pgrSitemap = (ViewPager) rootView.findViewById(R.id.pgr_sitemap);
         pgrSitemap.setAdapter(sitemapAdapter);
         pgrSitemap.addOnPageChangeListener(pagerChangeListener);
 
@@ -131,19 +126,19 @@ public class SitemapFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        requestPageCallback = new RequestPageDummyListener();
-    }
-
-    @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
         if(pages.size() > 0 && getActivity() instanceof AppCompatActivity){
             ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("");
         }
         super.onStop();
+    }
+
+    private void setupActionbar(){
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(sitemap.getLabel());
+        }
     }
 
     class RequestPageDummyListener implements OHCallback<OHLinkedPage> {
@@ -165,9 +160,6 @@ public class SitemapFragment extends Fragment {
         @Override
         public void onPageSelected(int i) {
             index=i;
-            if(pages.size() > 0 && getActivity() instanceof AppCompatActivity){
-                // TODO ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle(Html.fromHtml(pages.get(i).getActionbarTitle()));
-            }
         }
 
         @Override
@@ -257,6 +249,13 @@ public class SitemapFragment extends Fragment {
      */
     public void onEvent(OHLinkedPage event){
         addPage(event);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        ButterKnife.unbind(this);
     }
 
     @Override
