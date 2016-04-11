@@ -3,12 +3,14 @@ package se.treehou.ng.ohcommunicator.connector;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
+import rx.Observable;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -48,6 +50,10 @@ public interface OpenHabService {
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps")
     Call<List<OHSitemap>> listSitemaps();
+
+    @Headers("Accept: application/json")
+    @GET("/rest/sitemaps")
+    Observable<List<OHSitemap>> listSitemapsRx();
 
     @Headers("Accept: application/json")
     @GET("/rest/sitemaps/{id}")
