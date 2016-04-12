@@ -2,11 +2,12 @@ package se.treehou.ng.ohcommunicator.connector.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ThingType {
 
-    private List<Channel> channels;
+    private List<Channel> channels = new ArrayList<>();
     private String description;
     private String label;
 

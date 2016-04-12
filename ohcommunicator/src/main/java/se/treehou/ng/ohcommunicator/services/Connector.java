@@ -70,13 +70,7 @@ public class Connector {
     }
 
     public static OpenHabService generateOpenHabService(OHServer server, String url){
-        try {
-            return BasicAuthServiceGenerator.createService(OpenHabService.class, server.getUsername(), server.getPassword(), url);
-        }
-        catch (Exception e) {
-            Log.e(TAG, "Failed to create OpenhabService ", e);
-        }
-        return null;
+        return BasicAuthServiceGenerator.createService(OpenHabService.class, server.getUsername(), server.getPassword(), url);
     }
 
     public ServerHandler getServerHandler(OHServer server){
@@ -303,12 +297,13 @@ public class Connector {
          */
         public static String getUrl(Context context, OHServer server){
             String url = server.getLocalUrl();
+            String remoteUrl = server.getRemoteUrl();
             NetworkInfo networkInfo = getNetworkInfo(context);
             if(networkInfo == null || !networkInfo.isConnected()){
-                return null;
+                return "";
             }
-            if(!isConnectedWifi(context)){
-                url = server.getRemoteUrl();
+            if(!isConnectedWifi(context) || !ConnectorUtil.isValidServerUrl(url)){
+                url = remoteUrl;
             }
 
             return url;
@@ -476,7 +471,7 @@ public class Connector {
          * @return observer for remote sitemaps
          */
         public Observable<List<OHSitemap>> requestSitemapObservable(){
-            return getService().listSitemapsRx();
+             return getService().listSitemapsRx();
         }
 
         private <G> Socket connectServer(final Uri url, final Type type, final OHCallback<G> callback){

@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +19,21 @@ import treehou.se.habit.core.db.model.ServerDB;
 
 public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.SitemapBaseHolder> {
 
+    @IntDef({STATE_SUCCESS, STATE_LOADING, STATE_ERROR})
+    public @interface ServerState {}
+    public static final int STATE_SUCCESS = 0;
+    public static final int STATE_LOADING = 1;
+    public static final int STATE_ERROR = 2;
+
     protected LayoutInflater inflater;
     protected Context context;
     private Map<ServerDB, SitemapItem> items = new HashMap<>();
     private SitemapSelectedListener sitemapSelectedListener = new DummySitemapSelectListener();
 
     private static class SitemapItem{
-        public static final int STATE_SUCCESS = 0;
-        public static final int STATE_LOADING = 1;
-        public static final int STATE_ERROR = 2;
 
         public ServerDB server;
-        public int state = STATE_LOADING;
+        public @ServerState int state = STATE_LOADING;
         public List<OHSitemap> sitemaps = new ArrayList<>();
 
         public SitemapItem(ServerDB server) {
@@ -64,12 +68,15 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
 
     public interface SitemapSelectedListener {
         void onSelected(ServerDB server, OHSitemap sitemap);
+        void onErrorSelected(ServerDB server);
     }
 
     class DummySitemapSelectListener implements SitemapSelectedListener {
         @Override
-        public void onSelected(ServerDB server, OHSitemap sitemap) {
-        }
+        public void onSelected(ServerDB server, OHSitemap sitemap) {}
+
+        @Override
+        public void onErrorSelected(ServerDB server) {}
     }
 
     public class SitemapErrorHolder extends SitemapBaseHolder {
@@ -107,10 +114,10 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
     public SitemapBaseHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        if (SitemapItem.STATE_SUCCESS == type) {
+        if (STATE_SUCCESS == type) {
             View itemView = inflater.inflate(R.layout.item_sitemap, null);
             return new SitemapHolder(itemView);
-        } else if (SitemapItem.STATE_LOADING == type) {
+        } else if (STATE_LOADING == type) {
             View itemView = inflater.inflate(R.layout.item_sitemap_load, null);
             return new SitemapLoadHolder(itemView);
         } else {
@@ -127,7 +134,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
 
         final OHSitemap sitemap = item.sitemap;
         final ServerDB server = item.item.server;
-        if (SitemapItem.STATE_SUCCESS == type) {
+        if (STATE_SUCCESS == type) {
             SitemapHolder holder = (SitemapHolder) sitemapHolder;
 
             holder.lblName.setText(sitemap.getDisplayName());
@@ -139,17 +146,16 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
                     sitemapSelectedListener.onSelected(server, sitemap);
                 }
             });
-        } else if (SitemapItem.STATE_LOADING == type) {
+        } else if (STATE_LOADING == type) {
             SitemapLoadHolder holder = (SitemapLoadHolder) sitemapHolder;
             holder.lblServer.setText(server.getDisplayName());
-        } else if (SitemapItem.STATE_ERROR == type) {
+        } else if (STATE_ERROR == type) {
             SitemapErrorHolder holder = (SitemapErrorHolder) sitemapHolder;
             holder.lblServer.setText(server.getDisplayName());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*final OHServer serverDB = OHServer.load(item.item.serverId);
-                    requestSitemap(serverDB);*/
+                    sitemapSelectedListener.onErrorSelected(server);
                 }
             });
         }
@@ -159,25 +165,25 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
     public int getItemViewType(int position) {
         int count = 0;
         for (SitemapItem item : items.values()) {
-            if (SitemapItem.STATE_SUCCESS == item.state) {
+            if (STATE_SUCCESS == item.state) {
                 if (position >= count && position < (count + item.sitemaps.size())) {
-                    return SitemapItem.STATE_SUCCESS;
+                    return STATE_SUCCESS;
                 }
                 count += item.sitemaps.size();
-            } else if (SitemapItem.STATE_ERROR == item.state) {
+            } else if (STATE_ERROR == item.state) {
                 if (count == position) {
-                    return SitemapItem.STATE_ERROR;
+                    return STATE_ERROR;
                 }
                 count++;
-            } else if (SitemapItem.STATE_LOADING == item.state) {
+            } else if (STATE_LOADING == item.state) {
                 if (count == position) {
-                    return SitemapItem.STATE_LOADING;
+                    return STATE_LOADING;
                 }
                 count++;
             }
         }
 
-        return SitemapItem.STATE_LOADING;
+        return STATE_LOADING;
     }
 
     @Override
@@ -185,7 +191,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
 
         int count = 0;
         for (SitemapItem item : items.values()) {
-            if (item.state == SitemapItem.STATE_SUCCESS) {
+            if (item.state == STATE_SUCCESS) {
                 count += item.sitemaps.size();
             } else {
                 count++;
@@ -205,7 +211,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
         GetResult result = null;
         int count = 0;
         for (SitemapItem item : items.values()) {
-            if (SitemapItem.STATE_SUCCESS == item.state) {
+            if (STATE_SUCCESS == item.state) {
                 for (OHSitemap sitemap : item.sitemaps) {
                     if (count == position) {
                         result = new GetResult(item, sitemap);
@@ -282,7 +288,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
     private int findPosition(final OHSitemap sitemap) {
         int count = 0;
         for (SitemapItem item : items.values()) {
-            if (SitemapItem.STATE_SUCCESS == item.state) {
+            if (STATE_SUCCESS == item.state) {
                 for (OHSitemap sitemapIter : item.sitemaps) {
                     if (sitemap == sitemapIter) {
                         return count;
@@ -311,7 +317,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
         return item;
     }
 
-    public void setServerState(ServerDB server, int state) {
+    public void setServerState(ServerDB server, @ServerState int state) {
         SitemapItem item = getItem(server);
         item.state = state;
 

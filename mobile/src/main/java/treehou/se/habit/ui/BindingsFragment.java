@@ -11,11 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
-
-import org.atmosphere.wasync.Socket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +26,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.models.Binding;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.adapter.BindingAdapter;
 
 public class BindingsFragment extends Fragment {
 
@@ -107,7 +105,13 @@ public class BindingsFragment extends Fragment {
         }
 
         final RecyclerView lstBinding = (RecyclerView) rootView.findViewById(R.id.lst_bindings);
-        bindingAdapter = new BindingAdapter();
+        bindingAdapter = new BindingAdapter(this);
+        bindingAdapter.setItemClickListener(new BindingAdapter.ItemClickListener() {
+            @Override
+            public void onClick(OHBinding binding) {
+                openBinding(binding);
+            }
+        });
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstBinding.setLayoutManager(gridLayoutManager);
@@ -118,6 +122,18 @@ public class BindingsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         return rootView;
+    }
+
+    /**
+     * Open up binding page.
+     * @param binding the binding to show.
+     */
+    private void openBinding(OHBinding binding){
+        Fragment fragment = BindingFragment.newInstance(binding);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(BindingsFragment.this.container.getId(), fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -139,72 +155,4 @@ public class BindingsFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder>{
-
-        private List<OHBinding> bindings = new ArrayList<>();
-
-        public class BindingHolder extends RecyclerView.ViewHolder {
-
-            private TextView lblName;
-            private TextView lblAuthor;
-            private TextView lblDescription;
-
-            public BindingHolder(View itemView) {
-                super(itemView);
-
-                lblName = (TextView) itemView.findViewById(R.id.lbl_name);
-                lblAuthor = (TextView) itemView.findViewById(R.id.lbl_author);
-                lblDescription = (TextView) itemView.findViewById(R.id.lbl_description);
-            }
-        }
-
-        public BindingAdapter() {
-        }
-
-        @Override
-        public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View itemView = inflater.inflate(R.layout.item_binding, null);
-
-            return new BindingHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final BindingHolder holder, int position) {
-
-            final OHBinding binding = bindings.get(position);
-            holder.lblName.setText(binding.getName());
-            holder.lblAuthor.setText(binding.getAuthor());
-            holder.lblDescription.setText(binding.getDescription());
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Fragment fragment = BindingFragment.newInstance(binding);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(container.getId(), fragment)
-                            .addToBackStack(null)
-                            .commit();
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return bindings.size();
-        }
-
-        public void addBinding(OHBinding binding){
-            bindings.add(binding);
-            notifyItemInserted(bindings.size()-1);
-        }
-
-        public void setBindings(List<OHBinding> newBindings){
-            bindings.clear();
-            bindings.addAll(newBindings);
-            notifyDataSetChanged();
-        }
-    }
 }

@@ -9,18 +9,18 @@ public class OHServer {
     private String username;
     private String password;
     private String localurl;
-    private String remoteurl;
+    private String remoteUrl;
     private int majorversion;
 
     public OHServer() {}
 
-    public OHServer(long id, String name, String username, String password, String localurl, String remoteurl, int majorversion) {
+    public OHServer(long id, String name, String username, String password, String localurl, String remoteUrl, int majorversion) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.password = password;
         this.localurl = localurl;
-        this.remoteurl = remoteurl;
+        this.remoteUrl = remoteUrl;
         this.majorversion = majorversion;
     }
 
@@ -65,11 +65,11 @@ public class OHServer {
     }
 
     public String getRemoteUrl() {
-        return remoteurl;
+        return remoteUrl;
     }
 
-    public void setRemoteurl(String remoteurl) {
-        this.remoteurl = remoteurl;
+    public void setRemoteUrl(String remoteUrl) {
+        this.remoteUrl = remoteUrl;
     }
 
     /**
@@ -110,7 +110,7 @@ public class OHServer {
 
     @Override
     public int hashCode() {
-        return (""+name+":"+localurl+":"+remoteurl).hashCode();
+        return (""+name+":"+localurl+":"+ remoteUrl).hashCode();
     }
 
     @Override

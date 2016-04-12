@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Patterns;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,6 +31,10 @@ public class ConnectorUtil {
                 .scheme(newHost.getScheme())
                 .encodedAuthority(newHost.getHost() + (newHost.getPort() != -1 ? ":" + newHost.getPort() : ""));
         return builder.build();
+    }
+
+    public static boolean isValidServerUrl(String url){
+        return Patterns.WEB_URL.matcher(url).matches();
     }
 
     public static String createAuthValue(String username, String password) {

@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
-import se.treehou.ng.ohcommunicator.connector.models.ThingType;
 import treehou.se.habit.R;
 
 public class BindingFragment extends Fragment {
@@ -53,23 +52,10 @@ public class BindingFragment extends Fragment {
         TextView lblName = (TextView) rootView.findViewById(R.id.lbl_name);
         TextView lblAuthor = (TextView) rootView.findViewById(R.id.lbl_author);
         TextView lblDescription = (TextView) rootView.findViewById(R.id.lbl_description);
-        LinearLayout louChannels = (LinearLayout) rootView.findViewById(R.id.lou_thing_types);
 
         lblName.setText(binding.getName());
         lblAuthor.setText(binding.getAuthor());
         lblDescription.setText(binding.getDescription());
-
-        louChannels.removeAllViews();
-        for(ThingType thingType : binding.getThingTypes()){
-            View itemThingType = inflater.inflate(R.layout.item_thing_type, louChannels, false);
-            TextView lblThingName = (TextView) itemThingType.findViewById(R.id.lbl_name);
-            TextView lblThingDescription = (TextView) itemThingType.findViewById(R.id.lbl_description);
-
-            lblThingName.setText(thingType.getLabel());
-            lblThingDescription.setText(thingType.getDescription());
-
-            louChannels.addView(itemThingType);
-        }
 
         return rootView;
     }

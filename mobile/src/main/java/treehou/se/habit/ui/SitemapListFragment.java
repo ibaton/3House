@@ -26,6 +26,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.services.Connector;
 import treehou.se.habit.R;
 
 import treehou.se.habit.core.db.model.ServerDB;
@@ -114,6 +115,11 @@ public class SitemapListFragment extends RxFragment {
                         .addToBackStack(null)
                         .commit();
             }
+
+            @Override
+            public void onErrorSelected(ServerDB server) {
+                requestSitemap(server);
+            }
         });
         listView.setAdapter(sitemapAdapter);
 
@@ -168,10 +174,11 @@ public class SitemapListFragment extends RxFragment {
      * @param server
      */
     private void requestSitemap(final ServerDB server){
+        Connector.ServerHandler serverHandler = Openhab.instance(server.toGeneric());
 
         Log.d(TAG, "Requesting Sitemap " + server.getName());
-        sitemapAdapter.setServerState(server, SitemapSelectorFragment.SitemapItem.STATE_LOADING);
-        Openhab.instance(server.toGeneric()).requestSitemapObservable()
+        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING);
+        serverHandler.requestSitemapObservable()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.<List<OHSitemap>>bindToLifecycle())
@@ -188,6 +195,7 @@ public class SitemapListFragment extends RxFragment {
                     @Override
                     public void call(Throwable throwable) {
                         Log.e(TAG, "Request sitemap failed", throwable);
+                        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
                     }
                 });
     }

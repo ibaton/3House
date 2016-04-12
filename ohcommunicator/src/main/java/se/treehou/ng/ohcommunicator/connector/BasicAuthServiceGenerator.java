@@ -1,6 +1,7 @@
 package se.treehou.ng.ohcommunicator.connector;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -20,10 +21,12 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class BasicAuthServiceGenerator {
 
+    private static final String TAG = BasicAuthServiceGenerator.class.getSimpleName();
+
     // No need to instantiate this class.
     private BasicAuthServiceGenerator() {}
 
-    public static <S> S createService(Class<S> serviceClass, final String usernarname, final String password, final String url) {
+    public static <S> S createService(Class<S> serviceClass, final String usernarname, final String password, String url) {
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
@@ -44,14 +47,23 @@ public class BasicAuthServiceGenerator {
             e.printStackTrace();
         }
 
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .client(client.build())
-                .baseUrl(url)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(GsonHelper.createGsonBuilder()))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+        if(!ConnectorUtil.isValidServerUrl(url)){
+            url = "http://127.0.0.1:8080";
+        }
 
-        Retrofit retrofit = builder.build();
+        Retrofit retrofit;
+        try {
+            Retrofit.Builder builder = new Retrofit.Builder()
+                    .client(client.build())
+                    .baseUrl(url)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(GsonHelper.createGsonBuilder()))
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+            retrofit = builder.build();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to generate service", e);
+            throw e;
+        }
 
         return retrofit.create(serviceClass);
     }
