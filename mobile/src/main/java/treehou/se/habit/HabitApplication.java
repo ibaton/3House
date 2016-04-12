@@ -4,13 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.db.model.OHRealm;
-import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 
 public class HabitApplication extends Application {
 

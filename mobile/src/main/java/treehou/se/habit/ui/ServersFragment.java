@@ -89,8 +89,13 @@ public class ServersFragment extends RxFragment {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onPause() {
+        super.onPause();
         lstServer.setAdapter(null);
+    }
+
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
