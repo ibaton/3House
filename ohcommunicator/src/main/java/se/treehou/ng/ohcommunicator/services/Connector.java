@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
 import com.ning.http.client.Realm;
@@ -29,12 +28,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import retrofit2.Call;
@@ -55,7 +49,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
-import se.treehou.ng.ohcommunicator.util.ThreadPool;
 
 public class Connector {
 
@@ -98,7 +91,9 @@ public class Connector {
             service.listBindings().enqueue(new Callback<List<OHBinding>>() {
                 @Override
                 public void onResponse(Call<List<OHBinding>> call, Response<List<OHBinding>> response) {
-                    bindingCallback.onUpdate(new OHResponse.Builder<>(response.body()).build());
+                    List<OHBinding> items = response.body();
+                    if(items == null) items = new ArrayList<>();
+                    bindingCallback.onUpdate(new OHResponse.Builder<>(items).build());
                 }
 
                 @Override
@@ -120,7 +115,9 @@ public class Connector {
             service.listInboxItems().enqueue(new Callback<List<OHInboxItem>>() {
                 @Override
                 public void onResponse(Call<List<OHInboxItem>> call, Response<List<OHInboxItem>> response) {
-                    inboxCallback.onUpdate(new OHResponse.Builder<>(response.body()).build());
+                    List<OHInboxItem> inboxItems = response.body();
+                    if(inboxItems == null) inboxItems = new ArrayList<>();
+                    inboxCallback.onUpdate(new OHResponse.Builder<>(inboxItems).build());
                 }
 
                 @Override

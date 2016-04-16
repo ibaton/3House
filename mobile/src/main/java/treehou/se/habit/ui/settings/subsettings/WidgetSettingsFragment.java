@@ -16,6 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.Constants;
@@ -27,10 +29,10 @@ public class WidgetSettingsFragment extends Fragment {
 
     private static final String TAG = "WidgetSettingsFragment";
 
-    private OHWidget displayWidget;
-    private FrameLayout widgetHolder;
     private static final int BASE_IMAGE_SIZE = 50;
 
+    private OHWidget displayWidget;
+    @Bind(R.id.widget_holder) FrameLayout widgetHolder;
     private Realm realm;
 
     public static WidgetSettingsFragment newInstance() {
@@ -61,11 +63,10 @@ public class WidgetSettingsFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(getActivity().getString(R.string.settings_widget));
 
-
         final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
 
         View rootView = inflater.inflate(R.layout.fragment_settings_widget, container, false);
-        widgetHolder = (FrameLayout) rootView.findViewById(R.id.widget_holder);
+        ButterKnife.bind(this, rootView);
 
         redrawWidget();
 
@@ -164,6 +165,12 @@ public class WidgetSettingsFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

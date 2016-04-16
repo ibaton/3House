@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
@@ -30,7 +32,8 @@ public class ScanServersFragment extends Fragment {
 
     private ServersAdapter serversAdapter;
 
-    private View viwEmpty;
+    @Bind(R.id.empty) View viwEmpty;
+    @Bind(R.id.list) RecyclerView lstServer;
 
     private OHCallback<List<OHServer>> discoveryListener;
 
@@ -73,15 +76,13 @@ public class ScanServersFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.fragment_scan_servers, container, false);
-
-        viwEmpty = rootView.findViewById(R.id.empty);
+        ButterKnife.bind(this, rootView);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.scan_for_server);
         }
 
-        final RecyclerView lstServer = (RecyclerView) rootView.findViewById(R.id.list);
         lstServer.setAdapter(serversAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstServer.setLayoutManager(gridLayoutManager);
@@ -121,6 +122,13 @@ public class ScanServersFragment extends Fragment {
         super.onPause();
 
         Openhab.deregisterServerDiscoveryListener(discoveryListener);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        ButterKnife.unbind(this);
     }
 
     /**

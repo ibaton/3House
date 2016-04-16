@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
@@ -28,7 +30,7 @@ public class SitemapSelectorFragment extends Fragment {
 
     private static final String TAG = "SitemapSelectorFragment";
 
-    private static final String VOLLEY_TAG_SITEMAPS = "SitemapListFragmentSitemaps_";
+    @Bind(R.id.list) RecyclerView mListView;
 
     private SitemapAdapter mSitemapAdapter;
     private Communicator communicator;
@@ -57,7 +59,7 @@ public class SitemapSelectorFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sitemap_selector, container, false);
-        RecyclerView mListView = (RecyclerView) rootView.findViewById(R.id.list);
+        ButterKnife.bind(this, rootView);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
 
@@ -83,6 +85,12 @@ public class SitemapSelectorFragment extends Fragment {
         for(final OHSitemap server : servers){
             requestSitemap(server);
         }*/
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     private void requestSitemap(final OHServer server){

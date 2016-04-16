@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import treehou.se.habit.R;
@@ -15,6 +17,10 @@ import treehou.se.habit.R;
 public class BindingFragment extends Fragment {
 
     private static final String ARG_BINDING = "ARG_BINDING";
+
+    @Bind(R.id.lbl_name) TextView lblName;
+    @Bind(R.id.lbl_author) TextView lblAuthor;
+    @Bind(R.id.lbl_description) TextView lblDescription;
 
     private OHBinding binding;
 
@@ -48,15 +54,18 @@ public class BindingFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_binding, container, false);
-
-        TextView lblName = (TextView) rootView.findViewById(R.id.lbl_name);
-        TextView lblAuthor = (TextView) rootView.findViewById(R.id.lbl_author);
-        TextView lblDescription = (TextView) rootView.findViewById(R.id.lbl_description);
+        ButterKnife.bind(this, rootView);
 
         lblName.setText(binding.getName());
         lblAuthor.setText(binding.getAuthor());
         lblDescription.setText(binding.getDescription());
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

@@ -17,6 +17,8 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
@@ -35,6 +37,8 @@ public class BindingsFragment extends Fragment {
     private static final String ARG_SERVER = "ARG_SERVER";
 
     private static final String STATE_BINDINGS = "STATE_BINDINGS";
+
+    @Bind(R.id.lst_bindings) RecyclerView lstBinding;
 
     private BindingAdapter bindingAdapter;
     private ServerDB server;
@@ -97,6 +101,8 @@ public class BindingsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_bindings_list, container, false);
+        ButterKnife.bind(this, rootView);
+
         this.container = container;
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -104,7 +110,6 @@ public class BindingsFragment extends Fragment {
             actionBar.setTitle(R.string.bindings);
         }
 
-        final RecyclerView lstBinding = (RecyclerView) rootView.findViewById(R.id.lst_bindings);
         bindingAdapter = new BindingAdapter(this);
         bindingAdapter.setItemClickListener(new BindingAdapter.ItemClickListener() {
             @Override
@@ -146,6 +151,12 @@ public class BindingsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

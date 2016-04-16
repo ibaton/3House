@@ -17,9 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
@@ -35,12 +38,14 @@ public class InboxListFragment extends Fragment {
 
     private static final String ARG_SERVER = "argServer";
 
+    @Bind(R.id.list) RecyclerView listView;
+
     private Realm relam;
 
     private ServerDB server;
     private InboxAdapter adapter;
 
-    private List<OHInboxItem> items;
+    private List<OHInboxItem> items = new ArrayList<>();
     private OHCallback<List<OHInboxItem>> inboxCallback;
 
     private boolean showIgnored = false;
@@ -84,13 +89,13 @@ public class InboxListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
+        ButterKnife.bind(this, view);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.inbox);
         }
 
-        RecyclerView listView = (RecyclerView) view.findViewById(R.id.list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         listView.setLayoutManager(gridLayoutManager);
         listView.setItemAnimator(new DefaultItemAnimator());
@@ -231,8 +236,8 @@ public class InboxListFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
-
 }

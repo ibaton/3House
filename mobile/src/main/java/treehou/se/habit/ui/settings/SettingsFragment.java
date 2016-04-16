@@ -13,6 +13,8 @@ import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
@@ -28,7 +30,7 @@ public class SettingsFragment extends Fragment {
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    @Bind(android.R.id.list) AbsListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -66,8 +68,9 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        ButterKnife.bind(this, view);
+
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
 
         mListView.setOnItemClickListener(optionsSelectListener);
@@ -78,6 +81,12 @@ public class SettingsFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     AdapterView.OnItemClickListener optionsSelectListener = new AdapterView.OnItemClickListener() {

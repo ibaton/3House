@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;

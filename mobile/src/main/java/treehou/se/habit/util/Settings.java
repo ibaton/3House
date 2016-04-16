@@ -37,9 +37,8 @@ public class Settings {
      *
      * @return default sitemap.
      */
-    public OHSitemap getDefaultSitemap(){
-        //OHSitemap sitemap = OHSitemap.load(preferences.getInt(PREF_DEFAULT_SITEMAP, -1));
-        return null; //sitemap;
+    public long getDefaultSitemapId(){
+        return preferences.getInt(PREF_DEFAULT_SITEMAP, -1);
     }
 
     /**

@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
@@ -22,15 +25,15 @@ public class SetupServerFragment extends Fragment {
 
     private static final String EXTRA_SERVER_ID = "EXTRA_SERVER_ID";
 
-    private EditText txtName;
-    private EditText txtLocalUrl;
-    private EditText txtRemoteUrl;
-    private EditText txtUsername;
-    private EditText txtPassword;
+    @Bind(R.id.txt_server_name) EditText txtName;
+    @Bind(R.id.txt_server_local) EditText txtLocalUrl;
+    @Bind(R.id.txt_server_remote) EditText txtRemoteUrl;
+    @Bind(R.id.txt_username) EditText txtUsername;
+    @Bind(R.id.txt_password) EditText txtPassword;
+    @Bind(R.id.btn_back) Button btnBack;
 
     private long serverId = -1;
 
-    private Button btnBack;
     private int buttonTextId = R.string.back;
 
     public static SetupServerFragment newInstance() {
@@ -70,24 +73,18 @@ public class SetupServerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_setup_server, container, false);
+        ButterKnife.bind(this, rootView);
 
-        txtName = (EditText) rootView.findViewById(R.id.txt_server_name);
-        txtLocalUrl = (EditText) rootView.findViewById(R.id.txt_server_local);
-        txtRemoteUrl = (EditText) rootView.findViewById(R.id.txt_server_remote);
-        txtUsername = (EditText) rootView.findViewById(R.id.txt_username);
-        txtPassword = (EditText) rootView.findViewById(R.id.txt_password);
-        btnBack = (Button) rootView.findViewById(R.id.btn_back);
         btnBack.setText(buttonTextId);
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
 
         return rootView;
     }
+
+    @OnClick(R.id.btn_back)
+    void backpresed(){
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
 
     @Override
     public void onResume() {
@@ -134,6 +131,12 @@ public class SetupServerFragment extends Fragment {
             }
         });
         realm.close();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

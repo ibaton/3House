@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
@@ -58,6 +60,8 @@ public class ColorpickerActivity extends AppCompatActivity {
         private static final String ARG_SERVER  = "ARG_SERVER";
         private static final String ARG_WIDGET  = "ARG_SITEMAP";
         private static final String ARG_COLOR   = "ARG_COLOR";
+
+        @Bind(R.id.lbl_name) TextView lblName;
 
         private Realm realm;
 
@@ -103,8 +107,8 @@ public class ColorpickerActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_colorpicker, container, false);
+            ButterKnife.bind(this, rootView);
 
-            TextView lblName = (TextView) rootView.findViewById(R.id.lbl_name);
             lblName.setText(widget.getLabel());
 
             pcrColor = (ColorPicker) rootView.findViewById(R.id.pcr_color_h);
@@ -130,6 +134,12 @@ public class ColorpickerActivity extends AppCompatActivity {
             super.onDestroy();
 
             realm.close();
+        }
+
+        @Override
+        public void onDestroyView() {
+            super.onDestroyView();
+            ButterKnife.unbind(this);
         }
 
         com.chiralcode.colorpicker.ColorPicker.ColorChangeListener colorChangeListener = new com.chiralcode.colorpicker.ColorPicker.ColorChangeListener() {

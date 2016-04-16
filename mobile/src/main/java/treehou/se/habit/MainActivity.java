@@ -11,10 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
@@ -22,6 +21,7 @@ import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.ServersFragment;
 import treehou.se.habit.ui.SitemapFragment;
 import treehou.se.habit.ui.SitemapListFragment;
+import treehou.se.habit.util.Settings;
 
 
 public class MainActivity extends AppCompatActivity
@@ -64,16 +64,17 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }else {
                 // Load default sitemap if any
-                /*OHSitemap defaultSitemap = Settings.instance(this).getDefaultSitemap();
-                if(savedInstanceState == null && defaultSitemap != null) {
+                long defaultSitemap = Settings.instance(this).getDefaultSitemapId();
+                if(savedInstanceState == null && defaultSitemap > 0) {
+
                     fragmentManager.beginTransaction()
-                            .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap.getId()))
+                            .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap))
                             .commit();
-                }else {*/
+                }else {
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance())
                             .commit();
-                //}
+                }
             }
         }
 
