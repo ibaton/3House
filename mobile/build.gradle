@@ -14,6 +14,8 @@ android {
 
         // Enabling multidex support.
         multiDexEnabled true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     dexOptions {
         incremental true
@@ -81,4 +83,17 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
     compile 'javax.jmdns:jmdns:3.4.1'
     compile 'com.android.support:multidex:1.0.1'
+
+
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    // Set this dependency to use JUnit 4 rules
+    androidTestCompile 'com.android.support.test:rules:0.4'
+    // Set this dependency to build and run Espresso tests
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
+
+    compile 'com.android.support:support-annotations:23.2.1'
+    testCompile 'com.android.support:support-annotations:23.2.1'
+    androidTestCompile 'com.android.support:support-annotations:23.2.1'
+    androidTestCompile 'com.android.support:recyclerview-v7:23.2.1'
 }
