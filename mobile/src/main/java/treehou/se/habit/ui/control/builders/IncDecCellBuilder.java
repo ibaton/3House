@@ -52,7 +52,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
                 public void onClick(View v) {
                     ServerDB server = buttonCell.getItem().getServer();
                     Communicator communicator = Communicator.instance(context);
-                    communicator.incDec(server.toGeneric(), buttonCell.getItem().toGeneric(), buttonCell.getValue(), buttonCell.getMin(), buttonCell.getMax());
+                    communicator.incDec(server.toGeneric(), buttonCell.getItem().getName(), buttonCell.getValue(), buttonCell.getMin(), buttonCell.getMax());
                 }
             });
         }

@@ -16,6 +16,8 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -23,6 +25,8 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
+import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 public class SwitchActionFragment extends Fragment {
@@ -32,6 +36,8 @@ public class SwitchActionFragment extends Fragment {
 
     private ArrayAdapter<OHItem> itemAdapter;
     private List<OHItem> filteredItems = new ArrayList<>();
+
+    private Realm realm;
 
     public static SwitchActionFragment newInstance() {
         SwitchActionFragment fragment = new SwitchActionFragment();
@@ -47,6 +53,7 @@ public class SwitchActionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -64,10 +71,10 @@ public class SwitchActionFragment extends Fragment {
                 sprItems.setAdapter(itemAdapter);
             }
         });
-        List<OHServer> servers = null; //OHServer.loadAll();
+        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
         filteredItems.clear();
 
-        for(final OHServer server : servers) {
+        for(final ServerDB server : servers) {
             OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
                 public void onUpdate(OHResponse<List<OHItem>> response) {
@@ -82,7 +89,7 @@ public class SwitchActionFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(server).requestItem(callback);
+            Openhab.instance(server.toGeneric()).requestItem(callback);
         }
 
         tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);
@@ -97,6 +104,12 @@ public class SwitchActionFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     private List<OHItem> filterItems(List<OHItem> items){
@@ -118,10 +131,12 @@ public class SwitchActionFragment extends Fragment {
         final Intent resultIntent = new Intent();
 
         OHItem item = (OHItem) sprItems.getSelectedItem();
-        // TODO item.save();
+        realm.beginTransaction();
+        ItemDB itemDb = ItemDB.createOrLoadFromGeneric(realm, item);
+        realm.commitTransaction();
 
         String command = tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF;
-        final Bundle resultBundle = CommandBoundleManager.generateCommandBundle(getActivity(), item, command);
+        final Bundle resultBundle = CommandBoundleManager.generateCommandBundle(itemDb.getId(), command);
 
         resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_STRING_BLURB, item.getName() + " - " + command);
         resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_BUNDLE, resultBundle);

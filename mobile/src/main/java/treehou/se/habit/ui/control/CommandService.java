@@ -82,7 +82,7 @@ public class CommandService extends IntentService {
 
                 Communicator communicator = Communicator.instance(this);
                 OHServer server = item.getServer().toGeneric();
-                communicator.incDec(server, item.toGeneric(), value, min, max);
+                communicator.incDec(server, item.getName(), value, min, max);
             }
         }
         realm.close();

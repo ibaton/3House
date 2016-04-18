@@ -54,7 +54,7 @@ public class Communicator {
         return Math.max(Math.min(number, max), min);
     }
 
-    public void incDec(final OHServer server, final OHItem item, final int value, final int min, final int max){
+    public void incDec(final OHServer server, final String itemName, final int value, final int min, final int max){
 
         OHCallback<OHItem> callback = new OHCallback<OHItem>() {
             @Override
@@ -87,7 +87,7 @@ public class Communicator {
                 Log.d(TAG, "incDec onError");
             }
         };
-        Openhab.instance(server).requestItem(item.getName(), callback);
+        Openhab.instance(server).requestItem(itemName, callback);
     }
 
     public Picasso buildPicasso(Context context, final OHServer server){

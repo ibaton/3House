@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 public class CommandReciever implements IFireReciever {
@@ -47,16 +49,18 @@ public class CommandReciever implements IFireReciever {
     public boolean fire(Context context, Bundle bundle) {
 
         if (isBundleValid(bundle)) {
-            final int itemId = bundle.getInt(BUNDLE_EXTRA_ITEM);
+            final long itemId = bundle.getLong(BUNDLE_EXTRA_ITEM);
             final String command = bundle.getString(BUNDLE_EXTRA_COMMAND);
 
-            OHItem item = null; // TODO OHItem.load(itemId);
+            Realm realm = Realm.getDefaultInstance();
+            ItemDB item = ItemDB.load(realm, itemId);
             if(item != null){
-                Openhab.instance(item.getServer()).sendCommand(item.getName(), command);
+                Openhab.instance(item.getServer().toGeneric()).sendCommand(item.getName(), command);
                 Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");
             }
+            realm.close();
 
             Log.d(TAG, "Sending sendCommand " + command);
         }else {
