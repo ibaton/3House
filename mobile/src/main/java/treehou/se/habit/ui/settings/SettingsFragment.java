@@ -11,6 +11,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 
+import com.mikepenz.aboutlibraries.LibsBuilder;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -26,6 +28,7 @@ public class SettingsFragment extends Fragment {
     private static final int ITEM_WIDGETS = 1;
     private static final int ITEM_NOTIFICATIONS = 2;
     private static final int ITEM_CUSTOM_WIDGETS = 3;
+    private static final int ITEM_LICENSES = 4;
 
     /**
      * The fragment's ListView/GridView.
@@ -57,8 +60,9 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         ArrayList<ImageItem> items = new ArrayList<>();
-        items.add(new ImageItem(ITEM_WIDGETS, getActivity().getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
-        items.add(new ImageItem(ITEM_NOTIFICATIONS, getActivity().getString(R.string.settings_notification), R.drawable.ic_item_settings_notifications));
+        items.add(new ImageItem(ITEM_WIDGETS, getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
+        items.add(new ImageItem(ITEM_NOTIFICATIONS, getString(R.string.settings_notification), R.drawable.ic_item_settings_notifications));
+        items.add(new ImageItem(ITEM_LICENSES, getString(R.string.open_source_libraries), R.drawable.ic_item_settings_notifications));
 
         mAdapter = new ImageAdapter(getActivity(), items);
     }
@@ -102,6 +106,9 @@ public class SettingsFragment extends Fragment {
                     break;
                 case ITEM_NOTIFICATIONS :
                     fragment = NotificationsSettingsFragment.newInstance();
+                    break;
+                case ITEM_LICENSES :
+                    fragment = new LibsBuilder().supportFragment();
                     break;
             }
 
