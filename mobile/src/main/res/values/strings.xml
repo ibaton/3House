@@ -115,5 +115,5 @@
     <string name="hide_ignored">Hide ignored items.</string>
     <string name="scan">Scan</string>
     <string name="new_server">New Server</string>
-    <string name="open_source_libraries">Open Source Libraries</string>
+    <string name="open_source_libraries">Libraries</string>
 </resources>

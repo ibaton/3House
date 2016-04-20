@@ -62,7 +62,7 @@ public class SettingsFragment extends Fragment {
         ArrayList<ImageItem> items = new ArrayList<>();
         items.add(new ImageItem(ITEM_WIDGETS, getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
         items.add(new ImageItem(ITEM_NOTIFICATIONS, getString(R.string.settings_notification), R.drawable.ic_item_settings_notifications));
-        items.add(new ImageItem(ITEM_LICENSES, getString(R.string.open_source_libraries), R.drawable.ic_item_settings_notifications));
+        items.add(new ImageItem(ITEM_LICENSES, getString(R.string.open_source_libraries), R.drawable.ic_license));
 
         mAdapter = new ImageAdapter(getActivity(), items);
     }
@@ -80,9 +80,7 @@ public class SettingsFragment extends Fragment {
         mListView.setOnItemClickListener(optionsSelectListener);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.settings);
-        }
+        if(actionBar != null) actionBar.setTitle(R.string.settings);
 
         return view;
     }
@@ -109,6 +107,8 @@ public class SettingsFragment extends Fragment {
                     break;
                 case ITEM_LICENSES :
                     fragment = new LibsBuilder().supportFragment();
+                    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+                    if(actionBar != null) actionBar.setTitle(R.string.open_source_libraries);
                     break;
             }
 
