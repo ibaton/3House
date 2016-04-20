@@ -13,7 +13,6 @@ import android.view.MenuItem;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
@@ -64,8 +63,8 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }else {
                 // Load default sitemap if any
-                long defaultSitemap = Settings.instance(this).getDefaultSitemapId();
-                if(savedInstanceState == null && defaultSitemap > 0) {
+                String defaultSitemap = Settings.instance(this).getDefaultSitemap();
+                if(savedInstanceState == null && defaultSitemap != null) {
 
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap))

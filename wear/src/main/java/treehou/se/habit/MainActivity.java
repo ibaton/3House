@@ -35,8 +35,6 @@ public class MainActivity extends Activity {
                 });
             }
         });
-
-
     }
 
     // Create an intent that can start the Speech Recognizer activity

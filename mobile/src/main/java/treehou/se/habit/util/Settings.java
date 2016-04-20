@@ -37,8 +37,8 @@ public class Settings {
      *
      * @return default sitemap.
      */
-    public long getDefaultSitemapId(){
-        return preferences.getInt(PREF_DEFAULT_SITEMAP, -1);
+    public String getDefaultSitemap(){
+        return preferences.getString(PREF_DEFAULT_SITEMAP, "");
     }
 
     /**
@@ -47,13 +47,12 @@ public class Settings {
      * @param sitemap new default sitemap
      */
     public void setDefaultSitemap(OHSitemap sitemap){
-        /*SharedPreferences.Editor editor = preferences.edit();
+        SharedPreferences.Editor editor = preferences.edit();
         if(sitemap != null) {
-            editor.putLong(PREF_DEFAULT_SITEMAP, sitemap.getId());
-        }
-        else {
+            editor.putString(PREF_DEFAULT_SITEMAP, sitemap.getName());
+        } else {
             editor.remove(PREF_DEFAULT_SITEMAP);
         }
-        editor.apply();*/
+        editor.apply();
     }
 }

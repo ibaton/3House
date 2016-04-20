@@ -36,14 +36,14 @@ public class SitemapListFragment extends RxFragment {
 
     private static final String TAG = "SitemapListFragment";
 
-    private static final String ARG_SHOW_SITEMAP    = "showSitemap";
+    private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
     private Realm realm;
 
     @Bind(R.id.list) RecyclerView listView;
     private SitemapListAdapter sitemapAdapter;
 
-    private long showSitemapId = -1;
+    private String showSitemap = "";
 
     /**
      * Create fragment where user can select sitemap.
@@ -61,13 +61,13 @@ public class SitemapListFragment extends RxFragment {
      * Load sitemaps for servers.
      * Open provided sitemap if loaded.
      *
-     * @param sitemap id of sitemap to load
+     * @param sitemap name of sitemap to load
      * @return Fragment
      */
-    public static SitemapListFragment newInstance(long sitemap) {
+    public static SitemapListFragment newInstance(String sitemap) {
         SitemapListFragment fragment = new SitemapListFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_SHOW_SITEMAP, sitemap);
+        args.putString(ARG_SHOW_SITEMAP, sitemap);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,8 +84,8 @@ public class SitemapListFragment extends RxFragment {
 
         realm = Realm.getDefaultInstance();
 
-        if(savedInstanceState != null) showSitemapId = -1;
-        else showSitemapId = getArguments().getLong(ARG_SHOW_SITEMAP);
+        if(savedInstanceState != null) showSitemap = "";
+        else showSitemap = getArguments().getString(ARG_SHOW_SITEMAP);
     }
 
     @Override
@@ -108,11 +108,7 @@ public class SitemapListFragment extends RxFragment {
             public void onSelected(ServerDB server, OHSitemap sitemap) {
                 Settings settings = Settings.instance(getContext());
                 settings.setDefaultSitemap(sitemap);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.page_container, SitemapFragment.newInstance(server, sitemap))
-                        .addToBackStack(null)
-                        .commit();
+                openSitemap(server, sitemap);
             }
 
             @Override
@@ -126,13 +122,25 @@ public class SitemapListFragment extends RxFragment {
     }
 
     /**
+     * Open fragment showing sitemap.
+     *
+     * @param server the server of default sitemap.
+     * @param sitemap the name of sitemap to show.
+     */
+    private void openSitemap(ServerDB server, OHSitemap sitemap){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.page_container, SitemapFragment.newInstance(server, sitemap))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    /**
      * Setup actionbar.
      */
     private void setupActionBar(){
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.sitemaps);
-        }
+        if(actionBar != null) actionBar.setTitle(R.string.sitemaps);
     }
 
     @Override
@@ -188,6 +196,11 @@ public class SitemapListFragment extends RxFragment {
                         for (OHSitemap sitemap : sitemaps) {
                             sitemap.setServer(server.toGeneric());
                             sitemapAdapter.add(server, sitemap);
+
+                            if(sitemap.getName().equals(showSitemap)) {
+                                showSitemap = null; // Prevents sitemap from being accessed again.
+                                openSitemap(server, sitemap);
+                            }
                         }
                     }
                 }, new Action1<Throwable>() {
