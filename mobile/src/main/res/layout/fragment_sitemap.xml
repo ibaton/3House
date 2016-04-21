@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/pgr_sitemap"
-    tools:context="treehou.se.habit.ui.SitemapFragment">
+    tools:context=".ui.sitemaps.SitemapFragment">
 
     <android.support.v4.view.PagerTitleStrip
         android:id="@+id/pager_title_strip"

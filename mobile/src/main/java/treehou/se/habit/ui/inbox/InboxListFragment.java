@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.inbox;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;

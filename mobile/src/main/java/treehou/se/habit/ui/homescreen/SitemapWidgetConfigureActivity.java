@@ -11,7 +11,7 @@ import android.util.Log;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
-import treehou.se.habit.ui.SitemapSelectorFragment;
+import treehou.se.habit.ui.sitemaps.SitemapSelectorFragment;
 
 /**
  * The configuration screen for the {@link SitemapWidget SitemapWidget} AppWidget.

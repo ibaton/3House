@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.sitemaps;
 
 import android.os.AsyncTask;
 import android.os.Build;
@@ -12,41 +12,23 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.AsyncHttpClientConfig;
 
-import org.atmosphere.wasync.Client;
-import org.atmosphere.wasync.ClientFactory;
-import org.atmosphere.wasync.Decoder;
-import org.atmosphere.wasync.Encoder;
-import org.atmosphere.wasync.Event;
-import org.atmosphere.wasync.Function;
-import org.atmosphere.wasync.OptionsBuilder;
-import org.atmosphere.wasync.RequestBuilder;
 import org.atmosphere.wasync.Socket;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Constants;
-import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ThreadPool;

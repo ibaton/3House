@@ -17,9 +17,9 @@ import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
-import treehou.se.habit.ui.ServersFragment;
-import treehou.se.habit.ui.SitemapFragment;
-import treehou.se.habit.ui.SitemapListFragment;
+import treehou.se.habit.ui.servers.ServersFragment;
+import treehou.se.habit.ui.sitemaps.SitemapFragment;
+import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.util.Settings;
 
 

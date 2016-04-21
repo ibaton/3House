@@ -12,7 +12,7 @@ import java.util.List;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import treehou.se.habit.R;
-import treehou.se.habit.ui.BindingsFragment;
+import treehou.se.habit.ui.bindings.BindingsFragment;
 
 public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder> {
 

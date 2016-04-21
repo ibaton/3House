@@ -8,7 +8,7 @@ import java.util.List;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.ui.PageFragment;
+import treehou.se.habit.ui.sitemaps.PageFragment;
 
 public class SitemapAdapter extends FragmentStatePagerAdapter {
 

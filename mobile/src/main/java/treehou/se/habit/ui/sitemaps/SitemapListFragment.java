@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.sitemaps;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;

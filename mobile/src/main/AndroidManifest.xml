@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ColorpickerActivity"
+            android:name=".ui.colorpicker.ColorpickerActivity"
             android:label="@string/title_activity_colorpicker" >
         </activity>
 

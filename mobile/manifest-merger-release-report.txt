@@ -219,7 +219,7 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:45:17
 	android:name
 		ADDED from AndroidManifest.xml:45:27
-activity#treehou.se.habit.ui.ColorpickerActivity
+activity#treehou.se.habit.ui.colorpicker.ColorpickerActivity
 ADDED from AndroidManifest.xml:48:9
 	android:label
 		ADDED from AndroidManifest.xml:50:13

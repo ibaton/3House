@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.servers;
 
 import android.content.Context;
 import android.os.Bundle;

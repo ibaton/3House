@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.servers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -27,7 +27,9 @@ import io.realm.RealmResults;
 import rx.functions.Action1;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.inbox.InboxListFragment;
 import treehou.se.habit.ui.adapter.ServersAdapter;
+import treehou.se.habit.ui.bindings.BindingsFragment;
 import treehou.se.habit.ui.settings.SetupServerFragment;
 
 public class ServersFragment extends RxFragment {

@@ -1,6 +1,5 @@
 package treehou.se.habit.tasker;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,12 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.model.OHRealm;
-import treehou.se.habit.tasker.boundle.OpenSitemapBoundleManager;
-import treehou.se.habit.ui.SitemapSelectorFragment;
+import treehou.se.habit.ui.sitemaps.SitemapSelectorFragment;
 import treehou.se.habit.ui.adapter.MenuAdapter;
 import treehou.se.habit.ui.adapter.MenuItem;
 

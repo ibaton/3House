@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.colorpicker;
 
 import android.app.Fragment;
 import android.os.Bundle;

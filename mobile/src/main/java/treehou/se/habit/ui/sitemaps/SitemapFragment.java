@@ -1,4 +1,4 @@
-package treehou.se.habit.ui;
+package treehou.se.habit.ui.sitemaps;
 
 import android.app.PendingIntent;
 import android.content.Intent;

@@ -26,7 +26,7 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.ui.ColorpickerActivity;
+import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class ColorpickerWidgetFactory implements IWidgetFactory {

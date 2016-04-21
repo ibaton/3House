@@ -11,7 +11,6 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.ui.ServersFragment;
 
 public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder> {
 

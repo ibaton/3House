@@ -19,8 +19,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import treehou.se.habit.ui.ServersFragment;
-import treehou.se.habit.ui.SitemapListFragment;
+import treehou.se.habit.ui.servers.ServersFragment;
+import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
 
