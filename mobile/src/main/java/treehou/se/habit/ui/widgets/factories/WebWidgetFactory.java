@@ -16,9 +16,7 @@ public class WebWidgetFactory implements IWidgetFactory {
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
 
-        WidgetFactory.IWidgetHolder rootView = WebWidgetHolder.create(widgetFactory, widget, parent);
-
-        return rootView;
+        return WebWidgetHolder.create(widgetFactory, widget, parent);
     }
 
     public static class WebWidgetHolder implements WidgetFactory.IWidgetHolder {
