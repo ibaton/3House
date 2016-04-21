@@ -82,7 +82,7 @@ public class CellButtonConfigFragment extends Fragment {
                 buttonCell = new ButtonCellDB();
                 buttonCell.setCell(cell);
                 buttonCell.setCommand(Constants.COMMAND_ON);
-                ButtonCellDB.save(realm, buttonCell);
+                buttonCell = ButtonCellDB.save(realm, buttonCell);
             }
 
             ItemDB itemDB = buttonCell.getItem();
