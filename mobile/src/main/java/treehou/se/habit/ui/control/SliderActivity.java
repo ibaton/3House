@@ -13,8 +13,6 @@ import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
 

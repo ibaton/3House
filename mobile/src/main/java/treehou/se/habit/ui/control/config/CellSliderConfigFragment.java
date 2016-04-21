@@ -24,7 +24,6 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
-import treehou.se.habit.core.controller.SliderCell;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;

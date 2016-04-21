@@ -1,12 +1,10 @@
 package treehou.se.habit.core.db.model;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 
 public class ServerDB extends RealmObject {

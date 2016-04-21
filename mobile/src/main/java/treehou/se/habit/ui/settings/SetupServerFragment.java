@@ -13,7 +13,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.ServerDB;

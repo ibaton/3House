@@ -31,7 +31,7 @@ public class TrustModifier {
     }
 
     public static synchronized SSLSocketFactory prepFactory(HttpsURLConnection httpsConnection)
-            throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+            throws NoSuchAlgorithmException, KeyManagementException {
 
         if (factory == null) {
             SSLContext ctx = SSLContext.getInstance("TLS");
@@ -90,7 +90,9 @@ public class TrustModifier {
         try {
             client.setHostnameVerifier(new TrustModifier.NullHostNameVerifier());
             client.setSslSocketFactory(TrustModifier.createFactory());
-        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
@@ -98,7 +100,7 @@ public class TrustModifier {
     }
 
     public static synchronized SSLSocketFactory createFactory()
-            throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+            throws KeyManagementException, NoSuchAlgorithmException {
 
         if (factory == null) {
             SSLContext ctx = SSLContext.getInstance("TLS");

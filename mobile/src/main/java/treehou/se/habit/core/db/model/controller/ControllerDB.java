@@ -6,7 +6,6 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import treehou.se.habit.core.db.model.OHRealm;
 
 public class ControllerDB extends RealmObject {
 

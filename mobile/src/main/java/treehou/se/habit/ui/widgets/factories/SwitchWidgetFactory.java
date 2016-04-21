@@ -18,7 +18,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;

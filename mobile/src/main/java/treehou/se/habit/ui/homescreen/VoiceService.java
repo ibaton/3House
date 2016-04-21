@@ -10,7 +10,6 @@ import java.util.List;
 
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.core.db.model.ServerDB;
 
 public class VoiceService extends IntentService {

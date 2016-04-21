@@ -2,7 +2,6 @@ package treehou.se.habit.core.db.model;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 

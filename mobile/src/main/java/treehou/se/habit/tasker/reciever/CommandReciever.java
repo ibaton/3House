@@ -7,7 +7,6 @@ import android.util.Log;
 
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
-import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 

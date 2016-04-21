@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.IncDecReciever;
 

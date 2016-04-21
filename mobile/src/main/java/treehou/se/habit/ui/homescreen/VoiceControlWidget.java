@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 

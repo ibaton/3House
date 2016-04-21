@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
-import java.util.List;
-
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.connector.Constants;

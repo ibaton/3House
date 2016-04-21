@@ -19,7 +19,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;

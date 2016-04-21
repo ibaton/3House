@@ -12,7 +12,6 @@ import java.util.Map;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import treehou.se.habit.core.controller.StringCell;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;

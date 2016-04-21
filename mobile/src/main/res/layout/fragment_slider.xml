@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/item_margin"
     android:orientation="vertical"
-    tools:context="treehou.se.habit.ui.control.SliderActivity.SliderFragment"
+    tools:context="treehou.se.habit.ui.control.SliderActivity"
     android:gravity="center_vertical">
 
     <android.support.v7.widget.CardView
