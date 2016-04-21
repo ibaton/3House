@@ -59,8 +59,6 @@ public class PageFragment extends Fragment {
 
     private boolean initialized = false;
 
-    private Socket pollSocket;
-
     /**
      * Creates a new instane of the page.
      *
@@ -264,15 +262,14 @@ public class PageFragment extends Fragment {
         super.onPause();
 
         // Stop listening for server updates
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && longPoller != null && pollSocket != null) {
-            pollSocket.close();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && longPoller != null) {
             longPoller.cancel(true);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(STATE_PAGE, GsonHelper.createGsonBuilder().toJson(page)); // TODO save state prevent fragment from requesting state again
+        outState.putSerializable(STATE_PAGE, GsonHelper.createGsonBuilder().toJson(page));
         super.onSaveInstanceState(outState);
     }
 }

@@ -155,11 +155,7 @@ public class CellButtonConfigFragment extends Fragment {
         }
 
         if(buttonCell.getItem() != null) {
-            //mItems.add(new OHItem(buttonCell.getItem()));
-        }
-
-        if(buttonCell.getItem() != null) {
-            //mItems.add(new OHItem(buttonCell.getItem()));
+            mItems.add(buttonCell.getItem().toGeneric());
         }
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();

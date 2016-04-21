@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control;
+package treehou.se.habit.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;

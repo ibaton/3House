@@ -22,7 +22,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ColorCellDB;
-import treehou.se.habit.ui.control.IconAdapter;
+import treehou.se.habit.ui.adapter.IconAdapter;
 
 public class CellColorConfigFragment extends Fragment {
 
