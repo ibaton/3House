@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.chiralcode.colorpicker.ColorPicker;
 import com.google.gson.Gson;
 
 import java.util.Timer;
@@ -142,7 +141,7 @@ public class ColorpickerActivity extends AppCompatActivity {
             ButterKnife.unbind(this);
         }
 
-        com.chiralcode.colorpicker.ColorPicker.ColorChangeListener colorChangeListener = new com.chiralcode.colorpicker.ColorPicker.ColorChangeListener() {
+        treehou.se.habit.ui.colorpicker.ColorPicker.ColorChangeListener colorChangeListener = new treehou.se.habit.ui.colorpicker.ColorPicker.ColorChangeListener() {
             @Override
             public void onColorChange(final float[] hsv) {
                 timer.cancel();

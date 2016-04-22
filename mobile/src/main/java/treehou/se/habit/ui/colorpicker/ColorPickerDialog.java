@@ -1,4 +1,4 @@
-package com.chiralcode.colorpicker;
+package treehou.se.habit.ui.colorpicker;
 
 
 import android.app.AlertDialog;

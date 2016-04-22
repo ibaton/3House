@@ -1,1 +1,0 @@
-ALTER TABLE Server ADD COLUMN majorVersion INTEGER;

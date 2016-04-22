@@ -21,7 +21,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.chiralcode.colorpicker.ColorPicker
+        <treehou.se.habit.ui.colorpicker.ColorPicker
             android:id="@+id/pcr_color_h"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
