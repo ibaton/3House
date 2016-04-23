@@ -3,7 +3,6 @@ package se.treehou.ng.ohcommunicator;
 import android.content.Context;
 
 import java.util.List;
-import java.util.Map;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;

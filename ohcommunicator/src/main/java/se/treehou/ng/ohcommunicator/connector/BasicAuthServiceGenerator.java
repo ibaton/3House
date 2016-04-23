@@ -43,7 +43,7 @@ public class BasicAuthServiceGenerator {
         try {
             client.sslSocketFactory(TrustModifier.createFactory());
             client.hostnameVerifier(new TrustModifier.NullHostNameVerifier());
-        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
         }
 
