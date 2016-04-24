@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -28,22 +30,23 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderCellBuilder";
 
+    @Bind(R.id.img_icon_button) ImageView imgIcon;
+    @Bind(R.id.sbrNumber) SeekBar sbrNumber;
+    @Bind(R.id.viw_background) View viwBackground;
+
     public View build(final Context context, ControllerDB controller, final CellDB cell){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View cellView = inflater.inflate(R.layout.cell_slider, null);
+        ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
         final SliderCellDB sliderCell = SliderCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View cellView = inflater.inflate(R.layout.cell_slider, null);
-        View viwBackground = cellView.findViewById(R.id.viw_background);
         viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
-        ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon_button);
         imgIcon.setImageDrawable(Util.getIconDrawable(context, sliderCell.getIcon()));
-
-        SeekBar sbrNumber = (SeekBar) cellView.findViewById(R.id.sbrNumber);
         sbrNumber.setMax(sliderCell.getMax());
         sbrNumber.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -66,6 +69,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
             }
         });
         realm.close();
+
+        ButterKnife.unbind(this);
 
         return cellView;
     }

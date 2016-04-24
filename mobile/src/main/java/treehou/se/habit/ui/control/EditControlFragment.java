@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -48,7 +49,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     @Bind(R.id.lou_btn_holder) LinearLayout louController;
     @Bind(R.id.viw_background) View viwBackground;
-    @Bind(R.id.drawer_layout) DrawerLayout drwLayout;
 
     private ActionBar actionBar;
     private ControllerDB controller;
@@ -98,6 +98,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_control, container, false);
+        ButterKnife.bind(this, rootView);
 
         actionBar = activity.getSupportActionBar();
 
@@ -273,7 +274,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     @Override
     public void onDestroyView() {
-
+        ButterKnife.unbind(this);
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity.getWindow().setStatusBarColor(activity.getResources().getColor(R.color.colorPrimaryDark));
             activity.getWindow().setNavigationBarColor(activity.getResources().getColor(R.color.navigationBarColor));

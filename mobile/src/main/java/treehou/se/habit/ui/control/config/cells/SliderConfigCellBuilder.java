@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -23,18 +25,21 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderConfigCellBuilder";
 
+    @Bind(R.id.viw_background) View viwBackground;
+    @Bind(R.id.sbr_value) SeekBar sbrValue;
+    @Bind(R.id.img_icon) ImageView imgIcon;
+
     public View build(Context context, ControllerDB controller, CellDB cell){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View cellView = inflater.inflate(R.layout.cell_conf_slider, null);
+        ButterKnife.bind(this, cellView);
+
         Realm realm = Realm.getDefaultInstance();
         SliderCellDB numberCell = SliderCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View cellView = inflater.inflate(R.layout.cell_conf_slider, null);
-        View viwBackground = cellView.findViewById(R.id.viw_background);
         viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
-
-        SeekBar sbrValue = (SeekBar) cellView.findViewById(R.id.sbr_value);
         sbrValue.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -44,10 +49,11 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
         Drawable icon = Util.getIconDrawable(context, numberCell.getIcon());
         if(icon != null) {
-            ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon);
             imgIcon.setImageDrawable(icon);
         }
         realm.close();
+
+        ButterKnife.unbind(this);
 
         return cellView;
     }

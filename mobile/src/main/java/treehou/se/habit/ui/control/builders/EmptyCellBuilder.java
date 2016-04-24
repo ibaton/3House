@@ -19,11 +19,11 @@ import treehou.se.habit.ui.control.ControllerUtil;
 public class EmptyCellBuilder implements CellFactory.CellBuilder {
 
     public View build(Context context, ControllerDB controller, CellDB cell){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View rootView = inflater.inflate(R.layout.cell_empty, null);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View rootView = inflater.inflate(R.layout.cell_empty, null);
         rootView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
         ImageButton imgButton = (ImageButton) rootView.findViewById(R.id.img_icon_button);
         imgButton.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);

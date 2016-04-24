@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -26,19 +28,20 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "VoiceCellBuilder";
 
+    @Bind(R.id.img_icon_button) ImageButton imgIcon;
+
     public View build(final Context context, ControllerDB controller, final CellDB cell){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View cellView = inflater.inflate(R.layout.cell_button, null);
+        ButterKnife.bind(this, cellView);
+
         Realm realm = Realm.getDefaultInstance();
         final VoiceCellDB voiceCell = VoiceCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View cellView = inflater.inflate(R.layout.cell_button, null);
-
-        ImageButton imgIcon = (ImageButton) cellView.findViewById(R.id.img_icon_button);
         imgIcon.setImageDrawable(Util.getIconDrawable(context, voiceCell.getIcon()));
         imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
-
         imgIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +71,8 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
                 context.startActivity( intent);
             }
         });
+
+        ButterKnife.unbind(this);
 
         return cellView;
     }

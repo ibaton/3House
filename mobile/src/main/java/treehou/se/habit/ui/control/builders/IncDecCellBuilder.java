@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
@@ -29,17 +31,17 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "IncDecCellBuilder";
 
+    @Bind(R.id.img_icon_button) ImageButton imgIcon;
+
     public View build(final Context context, ControllerDB controller, final CellDB cell){
-        Log.d(TAG, "Build: Button");
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View cellView = inflater.inflate(R.layout.cell_button, null);
+        ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
         final IncDecCellDB buttonCell = IncDecCellDB.getCell(realm, cell);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View cellView = inflater.inflate(R.layout.cell_button, null);
-
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        ImageButton imgIcon = (ImageButton) cellView.findViewById(R.id.img_icon_button);
         imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         Log.d(TAG, "Build: Button icon " + buttonCell.getIcon());
@@ -57,6 +59,8 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
             });
         }
         realm.close();
+
+        ButterKnife.unbind(this);
 
         return cellView;
     }
