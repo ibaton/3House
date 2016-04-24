@@ -50,6 +50,7 @@ public class PageFragment extends Fragment {
     @Bind(R.id.lou_widgets) LinearLayout louFragments;
 
     private WidgetFactory widgetFactory;
+
     private List<OHWidget> widgets = new ArrayList<>();
     private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
 

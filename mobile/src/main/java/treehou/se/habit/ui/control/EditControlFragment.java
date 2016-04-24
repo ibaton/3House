@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import butterknife.Bind;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -45,18 +46,13 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     public static final int REQUEST_COLOR = 3117;
 
-    private LinearLayout louController;
-    private View titleHolder;
-    private View viwBackground;
-
-    private DrawerLayout drwLayout;
+    @Bind(R.id.lou_btn_holder) LinearLayout louController;
+    @Bind(R.id.viw_background) View viwBackground;
+    @Bind(R.id.drawer_layout) DrawerLayout drwLayout;
 
     private ActionBar actionBar;
-
     private ControllerDB controller;
-
     private AppCompatActivity activity;
-
     private CellFactory<Integer> cellFactory;
 
     private Realm realm;
@@ -104,9 +100,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         View rootView = inflater.inflate(R.layout.fragment_edit_control, container, false);
 
         actionBar = activity.getSupportActionBar();
-        drwLayout = (DrawerLayout) rootView.findViewById(R.id.drawer_layout);
-        louController = (LinearLayout) rootView.findViewById(R.id.lou_btn_holder);
-        viwBackground = rootView.findViewById(R.id.viw_background);
 
         updateColorPalette(controller.getColor());
 

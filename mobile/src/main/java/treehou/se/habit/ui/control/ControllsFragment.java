@@ -1,7 +1,6 @@
 package treehou.se.habit.ui.control;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,20 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.ui.adapter.ControllerAdapter;
 
 /**
  * Fragment listing all app controllers.
@@ -33,11 +32,11 @@ public class ControllsFragment extends Fragment {
 
     private static final String TAG = "ControllsFragment";
 
-    private RecyclerView mListView;
     private ControllerAdapter mAdapter;
 
-    private View viwEmpty;
-    private FloatingActionButton fabAdd;
+    @Bind(R.id.list) RecyclerView mListView;
+    @Bind(R.id.empty) View viwEmpty;
+    @Bind(R.id.fab_add) FloatingActionButton fabAdd;
 
     private Realm realm;
 
@@ -61,25 +60,20 @@ public class ControllsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_control, container, false);
+        ButterKnife.bind(this, view);
 
-        viwEmpty = view.findViewById(R.id.empty);
         viwEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createNewController();
             }
         });
-
-        fabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNewController();
             }
         });
-
-        mListView = (RecyclerView) view.findViewById(R.id.list);
-
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.controllers);
@@ -147,9 +141,14 @@ public class ControllsFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-
         realm.close();
     }
 
@@ -183,110 +182,5 @@ public class ControllsFragment extends Fragment {
         controller.addRow(realm);
 
         loadController(controller.getId());
-    }
-
-    public static class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.ControllerHolder>{
-
-        private List<ControllerDB> items = new ArrayList<>();
-        private Context context;
-        private ItemListener itemListener = new DummyItemListener();
-
-        public class ControllerHolder extends RecyclerView.ViewHolder {
-            public final TextView lblName;
-
-            public ControllerHolder(View view) {
-                super(view);
-                lblName = (TextView) view.findViewById(R.id.lbl_controller);
-            }
-        }
-
-        public ControllerAdapter(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public ControllerHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_controller, null);
-
-            return new ControllerHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final ControllerHolder controllerHolder, int position) {
-            final ControllerDB controller = items.get(position);
-            controllerHolder.lblName.setText(controller.getName());
-            controllerHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.itemClickListener(controllerHolder);
-                }
-            });
-            controllerHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return itemListener.itemLongClickListener(controllerHolder);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        interface ItemListener {
-            void itemCountUpdated(int itemCount);
-            void itemClickListener(ControllerHolder controllerHolder);
-            boolean itemLongClickListener(ControllerHolder controllerHolder);
-        }
-
-        class DummyItemListener implements ItemListener {
-
-            @Override
-            public void itemCountUpdated(int itemCount) {}
-
-            @Override
-            public void itemClickListener(ControllerHolder controllerHolder) {}
-
-            @Override
-            public boolean itemLongClickListener(ControllerHolder controllerHolder) {
-                return false;
-            }
-        }
-
-        public void setItemListener(ItemListener itemListener) {
-            if(itemListener == null){
-                this.itemListener = new DummyItemListener();
-                return;
-            }
-            this.itemListener = itemListener;
-        }
-
-        public ControllerDB getItem(int position) {
-            return items.get(position);
-        }
-
-        public void removeItem(int position) {
-            Log.d(TAG, "removeItem: " + position);
-            items.remove(position);
-            notifyItemRemoved(position);
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void addItem(ControllerDB controller) {
-            items.add(0, controller);
-            notifyItemInserted(0);
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void addAll(List<ControllerDB> controllers) {
-            for(ControllerDB controller : controllers) {
-                items.add(0, controller);
-                notifyItemRangeInserted(0, controllers.size());
-            }
-            itemListener.itemCountUpdated(items.size());
-        }
     }
 }

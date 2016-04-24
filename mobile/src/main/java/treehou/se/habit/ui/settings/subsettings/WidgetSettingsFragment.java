@@ -77,7 +77,7 @@ public class WidgetSettingsFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 realm.beginTransaction();
                 settings.setTextSize(Constants.MIN_TEXT_ADDON+progress);
-                realm.close();
+                realm.commitTransaction();
                 redrawWidget();
             }
 

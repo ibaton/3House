@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -25,8 +27,8 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     public static final String ARG_CELL_ID = "ARG_CELL_ID";
     public static final int REQUEST_COLOR = 3001;
 
-    private Button btnPicker;
-
+    @Bind(R.id.btn_color_picker) Button btnPicker;
+    @Bind(R.id.spr_items) Spinner sprItems;
     private ArrayAdapter mTypeAdapter;
     private CellDB cell;
 
@@ -61,11 +63,11 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_controll_cell, container, false);
-        final Spinner sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
+        ButterKnife.bind(this, rootView);
+
         sprItems.setAdapter(mTypeAdapter);
         sprItems.setOnItemSelectedListener(itemSelectListener);
 
-        btnPicker = (Button) rootView.findViewById(R.id.btn_color_picker);
         updateColorButton(cell.getColor());
         btnPicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +92,12 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
         sprItems.setSelection(index);
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -38,19 +40,16 @@ public class CellSliderConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private Cell cell;
-
-    private SliderCellDB numberCell;
-    private Spinner sprItems;
-    private TextView txtMax;
-    private ImageButton btnSetIcon;
-    private View louRange;
+    @Bind(R.id.spr_items) Spinner sprItems;
+    @Bind(R.id.txt_max) TextView txtMax;
+    @Bind(R.id.btn_set_icon) ImageButton btnSetIcon;
+    @Bind(R.id.lou_range) View louRange;
 
     private ArrayAdapter<OHItem> mItemAdapter ;
     private ArrayList<OHItem> mItems = new ArrayList<>();
-
+    private SliderCellDB numberCell;
+    private Cell cell;
     private OHItem item;
-
     private Realm realm;
 
     public static CellSliderConfigFragment newInstance(CellDB cell) {
@@ -98,10 +97,8 @@ public class CellSliderConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_cell_number_config, container, false);
+        ButterKnife.bind(this, rootView);
 
-        louRange = rootView.findViewById(R.id.lou_range);
-
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -158,7 +155,6 @@ public class CellSliderConfigFragment extends Fragment {
             Openhab.instance(server).requestItem(callback);
         }
 
-        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
         updateIconImage();
         btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +164,6 @@ public class CellSliderConfigFragment extends Fragment {
             }
         });
 
-        txtMax = (TextView) rootView.findViewById(R.id.txt_max);
         if(numberCell != null){
             txtMax.setText(""+numberCell.getMax());
         }else{
@@ -220,6 +215,12 @@ public class CellSliderConfigFragment extends Fragment {
             numberCell.setMax(100);
         }
         realm.commitTransaction();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

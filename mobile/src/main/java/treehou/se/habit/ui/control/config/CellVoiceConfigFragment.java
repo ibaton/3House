@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -38,10 +40,10 @@ public class CellVoiceConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private VoiceCellDB voiceCell;
-    private Spinner sprItems;
-    private ImageButton btnSetIcon;
+    @Bind(R.id.spr_items) Spinner sprItems;
+    @Bind(R.id.btn_set_icon) ImageButton btnSetIcon;
 
+    private VoiceCellDB voiceCell;
     private Cell cell;
 
     private OHItem item;
@@ -68,9 +70,7 @@ public class CellVoiceConfigFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         realm = Realm.getDefaultInstance();
-
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
             cell = new Cell(CellDB.load(realm, id));
@@ -97,8 +97,8 @@ public class CellVoiceConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false);
+        ButterKnife.bind(this, rootView);
 
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setAdapter(mItemAdapter);
 
         List<ServerDB> servers = realm.allObjects(ServerDB.class);
@@ -146,7 +146,6 @@ public class CellVoiceConfigFragment extends Fragment {
             mItemAdapter.notifyDataSetChanged();
         }
 
-        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
         updateIconImage();
         btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +170,12 @@ public class CellVoiceConfigFragment extends Fragment {
         items.addAll(tempItems);
 
         return items;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

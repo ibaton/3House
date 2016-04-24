@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -38,20 +40,18 @@ public class CellIncDecConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private Cell cell;
-
-    private IncDecCellDB incDecCell;
-    private Spinner sprItems;
-    private EditText txtMax;
-    private EditText txtMin;
-    private EditText txtValue;
-    private ImageButton btnSetIcon;
+    @Bind(R.id.spr_items) Spinner sprItems;
+    @Bind(R.id.txtMax) EditText txtMax;
+    @Bind(R.id.txtMin) EditText txtMin;
+    @Bind(R.id.txtValue) EditText txtValue;
+    @Bind(R.id.btn_set_icon) ImageButton btnSetIcon;
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
 
+    private IncDecCellDB incDecCell;
+    private Cell cell;
     private OHItem item;
-
     private Realm realm;
 
     public static CellIncDecConfigFragment newInstance(CellDB cell) {
@@ -98,17 +98,12 @@ public class CellIncDecConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.inc_dec_controller_action, container, false);
+        ButterKnife.bind(this, rootView);
 
-        txtMax = (EditText) rootView.findViewById(R.id.txtMax);
         txtMax.setText("" + incDecCell.getMax());
-
-        txtMin = (EditText) rootView.findViewById(R.id.txtMin);
         txtMin.setText("" + incDecCell.getMin());
-
-        txtValue = (EditText) rootView.findViewById(R.id.txtValue);
         txtValue.setText("" + incDecCell.getValue());
 
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -162,7 +157,6 @@ public class CellIncDecConfigFragment extends Fragment {
             Openhab.instance(server).requestItem(callback);
         }
 
-        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
         updateIconImage();
         btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +208,12 @@ public class CellIncDecConfigFragment extends Fragment {
             incDecCell.setValue(1);
         }
         realm.commitTransaction();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override

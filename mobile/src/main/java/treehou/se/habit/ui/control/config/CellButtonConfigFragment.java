@@ -19,6 +19,8 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -41,18 +43,16 @@ public class CellButtonConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private ButtonCellDB buttonCell;
-    private CellDB cell;
-
-    private Spinner sprItems;
-    private ToggleButton tglOnOff;
-    private TextView txtCommand;
-    private ImageView btnSetIcon;
+    @Bind(R.id.spr_items) Spinner sprItems;
+    @Bind(R.id.tgl_on_off) ToggleButton tglOnOff;
+    @Bind(R.id.txt_command) TextView txtCommand;
+    @Bind(R.id.btn_set_icon) ImageView btnSetIcon;
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
     private OHItem item;
-
+    private ButtonCellDB buttonCell;
+    private CellDB cell;
     private Realm realm;
 
     public static CellButtonConfigFragment newInstance(CellDB cell) {
@@ -98,11 +98,8 @@ public class CellButtonConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_cell_button_config, container, false);
+        ButterKnife.bind(this, rootView);
 
-        txtCommand = (EditText) rootView.findViewById(R.id.txt_command);
-        tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);
-
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -181,7 +178,6 @@ public class CellButtonConfigFragment extends Fragment {
                 Constants.COMMAND_OPEN.equals(buttonCell.getCommand()));
         txtCommand.setText(buttonCell.getCommand());
 
-        btnSetIcon = (ImageView) rootView.findViewById(R.id.btn_set_icon);
         updateIconImage();
         btnSetIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,6 +228,12 @@ public class CellButtonConfigFragment extends Fragment {
             buttonCell.setCommand(tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
         }
         realm.commitTransaction();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
