@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 
 android {
@@ -81,6 +82,10 @@ dependencies {
         transitive = true
         exclude module: 'iconics-core'
     }
+
+    apt 'com.google.dagger:dagger-compiler:2.2'
+    compile 'com.google.dagger:dagger:2.2'
+    provided 'javax.annotation:jsr250-api:1.0'
 
     androidTestCompile 'com.android.support.test:runner:0.4'
     androidTestCompile 'com.android.support.test:rules:0.4'

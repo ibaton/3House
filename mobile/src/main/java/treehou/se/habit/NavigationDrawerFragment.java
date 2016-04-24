@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -27,6 +26,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import treehou.se.habit.util.Settings;
 
@@ -60,6 +61,9 @@ public class NavigationDrawerFragment extends Fragment {
     private ArrayList<DrawerItem> items = new ArrayList<>();
     private ArrayAdapter<DrawerItem> menuAdapter;
 
+    @Inject SharedPreferences sharedPreferences;
+    @Inject Settings settings;
+
     public NavigationDrawerFragment() {
     }
 
@@ -67,10 +71,11 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getApplicationComponent().inject(this);
+
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+        mUserLearnedDrawer = sharedPreferences.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
@@ -82,6 +87,10 @@ public class NavigationDrawerFragment extends Fragment {
         items.add(new DrawerItem(getActivity().getString(R.string.settings), R.drawable.ic_settings_grey600_24dp, ITEM_SETTINGS));
 
         menuAdapter = new DrawerAdapter(getActivity(), items);
+    }
+
+    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+        return ((HabitApplication) getActivity().getApplication()).component();
     }
 
     @Override
@@ -157,7 +166,7 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 if (!mUserLearnedDrawer) {
-                    Settings.instance(getActivity()).userLearnedDrawer(mUserLearnedDrawer = true);
+                    settings.userLearnedDrawer(mUserLearnedDrawer = true);
                 }
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }

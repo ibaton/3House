@@ -16,6 +16,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -39,6 +41,8 @@ public class SitemapListFragment extends RxFragment {
     private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
     private Realm realm;
+
+    @Inject Settings settings;
 
     @Bind(R.id.list) RecyclerView listView;
     private SitemapListAdapter sitemapAdapter;
@@ -106,7 +110,6 @@ public class SitemapListFragment extends RxFragment {
         sitemapAdapter.setSitemapSelectedListener(new SitemapListAdapter.SitemapSelectedListener() {
             @Override
             public void onSelected(ServerDB server, OHSitemap sitemap) {
-                Settings settings = Settings.instance(getContext());
                 settings.setDefaultSitemap(sitemap);
                 openSitemap(server, sitemap);
             }

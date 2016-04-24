@@ -3,6 +3,8 @@ package treehou.se.habit.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import javax.inject.Inject;
+
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 
 public class Settings {
@@ -12,7 +14,7 @@ public class Settings {
     private static final String PREF_DEFAULT_SITEMAP = "default_sitemap";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
-    private SharedPreferences preferences;
+    @Inject SharedPreferences preferences;
 
     public Settings(Context context) {
         preferences = context.getSharedPreferences(PREF_MANAGER, Context.MODE_PRIVATE);
