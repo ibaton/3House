@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -32,13 +34,16 @@ public class MainActivity extends AppCompatActivity
 
     private Realm realm;
 
+    @Inject Settings settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getApplicationComponent().inject(this);
+
         setContentView(R.layout.activity_main);
-
         realm = Realm.getDefaultInstance();
-
         ControlHelper.showNotifications(this);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -63,7 +68,7 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }else {
                 // Load default sitemap if any
-                String defaultSitemap = Settings.instance(this).getDefaultSitemap();
+                String defaultSitemap = settings.getDefaultSitemap();
                 if(savedInstanceState == null && defaultSitemap != null) {
 
                     fragmentManager.beginTransaction()
@@ -88,6 +93,10 @@ public class MainActivity extends AppCompatActivity
                 ControlHelper.showNotification(this, controller);
             }
         }*/
+    }
+
+    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+        return ((HabitApplication) getApplication()).component();
     }
 
     @Override
