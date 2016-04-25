@@ -15,10 +15,12 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.servers.ServersFragment;
@@ -33,9 +35,13 @@ public class MenuTest {
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
+    @Before
+    public void setup(){
+        DatabaseUtil.init();
+    }
+
     @Test
     public void testOpenSitemaps() {
-
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.lbl_name), withText(R.string.sitemaps))).perform(ViewActions.click());
         Assert.assertTrue(activityRule.getActivity().getSupportFragmentManager().findFragmentById(R.id.page_container) instanceof SitemapListFragment);

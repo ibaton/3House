@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import butterknife.Bind;
+import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
@@ -33,6 +34,7 @@ public class WidgetSettingsTest {
 
     @Before
     public void moveToWidget(){
+        DatabaseUtil.init();
         NavigationUtil.navigateToSettings();
         onView(withText(R.string.settings_widgets)).perform(ViewActions.click());
     }
