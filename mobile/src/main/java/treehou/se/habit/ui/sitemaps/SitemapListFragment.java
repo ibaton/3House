@@ -28,6 +28,7 @@ import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.Connector;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 
 import treehou.se.habit.core.db.model.ServerDB;
@@ -100,6 +101,8 @@ public class SitemapListFragment extends RxFragment {
 
         listView = (RecyclerView) view.findViewById(R.id.list);
 
+        getApplicationComponent().inject(this);
+
         setupActionBar();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
@@ -122,6 +125,10 @@ public class SitemapListFragment extends RxFragment {
         listView.setAdapter(sitemapAdapter);
 
         return view;
+    }
+
+    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+        return ((HabitApplication) getActivity().getApplication()).component();
     }
 
     /**

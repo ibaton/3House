@@ -32,7 +32,19 @@ public class WidgetSettingsFragment extends Fragment {
     private static final int BASE_IMAGE_SIZE = 50;
 
     private OHWidget displayWidget;
+
     @Bind(R.id.widget_holder) FrameLayout widgetHolder;
+    @Bind(R.id.img_widget_icon1) ImageView img1;
+    @Bind(R.id.img_widget_icon2) ImageView img2;
+    @Bind(R.id.img_widget_icon3) ImageView img3;
+    @Bind(R.id.img_widget_icon4) ImageView img4;
+    @Bind(R.id.img_widget_icon5) ImageView img5;
+    @Bind(R.id.img_widget_icon6) ImageView img6;
+    @Bind(R.id.bar_image_size) SeekBar barImageSize;
+    @Bind(R.id.bar_text_size) SeekBar barTextSize;
+    @Bind(R.id.swt_compressed_button) SwitchCompat swtCompressButton;
+    @Bind(R.id.swt_compressed_slider) SwitchCompat swtCompressSlider;
+
     private Realm realm;
 
     public static WidgetSettingsFragment newInstance() {
@@ -60,17 +72,16 @@ public class WidgetSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(getActivity().getString(R.string.settings_widget));
-
-        final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-
         View rootView = inflater.inflate(R.layout.fragment_settings_widget, container, false);
         ButterKnife.bind(this, rootView);
 
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar.setTitle(R.string.settings_widget);
+
+        final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
+
         redrawWidget();
 
-        SeekBar barTextSize = (SeekBar) rootView.findViewById(R.id.bar_text_size);
         barTextSize.setProgress(settings.getTextSize()-Constants.MIN_TEXT_ADDON);
         barTextSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -95,31 +106,24 @@ public class WidgetSettingsFragment extends Fragment {
         DummyWidgetFactory factory = new DummyWidgetFactory(getActivity());
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_item_settings_widget);
 
-        ImageView img1 = (ImageView) rootView.findViewById(R.id.img_widget_icon1);
         factory.setBackgroundColor(img1,bitmap, WidgetSettingsDB.MUTED_COLOR);
         img1.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.MUTED_COLOR));
 
-        ImageView img2 = (ImageView) rootView.findViewById(R.id.img_widget_icon2);
         factory.setBackgroundColor(img2,bitmap, WidgetSettingsDB.LIGHT_MUTED_COLOR);
         img2.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_MUTED_COLOR));
 
-        ImageView img3 = (ImageView) rootView.findViewById(R.id.img_widget_icon3);
         factory.setBackgroundColor(img3,bitmap, WidgetSettingsDB.DARK_MUTED_COLOR);
         img3.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_MUTED_COLOR));
 
-        ImageView img4 = (ImageView) rootView.findViewById(R.id.img_widget_icon4);
         factory.setBackgroundColor(img4,bitmap, WidgetSettingsDB.VIBRANT_COLOR);
         img4.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.VIBRANT_COLOR));
 
-        ImageView img5 = (ImageView) rootView.findViewById(R.id.img_widget_icon5);
         factory.setBackgroundColor(img5,bitmap, WidgetSettingsDB.LIGHT_VIBRANT_COLOR);
         img5.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_VIBRANT_COLOR));
 
-        ImageView img6 = (ImageView) rootView.findViewById(R.id.img_widget_icon6);
         factory.setBackgroundColor(img6,bitmap, WidgetSettingsDB.DARK_VIBRANT_COLOR);
         img6.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_VIBRANT_COLOR));
 
-        SeekBar barImageSize = (SeekBar) rootView.findViewById(R.id.bar_image_size);
         barImageSize.setProgress(settings.getIconSize()-BASE_IMAGE_SIZE);
 
         barImageSize.setProgress(settings.getIconSize()-Constants.MIN_TEXT_ADDON);
@@ -145,7 +149,6 @@ public class WidgetSettingsFragment extends Fragment {
 
         // TODO Add image showing change
 
-        SwitchCompat swtCompressButton = (SwitchCompat) rootView.findViewById(R.id.swt_compressed_button);
         swtCompressButton.setChecked(settings.isCompressedSingleButton());
         swtCompressButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -154,7 +157,6 @@ public class WidgetSettingsFragment extends Fragment {
             }
         });
 
-        SwitchCompat swtCompressSlider = (SwitchCompat) rootView.findViewById(R.id.swt_compressed_slider);
         swtCompressSlider.setChecked(settings.isCompressedSlider());
         swtCompressSlider.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

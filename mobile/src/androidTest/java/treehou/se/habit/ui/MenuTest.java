@@ -1,4 +1,4 @@
-package treehou.se.habit;
+package treehou.se.habit.ui;
 
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.DrawerActions;
@@ -19,6 +19,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import treehou.se.habit.MainActivity;
+import treehou.se.habit.R;
 import treehou.se.habit.ui.servers.ServersFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
