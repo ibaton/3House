@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
-    public static final String EXTRA_SHOW_SITEMAP = "showSitemap";
-
     private Realm realm;
 
     @Inject Settings settings;

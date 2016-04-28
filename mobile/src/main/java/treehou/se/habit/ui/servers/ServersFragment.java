@@ -44,6 +44,7 @@ public class ServersFragment extends RxFragment {
     @Bind(R.id.fab_add) FloatingActionButton fabAdd;
 
     private ServersAdapter serversAdapter;
+    private RealmResults<ServerDB> servers;
 
     private boolean initialized = false;
     private Realm realm;
@@ -126,6 +127,7 @@ public class ServersFragment extends RxFragment {
                     @Override
                     public void call(RealmResults<ServerDB> servers) {
                         Log.d(TAG, "Loaded " + servers.size() + " servers");
+                        ServersFragment.this.servers = servers;
                         serversAdapter = new ServersAdapter(getContext(), servers);
                         serversAdapter.setItemListener(serverListener);
                         lstServer.setAdapter(serversAdapter);
@@ -256,13 +258,12 @@ public class ServersFragment extends RxFragment {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                server.removeFromRealm();
-                                serversAdapter.notifyItemRemoved(serverHolder.getAdapterPosition());
-                            }
-                        });
+                        realm.beginTransaction();
+                        int position = serverHolder.getAdapterPosition();
+                        int i = servers.indexOf(server);
+                        if(i >= 0) { servers.deleteFromRealm(i);}
+                        realm.commitTransaction();
+                        serversAdapter.notifyItemRemoved(position);
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
