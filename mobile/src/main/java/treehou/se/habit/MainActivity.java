@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity
                 // Load default sitemap if any
                 String defaultSitemap = settings.getDefaultSitemap();
                 if(savedInstanceState == null && defaultSitemap != null) {
-
                     fragmentManager.beginTransaction()
                             .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap))
                             .commit();
@@ -84,13 +84,9 @@ public class MainActivity extends AppCompatActivity
             GCMHelper.gcmRegisterBackground(this);
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
-        }
-
-        for(ControllerDB controller : OHTreehouseRealm.realm().allObjects(ControllerDB.class)){
-            if (controller.isShowNotification()) {
-                ControlHelper.showNotification(this, controller);
-            }
         }*/
+
+        showControllerInNotification();
     }
 
     protected HabitApplication.ApplicationComponent getApplicationComponent() {
@@ -160,6 +156,17 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.page_container, fragment)
                     .commit();
+        }
+    }
+
+    /**
+     * Show controllers in notification tray
+     */
+    private void showControllerInNotification() {
+        for(ControllerDB controller : realm.allObjects(ControllerDB.class)){
+            if (controller.isShowNotification()) {
+                ControlHelper.showNotification(this, controller);
+            }
         }
     }
 

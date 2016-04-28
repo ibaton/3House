@@ -42,12 +42,9 @@ public class SitemapListFragment extends RxFragment {
     private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
     private Realm realm;
-
     @Inject Settings settings;
-
     @Bind(R.id.list) RecyclerView listView;
     private SitemapListAdapter sitemapAdapter;
-
     private String showSitemap = "";
 
     /**
@@ -97,14 +94,9 @@ public class SitemapListFragment extends RxFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sitemaplist, container, false);
-        ButterKnife.bind(view);
-
-        listView = (RecyclerView) view.findViewById(R.id.list);
-
+        ButterKnife.bind(this, view);
         getApplicationComponent().inject(this);
-
         setupActionBar();
-
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         listView.setLayoutManager(gridLayoutManager);
         listView.setItemAnimator(new DefaultItemAnimator());
