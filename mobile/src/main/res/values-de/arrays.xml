@@ -14,10 +14,11 @@
     </string-array>
     <string-array name="controll_manager">
         <item>Bearbeiten</item>
-        <item>Löschen</item>
+        <item>@string/delete</item>
     </string-array>
     <string-array name="server_manager">
         <item>Bindings</item>
-        <item>Löschen</item>
+        <item>Inbox</item>
+        <item>@string/delete</item>
     </string-array>
 </resources>

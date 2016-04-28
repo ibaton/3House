@@ -18,6 +18,7 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     dexOptions {
         incremental true
         maxProcessCount 4

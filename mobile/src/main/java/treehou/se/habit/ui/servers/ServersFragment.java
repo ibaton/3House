@@ -280,6 +280,7 @@ public class ServersFragment extends RxFragment {
      * Show empty view if no controllers exist
      */
     private void updateEmptyView(int itemCount){
+        if(viwEmpty == null) return;
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 }

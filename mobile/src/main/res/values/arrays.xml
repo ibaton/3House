@@ -48,12 +48,12 @@
 
     <string-array name="controll_manager">
         <item>Edit</item>
-        <item>Delete</item>
+        <item>@string/delete</item>
     </string-array>
 
     <string-array name="server_manager">
         <item>Bindings</item>
         <item>Inbox</item>
-        <item>Delete</item>
+        <item>@string/delete</item>
     </string-array>
 </resources>

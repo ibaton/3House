@@ -14,4 +14,9 @@ public class NavigationUtil {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.lbl_name), withText(R.string.settings))).perform(ViewActions.click());
     }
+
+    public static void navigateToServer(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(allOf(withId(R.id.lbl_name), withText(R.string.servers))).perform(ViewActions.click());
+    }
 }
