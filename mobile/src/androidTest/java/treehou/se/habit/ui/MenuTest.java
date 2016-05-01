@@ -2,7 +2,6 @@ package treehou.se.habit.ui;
 
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.DrawerActions;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import static org.hamcrest.Matchers.allOf;
@@ -20,9 +19,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
+import treehou.se.habit.TestUtil;
 import treehou.se.habit.ui.servers.ServersFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
@@ -33,11 +34,10 @@ import treehou.se.habit.ui.settings.SettingsFragment;
 public class MenuTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
+    public DaggerActivityTestRule<MainActivity> activityRule = TestUtil.TestRule();
 
     @Before
     public void setup(){
-        DatabaseUtil.init();
     }
 
     @Test

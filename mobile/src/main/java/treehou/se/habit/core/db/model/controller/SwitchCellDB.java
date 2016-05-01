@@ -46,7 +46,7 @@ public class SwitchCellDB extends RealmObject {
     }
 
     public static void save(SwitchCellDB item){
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         if(item.getId() <= 0) {
             item.setId(getUniqueId(realm));

@@ -84,6 +84,8 @@ public class SitemapListFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getApplicationComponent().inject(this);
+
         realm = Realm.getDefaultInstance();
 
         if(savedInstanceState != null) showSitemap = "";
@@ -95,7 +97,6 @@ public class SitemapListFragment extends RxFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sitemaplist, container, false);
         ButterKnife.bind(this, view);
-        getApplicationComponent().inject(this);
         setupActionBar();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         listView.setLayoutManager(gridLayoutManager);
@@ -149,8 +150,9 @@ public class SitemapListFragment extends RxFragment {
     public void onResume() {
         super.onResume();
 
-        realm.allObjects(ServerDB.class)
-                .asObservable()
+        realm.allObjects(ServerDB.class).where()
+                .isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0)
+                .findAllAsync().asObservable()
                 .compose(this.<RealmResults<ServerDB>>bindToLifecycle())
                 .subscribe(new Action1<RealmResults<ServerDB>>() {
                     @Override

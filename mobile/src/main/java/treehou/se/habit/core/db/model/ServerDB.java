@@ -99,7 +99,7 @@ public class ServerDB extends RealmObject {
 
     public static void save(ServerDB item) {
 
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         if (item.getId() <= 0) {
             item.setId(getUniqueId());
@@ -115,7 +115,7 @@ public class ServerDB extends RealmObject {
     }
 
     public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         long id = 1;
         Number num = realm.where(ServerDB.class).max("id");
         if (num != null) id = num.longValue() + 1;

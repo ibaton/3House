@@ -89,7 +89,7 @@ public class SetupServerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         ServerDB server = realm.where(ServerDB.class).equalTo("id", serverId).findFirst();
         if(server != null) {
             txtName.setText(server.getName());
@@ -111,7 +111,7 @@ public class SetupServerFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {

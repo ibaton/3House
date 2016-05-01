@@ -8,16 +8,21 @@ import android.preference.PreferenceManager;
 
 import javax.inject.Singleton;
 
+import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import treehou.se.habit.HabitApplication;
+import treehou.se.habit.MainActivity;
+import treehou.se.habit.NavigationDrawerFragment;
+import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.util.Settings;
 
 @Module
 public class AndroidModule {
-    private final HabitApplication application;
+    protected final Context application;
 
-    public AndroidModule(HabitApplication application) {
+    public AndroidModule(Context application) {
         this.application = application;
     }
 
@@ -31,12 +36,22 @@ public class AndroidModule {
     }
 
     @Provides @Singleton
-    public Vibrator provideVibratorManager(){
-        return (Vibrator) application.getSystemService(Context.VIBRATOR_SERVICE);
+    public OHRealm provideRealm() {
+        return new OHRealm(application);
     }
 
     @Provides @Singleton
     public Settings provideSettingsManager(){
         return Settings.instance(application);
+    }
+
+    @Singleton
+    @Component(modules = AndroidModule.class)
+    public interface ApplicationComponent {
+        void inject(HabitApplication application);
+        void inject(MainActivity homeActivity);
+        void inject(SitemapListFragment sitemapListFragment);
+        void inject(NavigationDrawerFragment drawerFragment);
+        void inject(Settings settings);
     }
 }

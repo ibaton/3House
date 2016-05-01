@@ -3,7 +3,9 @@ package treehou.se.habit;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -16,6 +18,8 @@ import treehou.se.habit.util.Settings;
 
 public class HabitApplication extends Application {
 
+    private static final String TAG = HabitApplication.class.getSimpleName();
+
     @Singleton
     @Component(modules = AndroidModule.class)
     public interface ApplicationComponent {
@@ -26,19 +30,36 @@ public class HabitApplication extends Application {
         void inject(Settings settings);
     }
 
-    private ApplicationComponent component;
+    protected ApplicationComponent component;
+
+    @Inject OHRealm ohRealm;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        component = DaggerHabitApplication_ApplicationComponent.builder()
-                .androidModule(new AndroidModule(this))
-                .build();
+        if(component == null) {
+            component = createComponent();
+        }
         component().inject(this);
+
+        ohRealm.setup(this);
+        Openhab.setup(this);
 
         // TODO Remove when support for self signed certificates
         TrustModifier.NukeSSLCerts.nuke();
+    }
+
+    protected ApplicationComponent createComponent(){
+        Log.d(TAG, "Creating app component");
+        component = DaggerHabitApplication_ApplicationComponent.builder()
+                .androidModule(new AndroidModule(this))
+                .build();
+        return component;
+    }
+
+    public void setTestComponent(ApplicationComponent appComponent) {
+        component = appComponent;
     }
 
     public ApplicationComponent component() {
@@ -48,9 +69,6 @@ public class HabitApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-
-        OHRealm.setup(this);
-        Openhab.setup(this);
 
         try {
             MultiDex.install(this);

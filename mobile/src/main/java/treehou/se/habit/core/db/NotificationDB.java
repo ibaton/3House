@@ -48,7 +48,7 @@ public class NotificationDB extends RealmObject {
     }
 
     public static void save(NotificationDB item){
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         if(item.getId() <= 0) {
             item.setId(getUniqueId());
@@ -59,7 +59,7 @@ public class NotificationDB extends RealmObject {
     }
 
     public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         Number num = realm.where(NotificationDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;

@@ -115,7 +115,7 @@ public class PageFragment extends Fragment {
 
         updatePage(page);
 
-        if(!initialized) {
+        if(!initialized && server != null) {
             requestPageUpdate();
         }
         initialized = true;
@@ -152,8 +152,8 @@ public class PageFragment extends Fragment {
 
     // TODO extract to separate class
     private AsyncTask<Void, Void, Void> createLongPoller() {
-
         final long serverId = server.getId();
+
         Realm realm = Realm.getDefaultInstance();
         OHServer server = ServerDB.load(realm, serverId).toGeneric();
         realm.close();
@@ -175,7 +175,7 @@ public class PageFragment extends Fragment {
 
         // Start listening for server updates
         // TODO Support for older versions.
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && server != null) {
             longPoller = createLongPoller();
             longPoller.execute();
         }

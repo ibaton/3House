@@ -79,7 +79,7 @@ public class WidgetSettingsDB extends RealmObject {
     }
 
     public static void save(WidgetSettingsDB item){
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         if(item.getId() <= 0) {
             item.setId(getUniqueId());
@@ -89,7 +89,7 @@ public class WidgetSettingsDB extends RealmObject {
     }
 
     public static long getUniqueId() {
-        Realm realm = OHRealm.realm();
+        Realm realm = Realm.getDefaultInstance();
         Number num = realm.where(WidgetSettingsDB.class).max("id");
         long newId = 1;
         if (num != null) newId = num.longValue() + 1;
