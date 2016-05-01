@@ -7,7 +7,7 @@ import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 
 public class OHLinkedPage {
 
-    private String id;
+    private String id = "";
     private String link;
     private String title;
     private boolean leaf;
@@ -18,6 +18,7 @@ public class OHLinkedPage {
     }
 
     public void setId(String id) {
+        if(id == null) id = "";
         this.id = id;
     }
 
