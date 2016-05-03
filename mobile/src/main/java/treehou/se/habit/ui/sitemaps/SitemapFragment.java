@@ -40,14 +40,14 @@ public class SitemapFragment extends Fragment {
     private static final String ARG_SITEMAP = "ARG_SITEMAP";
     private static final String ARG_SERVER = "ARG_SERVER";
 
+    @Bind(R.id.pgr_sitemap) ViewPager pgrSitemap;
+
     private Realm realm;
 
     private ServerDB server;
     private OHSitemap sitemap;
     private SitemapAdapter sitemapAdapter;
     private ArrayList<OHLinkedPage> pages = new ArrayList<>();
-
-    @Bind(R.id.pgr_sitemap) ViewPager pgrSitemap;
 
     private OHCallback<OHLinkedPage> requestPageCallback = new RequestPageDummyListener();
 

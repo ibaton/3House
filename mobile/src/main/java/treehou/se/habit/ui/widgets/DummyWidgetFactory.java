@@ -73,6 +73,4 @@ public class DummyWidgetFactory {
         int imageBackground = Util.getBackground(context, bitmap,type);
         imgIcon.setBackgroundColor(imageBackground);
     }
-
-
 }

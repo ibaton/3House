@@ -61,7 +61,7 @@ public class Communicator {
             public void onUpdate(OHResponse<OHItem> newItem) {
                 Log.d(TAG, "Item state " + newItem.body().getState() + " " + newItem.body().getType());
                 String state = newItem.body().getState();
-                if (treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(newItem.body().getType())) {
+                if (treehou.se.habit.util.Constants.SUPPORT_INC_DEC.contains(newItem.body().getType())) {
                     if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
                         if (value > 0) {
                             Openhab.instance(server).sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(min + value, min, max)));

@@ -42,12 +42,12 @@ public class PageFragment extends Fragment {
 
     private static final String STATE_PAGE = "STATE_PAGE";
 
+    @Bind(R.id.lou_widgets) LinearLayout louFragments;
+
     private Realm realm;
 
     private ServerDB server;
     private OHLinkedPage page;
-
-    @Bind(R.id.lou_widgets) LinearLayout louFragments;
 
     private WidgetFactory widgetFactory;
 

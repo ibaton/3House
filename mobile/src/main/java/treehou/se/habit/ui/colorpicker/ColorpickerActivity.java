@@ -61,13 +61,13 @@ public class ColorpickerActivity extends AppCompatActivity {
         private static final String ARG_COLOR   = "ARG_COLOR";
 
         @Bind(R.id.lbl_name) TextView lblName;
+        @Bind(R.id.pcr_color_h) ColorPicker pcrColor;
 
         private Realm realm;
 
         private OHServer server;
         private OHWidget widget;
         private int color;
-        private ColorPicker pcrColor;
 
         private Timer timer = new Timer();
 
@@ -109,8 +109,6 @@ public class ColorpickerActivity extends AppCompatActivity {
             ButterKnife.bind(this, rootView);
 
             lblName.setText(widget.getLabel());
-
-            pcrColor = (ColorPicker) rootView.findViewById(R.id.pcr_color_h);
             pcrColor.setColor(color);
 
             return rootView;

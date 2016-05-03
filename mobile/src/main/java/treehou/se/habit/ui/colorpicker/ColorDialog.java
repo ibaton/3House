@@ -23,8 +23,6 @@ import treehou.se.habit.R;
 
 public class ColorDialog extends DialogFragment {
 
-    public static final String EXTRA_COLOR = "color";
-
     private ColorDialogCallback colorCallback;
 
     public static ColorDialog instance(){

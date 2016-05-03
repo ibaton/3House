@@ -54,8 +54,6 @@ public class Connector {
 
     private static final String TAG = Connector.class.getSimpleName();
 
-    private static final int UPDATE_FREQUENCY = 5000;
-
     private Context context;
 
     public Connector(Context context) {
@@ -422,23 +420,6 @@ public class Connector {
             });
         }
 
-        /**
-         * Create a realm for for server.
-         *
-         * @param server the server to connect to
-         * @return Realm for server
-         */
-        private Realm createRealm(OHServer server){
-            Realm realm = new Realm.RealmBuilder()
-                    .setPrincipal(server.getUsername())
-                    .setPassword(server.getPassword())
-                    .setUsePreemptiveAuth(true)
-                    .setScheme(Realm.AuthScheme.BASIC)
-                    .build();
-
-            return realm;
-        }
-
         public void requestSitemaps(final OHCallback<List<OHSitemap>> sitemapsCallback){
             OpenHabService service = getService();
             if(service == null) {
@@ -469,81 +450,6 @@ public class Connector {
          */
         public Observable<List<OHSitemap>> requestSitemapObservable(){
              return getService().listSitemapsRx();
-        }
-
-        private <G> Socket connectServer(final Uri url, final Type type, final OHCallback<G> callback){
-
-            Log.d(TAG, "Longpolling connection to url " + url);
-
-            Realm realm = null;
-            if(server.requiresAuth()){
-                realm = createRealm(server);
-            }
-            final AsyncHttpClient asyncHttpClient = new AsyncHttpClient(
-                    new AsyncHttpClientConfig.Builder().setAcceptAnyCertificate(true)
-                            .setHostnameVerifier(new TrustModifier.NullHostNameVerifier())
-                            .setRealm(realm)
-                            .build()
-            );
-            final Client client = ClientFactory.getDefault().newClient();
-            OptionsBuilder optBuilder = client.newOptionsBuilder().runtime(asyncHttpClient);
-            UUID atmosphereId = UUID.randomUUID();
-
-            RequestBuilder request = client.newRequestBuilder()
-                    .method(org.atmosphere.wasync.Request.METHOD.GET)
-                    .uri(url.toString())
-                    .header("Accept", "application/json")
-                    .header("X-Atmosphere-Framework", "1.0")
-                    .header("X-Atmosphere-Transport", "long-polling")
-                    .header("X-Atmosphere-tracking-id", atmosphereId.toString())
-                    .encoder(new Encoder<String, Reader>() {        // Stream the request body
-                        @Override
-                        public Reader encode(String s) {
-                            Log.d(TAG, "wasync RequestBuilder encode");
-                            return new StringReader(s);
-                        }
-                    })
-                    .decoder(new Decoder<String, G>() {
-
-                        @Override
-                        public G decode(Event e, String s) {
-                            Log.d(TAG, "wasync requestBuilder Updating callback " + e + " " + s);
-                            if(Event.MESSAGE == e) {
-                                Gson gson = GsonHelper.createGsonBuilder();
-                                G item = gson.fromJson(s, type);
-
-                                Log.d(TAG, "wasync requestBuilder Updating callback " + item);
-                                callback.onUpdate(new OHResponse.Builder<>(item).fromCache(false).build());
-                                Log.d(TAG, "wasync requestBuilder Updated callback " + callback);
-                                return item;
-                            }
-                            return null;
-                        }
-                    })
-                    .transport(Request.TRANSPORT.LONG_POLLING);                    // Fallback to Long-Polling
-
-            if (server.requiresAuth()){
-                request.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
-            }
-
-            Socket pollSocket = client.create(optBuilder.build());
-            try {
-                Log.d(TAG, "wasync Socket " + pollSocket + " " + request.uri());
-                pollSocket.on(new Function<G>() {
-
-                    @Override
-                    public void on(G items) {
-                        Log.d(TAG, "wasync Socket received");
-                        callback.onUpdate(new OHResponse.Builder<>(items).fromCache(false).build());
-                    }
-                }).open(request.build());
-            } catch (IOException | ExceptionInInitializerError e) {
-                Log.d(TAG, "wasync Got error " + e);
-            }
-
-            Log.d(TAG,"Longpolling Poller started");
-
-            return pollSocket;
         }
     }
 }

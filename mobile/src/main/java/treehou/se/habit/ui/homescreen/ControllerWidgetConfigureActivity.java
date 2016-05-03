@@ -15,6 +15,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.OnClick;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
@@ -29,8 +31,8 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     private static final String PREF_PREFIX_KEY             = "appwidget_";
     private static final String PREF_POSTFIX_SHOW_TITLE     = "_show_title";
 
-    private Spinner sprControllers;
-    private CheckBox cbxShowTitle;
+    @Bind(R.id.spr_controller) Spinner sprControllers;
+    @Bind(R.id.cbx_show_title) CheckBox cbxShowTitle;
 
     private Realm realm;
 
@@ -50,17 +52,12 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
 
         setContentView(R.layout.controller_widget_configure);
 
-        sprControllers = (Spinner) findViewById(R.id.spr_controller);
         List<ControllerDB> controllers = realm.allObjects(ControllerDB.class);
         List<ControllerItem> controllerItems = new ArrayList<>();
         for(ControllerDB controllerDB : controllers) controllerItems.add(new ControllerItem(controllerDB));
 
         ArrayAdapter<ControllerItem> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, controllerItems);
         sprControllers.setAdapter(mAdapter);
-
-        cbxShowTitle = (CheckBox) findViewById(R.id.cbx_show_title);
-
-        findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -79,7 +76,6 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         realm.close();
     }
 
@@ -100,31 +96,30 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         }
     }
 
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            final Context context = ControllerWidgetConfigureActivity.this;
+    @OnClick(R.id.add_button)
+    public void onAddClick() {
+        final Context context = ControllerWidgetConfigureActivity.this;
 
-            ControllerDB controller = ((ControllerItem) sprControllers.getSelectedItem()).getControllerDB();
-            if(controller == null){
-                Toast.makeText(ControllerWidgetConfigureActivity.this, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show();
-                setResult(RESULT_CANCELED);
-                finish();
-                return;
-            }
-
-            saveControllerIdPref(context, mAppWidgetId, controller, cbxShowTitle.isChecked());
-
-            // It is the responsibility of the configuration activity to update the app widget
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            ControllerWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
-
-            // Make sure we pass back the original appWidgetId
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            setResult(RESULT_OK, resultValue);
+        ControllerDB controller = ((ControllerItem) sprControllers.getSelectedItem()).getControllerDB();
+        if(controller == null){
+            Toast.makeText(ControllerWidgetConfigureActivity.this, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show();
+            setResult(RESULT_CANCELED);
             finish();
+            return;
         }
-    };
+
+        saveControllerIdPref(context, mAppWidgetId, controller, cbxShowTitle.isChecked());
+
+        // It is the responsibility of the configuration activity to update the app widget
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ControllerWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+
+        // Make sure we pass back the original appWidgetId
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        setResult(RESULT_OK, resultValue);
+        finish();
+    }
 
     // Write the prefix to the SharedPreferences object for this widget
     static void saveControllerIdPref(Context context, int appWidgetId, ControllerDB controller, boolean showTitle) {

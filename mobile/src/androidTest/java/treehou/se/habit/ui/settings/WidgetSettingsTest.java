@@ -19,6 +19,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static treehou.se.habit.ViewActions.SliderActions.setProgress;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -41,6 +42,22 @@ public class WidgetSettingsTest {
         onView(withId(R.id.img_widget_icon4)).perform(scrollTo(), ViewActions.click());
         onView(withId(R.id.img_widget_icon5)).perform(scrollTo(), ViewActions.click());
         onView(withId(R.id.img_widget_icon6)).perform(scrollTo(), ViewActions.click());
+    }
+
+    @Test
+    public void testImageSize() {
+        onView(withId(R.id.bar_image_size)).perform(scrollTo(), setProgress(12));
+        onView(withId(R.id.bar_image_size)).perform(setProgress(100));
+        onView(withId(R.id.bar_image_size)).perform(setProgress(0));
+        onView(withId(R.id.bar_image_size)).perform(setProgress(50));
+    }
+
+    @Test
+    public void testTextSize() {
+        onView(withId(R.id.bar_text_size)).perform(scrollTo(), setProgress(12));
+        onView(withId(R.id.bar_text_size)).perform(setProgress(100));
+        onView(withId(R.id.bar_text_size)).perform(setProgress(0));
+        onView(withId(R.id.bar_text_size)).perform(setProgress(50));
     }
 
     @Test

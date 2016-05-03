@@ -43,8 +43,7 @@ public class SitemapWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
         OHSitemap sitemap = SitemapWidgetConfigureActivity.loadSitemap(context, appWidgetId);
 

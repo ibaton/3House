@@ -4,8 +4,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
-import treehou.se.habit.Constants;
-import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.util.Constants;
 
 public class WidgetSettingsDB extends RealmObject {
 

@@ -30,6 +30,7 @@ import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.IncDecCellDB;
+import treehou.se.habit.util.Constants;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -177,7 +178,7 @@ public class CellIncDecConfigFragment extends Fragment {
 
         List<OHItem> tempItems = new ArrayList<>();
         for(OHItem item : items){
-            if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
+            if(Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }
         }

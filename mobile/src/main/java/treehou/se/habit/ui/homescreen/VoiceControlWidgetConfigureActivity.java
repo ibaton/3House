@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
+import butterknife.Bind;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import treehou.se.habit.R;
 
@@ -24,9 +25,8 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
     private static final String PREF_POSTFIX_SHOW_TITLE     = "_show_title";
     private static final String PREF_PREFIX_KEY = "appwidget_voice_";
 
-    private Spinner sprServers;
-
-    private CheckBox cbxShowTitle;
+    @Bind(R.id.spr_server) Spinner sprServers;
+    @Bind(R.id.cbx_show_title) CheckBox cbxShowTitle;
 
     public VoiceControlWidgetConfigureActivity() {
         super();
@@ -42,13 +42,10 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
 
         setContentView(R.layout.voice_control_widget_configure);
 
-        sprServers = (Spinner) findViewById(R.id.spr_server);
         ArrayAdapter<OHServer> serverAdapter = null; // TODO new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, OHServer.loadAll());
         sprServers.setAdapter(serverAdapter);
 
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
-
-        cbxShowTitle = (CheckBox) findViewById(R.id.cbx_show_title);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();

@@ -41,11 +41,11 @@ public class SitemapListFragment extends RxFragment {
 
     private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
-    private Realm realm;
     @Inject Settings settings;
     @Bind(R.id.list) RecyclerView listView;
     private SitemapListAdapter sitemapAdapter;
     private String showSitemap = "";
+    private Realm realm;
 
     /**
      * Create fragment where user can select sitemap.

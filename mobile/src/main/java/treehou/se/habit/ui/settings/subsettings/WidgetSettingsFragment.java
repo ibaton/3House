@@ -20,7 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import treehou.se.habit.Constants;
+import treehou.se.habit.util.Constants;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.DummyWidgetFactory;

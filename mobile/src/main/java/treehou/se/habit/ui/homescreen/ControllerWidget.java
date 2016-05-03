@@ -64,7 +64,7 @@ public class ControllerWidget extends AppWidgetProvider {
         views.setInt(R.id.lou_rows, "setBackgroundColor", controller.getColor());
 
         views.setTextViewText(R.id.lbl_title, controller.getName());
-        views.setViewVisibility(R.id.lbl_title, showTitle?View.VISIBLE:View.GONE);
+        views.setViewVisibility(R.id.lbl_title, showTitle ? View.VISIBLE:View.GONE);
 
         ControlHelper.drawRemoteController(context, views, controller);
 

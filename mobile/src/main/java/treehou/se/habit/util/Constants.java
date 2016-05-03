@@ -1,4 +1,4 @@
-package treehou.se.habit;
+package treehou.se.habit.util;
 
 import java.util.HashSet;
 import java.util.Set;
