@@ -146,6 +146,7 @@ public class Connector {
 
         public AsyncTask<Void, Void, Void> requestPageUpdates(final OHServer server, final OHLinkedPage page, final OHCallback<OHLinkedPage> callback) {
             final Socket[] pollSocket = new Socket[1];
+            final AsyncHttpClient[] asyncHttpClient = new AsyncHttpClient[1];
             return new AsyncTask<Void, Void, Void>() {
 
                 @Override
@@ -161,7 +162,7 @@ public class Connector {
                                 .build();
                     }
 
-                    AsyncHttpClient asyncHttpClient = new AsyncHttpClient(
+                    asyncHttpClient[0] = new AsyncHttpClient(
                             new AsyncHttpClientConfig.Builder().setAcceptAnyCertificate(true)
                                     .setHostnameVerifier(new TrustModifier.NullHostNameVerifier())
                                     .setRealm(clientRealm)
@@ -169,7 +170,7 @@ public class Connector {
                     );
 
                     Client client = ClientFactory.getDefault().newClient();
-                    OptionsBuilder optBuilder = client.newOptionsBuilder().runtime(asyncHttpClient);
+                    OptionsBuilder optBuilder = client.newOptionsBuilder().runtime(asyncHttpClient[0]);
 
                     UUID atmosphereId = UUID.randomUUID();
 
@@ -227,6 +228,9 @@ public class Connector {
 
                     if (pollSocket[0] != null) {
                         pollSocket[0].close();
+                    }
+                    if (asyncHttpClient[0] != null) {
+                        asyncHttpClient[0].close();
                     }
                 }
             };

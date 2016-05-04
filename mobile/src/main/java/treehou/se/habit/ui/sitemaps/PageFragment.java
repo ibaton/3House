@@ -108,8 +108,7 @@ public class PageFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_widget, container, false);
         ButterKnife.bind(this, view);
 
@@ -261,7 +260,7 @@ public class PageFragment extends Fragment {
         super.onPause();
 
         // Stop listening for server updates
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && longPoller != null) {
+        if (longPoller != null) {
             longPoller.cancel(true);
         }
     }
