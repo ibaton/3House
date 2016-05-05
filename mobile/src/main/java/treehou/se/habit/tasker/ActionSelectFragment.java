@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
+import treehou.se.habit.ui.adapter.SitemapAdapter;
 import treehou.se.habit.ui.sitemaps.SitemapSelectorFragment;
 import treehou.se.habit.ui.adapter.MenuAdapter;
 import treehou.se.habit.ui.adapter.MenuItem;
@@ -19,7 +21,7 @@ import treehou.se.habit.ui.adapter.MenuItem;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ActionSelectFragment extends Fragment implements SitemapSelectorFragment.OnSitemapSelectListener {
+public class ActionSelectFragment extends Fragment implements SitemapAdapter.OnSitemapSelectListener {
 
     private static final int MENU_ITEMS = 1;
     private static final int MENU_SITEMAP = 2;
@@ -85,5 +87,10 @@ public class ActionSelectFragment extends Fragment implements SitemapSelectorFra
 
         getActivity().setResult(Activity.RESULT_OK, resultIntent);
         getActivity().finish();*/
+    }
+
+    @Override
+    public void onErrorClicked(OHServer server) {
+
     }
 }

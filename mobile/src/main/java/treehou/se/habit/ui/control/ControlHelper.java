@@ -78,10 +78,6 @@ public class ControlHelper {
                     .setContent(views)
                     .build();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                notification.bigContentView = views;
-            }
-
             NotificationManagerCompat.from(context).notify((int) controller.getId(), notification);
         }
     }

@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,8 +43,8 @@ public class WidgetSettingsFragment extends Fragment {
     @Bind(R.id.img_widget_icon6) ImageView img6;
     @Bind(R.id.bar_image_size) SeekBar barImageSize;
     @Bind(R.id.bar_text_size) SeekBar barTextSize;
-    @Bind(R.id.swt_compressed_button) SwitchCompat swtCompressButton;
-    @Bind(R.id.swt_compressed_slider) SwitchCompat swtCompressSlider;
+    @Bind(R.id.swt_compressed_button) Switch swtCompressButton;
+    @Bind(R.id.swt_compressed_slider) Switch swtCompressSlider;
 
     private Realm realm;
 

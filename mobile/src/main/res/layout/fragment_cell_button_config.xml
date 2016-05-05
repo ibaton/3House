@@ -29,14 +29,14 @@
                         android:layout_height="fill_parent"
                         android:padding="@dimen/default_item_padding">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/item_type"
                             android:id="@+id/hdr_item_type" />
 
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/spr_items"
@@ -44,7 +44,7 @@
                             android:entries="@array/empty"
                             android:layout_gravity="center_horizontal" />
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/image" />
@@ -54,14 +54,14 @@
                             android:layout_height="@dimen/controller_config_icon_height"
                             android:id="@+id/btn_set_icon"/>
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/command"
                             android:id="@+id/hdr_command"/>
 
-                        <android.support.v7.widget.AppCompatEditText
+                        <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/txt_command"

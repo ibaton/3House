@@ -35,7 +35,7 @@
                         android:layout_height="fill_parent"
                         android:padding="10dp">
 
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/spr_items"
@@ -54,7 +54,7 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="@string/color"/>
 
-                            <android.support.v7.widget.AppCompatButton
+                            <Button
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/pick_color"

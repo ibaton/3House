@@ -18,13 +18,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <android.support.v7.widget.AppCompatSpinner
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spr_controller"
                 android:spinnerMode="dropdown" />
 
-            <android.support.v7.widget.AppCompatCheckBox
+            <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/show_name"
@@ -34,7 +34,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="30dp"

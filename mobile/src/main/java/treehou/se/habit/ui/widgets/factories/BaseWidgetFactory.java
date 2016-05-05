@@ -135,7 +135,7 @@ public class BaseWidgetFactory {
                 return;
             }
 
-            Log.d(TAG, "update " + widget.getLabel());
+            Log.d(TAG, "update " + (widget.getItem() != null ? widget.getItem().getName() : "") + " " + widget.getLabel());
 
             setName(widget.getLabel());
 

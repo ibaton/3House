@@ -2,15 +2,16 @@ package treehou.se.habit.module;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
+
+import com.google.gson.Gson;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationDrawerFragment;
@@ -38,6 +39,11 @@ public class AndroidModule {
     @Provides @Singleton
     public OHRealm provideRealm() {
         return new OHRealm(application);
+    }
+
+    @Provides @Singleton
+    public Gson provideGson() {
+        return GsonHelper.createGsonBuilder();
     }
 
     @Provides @Singleton

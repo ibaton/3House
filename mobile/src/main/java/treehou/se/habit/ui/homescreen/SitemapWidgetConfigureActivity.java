@@ -9,14 +9,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
+import treehou.se.habit.ui.adapter.SitemapAdapter;
 import treehou.se.habit.ui.sitemaps.SitemapSelectorFragment;
 
 /**
  * The configuration screen for the {@link SitemapWidget SitemapWidget} AppWidget.
  */
-public class SitemapWidgetConfigureActivity extends AppCompatActivity implements SitemapSelectorFragment.OnSitemapSelectListener {
+public class SitemapWidgetConfigureActivity extends AppCompatActivity implements SitemapAdapter.OnSitemapSelectListener {
 
     private static final String TAG = "SitemapWidgetConfigure";
     private static final String VOLLEY_TAG_SITEMAPS = "SitemapListFragmentSitemaps2";
@@ -94,5 +96,8 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
         prefs.apply();
     }
+
+    @Override
+    public void onErrorClicked(OHServer server) {}
 }
 

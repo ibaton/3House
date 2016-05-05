@@ -84,7 +84,7 @@ public class SitemapListFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getApplicationComponent().inject(this);
+        getComponent().inject(this);
 
         realm = Realm.getDefaultInstance();
 
@@ -120,7 +120,7 @@ public class SitemapListFragment extends RxFragment {
         return view;
     }
 
-    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+    protected HabitApplication.ApplicationComponent getComponent() {
         return ((HabitApplication) getActivity().getApplication()).component();
     }
 

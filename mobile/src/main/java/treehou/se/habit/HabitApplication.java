@@ -5,8 +5,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
-import com.squareup.leakcanary.LeakCanary;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -15,6 +13,8 @@ import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.module.AndroidModule;
+import treehou.se.habit.ui.sitemaps.PageFragment;
+import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.util.Settings;
 
@@ -28,7 +28,9 @@ public class HabitApplication extends Application {
         void inject(HabitApplication application);
         void inject(MainActivity homeActivity);
         void inject(SitemapListFragment sitemapListFragment);
+        void inject(SitemapFragment sitemapFragment);
         void inject(NavigationDrawerFragment drawerFragment);
+        void inject(PageFragment pageFragment);
         void inject(Settings settings);
     }
 
@@ -39,8 +41,6 @@ public class HabitApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        LeakCanary.install(this);
 
         if(component == null) {
             component = createComponent();

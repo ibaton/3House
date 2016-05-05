@@ -118,21 +118,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.page_container);
-        if(fragment instanceof SitemapFragment){
-            SitemapFragment sitemapFragment = (SitemapFragment) fragment;
-            boolean result = sitemapFragment.popStack();
-            if(result) {
-                return;
-            }
-        }
-
-        super.onBackPressed();
-    }
-
-    @Override
     public void onNavigationDrawerItemSelected(int value) {
         Fragment fragment = null;
         switch (value) {
@@ -168,6 +153,21 @@ public class MainActivity extends AppCompatActivity
                 ControlHelper.showNotification(this, controller);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.page_container);
+        if(fragment instanceof SitemapFragment){
+            SitemapFragment sitemapFragment = (SitemapFragment) fragment;
+            boolean result = sitemapFragment.popStack();
+            if(result) {
+                return;
+            }
+        }
+
+        super.onBackPressed();
     }
 
     /**

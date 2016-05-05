@@ -27,19 +27,19 @@
                 android:layout_height="fill_parent"
                 android:padding="10dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/item" />
 
-                <android.support.v7.widget.AppCompatSpinner
+                <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/spr_items"
                     android:spinnerMode="dropdown"
                     android:entries="@array/empty" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/image" />
@@ -49,12 +49,12 @@
                     android:layout_height="@dimen/controller_config_icon_height"
                     android:id="@+id/btn_set_icon"/>
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/value" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal|numberSigned"
@@ -74,12 +74,12 @@
                         android:orientation="vertical"
                         android:layout_weight="1">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/min" />
 
-                        <android.support.v7.widget.AppCompatEditText
+                        <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal|numberSigned"
@@ -97,12 +97,12 @@
                         android:orientation="vertical"
                         android:layout_weight="1">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/max" />
 
-                        <android.support.v7.widget.AppCompatEditText
+                        <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal|numberSigned"

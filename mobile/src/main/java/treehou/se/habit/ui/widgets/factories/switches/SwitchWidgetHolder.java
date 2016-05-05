@@ -1,9 +1,9 @@
 package treehou.se.habit.ui.widgets.factories.switches;
 
-import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Switch;
 
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
@@ -23,7 +23,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
     private static final String TAG = "SwitchWidgetHolder";
 
     private BaseWidgetFactory.BaseWidgetHolder baseHolder;
-    private SwitchCompat swtSwitch;
+    private Switch swtSwitch;
 
     public static SwitchWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
         return new SwitchWidgetHolder(widget, parent, factory);
@@ -46,7 +46,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         View itemView = factory.getInflater().inflate(R.layout.item_widget_switch, null);
 
-        swtSwitch = (SwitchCompat) itemView.findViewById(R.id.swt_switch);
+        swtSwitch = (Switch) itemView.findViewById(R.id.swt_switch);
         swtSwitch.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * swtSwitch.getTextSize());
 
         getView().setOnClickListener(new View.OnClickListener() {

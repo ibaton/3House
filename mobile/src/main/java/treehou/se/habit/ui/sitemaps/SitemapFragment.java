@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,10 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
@@ -29,9 +30,9 @@ import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.ui.adapter.SitemapAdapter;
 import treehou.se.habit.ui.homescreen.VoiceService;
 
 public class SitemapFragment extends Fragment {
@@ -40,14 +41,11 @@ public class SitemapFragment extends Fragment {
     private static final String ARG_SITEMAP = "ARG_SITEMAP";
     private static final String ARG_SERVER = "ARG_SERVER";
 
-    @Bind(R.id.pgr_sitemap) ViewPager pgrSitemap;
+    @Inject Gson gson;
 
     private Realm realm;
-
     private ServerDB server;
     private OHSitemap sitemap;
-    private SitemapAdapter sitemapAdapter;
-    private ArrayList<OHLinkedPage> pages = new ArrayList<>();
 
     private OHCallback<OHLinkedPage> requestPageCallback = new RequestPageDummyListener();
 
@@ -68,13 +66,15 @@ public class SitemapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getComponent().inject(this);
+
         realm = Realm.getDefaultInstance();
 
         long serverId = getArguments().getLong(ARG_SERVER);
         server = ServerDB.load(realm, serverId);
 
         String jSitemap = getArguments().getString(ARG_SITEMAP);
-        sitemap = GsonHelper.createGsonBuilder().fromJson(jSitemap, OHSitemap.class);
+        sitemap = gson.fromJson(jSitemap, OHSitemap.class);
     }
 
     @Override
@@ -94,20 +94,24 @@ public class SitemapFragment extends Fragment {
                              final Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_sitemap, null);
-        ButterKnife.bind(this, rootView);
+        View rootView = inflater.inflate(R.layout.fragment_sitemap, container, false);
+        setHasOptionsMenu(true);
 
-        sitemapAdapter = new SitemapAdapter(server, getActivity().getSupportFragmentManager(), pages);
-        pgrSitemap.setAdapter(sitemapAdapter);
-        pgrSitemap.addOnPageChangeListener(pagerChangeListener);
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         requestPageCallback = new OHCallback<OHLinkedPage>() {
             @Override
             public void onUpdate(OHResponse<OHLinkedPage> items) {
+                if(isDetached()) return; // TODO remove callback
+
                 OHLinkedPage linkedPage = items.body();
                 Log.d(TAG, "Received page " + linkedPage);
-                pages.add(linkedPage);
-                sitemapAdapter.notifyDataSetChanged();
+                addPage(linkedPage);
             }
 
             @Override
@@ -116,29 +120,25 @@ public class SitemapFragment extends Fragment {
             }
         };
 
-        if(pages.size() == 0) {
-            Log.d(TAG, "Requesting page");
+        Log.d(TAG, "Requesting page");
+        if(!hasPage()) {
             Openhab.instance(sitemap.getServer()).requestPage(sitemap.getHomepage(), requestPageCallback);
         }
-        setHasOptionsMenu(true);
-
-        return rootView;
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        if(pages.size() > 0 && getActivity() instanceof AppCompatActivity){
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setSubtitle("");
-        }
         super.onStop();
+    }
+
+    protected HabitApplication.ApplicationComponent getComponent() {
+        return ((HabitApplication) getActivity().getApplication()).component();
     }
 
     private void setupActionbar(){
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(sitemap.getLabel());
-        }
+        if(actionBar != null) actionBar.setTitle(sitemap.getLabel());
     }
 
     class RequestPageDummyListener implements OHCallback<OHLinkedPage> {
@@ -150,29 +150,13 @@ public class SitemapFragment extends Fragment {
         public void onError() {}
     }
 
-    // Removes history when moving back in tabs
-    private ViewPager.OnPageChangeListener pagerChangeListener = new ViewPager.OnPageChangeListener() {
-        int index = 0;
-
-        @Override
-        public void onPageScrolled(int i, float v, int i2) {}
-
-        @Override
-        public void onPageSelected(int i) {
-            index=i;
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-            // Remove tabs that not parent of selected view
-            if(state == ViewPager.SCROLL_STATE_IDLE){
-                while(pages.size() > index+1) {
-                    pages.remove(pages.size() - 1);
-                    sitemapAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-    };
+    /**
+     * Check if a page is loaded.
+     * @return true if page loaded, else false.
+     */
+    private boolean hasPage(){
+        return getChildFragmentManager().getBackStackEntryCount() > 0;
+    }
 
     /**
      * Add and move to page in view pager.
@@ -180,23 +164,14 @@ public class SitemapFragment extends Fragment {
      * @param page the page to add to pager
      */
     public void addPage(OHLinkedPage page) {
-        Log.d(TAG, "Add page " + page.getLink());
-        pages.add(page);
-        sitemapAdapter.notifyDataSetChanged();
-        pgrSitemap.setCurrentItem(pages.size() - 1, true);
-    }
+        FragmentManager fragmentManager = getChildFragmentManager();
+        if(fragmentManager == null) return;
 
-    /**
-     * Move one step back in viewpager and remove page.
-     *
-     * @return true if fragment was poped.
-     */
-    public boolean popStack(){
-        if(pages.size() > 1) {
-            pgrSitemap.setCurrentItem(pages.size() - 2);
-            return true;
-        }
-        return false;
+        Log.d(TAG, "Add page " + page.getLink());
+        getChildFragmentManager().beginTransaction()
+            .replace(R.id.pgr_sitemap, PageFragment.newInstance(server, page))
+            .addToBackStack(null)
+            .commit();
     }
 
     @Override
@@ -240,7 +215,20 @@ public class SitemapFragment extends Fragment {
         startActivity(intent);
     }
 
+    /**
+     * Pop backstack
+     * @return true if handled by fragment, else false.
+     */
+    public boolean popStack(){
+        FragmentManager fragmentManager = getChildFragmentManager();
+        int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+        if(backStackEntryCount > 0){
+            fragmentManager.popBackStackImmediate();
+        }
+        backStackEntryCount = fragmentManager.getBackStackEntryCount();
 
+        return backStackEntryCount >= 1;
+    }
 
     /**
      * User requested to move to new page.
@@ -252,17 +240,8 @@ public class SitemapFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        ButterKnife.unbind(this);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("SitemapFragment", "SitemapFragment destroyed");
-
         realm.close();
     }
 }

@@ -35,12 +35,12 @@
                     android:layout_height="fill_parent"
                     android:padding="10dp">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/item"/>
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/spr_items"
@@ -48,12 +48,12 @@
                         android:entries="@array/empty"
                         android:layout_gravity="center_horizontal" />
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/command"/>
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/txt_command" />
@@ -69,7 +69,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="30dp"
