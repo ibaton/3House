@@ -12,8 +12,12 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import butterknife.Bind;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.adapter.ServerArrayAdapter;
 
 /**
  * The configuration screen for the {@link VoiceControlWidget VoiceControlWidget} AppWidget.
@@ -41,8 +45,13 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.voice_control_widget_configure);
+        ButterKnife.bind(this);
 
-        ArrayAdapter<OHServer> serverAdapter = null; // TODO new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, OHServer.loadAll());
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
+        realm.close();
+
+        ArrayAdapter<ServerDB> serverAdapter = new ServerArrayAdapter(this, servers);
         sprServers.setAdapter(serverAdapter);
 
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
@@ -68,8 +77,8 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-            //TODO check that server is selectes
-            saveServerPref(VoiceControlWidgetConfigureActivity.this, mAppWidgetId, (OHServer)sprServers.getSelectedItem(), cbxShowTitle.isChecked());
+            //TODO check that server is selected
+            saveServerPref(VoiceControlWidgetConfigureActivity.this, mAppWidgetId, (ServerDB)sprServers.getSelectedItem(), cbxShowTitle.isChecked());
 
             VoiceControlWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
@@ -82,9 +91,9 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
     };
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveServerPref(Context context, int appWidgetId, OHServer server, boolean showTitle) {
+    static void saveServerPref(Context context, int appWidgetId, ServerDB server, boolean showTitle) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_SERVER, 0).edit();
-        prefs.putLong(PREF_PREFIX_KEY + appWidgetId, 0/*TODO server.getId()*/);
+        prefs.putLong(PREF_PREFIX_KEY + appWidgetId, server.getId());
         prefs.putBoolean(PREF_PREFIX_KEY + appWidgetId + PREF_POSTFIX_SHOW_TITLE, showTitle);
         prefs.apply();
     }
@@ -107,6 +116,13 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
         prefs.apply();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+    }
+
 }
 
 

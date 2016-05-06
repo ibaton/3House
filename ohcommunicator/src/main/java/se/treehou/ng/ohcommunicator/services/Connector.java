@@ -305,6 +305,8 @@ public class Connector {
                 url = remoteUrl;
             }
 
+            if(url == null) url = "";
+
             return url;
         }
 

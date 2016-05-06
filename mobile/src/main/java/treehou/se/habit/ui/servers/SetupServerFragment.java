@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.settings;
+package treehou.se.habit.ui.servers;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.ServerDB;
 
 public class SetupServerFragment extends Fragment {

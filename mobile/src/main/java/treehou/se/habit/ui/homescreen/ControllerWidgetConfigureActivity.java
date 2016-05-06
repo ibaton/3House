@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import treehou.se.habit.R;
@@ -44,13 +45,14 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        setContentView(R.layout.controller_widget_configure);
+
+        ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
-
-        setContentView(R.layout.controller_widget_configure);
 
         List<ControllerDB> controllers = realm.allObjects(ControllerDB.class);
         List<ControllerItem> controllerItems = new ArrayList<>();
@@ -76,6 +78,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
         realm.close();
     }
 

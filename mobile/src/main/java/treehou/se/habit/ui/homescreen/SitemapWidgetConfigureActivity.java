@@ -12,6 +12,7 @@ import android.util.Log;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.ui.adapter.SitemapAdapter;
 import treehou.se.habit.ui.sitemaps.SitemapSelectorFragment;
 
@@ -88,7 +89,7 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
         long sitemapId = prefs.getLong(PREF_PREFIX_KEY + appWidgetId, -1);
         Log.d(TAG, "loadSitemap " + sitemapId);
 
-        return null; //OHSitemap.load(sitemapId);
+        return null; // OHSitemap.load(sitemapId);
     }
 
     static void deletePref(Context context, int appWidgetId) {

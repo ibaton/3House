@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 
@@ -43,6 +44,7 @@ public class SitemapListFragment extends RxFragment {
 
     @Inject Settings settings;
     @Bind(R.id.list) RecyclerView listView;
+    @Bind(R.id.empty) TextView emptyView;
     private SitemapListAdapter sitemapAdapter;
     private String showSitemap = "";
     private Realm realm;
@@ -158,6 +160,10 @@ public class SitemapListFragment extends RxFragment {
                     @Override
                     public void call(RealmResults<ServerDB> servers) {
                         Log.d(TAG, "Requesting sitemaps for " + servers.size() + " servers");
+                        int emptyVisibility = servers.size() <= 0 ? View.VISIBLE : View.GONE;
+                        if(emptyVisibility != emptyView.getVisibility()){
+                            emptyView.setVisibility(emptyVisibility);
+                        }
                         sitemapAdapter.clear();
                         for (final ServerDB server : servers) {
                             requestSitemap(server);

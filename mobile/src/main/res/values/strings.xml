@@ -99,6 +99,7 @@
     <string name="delete_cell">Delete cell?</string>
     <string name="name">Name</string>
     <string name="empty">Empty</string>
+    <string name="no_sitemaps_found">No sitemaps found</string>
     <string name="start_scan_question">No server is configured. Do you want to search for one on your local network?</string>
     <string name="inbox">Inbox</string>
     <string name="inbox_property">%1$s:%2$s</string>
