@@ -13,6 +13,7 @@ import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.module.AndroidModule;
+import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;

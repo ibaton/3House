@@ -14,7 +14,7 @@ import dagger.Provides;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
-import treehou.se.habit.NavigationDrawerFragment;
+import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.util.Settings;

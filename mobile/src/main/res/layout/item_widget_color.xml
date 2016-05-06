@@ -84,14 +84,14 @@
                     android:layout_height="match_parent"
                     android:id="@+id/btn_decrement"
                     android:visibility="visible"
-                    android:src="@drawable/cell_down"/>
+                    android:src="@drawable/cell_down_action"/>
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:id="@+id/btn_increment"
                     android:visibility="visible"
-                    android:src="@drawable/cell_up"/>
+                    android:src="@drawable/cell_up_action"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -107,6 +107,6 @@
             android:clickable="false"
             android:selectable="false"
             android:background="@null"
-            android:src="@drawable/next_page"/>
+            android:src="@drawable/next_page_icon"/>
     </LinearLayout>
 </FrameLayout>

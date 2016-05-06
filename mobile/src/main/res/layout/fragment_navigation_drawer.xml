@@ -7,4 +7,4 @@
     android:layout_height="match_parent"
     android:dividerHeight="1dp"
     android:background="@color/drawer"
-    tools:context=".NavigationDrawerFragment" />
+    tools:context=".ui.menu.NavigationDrawerFragment" />

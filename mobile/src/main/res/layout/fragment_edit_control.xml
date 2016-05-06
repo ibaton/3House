@@ -76,7 +76,7 @@
                     android:layout_height="@dimen/controller_button_space"
                     android:id="@+id/btn_add_row"
                     android:padding="10dp"
-                    android:src="@drawable/add_row"
+                    android:src="@drawable/add_row_icon"
                     android:layout_weight="1"
                     android:background="@drawable/cell_button_conf"
                     android:layout_marginRight="@dimen/margin_controller_cell"

@@ -5,7 +5,7 @@
 
     <item android:id="@+id/action_scan_for_server"
         android:title="@string/scan_for_server"
-        android:icon="@drawable/action_scan"
+        android:icon="@drawable/scan_menu_icon"
         app:showAsAction="ifRoom"
         android:orderInCategory="100"/>
 </menu>

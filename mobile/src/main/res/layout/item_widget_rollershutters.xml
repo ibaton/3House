@@ -11,7 +11,7 @@
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
         android:id="@+id/btn_up"
-        android:src="@drawable/cell_up"
+        android:src="@drawable/cell_up_action"
         android:background="?android:attr/selectableItemBackground"
         android:layout_weight="1" />
 
@@ -19,7 +19,7 @@
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
         android:id="@+id/btn_cancel"
-        android:src="@drawable/cancel"
+        android:src="@drawable/cell_cancel_icon"
         android:background="?android:attr/selectableItemBackground"
         android:layout_weight="1" />
 
@@ -27,7 +27,7 @@
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
         android:id="@+id/btn_down"
-        android:src="@drawable/cell_down"
+        android:src="@drawable/cell_down_action"
         android:background="?android:attr/selectableItemBackground"
         android:layout_weight="1" />
 

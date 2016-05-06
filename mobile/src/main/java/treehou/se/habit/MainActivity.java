@@ -18,6 +18,7 @@ import io.realm.RealmResults;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.ControlHelper;
+import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.servers.ServersFragment;

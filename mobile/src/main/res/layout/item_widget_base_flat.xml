@@ -82,6 +82,6 @@
             android:clickable="false"
             android:selectable="false"
             android:background="@null"
-            android:src="@drawable/next_page"/>
+            android:src="@drawable/next_page_icon"/>
     </LinearLayout>
 </FrameLayout>
