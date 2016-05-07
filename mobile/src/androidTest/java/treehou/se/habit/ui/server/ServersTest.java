@@ -66,6 +66,21 @@ public class ServersTest {
     }
 
     @Test
+    public void testEditServer() {
+        String testServerName = "Test Server " + new Random().nextInt(10000);
+        NavigationUtil.navigateToServer();
+        createServer(testServerName);
+
+        onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
+        onView(withId(R.id.txt_server_name)).perform(ViewActions.clearText());
+        onView(withId(R.id.txt_server_name)).perform(ViewActions.typeText(testServerName));
+        closeSoftKeyboard();
+        pressBack();
+
+        deleteServer(testServerName);
+    }
+
+    @Test
     public void testCreateRemoveMultipleServer() {
         final int serversToCreate = 8;
         NavigationUtil.navigateToServer();
