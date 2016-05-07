@@ -81,12 +81,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        /*if (GCMHelper.checkPlayServices(this)) {
-            GCMHelper.gcmRegisterBackground(this);
-        } else {
-            Log.i(TAG, "No valid Google Play Services APK found.");
-        }*/
-
         showControllerInNotification();
     }
 

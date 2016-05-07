@@ -19,33 +19,36 @@ import android.view.ViewGroup;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.functions.Action1;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.inbox.InboxListFragment;
 import treehou.se.habit.ui.adapter.ServersAdapter;
 import treehou.se.habit.ui.bindings.BindingsFragment;
+import treehou.se.habit.util.Settings;
 
 public class ServersFragment extends RxFragment {
 
     private static final String TAG = "ServersFragment";
-
-    private static final String STATE_INITIALIZED = "state_initialized";
 
     private ViewGroup container;
     @Bind(R.id.list) RecyclerView lstServer;
     @Bind(R.id.empty) View viwEmpty;
     @Bind(R.id.fab_add) FloatingActionButton fabAdd;
 
+    @Inject Settings settings;
+
     private ServersAdapter serversAdapter;
     private RealmResults<ServerDB> servers;
 
-    private boolean initialized = false;
     private Realm realm;
 
     public static ServersFragment newInstance() {
@@ -61,11 +64,8 @@ public class ServersFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getApplicationComponent().inject(this);
         realm = Realm.getDefaultInstance();
-
-        if(savedInstanceState != null){
-            initialized = savedInstanceState.getBoolean(STATE_INITIALIZED, false);
-        }
     }
 
     @Override
@@ -84,10 +84,14 @@ public class ServersFragment extends RxFragment {
         return rootView;
     }
 
+    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+        return ((HabitApplication) getContext().getApplicationContext()).component();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        setup();
+        setupAdapter();
     }
 
     @Override
@@ -119,7 +123,7 @@ public class ServersFragment extends RxFragment {
         setHasOptionsMenu(true);
     }
 
-    private void setup(){
+    private void setupAdapter(){
         realm.allObjects(ServerDB.class).asObservable()
                 .compose(this.<RealmResults<ServerDB>>bindToLifecycle())
                 .subscribe(new Action1<RealmResults<ServerDB>>() {
@@ -133,16 +137,16 @@ public class ServersFragment extends RxFragment {
                     }
                 });
 
-        if(!initialized && serversAdapter.getItemCount() <= 0){
+        if(!settings.getServerSetupAsked()){
             showScanServerFlow();
         }
-        initialized = true;
     }
 
     /**
      * Launch flow for opening server scanning.
      */
     private void showScanServerFlow() {
+        settings.setServerSetupAsked(true);
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.start_scan_question)
                 .setNeutralButton(R.string.new_server, new DialogInterface.OnClickListener() {
@@ -182,8 +186,38 @@ public class ServersFragment extends RxFragment {
         @Override
         public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
             final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
+            openServerPage(server);
+        }
+
+        /**
+         * Open page for editing server.
+         * @param server the server to open page for.
+         */
+        private void openServerPage(ServerDB server){
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.page_container, SetupServerFragment.newInstance(server.getId()))
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        /**
+         * Open inbox page
+         * @param server the server to open page for.
+         */
+        private void openInboxPage(ServerDB server){
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(container.getId(), InboxListFragment.newInstance(server))
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        /**
+         * Open bindings page for server.
+         * @param server the server to open page for.
+         */
+        private void openBindingsPage(ServerDB server){
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(container.getId(), BindingsFragment.newInstance(server))
                     .addToBackStack(null)
                     .commit();
         }
@@ -198,16 +232,10 @@ public class ServersFragment extends RxFragment {
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case 0:
-                                    getActivity().getSupportFragmentManager().beginTransaction()
-                                            .replace(container.getId(), BindingsFragment.newInstance(server))
-                                            .addToBackStack(null)
-                                            .commit();
+                                    openBindingsPage(server);
                                     break;
                                 case 1:
-                                    getActivity().getSupportFragmentManager().beginTransaction()
-                                            .replace(container.getId(), InboxListFragment.newInstance(server))
-                                            .addToBackStack(null)
-                                            .commit();
+                                    openInboxPage(server);
                                     break;
                                 case 2:
                                     showRemoveDialog(serverHolder, server);
@@ -267,12 +295,6 @@ public class ServersFragment extends RxFragment {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_INITIALIZED, true);
-        super.onSaveInstanceState(outState);
     }
 
     /**

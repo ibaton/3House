@@ -13,6 +13,7 @@ public class Settings {
 
     private static final String PREF_DEFAULT_SITEMAP = "default_sitemap";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
+    private static final String PREF_SERVER_SETUP_QUESTION = "pref_server_setup_question";
 
     @Inject SharedPreferences preferences;
 
@@ -56,5 +57,23 @@ public class Settings {
             editor.remove(PREF_DEFAULT_SITEMAP);
         }
         editor.apply();
+    }
+
+    /**
+     * Set if app has asked user to setup server.
+     * @param isAsked true if question has been asked, else false.
+     */
+    public void setServerSetupAsked(boolean isAsked){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(PREF_SERVER_SETUP_QUESTION, isAsked);
+        editor.apply();
+    }
+
+    /**
+     * Check if app has asked user to setup initial server.
+     * @return true if no question has been asked. else false.
+     */
+    public boolean getServerSetupAsked(){
+        return preferences.getBoolean(PREF_SERVER_SETUP_QUESTION, false);
     }
 }

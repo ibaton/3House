@@ -14,6 +14,7 @@ import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
+import treehou.se.habit.ui.servers.ServersFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
@@ -30,6 +31,7 @@ public class HabitApplication extends Application {
         void inject(MainActivity homeActivity);
         void inject(SitemapListFragment sitemapListFragment);
         void inject(SitemapFragment sitemapFragment);
+        void inject(ServersFragment serversFragment);
         void inject(NavigationDrawerFragment drawerFragment);
         void inject(PageFragment pageFragment);
         void inject(Settings settings);
