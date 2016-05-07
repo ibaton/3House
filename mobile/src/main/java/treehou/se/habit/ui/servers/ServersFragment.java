@@ -131,6 +131,7 @@ public class ServersFragment extends RxFragment {
                     public void call(RealmResults<ServerDB> servers) {
                         Log.d(TAG, "Loaded " + servers.size() + " servers");
                         ServersFragment.this.servers = servers;
+                        updateEmptyView(servers.size());
                         serversAdapter = new ServersAdapter(getContext(), servers);
                         serversAdapter.setItemListener(serverListener);
                         lstServer.setAdapter(serversAdapter);
@@ -245,11 +246,6 @@ public class ServersFragment extends RxFragment {
                     })
                     .create().show();
             return true;
-        }
-
-        @Override
-        public void itemCountUpdated(int itemCount) {
-            updateEmptyView(itemCount);
         }
     };
 

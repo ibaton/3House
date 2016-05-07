@@ -33,14 +33,6 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHo
         }
         this.context = context;
         this.realmResults = realmResults;
-
-        // Hookup size listener
-        this.realmResults.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                itemListener.itemCountUpdated(realmResults.size());
-            }
-        });
     }
 
     @Override
@@ -85,8 +77,6 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHo
         void onItemClickListener(ServerHolder serverHolder);
 
         boolean onItemLongClickListener(ServerHolder serverHolder);
-
-        void itemCountUpdated(int itemCount);
     }
 
     public class DummyItemListener implements ItemListener {
@@ -99,9 +89,6 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHo
         public boolean onItemLongClickListener(ServerHolder serverHolder) {
             return false;
         }
-
-        @Override
-        public void itemCountUpdated(int itemCount) {}
     }
 
     /**

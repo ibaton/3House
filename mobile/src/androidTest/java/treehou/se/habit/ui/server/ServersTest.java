@@ -67,13 +67,14 @@ public class ServersTest {
 
     @Test
     public void testCreateRemoveMultipleServer() {
+        final int serversToCreate = 8;
         NavigationUtil.navigateToServer();
         String serverBaseName = "Test Server ";
-        for(int i=0; i<20; i++){
+        for(int i=0; i<serversToCreate; i++){
             createServer(serverBaseName+i);
         }
 
-        for(int i=0; i<20; i++){
+        for(int i=0; i<serversToCreate; i++){
             deleteServer(serverBaseName+i);
         }
     }
