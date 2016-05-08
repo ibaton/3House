@@ -174,10 +174,18 @@ public class PageFragment extends Fragment {
 
         // Start listening for server updates
         // TODO Support for older versions.
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && server != null) {
+        if (supportsLongPolling()) {
             longPoller = createLongPoller();
             longPoller.execute();
         }
+    }
+
+    /**
+     * Check if android device supports long polling.
+     * @return true if long polling is supported, else false.
+     */
+    private boolean supportsLongPolling(){
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && server != null;
     }
 
     @Override
@@ -218,41 +226,56 @@ public class PageFragment extends Fragment {
             @Override
             public void run() {
                 if(invalidateWidgets) {
-                    Log.d(TAG, "Invalidating widgets " + pageWidgets.size() + " : " + widgets.size() + " " + page.getTitle());
-
-                    widgetHolders.clear();
-                    louFragments.removeAllViews();
-
-                    for (OHWidget widget : pageWidgets) {
-                        try {
-                            WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
-                            widgetHolders.add(result);
-                            louFragments.addView(result.getView());
-                        } catch (Exception e) {
-                            Log.w(TAG, "Create widget failed", e);
-                        }
-                    }
-                    widgets.clear();
-                    widgets.addAll(pageWidgets);
-                }
-                else {
-                    Log.d(TAG, "updating widgets");
-                    for (int i=0; i < widgetHolders.size(); i++) {
-
-                        try {
-                            WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
-
-                            Log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
-                            OHWidget newWidget = pageWidgets.get(i);
-
-                            holder.update(newWidget);
-                        } catch (Exception e) {
-                            Log.w(TAG, "Updating widget failed", e);
-                        }
-                    }
+                    invalidateWidgets(pageWidgets);
+                } else {
+                    updateWidgets(pageWidgets);
                 }
             }
         });
+    }
+
+    /**
+     * Invalidate all widgets in page.
+     * @param pageWidgets the widgets to update.
+     */
+    private void invalidateWidgets(List<OHWidget> pageWidgets){
+        Log.d(TAG, "Invalidating widgets " + pageWidgets.size() + " : " + widgets.size() + " " + page.getTitle());
+
+        widgetHolders.clear();
+        louFragments.removeAllViews();
+
+        for (OHWidget widget : pageWidgets) {
+            try {
+                WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
+                widgetHolders.add(result);
+                louFragments.addView(result.getView());
+            } catch (Exception e) {
+                Log.w(TAG, "Create widget failed", e);
+            }
+        }
+        widgets.clear();
+        widgets.addAll(pageWidgets);
+    }
+
+    /**
+     * Update widgets in page.
+     * @param pageWidgets the data to update widgets with.
+     */
+    private void updateWidgets(List<OHWidget> pageWidgets){
+        Log.d(TAG, "updating widgets");
+        for (int i=0; i < widgetHolders.size(); i++) {
+
+            try {
+                WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
+
+                Log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
+                OHWidget newWidget = pageWidgets.get(i);
+
+                holder.update(newWidget);
+            } catch (Exception e) {
+                Log.w(TAG, "Updating widget failed", e);
+            }
+        }
     }
 
     @Override
