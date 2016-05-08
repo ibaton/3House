@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -28,6 +30,7 @@ public class SliderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
+        ButterKnife.bind(this);
         long id = getIntent().getExtras().getLong(ARG_CELL);
         SliderFragment sliderFragment = SliderFragment.newInstance(id);
         if (savedInstanceState == null) {
@@ -35,12 +38,6 @@ public class SliderActivity extends AppCompatActivity {
                     .add(R.id.container, sliderFragment, SLIDER_TAG)
                     .commit();
         }
-        findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -54,6 +51,11 @@ public class SliderActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(0, 0);
+    }
+
+    @OnClick(R.id.container)
+    void closeClick() {
+        finish();
     }
 
     /**
@@ -120,7 +122,7 @@ public class SliderActivity extends AppCompatActivity {
         @Override
         public void onDestroy() {
             super.onDestroy();
-
+            ButterKnife.unbind(this);
             realm.close();
         }
     }

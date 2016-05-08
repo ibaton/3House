@@ -240,4 +240,10 @@ public class InboxListFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        relam.close();
+    }
 }
