@@ -7,7 +7,6 @@ import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -47,8 +46,13 @@ public class SitemapFragment extends Fragment {
     private ServerDB server;
     private OHSitemap sitemap;
 
-    private OHCallback<OHLinkedPage> requestPageCallback = new RequestPageDummyListener();
-
+    /**
+     * Creates a new instance of fragment showing sitemap.
+     *
+     * @param serverDB the server to use to open sitemap.
+     * @param sitemap the sitemap to load.
+     * @return Fragment displaying sitemap.
+     */
     public static SitemapFragment newInstance(ServerDB serverDB, OHSitemap sitemap){
         SitemapFragment fragment = new SitemapFragment();
 
@@ -67,12 +71,9 @@ public class SitemapFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         getComponent().inject(this);
-
         realm = Realm.getDefaultInstance();
-
         long serverId = getArguments().getLong(ARG_SERVER);
         server = ServerDB.load(realm, serverId);
-
         String jSitemap = getArguments().getString(ARG_SITEMAP);
         sitemap = gson.fromJson(jSitemap, OHSitemap.class);
     }
@@ -104,10 +105,10 @@ public class SitemapFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        requestPageCallback = new OHCallback<OHLinkedPage>() {
+        OHCallback<OHLinkedPage> requestPageCallback = new OHCallback<OHLinkedPage>() {
             @Override
             public void onUpdate(OHResponse<OHLinkedPage> items) {
-                if(isDetached()) return; // TODO remove callback
+                if (isDetached()) return; // TODO remove callback
 
                 OHLinkedPage linkedPage = items.body();
                 Log.d(TAG, "Received page " + linkedPage);
@@ -139,15 +140,6 @@ public class SitemapFragment extends Fragment {
     private void setupActionbar(){
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) actionBar.setTitle(sitemap.getLabel());
-    }
-
-    class RequestPageDummyListener implements OHCallback<OHLinkedPage> {
-
-        @Override
-        public void onUpdate(OHResponse<OHLinkedPage> items) {}
-
-        @Override
-        public void onError() {}
     }
 
     /**

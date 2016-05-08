@@ -151,7 +151,25 @@ public class SitemapListFragment extends RxFragment {
     @Override
     public void onResume() {
         super.onResume();
+        loadSitemapsFromServers();
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
+    /**
+     * Load servers from database and request their sitemaps.
+     */
+    private void loadSitemapsFromServers(){
         realm.allObjects(ServerDB.class).where()
                 .isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0)
                 .findAllAsync().asObservable()
@@ -170,18 +188,6 @@ public class SitemapListFragment extends RxFragment {
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
     }
 
     /**
