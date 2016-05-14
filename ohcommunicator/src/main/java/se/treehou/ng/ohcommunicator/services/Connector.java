@@ -280,6 +280,17 @@ public class Connector {
         }
 
         /**
+         * Request page for from server
+         *
+         * @param page the page to fetch.
+         * @return observable for page
+         */
+        public Observable<OHLinkedPage> requestPageRx(OHLinkedPage page) {
+            OpenHabService service = getService();
+            return service.getPageRx(page.getLink());
+        }
+
+        /**
          * Get url from server.
          *
          * @return url for server.

@@ -9,12 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -98,6 +94,10 @@ public class SitemapSelectorFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
+    /**
+     * Request sitemaps for server.
+     * @param server the server to request sitemap for.
+     */
     private void requestSitemap(final OHServer server){
 
         mSitemapAdapter.setServerState(server, SitemapAdapter.SitemapItem.STATE_LOADING);

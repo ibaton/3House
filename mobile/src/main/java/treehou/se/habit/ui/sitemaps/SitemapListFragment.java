@@ -170,8 +170,7 @@ public class SitemapListFragment extends RxFragment {
      * Load servers from database and request their sitemaps.
      */
     private void loadSitemapsFromServers(){
-        realm.allObjects(ServerDB.class).where()
-                .isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0)
+        realm.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0)
                 .findAllAsync().asObservable()
                 .compose(this.<RealmResults<ServerDB>>bindToLifecycle())
                 .subscribe(new Action1<RealmResults<ServerDB>>() {

@@ -31,7 +31,6 @@ public class SetupServerFragment extends Fragment {
     @Bind(R.id.btn_back) Button btnBack;
 
     private long serverId = -1;
-
     private int buttonTextId = R.string.back;
 
     public static SetupServerFragment newInstance() {
@@ -59,9 +58,7 @@ public class SetupServerFragment extends Fragment {
         if(savedInstanceState != null && savedInstanceState.containsKey(EXTRA_SERVER_ID)){
             serverId = savedInstanceState.getLong(EXTRA_SERVER_ID);
         }else if (bundle != null) {
-            if (bundle.containsKey(ARG_SERVER)) {
-                serverId = bundle.getLong(ARG_SERVER);
-            }
+            if (bundle.containsKey(ARG_SERVER)) serverId = bundle.getLong(ARG_SERVER);
             buttonTextId = bundle.getInt(ARG_BUTTON_TEXT_ID, R.string.back);
         }
     }
@@ -79,10 +76,9 @@ public class SetupServerFragment extends Fragment {
     }
 
     @OnClick(R.id.btn_back)
-    void backpresed(){
+    void onBack(){
         getActivity().getSupportFragmentManager().popBackStack();
     }
-
 
     @Override
     public void onResume() {
@@ -139,9 +135,7 @@ public class SetupServerFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
         outState.putLong(EXTRA_SERVER_ID, serverId);
-
         super.onSaveInstanceState(outState);
     }
 }

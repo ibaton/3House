@@ -124,7 +124,7 @@ public class ServersFragment extends RxFragment {
     }
 
     private void setupAdapter(){
-        realm.allObjects(ServerDB.class).asObservable()
+        realm.where(ServerDB.class).findAllAsync().asObservable()
                 .compose(this.<RealmResults<ServerDB>>bindToLifecycle())
                 .subscribe(new Action1<RealmResults<ServerDB>>() {
                     @Override
@@ -173,7 +173,6 @@ public class ServersFragment extends RxFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.action_scan_for_server:
                 openServerScan();
@@ -297,7 +296,6 @@ public class ServersFragment extends RxFragment {
      * Show empty view if no controllers exist
      */
     private void updateEmptyView(int itemCount){
-        if(viwEmpty == null) return;
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 }

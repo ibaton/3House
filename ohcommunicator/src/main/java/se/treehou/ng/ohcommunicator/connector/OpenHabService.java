@@ -62,6 +62,10 @@ public interface OpenHabService {
     @GET
     Call<OHLinkedPage> getPage(@Url String utl);
 
+    @Headers("Accept: application/json")
+    @GET
+    Observable<OHLinkedPage> getPageRx(@Url String utl);
+
     @Headers({
             "Accept: application/text",
             "Content-Type: text/plain"

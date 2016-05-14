@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity
      * Show controllers in notification tray
      */
     private void showControllerInNotification() {
-        for(ControllerDB controller : realm.allObjects(ControllerDB.class)){
+        for(ControllerDB controller : realm.where(ControllerDB.class).findAll()){
             if (controller.isShowNotification()) {
                 ControlHelper.showNotification(this, controller);
             }

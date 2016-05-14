@@ -81,6 +81,19 @@ public class ServersTest {
     }
 
     @Test
+    public void testBackButton() {
+        String testServerName = "Test Server " + new Random().nextInt(10000);
+        NavigationUtil.navigateToServer();
+        createServer(testServerName);
+
+        onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
+        closeSoftKeyboard();
+        onView(withId(R.id.btn_back)).perform(click());
+
+        deleteServer(testServerName);
+    }
+
+    @Test
     public void testCreateRemoveMultipleServer() {
         final int serversToCreate = 8;
         NavigationUtil.navigateToServer();

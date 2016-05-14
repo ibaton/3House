@@ -105,22 +105,6 @@ public class SitemapFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        OHCallback<OHLinkedPage> requestPageCallback = new OHCallback<OHLinkedPage>() {
-            @Override
-            public void onUpdate(OHResponse<OHLinkedPage> items) {
-                if (isDetached()) return; // TODO remove callback
-
-                OHLinkedPage linkedPage = items.body();
-                Log.d(TAG, "Received page " + linkedPage);
-                addPage(linkedPage);
-            }
-
-            @Override
-            public void onError() {
-                Log.d(TAG, "Received page failed");
-            }
-        };
-
         Log.d(TAG, "Requesting page");
         if(!hasPage()) {
             Openhab.instance(sitemap.getServer()).requestPage(sitemap.getHomepage(), requestPageCallback);
@@ -236,4 +220,20 @@ public class SitemapFragment extends Fragment {
         super.onDestroy();
         realm.close();
     }
+    
+    OHCallback<OHLinkedPage> requestPageCallback = new OHCallback<OHLinkedPage>() {
+        @Override
+        public void onUpdate(OHResponse<OHLinkedPage> items) {
+            if (isDetached()) return; // TODO remove callback
+
+            OHLinkedPage linkedPage = items.body();
+            Log.d(TAG, "Received page " + linkedPage);
+            addPage(linkedPage);
+        }
+
+        @Override
+        public void onError() {
+            Log.d(TAG, "Received page failed");
+        }
+    };
 }

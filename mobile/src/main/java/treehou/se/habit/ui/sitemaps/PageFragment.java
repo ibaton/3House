@@ -3,7 +3,7 @@ package treehou.se.habit.ui.sitemaps;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
@@ -31,7 +34,7 @@ import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ThreadPool;
 
-public class PageFragment extends Fragment {
+public class PageFragment extends RxFragment {
 
     private static final String TAG = "PageFragment";
     private static final String PAGE_REQUEST_TAG = "PageRequestTag";
@@ -123,30 +126,33 @@ public class PageFragment extends Fragment {
     }
 
     private void requestPageUpdate(){
-        Openhab.instance(server.toGeneric()).requestPage(page, new OHCallback<OHLinkedPage>() {
-            @Override
-            public void onUpdate(OHResponse<OHLinkedPage> response) {
-                final OHLinkedPage linkedPage = response.body();
-                Log.d(TAG, "Received update " + linkedPage.getWidgets().size() + " widgets from  " + page.getLink());
-                ThreadPool.instance().submit(new Runnable() {
+        Openhab.instance(server.toGeneric()).requestPageRx(page)
+                .compose(this.<OHLinkedPage>bindToLifecycle())
+                .doOnError(new Action1<Throwable>() {
                     @Override
-                    public void run() {
-                        updatePage(linkedPage);
+                    public void call(Throwable throwable) {
+                        if(getActivity() != null) {
+
+                            // TODO Check type of error.
+                            // TODO Retry on remote server.
+                            Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    }
+                })
+                .subscribe(new Action1<OHLinkedPage>() {
+                    @Override
+                    public void call(OHLinkedPage ohLinkedPage) {
+                        final OHLinkedPage linkedPage = ohLinkedPage;
+                        Log.d(TAG, "Received update " + linkedPage.getWidgets().size() + " widgets from  " + page.getLink());
+                        ThreadPool.instance().submit(new Runnable() {
+                            @Override
+                            public void run() {
+                                updatePage(linkedPage);
+                            }
+                        });
                     }
                 });
-            }
-
-            @Override
-            public void onError() {
-                if(getActivity() != null) {
-
-                    // TODO Check type of error.
-                    // TODO Retry on remote server.
-                    Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-            }
-        });
     }
 
     // TODO extract to separate class
