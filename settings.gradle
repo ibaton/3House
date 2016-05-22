@@ -1,2 +1,1 @@
-include ':mobile', ':wear', ':ohcom'
-project(':ohcom').projectDir = new File('ohcommunicator')
+include ':mobile', ':wear'
