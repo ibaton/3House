@@ -90,7 +90,7 @@ public class ServerDB extends RealmObject {
     }
 
     public boolean requiresAuth() {
-        return TextUtils.isEmpty(username) && TextUtils.isEmpty(password);
+        return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password);
     }
 
     public static ServerDB load(Realm realm, long id) {

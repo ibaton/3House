@@ -21,7 +21,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
@@ -126,7 +129,10 @@ public class PageFragment extends RxFragment {
     }
 
     private void requestPageUpdate(){
-        Openhab.instance(server.toGeneric()).requestPageRx(page)
+        Openhab.instance(server.toGeneric())
+                .requestPageRx(page)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.<OHLinkedPage>bindToLifecycle())
                 .doOnError(new Action1<Throwable>() {
                     @Override
@@ -139,20 +145,29 @@ public class PageFragment extends RxFragment {
                             getActivity().getSupportFragmentManager().popBackStack();
                         }
                     }
-                })
-                .subscribe(new Action1<OHLinkedPage>() {
-                    @Override
-                    public void call(OHLinkedPage ohLinkedPage) {
-                        final OHLinkedPage linkedPage = ohLinkedPage;
-                        Log.d(TAG, "Received update " + linkedPage.getWidgets().size() + " widgets from  " + page.getLink());
-                        ThreadPool.instance().submit(new Runnable() {
+                }).subscribe(new Subscriber<OHLinkedPage>() {
                             @Override
-                            public void run() {
-                                updatePage(linkedPage);
+                            public void onCompleted() {}
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e(TAG, "Error when requesting page ", e);
+                                Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            }
+
+                            @Override
+                            public void onNext(OHLinkedPage ohLinkedPage) {
+                                final OHLinkedPage linkedPage = ohLinkedPage;
+                                Log.d(TAG, "Received update " + linkedPage.getWidgets().size() + " widgets from  " + page.getLink());
+                                ThreadPool.instance().submit(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        updatePage(linkedPage);
+                                    }
+                                });
                             }
                         });
-                    }
-                });
     }
 
     // TODO extract to separate class
