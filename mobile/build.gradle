@@ -4,7 +4,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId "treehou.se.habit"
@@ -49,7 +49,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     wearApp project(':wear')
-    //compile project(':ohcom')
 
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.larswerkman:HoloColorPicker:1.5'
@@ -80,15 +79,15 @@ dependencies {
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
     compile 'org.atmosphere:wasync:2.1.2'
     compile 'joda-time:joda-time:2.7'
-    compile 'com.google.android.gms:play-services-gcm:9.0.1'
-    compile 'com.google.android.gms:play-services-wearable:9.0.1'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
+    compile 'com.google.android.gms:play-services-wearable:9.0.2'
     compile 'javax.jmdns:jmdns:3.4.1'
     compile 'com.android.support:multidex:1.0.1'
     compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
         transitive = true
         exclude module: 'iconics-core'
     }
-    compile 'com.github.ibaton:android-openhab-connect:1.1.2'
+    compile 'com.github.ibaton:android-openhab-connect:1.1.5'
 
     apt 'com.google.dagger:dagger-compiler:2.2'
     compile 'com.google.dagger:dagger:2.2'

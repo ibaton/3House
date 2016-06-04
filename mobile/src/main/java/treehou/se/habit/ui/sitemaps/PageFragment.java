@@ -3,7 +3,6 @@ package treehou.se.habit.ui.sitemaps;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -30,6 +28,7 @@ import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -60,7 +59,7 @@ public class PageFragment extends RxFragment {
     private List<OHWidget> widgets = new ArrayList<>();
     private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
 
-    private AsyncTask<Void, Void, Void> longPoller;
+    private Connector.ServerHandler.PageRequestTask pageRequestTask;
 
     private boolean initialized = false;
 
@@ -170,23 +169,24 @@ public class PageFragment extends RxFragment {
                         });
     }
 
-    // TODO extract to separate class
-    private AsyncTask<Void, Void, Void> createLongPoller() {
+    private Connector.ServerHandler.PageRequestTask createLongPoller() {
         final long serverId = server.getId();
 
         Realm realm = Realm.getDefaultInstance();
         OHServer server = ServerDB.load(realm, serverId).toGeneric();
         realm.close();
 
-        return Openhab.instance(server).requestPageUpdates(server, page, new OHCallback<OHLinkedPage>() {
+        Connector.ServerHandler.PageRequestTask pageRequestTask = Openhab.instance(server).requestPageUpdates(server, page, new OHCallback<OHLinkedPage>() {
             @Override
             public void onUpdate(OHResponse<OHLinkedPage> items) {
                 updatePage(items.body());
             }
 
             @Override
-            public void onError() {}
+            public void onError() {
+            }
         });
+        return pageRequestTask;
     }
 
     @Override
@@ -196,8 +196,7 @@ public class PageFragment extends RxFragment {
         // Start listening for server updates
         // TODO Support for older versions.
         if (supportsLongPolling()) {
-            longPoller = createLongPoller();
-            longPoller.execute();
+            pageRequestTask = createLongPoller();
         }
     }
 
@@ -304,8 +303,8 @@ public class PageFragment extends RxFragment {
         super.onPause();
 
         // Stop listening for server updates
-        if (longPoller != null) {
-            longPoller.cancel(true);
+        if (pageRequestTask != null) {
+            pageRequestTask.stop();
         }
     }
 

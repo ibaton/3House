@@ -134,7 +134,6 @@ public class Communicator {
         final Callback callback = new Callback() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, "onBitmapLoaded image load success");
                 imageView.setVisibility(View.VISIBLE);
                 Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
 
@@ -144,7 +143,7 @@ public class Communicator {
                 int imageBackground = Util.getBackground(context, bitmap, settings.getImageBackground());
                 realm.close();
 
-                imageView.setBackgroundColor(imageBackground);
+                 imageView.setBackgroundColor(imageBackground);
             }
 
             @Override

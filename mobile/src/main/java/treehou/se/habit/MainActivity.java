@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {
 
             // Load server setup server fragment if no server found
-            RealmResults<ServerDB> serverDBs = realm.allObjects(ServerDB.class);
+            RealmResults<ServerDB> serverDBs = realm.where(ServerDB.class).findAll();
 
             if(serverDBs.size() <= 0) {
                 fragmentManager.beginTransaction()
