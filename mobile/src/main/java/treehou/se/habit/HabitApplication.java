@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -44,6 +46,8 @@ public class HabitApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        JodaTimeAndroid.init(this);
 
         if(component == null) {
             component = createComponent();
