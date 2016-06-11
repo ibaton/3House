@@ -127,7 +127,7 @@ public class CellIncDecConfigFragment extends Fragment {
                 sprItems.setAdapter(mItemAdapter);
             }
         });
-        List<ServerDB> servers = realm.allObjects(ServerDB.class);
+        List<ServerDB> servers = realm.where(ServerDB.class).findAll();
         mItems.clear();
 
         if(item != null){

@@ -98,7 +98,7 @@ public class WidgetSettingsDB extends RealmObject {
 
     public static WidgetSettingsDB loadGlobal(Realm realm){
 
-        RealmResults<WidgetSettingsDB> result = realm.allObjects(WidgetSettingsDB.class);
+        RealmResults<WidgetSettingsDB> result = realm.where(WidgetSettingsDB.class).findAll();
         WidgetSettingsDB widgetSettingsDB;
         if(result.size() <= 0){
             realm.beginTransaction();

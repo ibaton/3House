@@ -25,7 +25,7 @@
         <item>#ff3e9e80</item>
     </array>
 
-    <string-array name="empty">
+    <string-array name="empty" translatable="false">
         <item></item>
     </string-array>
 

@@ -10,13 +10,15 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 47
-        versionName "4.7.0"
+        versionCode 48
+        versionName "5.0.0"
 
         // Enabling multidex support.
         multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
     }
 
     dexOptions {
@@ -27,8 +29,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
         }
+    }
+
+    lintOptions{
+        checkReleaseBuilds false
     }
 
     packagingOptions {
@@ -85,7 +91,7 @@ dependencies {
         transitive = true
         exclude module: 'iconics-core'
     }
-    compile 'com.github.ibaton:android-openhab-connect:1.1.6'
+    compile 'com.github.ibaton:android-openhab-connect:1.1.7'
     compile 'com.google.firebase:firebase-core:9.0.2'
     compile 'com.google.firebase:firebase-crash:9.0.2'
 

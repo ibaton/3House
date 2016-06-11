@@ -15,6 +15,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.Observable;
+import rx.functions.Func1;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.ServerArrayAdapter;
@@ -48,7 +50,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         ButterKnife.bind(this);
 
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
+        RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
         realm.close();
 
         ArrayAdapter<ServerDB> serverAdapter = new ServerArrayAdapter(this, servers);

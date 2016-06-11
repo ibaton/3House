@@ -113,6 +113,7 @@ public class SetupServerFragment extends Fragment {
                 ServerDB server = new ServerDB();
                 if(serverId <= 0) {
                     server.setId(ServerDB.getUniqueId());
+                    serverId = server.getId();
                 } else {
                     server.setId(serverId);
                 }

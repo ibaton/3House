@@ -94,15 +94,15 @@
     <string name="empty_controllers">No controller found. Press here to create your first controller.</string>
     <string name="empty_servers">No servers found. Press here to add your first server.</string>
     <string name="scan_for_servers">Searching for servers. The servers will show up here when found.</string>
-    <string name="minus">-</string>
-    <string name="plus">+</string>
+    <string name="minus" translatable="false">-</string>
+    <string name="plus" translatable="false">+</string>
     <string name="delete_cell">Delete cell?</string>
     <string name="name">Name</string>
     <string name="empty">Empty</string>
     <string name="no_sitemaps_found">No sitemaps found</string>
     <string name="start_scan_question">No server is configured. Do you want to search for one on your local network?</string>
     <string name="inbox">Inbox</string>
-    <string name="inbox_property">%1$s:%2$s</string>
+    <string name="inbox_property" translatable="false">%1$s:%2$s</string>
     <string name="ignore">Ignore</string>
     <string name="ignore_item">Don\'t show this item in the list again. Don\'t worry you\'ll be able to find them later.</string>
     <string name="approve_item">Approve</string>

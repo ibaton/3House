@@ -63,7 +63,7 @@ public class HabitApplication extends Application {
 
     protected ApplicationComponent createComponent(){
         Log.d(TAG, "Creating app component");
-        component = DaggerHabitApplication_ApplicationComponent.builder()
+        ApplicationComponent component = DaggerHabitApplication_ApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))
                 .build();
         return component;

@@ -122,6 +122,10 @@ public class SitemapListFragment extends RxFragment {
         return view;
     }
 
+    /**
+     * Get application component
+     * @return application component
+     */
     protected HabitApplication.ApplicationComponent getComponent() {
         return ((HabitApplication) getActivity().getApplication()).component();
     }
@@ -176,7 +180,6 @@ public class SitemapListFragment extends RxFragment {
                 .subscribe(new Action1<RealmResults<ServerDB>>() {
                     @Override
                     public void call(RealmResults<ServerDB> servers) {
-                        Log.d(TAG, "Requesting sitemaps for " + servers.size() + " servers");
                         int emptyVisibility = servers.size() <= 0 ? View.VISIBLE : View.GONE;
                         if(emptyVisibility != emptyView.getVisibility()){
                             emptyView.setVisibility(emptyVisibility);
@@ -198,7 +201,6 @@ public class SitemapListFragment extends RxFragment {
     private void requestSitemap(final ServerDB server){
         Connector.ServerHandler serverHandler = Openhab.instance(server.toGeneric());
 
-        Log.d(TAG, "Requesting Sitemap " + server.getName());
         sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING);
         serverHandler.requestSitemapObservable()
                 .subscribeOn(Schedulers.newThread())

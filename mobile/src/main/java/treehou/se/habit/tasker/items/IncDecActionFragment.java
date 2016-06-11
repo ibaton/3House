@@ -78,7 +78,7 @@ public class IncDecActionFragment extends Fragment {
                 sprItems.setAdapter(itemAdapter);
             }
         });
-        RealmResults<ServerDB> servers = realm.allObjects(ServerDB.class);
+        RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
         filteredItems.clear();
 
         for(final ServerDB server : servers) {

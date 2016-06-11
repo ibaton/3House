@@ -16,6 +16,8 @@
 #   public *;
 #}
 
+-dontobfuscate
+
 -keep class com.google.gson.** { *; }
 -keep class com.google.inject.* { *; }
 -keep class org.apache.http.* { *; }
@@ -26,3 +28,6 @@
 -keep @io.realm.internal.Keep class * { *; }
 -dontwarn javax.**
 -dontwarn io.realm.**
+
+-dontwarn org.apache.http.**
+-dontwarn android.net.http.AndroidHttpClient

@@ -39,7 +39,6 @@ import treehou.se.habit.util.ThreadPool;
 public class PageFragment extends RxFragment {
 
     private static final String TAG = "PageFragment";
-    private static final String PAGE_REQUEST_TAG = "PageRequestTag";
 
     // Arguments
     private static final String ARG_PAGE    = "ARG_PAGE";
@@ -127,24 +126,16 @@ public class PageFragment extends RxFragment {
         return view;
     }
 
+    /**
+     * Request page from server.
+     */
     private void requestPageUpdate(){
         Openhab.instance(server.toGeneric())
                 .requestPageRx(page)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.<OHLinkedPage>bindToLifecycle())
-                .doOnError(new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        if(getActivity() != null) {
-
-                            // TODO Check type of error.
-                            // TODO Retry on remote server.
-                            Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
-                            getActivity().getSupportFragmentManager().popBackStack();
-                        }
-                    }
-                }).subscribe(new Subscriber<OHLinkedPage>() {
+                .subscribe(new Subscriber<OHLinkedPage>() {
                             @Override
                             public void onCompleted() {}
 
@@ -194,7 +185,6 @@ public class PageFragment extends RxFragment {
         super.onResume();
 
         // Start listening for server updates
-        // TODO Support for older versions.
         if (supportsLongPolling()) {
             pageRequestTask = createLongPoller();
         }
@@ -259,8 +249,6 @@ public class PageFragment extends RxFragment {
      * @param pageWidgets the widgets to update.
      */
     private void invalidateWidgets(List<OHWidget> pageWidgets){
-        Log.d(TAG, "Invalidating widgets " + pageWidgets.size() + " : " + widgets.size() + " " + page.getTitle());
-
         widgetHolders.clear();
         louFragments.removeAllViews();
 
@@ -282,7 +270,6 @@ public class PageFragment extends RxFragment {
      * @param pageWidgets the data to update widgets with.
      */
     private void updateWidgets(List<OHWidget> pageWidgets){
-        Log.d(TAG, "updating widgets");
         for (int i=0; i < widgetHolders.size(); i++) {
 
             try {

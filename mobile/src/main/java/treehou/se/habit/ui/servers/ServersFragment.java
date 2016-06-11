@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.Subscription;
 import rx.functions.Action1;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -123,6 +124,9 @@ public class ServersFragment extends RxFragment {
         setHasOptionsMenu(true);
     }
 
+    /**
+     * Hookup server list, listening for server updates.
+     */
     private void setupAdapter(){
         realm.where(ServerDB.class).findAllAsync().asObservable()
                 .compose(this.<RealmResults<ServerDB>>bindToLifecycle())

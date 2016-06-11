@@ -79,12 +79,6 @@ public class SitemapFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupActionbar();
@@ -105,10 +99,10 @@ public class SitemapFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Log.d(TAG, "Requesting page");
         if(!hasPage()) {
             Openhab.instance(sitemap.getServer()).requestPage(sitemap.getHomepage(), requestPageCallback);
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -221,7 +215,7 @@ public class SitemapFragment extends Fragment {
         realm.close();
     }
     
-    OHCallback<OHLinkedPage> requestPageCallback = new OHCallback<OHLinkedPage>() {
+    private OHCallback<OHLinkedPage> requestPageCallback = new OHCallback<OHLinkedPage>() {
         @Override
         public void onUpdate(OHResponse<OHLinkedPage> items) {
             if (isDetached()) return; // TODO remove callback

@@ -91,10 +91,7 @@ public class InboxListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
         ButterKnife.bind(this, view);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setTitle(R.string.inbox);
-        }
+        setupActionbar();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         listView.setLayoutManager(gridLayoutManager);
@@ -123,6 +120,13 @@ public class InboxListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         return view;
+    }
+
+    private void setupActionbar() {
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.inbox);
+        }
     }
 
     @Override
@@ -179,7 +183,6 @@ public class InboxListFragment extends Fragment {
      * @param showIgnored true to filter out ignored items.
      */
     private void setItems(List<OHInboxItem> items, boolean showIgnored){
-
         Log.d(TAG, "Received items " + items);
 
         adapter.clear();

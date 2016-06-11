@@ -114,7 +114,7 @@ public class ControllsFragment extends Fragment {
                                             @Override
                                             public void execute(Realm realm) {
                                                 ControllerDB controller = ControllerDB.load(realm, id);
-                                                controller.removeFromRealm();
+                                                controller.deleteFromRealm();
                                             }
                                         });
                                         break;
@@ -124,7 +124,7 @@ public class ControllsFragment extends Fragment {
                 return true;
             }
         });
-        final List<ControllerDB> controllers = realm.allObjects(ControllerDB.class);
+        final List<ControllerDB> controllers = realm.where(ControllerDB.class).findAll();
         mAdapter.addAll(controllers);
 
         // Set the adapter

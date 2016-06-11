@@ -21,7 +21,7 @@ public class OHRealm {
 
     public RealmConfiguration configuration(Context context) {
         return new RealmConfiguration.Builder(context)
-                .setModules(new OHRealmModule())
+                .modules(new OHRealmModule())
                 .name("treehou.realm")
                 .schemaVersion(1)
                 .build();

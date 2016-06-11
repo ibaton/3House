@@ -54,7 +54,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
 
-        List<ControllerDB> controllers = realm.allObjects(ControllerDB.class);
+        List<ControllerDB> controllers = realm.where(ControllerDB.class).findAll();
         List<ControllerItem> controllerItems = new ArrayList<>();
         for(ControllerDB controllerDB : controllers) controllerItems.add(new ControllerItem(controllerDB));
 

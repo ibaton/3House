@@ -13,13 +13,13 @@ public class DatabaseUtil {
     public static void init(Context context) {
 
         RealmConfiguration configuration = new RealmConfiguration.Builder(context)
-                .setModules(new OHRealmModule())
+                .modules(new OHRealmModule())
                 .name("treehou-test.realm")
                 .schemaVersion(1)
                 .build();
         Realm.setDefaultConfiguration(configuration);
 
-        int serverSize = Realm.getDefaultInstance().allObjects(ServerDB.class).size();
+        int serverSize = Realm.getDefaultInstance().where(ServerDB.class).findAll().size();
         if(serverSize <= 0) {
             ServerDB server = new ServerDB();
             server.setName("Test Server");

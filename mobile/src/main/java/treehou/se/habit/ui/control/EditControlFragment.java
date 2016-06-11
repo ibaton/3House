@@ -216,8 +216,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         realm.beginTransaction();
-                                        cell.removeFromRealm();
-                                        if(row.getCells().size() <= 0) row.removeFromRealm();
+                                        cell.deleteFromRealm();
+                                        if(row.getCells().size() <= 0) row.deleteFromRealm();
                                         realm.commitTransaction();
                                         redrawController();
                                     }
