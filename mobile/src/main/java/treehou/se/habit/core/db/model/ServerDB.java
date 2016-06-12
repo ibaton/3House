@@ -12,13 +12,12 @@ public class ServerDB extends RealmObject {
     @PrimaryKey
     private long id = 0;
 
-    private String name;
-    private String username;
-    private String password;
-    private String localurl;
-    private String remoteurl;
+    private String name = "";
+    private String username = "";
+    private String password = "";
+    private String localurl = "";
+    private String remoteurl = "";
     private int majorversion;
-    //private RealmList<SitemapDB> sitemaps = new RealmList<>();
 
     public long getId() {
         return id;
@@ -28,19 +27,12 @@ public class ServerDB extends RealmObject {
         this.id = id;
     }
 
-    /*public RealmList<SitemapDB> getSitemaps() {
-        return sitemaps;
-    }
-
-    public void setSitemaps(RealmList<SitemapDB> sitemaps) {
-        this.sitemaps = sitemaps;
-    }*/
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
+        if(name == null) name = "";
         this.name = name;
     }
 
@@ -49,6 +41,7 @@ public class ServerDB extends RealmObject {
     }
 
     public void setUsername(String username) {
+        if(username == null) username = "";
         this.username = username;
     }
 
@@ -57,6 +50,7 @@ public class ServerDB extends RealmObject {
     }
 
     public void setPassword(String password) {
+        if(password == null) password = "";
         this.password = password;
     }
 
@@ -65,6 +59,7 @@ public class ServerDB extends RealmObject {
     }
 
     public void setLocalUrl(String localurl) {
+        if(localurl == null) localurl = "";
         this.localurl = localurl;
     }
 
@@ -73,6 +68,7 @@ public class ServerDB extends RealmObject {
     }
 
     public void setRemoteUrl(String remoteurl) {
+        if(remoteurl == null) remoteurl = "";
         this.remoteurl = remoteurl;
     }
 
@@ -137,5 +133,20 @@ public class ServerDB extends RealmObject {
             getLocalUrl(),
             getRemoteUrl(),
             getMajorversion());
+    }
+
+    /**
+     * Convert this object to a db object that can be stored in db.
+     * @return database server object.
+     */
+    public static ServerDB fromGeneric(OHServer server) {
+        ServerDB serverDB = new ServerDB();
+        serverDB.setId(ServerDB.getUniqueId());
+        serverDB.setName(server.getName());
+        serverDB.setLocalUrl(server.getLocalUrl());
+        serverDB.setRemoteUrl(server.getRemoteUrl());
+        serverDB.setUsername(server.getUsername());
+        serverDB.setPassword(server.getPassword());
+        return serverDB;
     }
 }

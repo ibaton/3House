@@ -20,21 +20,22 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.ServerDB;
 
 public class ScanServersFragment extends Fragment {
 
     private static final String TAG = "ScanServersFragment";
 
-    private ServersAdapter serversAdapter;
-
     @Bind(R.id.empty) View viwEmpty;
     @Bind(R.id.list) RecyclerView lstServer;
 
+    private ServersAdapter serversAdapter;
     private OHCallback<List<OHServer>> discoveryListener;
 
     public static ScanServersFragment newInstance() {
@@ -58,8 +59,7 @@ public class ScanServersFragment extends Fragment {
             @Override
             public void onItemClickListener(ServersAdapter.ServerHolder serverHolder) {
                 final OHServer server = serversAdapter.getItem(serverHolder.getAdapterPosition());
-                // TODO server.save();
-
+                saveServer(server);
                 getFragmentManager().popBackStack();
             }
 
@@ -68,6 +68,15 @@ public class ScanServersFragment extends Fragment {
                 updateEmptyView(itemCount);
             }
         });
+    }
+
+    private void saveServer(OHServer server){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        ServerDB serverDB = ServerDB.fromGeneric(server);
+        realm.copyToRealmOrUpdate(serverDB);
+        realm.commitTransaction();
+        realm.close();
     }
 
     @Override
@@ -174,7 +183,7 @@ public class ScanServersFragment extends Fragment {
             OHServer server = items.get(position);
 
             serverHolder.lblName.setText(server.getDisplayName());
-            //serverHolder.lblHost.setText(server.getUrl());
+            serverHolder.lblHost.setText(server.getLocalUrl());
             serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

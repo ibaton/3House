@@ -23,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -206,9 +207,19 @@ public class SitemapListFragment extends RxFragment {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.<List<OHSitemap>>bindToLifecycle())
-                .subscribe(new Action1<List<OHSitemap>>() {
+                .subscribe(new Subscriber<List<OHSitemap>>() {
+
                     @Override
-                    public void call(List<OHSitemap> sitemaps) {
+                    public void onCompleted() {                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "Request sitemap failed", e);
+                        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
+                    }
+
+                    @Override
+                    public void onNext(List<OHSitemap> sitemaps) {
                         Log.d(TAG, "Received response sitemaps " + sitemaps.size());
                         for (OHSitemap sitemap : sitemaps) {
                             sitemap.setServer(server.toGeneric());
@@ -219,12 +230,6 @@ public class SitemapListFragment extends RxFragment {
                                 openSitemap(server, sitemap);
                             }
                         }
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e(TAG, "Request sitemap failed", throwable);
-                        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
                     }
                 });
     }
