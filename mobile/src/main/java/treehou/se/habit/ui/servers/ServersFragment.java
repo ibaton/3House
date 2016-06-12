@@ -26,7 +26,6 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.Subscription;
 import rx.functions.Action1;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;

@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.settings;
 
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import android.widget.ListAdapter;
 
 import com.mikepenz.aboutlibraries.LibsBuilder;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -22,13 +25,24 @@ import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
 import treehou.se.habit.ui.settings.subsettings.NotificationsSettingsFragment;
 import treehou.se.habit.ui.settings.subsettings.WidgetSettingsFragment;
+import treehou.se.habit.util.IntentHelper;
 
 public class SettingsFragment extends Fragment {
 
-    private static final int ITEM_WIDGETS = 1;
-    private static final int ITEM_NOTIFICATIONS = 2;
-    private static final int ITEM_CUSTOM_WIDGETS = 3;
-    private static final int ITEM_LICENSES = 4;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef ({
+        SettingsItems.ITEM_WIDGETS,
+        SettingsItems.ITEM_NOTIFICATIONS,
+        SettingsItems.ITEM_CUSTOM_WIDGETS,
+        SettingsItems.ITEM_LICENSES,
+        SettingsItems.ITEM_TRANSLATE})
+    public @interface SettingsItems {
+        int ITEM_WIDGETS = 1;
+        int ITEM_NOTIFICATIONS = 2;
+        int ITEM_CUSTOM_WIDGETS = 3;
+        int ITEM_LICENSES = 4;
+        int ITEM_TRANSLATE = 5;
+    }
 
     /**
      * The fragment's ListView/GridView.
@@ -60,9 +74,10 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         ArrayList<ImageItem> items = new ArrayList<>();
-        items.add(new ImageItem(ITEM_WIDGETS, getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
-        items.add(new ImageItem(ITEM_NOTIFICATIONS, getString(R.string.settings_notification), R.drawable.ic_item_settings_notifications));
-        items.add(new ImageItem(ITEM_LICENSES, getString(R.string.open_source_libraries), R.drawable.ic_license));
+        items.add(new ImageItem(SettingsItems.ITEM_WIDGETS, getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
+        items.add(new ImageItem(SettingsItems.ITEM_NOTIFICATIONS, getString(R.string.settings_notification), R.drawable.ic_item_notification));
+        items.add(new ImageItem(SettingsItems.ITEM_LICENSES, getString(R.string.open_source_libraries), R.drawable.ic_license));
+        items.add(new ImageItem(SettingsItems.ITEM_TRANSLATE, getString(R.string.help_translate), R.drawable.ic_language));
 
         mAdapter = new ImageAdapter(getActivity(), items);
     }
@@ -97,19 +112,22 @@ public class SettingsFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             ImageItem item = (ImageItem) parent.getItemAtPosition(position);
 
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             Fragment fragment = null;
             switch (item.getId()) {
-                case ITEM_WIDGETS:
+                case SettingsItems.ITEM_WIDGETS:
                     fragment = WidgetSettingsFragment.newInstance();
                     break;
-                case ITEM_NOTIFICATIONS :
+                case SettingsItems.ITEM_NOTIFICATIONS :
                     fragment = NotificationsSettingsFragment.newInstance();
                     break;
-                case ITEM_LICENSES :
+                case SettingsItems.ITEM_LICENSES :
                     fragment = new LibsBuilder().supportFragment();
-                    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
                     if(actionBar != null) actionBar.setTitle(R.string.open_source_libraries);
                     break;
+                case SettingsItems.ITEM_TRANSLATE :
+                    openTranslationSite();
+                    return;
             }
 
             if(fragment != null){
@@ -120,4 +138,11 @@ public class SettingsFragment extends Fragment {
             }
         }
     };
+
+    /**
+     * Opens translation site for project.
+     */
+    private void openTranslationSite(){
+        startActivity(IntentHelper.helpTranslateIntent());
+    }
 }
