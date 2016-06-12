@@ -106,7 +106,7 @@ public class SitemapFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -115,6 +115,9 @@ public class SitemapFragment extends Fragment {
         return ((HabitApplication) getActivity().getApplication()).component();
     }
 
+    /**
+     * Setup actionbar using
+     */
     private void setupActionbar(){
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) actionBar.setTitle(sitemap.getLabel());

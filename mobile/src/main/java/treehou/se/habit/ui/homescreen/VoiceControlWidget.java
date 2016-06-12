@@ -60,8 +60,6 @@ public class VoiceControlWidget extends AppWidgetProvider {
             return;
         }
 
-        Log.d(TAG, "Server " + VoiceControlWidgetConfigureActivity.loadServerPref(context, appWidgetId));
-
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.voice_control_widget);
 
         views.setTextViewText(R.id.lbl_title, server.getName());
