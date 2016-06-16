@@ -2,6 +2,7 @@ package treehou.se.habit.ui.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.IntDef;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,16 @@ import treehou.se.habit.core.db.model.ServerDB;
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
 
     private static String TAG = InboxAdapter.class.getSimpleName();
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({
+        ItemType.item,
+        ItemType.item_ignored
+    })
+    @interface ItemType{
+        int item = 1;
+        int item_ignored = 2;
+    }
 
     private List<OHInboxItem> items = new ArrayList<>();
     private Context context;
@@ -41,17 +54,43 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         }
     }
 
+    public class IgnoreInboxHolder extends InboxHolder {
+
+        public IgnoreInboxHolder(View view) {
+            super(view);
+        }
+    }
+
     public InboxAdapter(Context context, ServerDB server) {
         this.context = context;
         this.server = server;
     }
 
     @Override
-    public InboxHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.item_inbox, null);
+    public int getItemViewType(int position) {
+        OHInboxItem item = getItem(position);
+        if(item.isIgnored()){
+            return ItemType.item_ignored;
+        }
+        return ItemType.item;
+    }
 
-        return new InboxHolder(itemView);
+    @Override
+    public InboxHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        InboxHolder inboxHolder = null;
+        switch (viewType) {
+            case ItemType.item:
+                View itemView = inflater.inflate(R.layout.item_inbox, null);
+                inboxHolder = new InboxHolder(itemView);
+                break;
+            case ItemType.item_ignored:
+                itemView = inflater.inflate(R.layout.item_inbox_ignored, null);
+                inboxHolder = new IgnoreInboxHolder(itemView);
+                break;
+        }
+        return inboxHolder;
     }
 
     @Override
@@ -153,8 +192,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     public void addAll(List<OHInboxItem> items) {
         for (OHInboxItem item : items) {
             this.items.add(0, item);
-            notifyItemRangeInserted(0, items.size());
         }
+        notifyDataSetChanged();
         itemListener.itemCountUpdated(items.size());
     }
 
@@ -172,6 +211,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         itemListener.itemCountUpdated(items.size());
     }
 
+    /**
+     * Remove all items from adapter
+     */
     public void clear() {
         this.items.clear();
         notifyDataSetChanged();

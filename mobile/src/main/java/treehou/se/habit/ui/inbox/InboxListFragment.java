@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,7 +38,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.InboxAdapter;
 
-public class InboxListFragment extends Fragment {
+public class InboxListFragment extends RxFragment {
 
     private static final String TAG = "InboxListFragment";
 
@@ -52,6 +58,12 @@ public class InboxListFragment extends Fragment {
     private MenuItem actionHide;
     private MenuItem actionShow;
 
+    /**
+     * Creates a new instance of inbox list fragment.
+     *
+     * @param server the server to connect to.
+     * @return new fragment instance.
+     */
     public static InboxListFragment newInstance(ServerDB server) {
         InboxListFragment fragment = new InboxListFragment();
         Bundle args = new Bundle();
@@ -92,17 +104,36 @@ public class InboxListFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         setupActionbar();
+        hookupInboxList();
+        setHasOptionsMenu(true);
 
+        return view;
+    }
+
+    /**
+     * Setup inbox list.
+     */
+    private void hookupInboxList(){
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         listView.setLayoutManager(gridLayoutManager);
         listView.setItemAnimator(new DefaultItemAnimator());
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder instanceof InboxAdapter.IgnoreInboxHolder) return ItemTouchHelper.LEFT;
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+
+            @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 if(ItemTouchHelper.RIGHT == swipeDir){
                     OHInboxItem item = adapter.getItem(viewHolder.getAdapterPosition());
                     ignoreInboxItem(item);
+                }
+                if(ItemTouchHelper.LEFT == swipeDir){
+                    OHInboxItem item = adapter.getItem(viewHolder.getAdapterPosition());
+                    unignoreInboxItem(item);
                 }
             }
 
@@ -116,12 +147,11 @@ public class InboxListFragment extends Fragment {
 
         adapter = new InboxAdapter(getContext(), server);
         listView.setAdapter(adapter);
-
-        setHasOptionsMenu(true);
-
-        return view;
     }
 
+    /**
+     * Set up actionbar
+     */
     private void setupActionbar() {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
@@ -153,6 +183,10 @@ public class InboxListFragment extends Fragment {
         updateIgnoreButtons(showIgnored);
     }
 
+    /**
+     * Set if ignored items should be shown.
+     * @param showIgnored true to show ignored items, else false.
+     */
     private void showIgnoredItems(boolean showIgnored){
 
         this.showIgnored = showIgnored;
@@ -183,17 +217,20 @@ public class InboxListFragment extends Fragment {
      * @param showIgnored true to filter out ignored items.
      */
     private void setItems(List<OHInboxItem> items, boolean showIgnored){
-        Log.d(TAG, "Received items " + items);
+        List<OHInboxItem> inboxItems = new ArrayList<>(items);
+        Log.d(TAG, "Received items " + inboxItems);
+
+        Collections.sort(inboxItems, new InboxItemComparator());
 
         adapter.clear();
         if (!showIgnored) {
-            for (Iterator<OHInboxItem> it = items.iterator(); it.hasNext();) {
+            for (Iterator<OHInboxItem> it = inboxItems.iterator(); it.hasNext();) {
                 if (it.next().isIgnored()) {
                     it.remove();
                 }
             }
         }
-        adapter.addAll(items);
+        adapter.addAll(inboxItems);
     }
 
     /**
@@ -204,7 +241,7 @@ public class InboxListFragment extends Fragment {
      * @param item the item to hide.
      */
     private void ignoreInboxItem(final OHInboxItem item){
-        adapter.removeItem(item);
+        item.setFlag(OHInboxItem.FLAG_IGNORED);
         Openhab.instance(server.toGeneric()).ignoreInboxItem(item);
 
         final View rootView = getView();
@@ -218,6 +255,7 @@ public class InboxListFragment extends Fragment {
                         }
                     }).show();
         }
+        setItems(items, showIgnored);
     }
 
     /**
@@ -228,7 +266,9 @@ public class InboxListFragment extends Fragment {
      * @param item the item to hide.
      */
     private void unignoreInboxItem(final OHInboxItem item) {
+        item.setFlag("");
         Openhab.instance(server.toGeneric()).unignoreInboxItem(item);
+        setItems(items, showIgnored);
     }
 
     @Override
@@ -248,5 +288,21 @@ public class InboxListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         relam.close();
+    }
+
+    /**
+     * Comparator for sorting inbox item in list.
+     */
+    private static class InboxItemComparator implements Comparator<OHInboxItem> {
+        @Override
+        public int compare(OHInboxItem lhs, OHInboxItem rhs) {
+
+            int inboxCompare = lhs.getLabel().compareTo(rhs.getLabel());
+            if(inboxCompare == 0){
+                return lhs.getThingUID().compareTo(rhs.getThingUID());
+            }
+
+            return inboxCompare;
+        }
     }
 }

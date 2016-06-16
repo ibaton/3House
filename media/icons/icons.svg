@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568542"
-     inkscape:cx="1040.5541"
-     inkscape:cy="397.49973"
+     inkscape:zoom="2"
+     inkscape:cx="868.27582"
+     inkscape:cy="404.0746"
      inkscape:document-units="px"
      inkscape:current-layer="g4314-9"
      showgrid="false"
@@ -1957,7 +1957,9 @@
            inkscape:export-xdpi="360"
            inkscape:export-ydpi="360">
           <g
-             id="g4423-6">
+             id="g4423-6"
+             inkscape:export-xdpi="360"
+             inkscape:export-ydpi="360">
             <use
                transform="translate(-9.7227182,-108.21816)"
                height="1"
