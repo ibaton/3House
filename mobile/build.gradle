@@ -74,6 +74,8 @@ dependencies {
     compile 'com.trello:rxlifecycle:0.5.0'
     compile 'com.trello:rxlifecycle-components:0.5.0'
 
+    compile 'com.wefika:flowlayout:0.4.1'
+
     compile 'com.github.matthewyork:ColoursLibrary:1.0.+@aar'
     compile 'commons-io:commons-io:2.4'
     compile 'com.jakewharton:butterknife:8.1.0'

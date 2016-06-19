@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -103,6 +104,7 @@ public class SitemapFragment extends Fragment {
         if(!hasPage()) {
             Openhab.instance(sitemap.getServer()).requestPage(sitemap.getHomepage(), requestPageCallback);
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -208,6 +210,7 @@ public class SitemapFragment extends Fragment {
      *
      * @param event
      */
+    @Subscribe
     public void onEvent(OHLinkedPage event){
         addPage(event);
     }

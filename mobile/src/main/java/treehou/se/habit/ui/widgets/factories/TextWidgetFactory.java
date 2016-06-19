@@ -19,18 +19,17 @@ public class TextWidgetFactory implements IWidgetFactory {
     @Override
     public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
 
-        TextWidgetHolder holder = new TextWidgetHolder(widget, parent, widgetFactory);
-        return holder;
+        return new TextWidgetHolder(widget, parent, widgetFactory);
     }
 
-    public static class TextWidgetHolder implements WidgetFactory.IWidgetHolder {
+    private static class TextWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         private static final String TAG = "TextWidgetHolder";
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private WidgetFactory factory;
 
-        public TextWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
+        TextWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
 
             this.factory = factory;
 
