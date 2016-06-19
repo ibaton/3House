@@ -2,6 +2,7 @@ package treehou.se.habit.ui.menu;
 
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -36,11 +37,16 @@ public class NavigationDrawerFragment extends Fragment {
 
     public static final String TAG = "NavigationDrawerFragment";
 
-
-    public static final int ITEM_SITEMAPS       = 1414;
-    public static final int ITEM_CONTROLLERS    = 1337;
-    public static final int ITEM_SERVER         = 5335;
-    public static final int ITEM_SETTINGS       = 4214;
+    @IntDef({NavigationItems.ITEM_SITEMAPS,
+            NavigationItems.ITEM_CONTROLLERS,
+            NavigationItems.ITEM_SERVER,
+            NavigationItems.ITEM_SETTINGS})
+    public @interface NavigationItems{
+        int ITEM_SITEMAPS       = 1414;
+        int ITEM_CONTROLLERS    = 1337;
+        int ITEM_SERVER         = 5335;
+        int ITEM_SETTINGS       = 4214;
+    }
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
@@ -82,10 +88,10 @@ public class NavigationDrawerFragment extends Fragment {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
         }
 
-        items.add(new DrawerItem(getActivity().getString(R.string.sitemaps),R.drawable.menu_sitemap, ITEM_SITEMAPS));
-        items.add(new DrawerItem(getActivity().getString(R.string.controllers),R.drawable.menu_remote, ITEM_CONTROLLERS));
-        items.add(new DrawerItem(getActivity().getString(R.string.servers), R.drawable.menu_servers, ITEM_SERVER));
-        items.add(new DrawerItem(getActivity().getString(R.string.settings), R.drawable.menu_settings, ITEM_SETTINGS));
+        items.add(new DrawerItem(getActivity().getString(R.string.sitemaps),R.drawable.menu_sitemap, NavigationItems.ITEM_SITEMAPS));
+        items.add(new DrawerItem(getActivity().getString(R.string.controllers),R.drawable.menu_remote, NavigationItems.ITEM_CONTROLLERS));
+        items.add(new DrawerItem(getActivity().getString(R.string.servers), R.drawable.menu_servers, NavigationItems.ITEM_SERVER));
+        items.add(new DrawerItem(getActivity().getString(R.string.settings), R.drawable.menu_settings, NavigationItems.ITEM_SETTINGS));
 
         menuAdapter = new DrawerAdapter(getActivity(), items);
     }

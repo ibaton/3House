@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
+
 
 import javax.inject.Inject;
 
@@ -25,6 +25,8 @@ import treehou.se.habit.ui.servers.ServersFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.util.Settings;
+
+import static treehou.se.habit.ui.menu.NavigationDrawerFragment.NavigationItems;
 
 
 public class MainActivity extends AppCompatActivity
@@ -104,28 +106,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onNavigationDrawerItemSelected(int value) {
+    public void onNavigationDrawerItemSelected(@NavigationDrawerFragment.NavigationItems int value) {
         Fragment fragment = null;
         switch (value) {
-            case (NavigationDrawerFragment.ITEM_SITEMAPS):
+            case NavigationItems.ITEM_SITEMAPS:
                 fragment = SitemapListFragment.newInstance();
                 break;
-            case (NavigationDrawerFragment.ITEM_CONTROLLERS):
+            case NavigationItems.ITEM_CONTROLLERS:
                 fragment = ControllsFragment.newInstance();
                 break;
-            case (NavigationDrawerFragment.ITEM_SERVER):
+            case NavigationItems.ITEM_SERVER:
                 fragment = ServersFragment.newInstance();
                 break;
-            case (NavigationDrawerFragment.ITEM_SETTINGS):
+            case NavigationItems.ITEM_SETTINGS:
                 fragment = SettingsFragment.newInstance();
                 break;
         }
@@ -168,7 +161,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Clear fragments on backstack
      */
-    public void clearFragments(){
+    private void clearFragments(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.getBackStackEntryCount() > 0){
             fragmentManager.popBackStackImmediate();
