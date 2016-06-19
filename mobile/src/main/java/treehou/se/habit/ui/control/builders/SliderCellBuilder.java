@@ -11,8 +11,9 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -30,9 +31,9 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderCellBuilder";
 
-    @Bind(R.id.img_icon_button) ImageView imgIcon;
-    @Bind(R.id.sbrNumber) SeekBar sbrNumber;
-    @Bind(R.id.viw_background) View viwBackground;
+    @BindView(R.id.img_icon_button) ImageView imgIcon;
+    @BindView(R.id.sbrNumber) SeekBar sbrNumber;
+    @BindView(R.id.viw_background) View viwBackground;
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -69,8 +70,6 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
             }
         });
         realm.close();
-
-        ButterKnife.unbind(this);
 
         return cellView;
     }

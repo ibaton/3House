@@ -16,8 +16,9 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -40,8 +41,8 @@ public class CellVoiceConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    @Bind(R.id.spr_items) Spinner sprItems;
-    @Bind(R.id.btn_set_icon) ImageButton btnSetIcon;
+    @BindView(R.id.spr_items) Spinner sprItems;
+    @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
 
     private VoiceCellDB voiceCell;
     private Cell cell;
@@ -52,6 +53,7 @@ public class CellVoiceConfigFragment extends Fragment {
     private ArrayList<OHItem> mItems = new ArrayList<>();
 
     private Realm realm;
+    private Unbinder unbinder;
 
     public static CellVoiceConfigFragment newInstance(CellDB cell) {
         CellVoiceConfigFragment fragment = new CellVoiceConfigFragment();
@@ -97,7 +99,7 @@ public class CellVoiceConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         sprItems.setAdapter(mItemAdapter);
 
@@ -147,12 +149,9 @@ public class CellVoiceConfigFragment extends Fragment {
         }
 
         updateIconImage();
-        btnSetIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
-                startActivityForResult(intent, REQUEST_ICON);
-            }
+        btnSetIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+            startActivityForResult(intent, REQUEST_ICON);
         });
 
         return rootView;
@@ -175,7 +174,7 @@ public class CellVoiceConfigFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

@@ -64,22 +64,15 @@ public class ColorDialog extends DialogFragment {
         ta.recycle();
 
         lstColors.setAdapter(new ColorAdapter(getActivity(), R.layout.item_color, colors));
-        lstColors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(colorCallback != null) {
-                    colorCallback.setColor((int) view.getTag());
-                }
-                ColorDialog.this.dismiss();
+        lstColors.setOnItemClickListener((parent, view, position, id) -> {
+            if(colorCallback != null) {
+                colorCallback.setColor((int) view.getTag());
             }
+            ColorDialog.this.dismiss();
         });
 
         builder.setView(pickerView)
-                .setNegativeButton(getActivity().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ColorDialog.this.getDialog().cancel();
-                    }
-                });
+                .setNegativeButton(getActivity().getString(R.string.cancel), (dialog, id) -> ColorDialog.this.getDialog().cancel());
         return builder.create();
     }
 

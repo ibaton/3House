@@ -60,13 +60,10 @@ public class NotificationsSettingsFragment extends Fragment {
 
         CheckBox cbxNotificationToSpeech = (CheckBox) rootView.findViewById(R.id.cbx_notification_to_speech);
         cbxNotificationToSpeech.setChecked(settings.notificationToSpeech());
-        cbxNotificationToSpeech.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                realm.beginTransaction();
-                settings.setNotificationToSpeech(isChecked);
-                realm.commitTransaction();
-            }
+        cbxNotificationToSpeech.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            realm.beginTransaction();
+            settings.setNotificationToSpeech(isChecked);
+            realm.commitTransaction();
         });
 
         // Inflate the layout for this fragment

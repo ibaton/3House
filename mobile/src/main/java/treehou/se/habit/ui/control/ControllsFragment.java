@@ -18,8 +18,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
@@ -34,11 +35,12 @@ public class ControllsFragment extends Fragment {
 
     private ControllerAdapter mAdapter;
 
-    @Bind(R.id.list) RecyclerView mListView;
-    @Bind(R.id.empty) View viwEmpty;
-    @Bind(R.id.fab_add) FloatingActionButton fabAdd;
+    @BindView(R.id.list) RecyclerView mListView;
+    @BindView(R.id.empty) View viwEmpty;
+    @BindView(R.id.fab_add) FloatingActionButton fabAdd;
 
     private Realm realm;
+    private Unbinder unbinder;
 
     public static ControllsFragment newInstance() {
         ControllsFragment fragment = new ControllsFragment();
@@ -60,7 +62,7 @@ public class ControllsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_control, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         viwEmpty.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +145,7 @@ public class ControllsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

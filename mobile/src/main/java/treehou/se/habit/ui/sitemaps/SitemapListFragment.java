@@ -19,8 +19,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.Subscriber;
@@ -44,11 +45,12 @@ public class SitemapListFragment extends RxFragment {
     private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
     @Inject Settings settings;
-    @Bind(R.id.list) RecyclerView listView;
-    @Bind(R.id.empty) TextView emptyView;
+    @BindView(R.id.list) RecyclerView listView;
+    @BindView(R.id.empty) TextView emptyView;
     private SitemapListAdapter sitemapAdapter;
     private String showSitemap = "";
     private Realm realm;
+    private Unbinder unbinder;
 
     /**
      * Create fragment where user can select sitemap.
@@ -99,7 +101,7 @@ public class SitemapListFragment extends RxFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sitemaplist, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         setupActionBar();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         listView.setLayoutManager(gridLayoutManager);
@@ -162,7 +164,7 @@ public class SitemapListFragment extends RxFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override
@@ -177,18 +179,15 @@ public class SitemapListFragment extends RxFragment {
     private void loadSitemapsFromServers(){
         realm.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0)
                 .findAllAsync().asObservable()
-                .compose(this.<RealmResults<ServerDB>>bindToLifecycle())
-                .subscribe(new Action1<RealmResults<ServerDB>>() {
-                    @Override
-                    public void call(RealmResults<ServerDB> servers) {
-                        int emptyVisibility = servers.size() <= 0 ? View.VISIBLE : View.GONE;
-                        if(emptyVisibility != emptyView.getVisibility()){
-                            emptyView.setVisibility(emptyVisibility);
-                        }
-                        sitemapAdapter.clear();
-                        for (final ServerDB server : servers) {
-                            requestSitemap(server);
-                        }
+                .compose(this.bindToLifecycle())
+                .subscribe(servers -> {
+                    int emptyVisibility = servers.size() <= 0 ? View.VISIBLE : View.GONE;
+                    if(emptyVisibility != emptyView.getVisibility()){
+                        emptyView.setVisibility(emptyVisibility);
+                    }
+                    sitemapAdapter.clear();
+                    for (final ServerDB server : servers) {
+                        requestSitemap(server);
                     }
                 });
     }
@@ -206,7 +205,7 @@ public class SitemapListFragment extends RxFragment {
         serverHandler.requestSitemapObservable()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.<List<OHSitemap>>bindToLifecycle())
+                .compose(this.bindToLifecycle())
                 .subscribe(new Subscriber<List<OHSitemap>>() {
 
                     @Override

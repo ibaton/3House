@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +16,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.util.Constants;
@@ -34,19 +34,20 @@ public class WidgetSettingsFragment extends Fragment {
 
     private OHWidget displayWidget;
 
-    @Bind(R.id.widget_holder) FrameLayout widgetHolder;
-    @Bind(R.id.img_widget_icon1) ImageView img1;
-    @Bind(R.id.img_widget_icon2) ImageView img2;
-    @Bind(R.id.img_widget_icon3) ImageView img3;
-    @Bind(R.id.img_widget_icon4) ImageView img4;
-    @Bind(R.id.img_widget_icon5) ImageView img5;
-    @Bind(R.id.img_widget_icon6) ImageView img6;
-    @Bind(R.id.bar_image_size) SeekBar barImageSize;
-    @Bind(R.id.bar_text_size) SeekBar barTextSize;
-    @Bind(R.id.swt_compressed_button) Switch swtCompressButton;
-    @Bind(R.id.swt_compressed_slider) Switch swtCompressSlider;
+    @BindView(R.id.widget_holder) FrameLayout widgetHolder;
+    @BindView(R.id.img_widget_icon1) ImageView img1;
+    @BindView(R.id.img_widget_icon2) ImageView img2;
+    @BindView(R.id.img_widget_icon3) ImageView img3;
+    @BindView(R.id.img_widget_icon4) ImageView img4;
+    @BindView(R.id.img_widget_icon5) ImageView img5;
+    @BindView(R.id.img_widget_icon6) ImageView img6;
+    @BindView(R.id.bar_image_size) SeekBar barImageSize;
+    @BindView(R.id.bar_text_size) SeekBar barTextSize;
+    @BindView(R.id.swt_compressed_button) Switch swtCompressButton;
+    @BindView(R.id.swt_compressed_slider) Switch swtCompressSlider;
 
     private Realm realm;
+    private Unbinder unbinder;
 
     public static WidgetSettingsFragment newInstance() {
         WidgetSettingsFragment fragment = new WidgetSettingsFragment();
@@ -74,7 +75,7 @@ public class WidgetSettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_settings_widget, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(R.string.settings_widget);
@@ -95,12 +96,10 @@ public class WidgetSettingsFragment extends Fragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -151,20 +150,10 @@ public class WidgetSettingsFragment extends Fragment {
         // TODO Add image showing change
 
         swtCompressButton.setChecked(settings.isCompressedSingleButton());
-        swtCompressButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setCompressedButtonChanged(isChecked);
-            }
-        });
+        swtCompressButton.setOnCheckedChangeListener((buttonView, isChecked) -> setCompressedButtonChanged(isChecked));
 
         swtCompressSlider.setChecked(settings.isCompressedSlider());
-        swtCompressSlider.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setCompressedSliderChanged(isChecked);
-            }
-        });
+        swtCompressSlider.setOnCheckedChangeListener((buttonView, isChecked) -> setCompressedSliderChanged(isChecked));
 
         // Inflate the layout for this fragment
         return rootView;
@@ -173,7 +162,7 @@ public class WidgetSettingsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

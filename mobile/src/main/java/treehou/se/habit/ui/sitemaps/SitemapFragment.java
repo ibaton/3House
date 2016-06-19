@@ -19,9 +19,10 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
+
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
@@ -102,13 +103,12 @@ public class SitemapFragment extends Fragment {
         if(!hasPage()) {
             Openhab.instance(sitemap.getServer()).requestPage(sitemap.getHomepage(), requestPageCallback);
         }
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onPause();
     }
 
     protected HabitApplication.ApplicationComponent getComponent() {

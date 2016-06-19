@@ -42,12 +42,9 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
 
         itemHolder.lblName.setText(item.getName());
         itemHolder.imgIcon.setImageResource(item.getImage());
-        itemHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null){
-                    itemClickListener.onItemClicked(item.getId());
-                }
+        itemHolder.itemView.setOnClickListener(v -> {
+            if(itemClickListener != null){
+                itemClickListener.onItemClicked(item.getId());
             }
         });
     }
@@ -90,6 +87,6 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
     }
 
     public interface OnItemClickListener{
-        public void onItemClicked(int id);
+        void onItemClicked(int id);
     }
 }

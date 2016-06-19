@@ -97,17 +97,14 @@ public class Communicator {
         }
 
         OkHttpClient httpClient = TrustModifier.createAcceptAllClient();
-        httpClient.interceptors().add(new Interceptor() {
-            @Override
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+        httpClient.interceptors().add(chain -> {
 
-                com.squareup.okhttp.Request.Builder newRequest = chain.request().newBuilder();
-                if (server.requiresAuth()) {
-                    newRequest.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
-                }
-
-                return chain.proceed(newRequest.build());
+            com.squareup.okhttp.Request.Builder newRequest = chain.request().newBuilder();
+            if (server.requiresAuth()) {
+                newRequest.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
             }
+
+            return chain.proceed(newRequest.build());
         });
 
         final Picasso picasso = new Picasso.Builder(context)

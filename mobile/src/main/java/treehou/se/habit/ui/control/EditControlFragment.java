@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +21,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -47,8 +47,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     public static final int REQUEST_COLOR = 3117;
 
-    @Bind(R.id.lou_btn_holder) LinearLayout louController;
-    @Bind(R.id.viw_background) View viwBackground;
+    @BindView(R.id.lou_btn_holder) LinearLayout louController;
+    @BindView(R.id.viw_background) View viwBackground;
 
     private ActionBar actionBar;
     private ControllerDB controller;
@@ -56,6 +56,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     private CellFactory<Integer> cellFactory;
 
     private Realm realm;
+    private Unbinder unbinder;
 
     public static EditControlFragment newInstance(long id) {
         EditControlFragment fragment = new EditControlFragment();
@@ -98,20 +99,17 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_control, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         actionBar = activity.getSupportActionBar();
 
         updateColorPalette(controller.getColor());
 
         ImageButton btnAddRow = (ImageButton) rootView.findViewById(R.id.btn_add_row);
-        btnAddRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.addRow(realm);
-                Log.d("Controller", "Added controller, currently " + controller.getCellRows().size() + " rows");
-                redrawController();
-            }
+        btnAddRow.setOnClickListener(v -> {
+            controller.addRow(realm);
+            Log.d("Controller", "Added controller, currently " + controller.getCellRows().size() + " rows");
+            redrawController();
         });
         redrawController();
 
@@ -198,45 +196,33 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
             for (final CellDB cell : row.getCells()) {
                 Log.d(TAG, "Drawing cell " + cell.getId());
                 final View itemView = cellFactory.create(getActivity(), controller, cell);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.page_container, ControllCellFragment.newInstance(cell.getId()))
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        new AlertDialog.Builder(getActivity())
-                                .setMessage(activity.getString(R.string.delete_cell))
-                                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        realm.beginTransaction();
-                                        cell.deleteFromRealm();
-                                        if(row.getCells().size() <= 0) row.deleteFromRealm();
-                                        realm.commitTransaction();
-                                        redrawController();
-                                    }
-                                })
-                                .setNegativeButton(R.string.cancel, null)
-                                .show();
 
-                        return true;
-                    }
+                itemView.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.page_container, ControllCellFragment.newInstance(cell.getId()))
+                        .addToBackStack(null)
+                        .commit());
+
+                itemView.setOnLongClickListener(v -> {
+                    new AlertDialog.Builder(getActivity())
+                            .setMessage(activity.getString(R.string.delete_cell))
+                            .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                realm.beginTransaction();
+                                cell.deleteFromRealm();
+                                if(row.getCells().size() <= 0) row.deleteFromRealm();
+                                realm.commitTransaction();
+                                redrawController();
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+
+                    return true;
                 });
                 louColumnHolder.addView(itemView);
             }
 
-            btnAddCell.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    row.addCell(realm);
-                    redrawController();
-                }
+            btnAddCell.setOnClickListener(v -> {
+                row.addCell(realm);
+                redrawController();
             });
             louController.addView(louRow);
         }
@@ -274,7 +260,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     @Override
     public void onDestroyView() {
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity.getWindow().setStatusBarColor(activity.getResources().getColor(R.color.colorPrimaryDark));
             activity.getWindow().setNavigationBarColor(activity.getResources().getColor(R.color.navigationBarColor));

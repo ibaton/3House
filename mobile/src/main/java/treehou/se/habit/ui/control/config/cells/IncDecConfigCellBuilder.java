@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
@@ -24,7 +24,7 @@ public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "IncDecConfigCellBuilder";
 
-    @Bind(R.id.img_icon_button) ImageButton imgIcon;
+    @BindView(R.id.img_icon_button) ImageButton imgIcon;
 
     public View build(Context context, ControllerDB controller, CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -46,8 +46,6 @@ public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
             imgIcon.setImageDrawable(icon);
         }
         realm.close();
-
-        ButterKnife.unbind(this);
 
         return cellView;
     }

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
@@ -25,9 +25,9 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderConfigCellBuilder";
 
-    @Bind(R.id.viw_background) View viwBackground;
-    @Bind(R.id.sbr_value) SeekBar sbrValue;
-    @Bind(R.id.img_icon) ImageView imgIcon;
+    @BindView(R.id.viw_background) View viwBackground;
+    @BindView(R.id.sbr_value) SeekBar sbrValue;
+    @BindView(R.id.img_icon) ImageView imgIcon;
 
     public View build(Context context, ControllerDB controller, CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -40,20 +40,13 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
         viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
-        sbrValue.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        sbrValue.setOnTouchListener((v, event) -> true);
 
         Drawable icon = Util.getIconDrawable(context, numberCell.getIcon());
         if(icon != null) {
             imgIcon.setImageDrawable(icon);
         }
         realm.close();
-
-        ButterKnife.unbind(this);
 
         return cellView;
     }

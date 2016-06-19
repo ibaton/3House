@@ -72,12 +72,7 @@ public class IncDecActionFragment extends Fragment {
         txtMax = (TextView) rootView.findViewById(R.id.txtMax);
 
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, filteredItems);
-        sprItems.post(new Runnable() {
-            @Override
-            public void run() {
-                sprItems.setAdapter(itemAdapter);
-            }
-        });
+        sprItems.post(() -> sprItems.setAdapter(itemAdapter));
         RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
         filteredItems.clear();
 
@@ -100,12 +95,9 @@ public class IncDecActionFragment extends Fragment {
         }
 
         Button btnSave = (Button) rootView.findViewById(R.id.btn_save);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-                getActivity().finish();
-            }
+        btnSave.setOnClickListener(v -> {
+            save();
+            getActivity().finish();
         });
 
         return rootView;

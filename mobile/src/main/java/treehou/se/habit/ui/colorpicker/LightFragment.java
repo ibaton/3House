@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
@@ -24,9 +26,6 @@ import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.model.ServerDB;
 
-/**
- * Created by matti on 2016-06-11.
- */
 public class LightFragment extends Fragment {
 
     private static final String TAG = "LightFragment";
@@ -35,8 +34,8 @@ public class LightFragment extends Fragment {
     private static final String ARG_WIDGET = "ARG_SITEMAP";
     private static final String ARG_COLOR = "ARG_COLOR";
 
-    @Bind(R.id.lbl_name) TextView lblName;
-    @Bind(R.id.pcr_color_h) ColorPicker pcrColor;
+    @BindView(R.id.lbl_name) TextView lblName;
+    @BindView(R.id.pcr_color_h) ColorPicker pcrColor;
 
     private Realm realm;
 
@@ -45,6 +44,7 @@ public class LightFragment extends Fragment {
     private int color;
 
     private Timer timer = new Timer();
+    private Unbinder unbinder;
 
     public static LightFragment newInstance(long serverId, OHWidget widget, int color) {
         LightFragment fragment = new LightFragment();
@@ -82,7 +82,7 @@ public class LightFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_colorpicker, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         lblName.setText(widget.getLabel());
         pcrColor.setColor(color);
@@ -112,10 +112,10 @@ public class LightFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+    unbinder.unbind();
     }
 
-    ColorPicker.ColorChangeListener colorChangeListener = new ColorPicker.ColorChangeListener() {
+    private ColorPicker.ColorChangeListener colorChangeListener = new ColorPicker.ColorChangeListener() {
         @Override
         public void onColorChange(final float[] hsv) {
             timer.cancel();
@@ -129,7 +129,7 @@ public class LightFragment extends Fragment {
                     hsv[2] *= 100;
                     Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                     if (hsv[2] > 5) {
-                        Openhab.instance(server).sendCommand(widget.getItem().getName(), String.format(Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
+                        Openhab.instance(server).sendCommand(widget.getItem().getName(), String.format(Locale.getDefault(), Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                     } else {
                         Openhab.instance(server).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
                     }

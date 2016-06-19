@@ -56,12 +56,7 @@ public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingH
         holder.lblAuthor.setText(binding.getAuthor());
         holder.lblDescription.setText(binding.getDescription());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemClickListener.onClick(binding);
-            }
-        });
+        holder.itemView.setOnClickListener(v -> itemClickListener.onClick(binding));
     }
 
     /**

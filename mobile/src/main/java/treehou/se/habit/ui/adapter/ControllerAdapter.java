@@ -49,18 +49,8 @@ public class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.Co
     public void onBindViewHolder(final ControllerHolder controllerHolder, int position) {
         final ControllerDB controller = items.get(position);
         controllerHolder.lblName.setText(controller.getName());
-        controllerHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemListener.itemClickListener(controllerHolder);
-            }
-        });
-        controllerHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return itemListener.itemLongClickListener(controllerHolder);
-            }
-        });
+        controllerHolder.itemView.setOnClickListener(v -> itemListener.itemClickListener(controllerHolder));
+        controllerHolder.itemView.setOnLongClickListener(v -> itemListener.itemLongClickListener(controllerHolder));
     }
 
     @Override

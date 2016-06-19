@@ -50,12 +50,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder>{
         serverHolder.imgImage.setImageResource(item.resource);
 
         serverHolder.lblName.setText(item.label);
-        serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.itemClicked(item.id);
-            }
-        });
+        serverHolder.itemView.setOnClickListener(v -> listener.itemClicked(item.id));
     }
 
     @Override
@@ -104,7 +99,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder>{
         public void itemClicked(int id) {}
     }
 
-    public static interface OnItemSelectListener{
-        public void itemClicked(int id);
+    public interface OnItemSelectListener{
+        void itemClicked(int id);
     }
 }

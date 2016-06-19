@@ -13,8 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -27,12 +28,13 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     public static final String ARG_CELL_ID = "ARG_CELL_ID";
     public static final int REQUEST_COLOR = 3001;
 
-    @Bind(R.id.btn_color_picker) Button btnPicker;
-    @Bind(R.id.spr_items) Spinner sprItems;
+    @BindView(R.id.btn_color_picker) Button btnPicker;
+    @BindView(R.id.spr_items) Spinner sprItems;
     private ArrayAdapter mTypeAdapter;
     private CellDB cell;
 
     private Realm realm;
+    private Unbinder unbinder;
 
     public static ControllCellFragment newInstance(long cellId) {
         ControllCellFragment fragment = new ControllCellFragment();
@@ -63,21 +65,18 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_controll_cell, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         sprItems.setAdapter(mTypeAdapter);
         sprItems.setOnItemSelectedListener(itemSelectListener);
 
         updateColorButton(cell.getColor());
-        btnPicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ColorDialog dialog = ColorDialog.instance();
-                dialog.setTargetFragment(ControllCellFragment.this, REQUEST_COLOR);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                    .add(dialog, "colordialog")
-                    .commit();
-            }
+        btnPicker.setOnClickListener(v -> {
+            ColorDialog dialog = ColorDialog.instance();
+            dialog.setTargetFragment(ControllCellFragment.this, REQUEST_COLOR);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                .add(dialog, "colordialog")
+                .commit();
         });
         Log.d(TAG,"Color is : " + cell.getColor());
 
@@ -97,7 +96,7 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

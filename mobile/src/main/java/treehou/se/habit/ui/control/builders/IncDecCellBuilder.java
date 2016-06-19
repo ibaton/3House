@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
@@ -31,7 +31,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "IncDecCellBuilder";
 
-    @Bind(R.id.img_icon_button) ImageButton imgIcon;
+    @BindView(R.id.img_icon_button) ImageButton imgIcon;
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -49,18 +49,13 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         Drawable icon = Util.getIconDrawable(context, buttonCell.getIcon());
         if(icon != null) {
             imgIcon.setImageDrawable(icon);
-            imgIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ServerDB server = buttonCell.getItem().getServer();
-                    Communicator communicator = Communicator.instance(context);
-                    communicator.incDec(server.toGeneric(), buttonCell.getItem().getName(), buttonCell.getValue(), buttonCell.getMin(), buttonCell.getMax());
-                }
+            imgIcon.setOnClickListener(v -> {
+                ServerDB server = buttonCell.getItem().getServer();
+                Communicator communicator = Communicator.instance(context);
+                communicator.incDec(server.toGeneric(), buttonCell.getItem().getName(), buttonCell.getValue(), buttonCell.getMin(), buttonCell.getMax());
             });
         }
         realm.close();
-
-        ButterKnife.unbind(this);
 
         return cellView;
     }

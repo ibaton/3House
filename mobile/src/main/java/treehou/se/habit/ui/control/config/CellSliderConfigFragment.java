@@ -16,8 +16,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -40,10 +41,10 @@ public class CellSliderConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    @Bind(R.id.spr_items) Spinner sprItems;
-    @Bind(R.id.txt_max) TextView txtMax;
-    @Bind(R.id.btn_set_icon) ImageButton btnSetIcon;
-    @Bind(R.id.lou_range) View louRange;
+    @BindView(R.id.spr_items) Spinner sprItems;
+    @BindView(R.id.txt_max) TextView txtMax;
+    @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
+    @BindView(R.id.lou_range) View louRange;
 
     private ArrayAdapter<OHItem> mItemAdapter ;
     private ArrayList<OHItem> mItems = new ArrayList<>();
@@ -51,6 +52,7 @@ public class CellSliderConfigFragment extends Fragment {
     private Cell cell;
     private OHItem item;
     private Realm realm;
+    private Unbinder unbinder;
 
     public static CellSliderConfigFragment newInstance(CellDB cell) {
         CellSliderConfigFragment fragment = new CellSliderConfigFragment();
@@ -97,7 +99,7 @@ public class CellSliderConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_cell_number_config, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -122,12 +124,7 @@ public class CellSliderConfigFragment extends Fragment {
             }
         });
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-        sprItems.post(new Runnable() {
-            @Override
-            public void run() {
-                sprItems.setAdapter(mItemAdapter);
-            }
-        });
+        sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
         mItems.clear();
 
@@ -156,12 +153,9 @@ public class CellSliderConfigFragment extends Fragment {
         }
 
         updateIconImage();
-        btnSetIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
-                startActivityForResult(intent, REQUEST_ICON);
-            }
+        btnSetIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+            startActivityForResult(intent, REQUEST_ICON);
         });
 
         if(numberCell != null){
@@ -220,7 +214,7 @@ public class CellSliderConfigFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

@@ -49,18 +49,8 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHo
         ServerDB server = realmResults.get(position);
 
         serverHolder.lblName.setText(server.getDisplayName());
-        serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemListener.onItemClickListener(serverHolder);
-            }
-        });
-        serverHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return itemListener.onItemLongClickListener(serverHolder);
-            }
-        });
+        serverHolder.itemView.setOnClickListener(v -> itemListener.onItemClickListener(serverHolder));
+        serverHolder.itemView.setOnLongClickListener(v -> itemListener.onItemLongClickListener(serverHolder));
     }
 
     @Override

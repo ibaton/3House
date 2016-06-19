@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
@@ -28,7 +28,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "VoiceCellBuilder";
 
-    @Bind(R.id.img_icon_button) ImageButton imgIcon;
+    @BindView(R.id.img_icon_button) ImageButton imgIcon;
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -42,37 +42,32 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
         imgIcon.setImageDrawable(Util.getIconDrawable(context, voiceCell.getIcon()));
         imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
-        imgIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        imgIcon.setOnClickListener(v -> {
 
-                if(voiceCell.getItem() == null || voiceCell.getItem().getServer()  == null){
-                    return;
-                }
-
-                ServerDB server = voiceCell.getItem().getServer();
-
-                Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
-                PendingIntent openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                // Specify the calling package to identify your application
-                intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, VoiceService.class.getPackage().getName());
-                // Display an hint to the user about what he should say.
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                        context.getString(R.string.voice_command_title));
-
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                //intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT, openhabPendingIntent);
-
-                // Instruct the widget manager to update the widget
-                context.startActivity( intent);
+            if(voiceCell.getItem() == null || voiceCell.getItem().getServer()  == null){
+                return;
             }
-        });
 
-        ButterKnife.unbind(this);
+            ServerDB server = voiceCell.getItem().getServer();
+
+            Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
+            PendingIntent openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            // Specify the calling package to identify your application
+            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, VoiceService.class.getPackage().getName());
+            // Display an hint to the user about what he should say.
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                    context.getString(R.string.voice_command_title));
+
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            //intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT, openhabPendingIntent);
+
+            // Instruct the widget manager to update the widget
+            context.startActivity( intent);
+        });
 
         return cellView;
     }

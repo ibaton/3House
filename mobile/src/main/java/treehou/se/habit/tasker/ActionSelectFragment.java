@@ -39,27 +39,24 @@ public class ActionSelectFragment extends Fragment implements SitemapAdapter.OnS
         menuAdapter.addItem(new MenuItem(getActivity().getString(R.string.items), MENU_ITEMS, R.drawable.ic_icon_action_item));
         menuAdapter.addItem(new MenuItem(getActivity().getString(R.string.open_sitemap), MENU_SITEMAP, R.drawable.ic_icon_sitemap));
 
-        menuAdapter.setOnItemSelectListener(new MenuAdapter.OnItemSelectListener() {
-            @Override
-            public void itemClicked(int id) {
-                switch (id) {
-                    case MENU_ITEMS:
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(container.getId(), ItemFragment.newInstance())
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-                    case MENU_SITEMAP:
-                        Fragment fragment = SitemapSelectorFragment.newInstance();
-                        fragment.setTargetFragment(ActionSelectFragment.this, REQUEST_SITEMAP);
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(container.getId(), fragment)
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-                }
+        menuAdapter.setOnItemSelectListener(id -> {
+            switch (id) {
+                case MENU_ITEMS:
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(container.getId(), ItemFragment.newInstance())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                case MENU_SITEMAP:
+                    Fragment fragment = SitemapSelectorFragment.newInstance();
+                    fragment.setTargetFragment(ActionSelectFragment.this, REQUEST_SITEMAP);
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(container.getId(), fragment)
+                            .addToBackStack(null)
+                            .commit();
+                    break;
             }
         });
 

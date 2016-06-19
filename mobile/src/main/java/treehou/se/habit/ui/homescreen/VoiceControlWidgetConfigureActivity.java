@@ -11,12 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.Observable;
-import rx.functions.Func1;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.ServerArrayAdapter;
@@ -31,8 +30,9 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
     private static final String PREF_POSTFIX_SHOW_TITLE     = "_show_title";
     private static final String PREF_PREFIX_KEY = "appwidget_voice_";
 
-    @Bind(R.id.spr_server) Spinner sprServers;
-    @Bind(R.id.cbx_show_title) CheckBox cbxShowTitle;
+    @BindView(R.id.spr_server) Spinner sprServers;
+    @BindView(R.id.cbx_show_title) CheckBox cbxShowTitle;
+    private Unbinder unbinder;
 
     public VoiceControlWidgetConfigureActivity() {
         super();
@@ -47,7 +47,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.voice_control_widget_configure);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         Realm realm = Realm.getDefaultInstance();
         RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
@@ -122,7 +122,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
 }

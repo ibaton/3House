@@ -18,8 +18,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
@@ -28,6 +29,8 @@ import treehou.se.habit.ui.settings.subsettings.WidgetSettingsFragment;
 import treehou.se.habit.util.IntentHelper;
 
 public class SettingsFragment extends Fragment {
+
+    private Unbinder unbinder;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef ({
@@ -47,7 +50,7 @@ public class SettingsFragment extends Fragment {
     /**
      * The fragment's ListView/GridView.
      */
-    @Bind(android.R.id.list) AbsListView mListView;
+    @BindView(android.R.id.list) AbsListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -87,7 +90,7 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         // Set the adapter
         mListView.setAdapter(mAdapter);
@@ -103,39 +106,35 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
-    AdapterView.OnItemClickListener optionsSelectListener = new AdapterView.OnItemClickListener() {
+    AdapterView.OnItemClickListener optionsSelectListener = (parent, view, position, id) -> {
+        ImageItem item = (ImageItem) parent.getItemAtPosition(position);
 
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        Fragment fragment = null;
+        switch (item.getId()) {
+            case SettingsItems.ITEM_WIDGETS:
+                fragment = WidgetSettingsFragment.newInstance();
+                break;
+            case SettingsItems.ITEM_NOTIFICATIONS :
+                fragment = NotificationsSettingsFragment.newInstance();
+                break;
+            case SettingsItems.ITEM_LICENSES :
+                fragment = new LibsBuilder().supportFragment();
+                if(actionBar != null) actionBar.setTitle(R.string.open_source_libraries);
+                break;
+            case SettingsItems.ITEM_TRANSLATE :
+                openTranslationSite();
+                return;
+        }
 
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            Fragment fragment = null;
-            switch (item.getId()) {
-                case SettingsItems.ITEM_WIDGETS:
-                    fragment = WidgetSettingsFragment.newInstance();
-                    break;
-                case SettingsItems.ITEM_NOTIFICATIONS :
-                    fragment = NotificationsSettingsFragment.newInstance();
-                    break;
-                case SettingsItems.ITEM_LICENSES :
-                    fragment = new LibsBuilder().supportFragment();
-                    if(actionBar != null) actionBar.setTitle(R.string.open_source_libraries);
-                    break;
-                case SettingsItems.ITEM_TRANSLATE :
-                    openTranslationSite();
-                    return;
-            }
-
-            if(fragment != null){
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.page_container, fragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        if(fragment != null){
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.page_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     };
 

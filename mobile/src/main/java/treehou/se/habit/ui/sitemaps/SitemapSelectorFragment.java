@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
@@ -26,9 +27,10 @@ public class SitemapSelectorFragment extends Fragment {
 
     private static final String TAG = "SitemapSelectorFragment";
 
-    @Bind(R.id.list) RecyclerView mListView;
+    @BindView(R.id.list) RecyclerView mListView;
 
     private SitemapAdapter mSitemapAdapter;
+    private Unbinder unbinder;
 
     public static SitemapSelectorFragment newInstance() {
         SitemapSelectorFragment fragment = new SitemapSelectorFragment();
@@ -54,7 +56,7 @@ public class SitemapSelectorFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sitemap_selector, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
 
@@ -91,7 +93,7 @@ public class SitemapSelectorFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     /**

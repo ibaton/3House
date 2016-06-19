@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -15,9 +14,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
@@ -32,10 +32,11 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     private static final String PREF_PREFIX_KEY             = "appwidget_";
     private static final String PREF_POSTFIX_SHOW_TITLE     = "_show_title";
 
-    @Bind(R.id.spr_controller) Spinner sprControllers;
-    @Bind(R.id.cbx_show_title) CheckBox cbxShowTitle;
+    @BindView(R.id.spr_controller) Spinner sprControllers;
+    @BindView(R.id.cbx_show_title) CheckBox cbxShowTitle;
 
     private Realm realm;
+    private Unbinder unbinder;
 
     public ControllerWidgetConfigureActivity() {
         super();
@@ -47,7 +48,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
 
         setContentView(R.layout.controller_widget_configure);
 
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
@@ -78,7 +79,7 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         realm.close();
     }
 

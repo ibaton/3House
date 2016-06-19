@@ -16,8 +16,8 @@ public class ViewHelper {
     public static void colorRemoteDrawable(RemoteViews cellView, int resource, int color){
     try {
         Class c = Class.forName("android.widget.RemoteViews");
-        Method m = c.getMethod("setDrawableParameters", new Class[]{int.class, boolean.class, int.class, int.class, PorterDuff.Mode.class, int.class});
-        m.invoke(cellView, new Object[]{resource, true, -1, color, PorterDuff.Mode.MULTIPLY, -1});
+        Method m = c.getMethod("setDrawableParameters", int.class, boolean.class, int.class, int.class, PorterDuff.Mode.class, int.class);
+        m.invoke(cellView, resource, true, -1, color, PorterDuff.Mode.MULTIPLY, -1);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

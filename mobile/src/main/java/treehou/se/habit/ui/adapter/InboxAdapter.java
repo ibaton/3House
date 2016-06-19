@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
+import rx.functions.Func1;
+import rx.functions.Func2;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
 import treehou.se.habit.R;
@@ -98,18 +101,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         final OHInboxItem inboxItem = items.get(position);
 
         serverHolder.lblName.setText(inboxItem.getLabel());
-        serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemListener.onItemClickListener(serverHolder);
-            }
-        });
-        serverHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return itemListener.onItemLongClickListener(serverHolder);
-            }
-        });
+        serverHolder.itemView.setOnClickListener(v -> itemListener.onItemClickListener(serverHolder));
+        serverHolder.itemView.setOnLongClickListener(v -> itemListener.onItemLongClickListener(serverHolder));
 
         LinearLayout louProperties = serverHolder.louProperties;
         louProperties.removeAllViews();
@@ -123,22 +116,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             louProperties.addView(louProperty);
         }
 
-        serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(context)
-                        .setTitle(context.getString(R.string.approve_item))
-                        .setMessage(context.getString(R.string.approve_this_item))
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Openhab.instance(server.toGeneric()).approveInboxItem(inboxItem);
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
-            }
-        });
+        serverHolder.itemView.setOnClickListener(v -> new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.approve_item))
+                .setMessage(context.getString(R.string.approve_this_item))
+                .setPositiveButton(R.string.ok, (dialog, which) -> Openhab.instance(server.toGeneric()).approveInboxItem(inboxItem))
+                .setNegativeButton(R.string.cancel, null)
+                .show());
     }
 
     @Override

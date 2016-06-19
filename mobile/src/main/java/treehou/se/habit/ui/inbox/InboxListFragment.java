@@ -2,14 +2,12 @@ package treehou.se.habit.ui.inbox;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,22 +19,22 @@ import android.view.ViewGroup;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.InboxAdapter;
+import treehou.se.habit.util.RxUtil;
 
 public class InboxListFragment extends RxFragment {
 
@@ -44,7 +42,7 @@ public class InboxListFragment extends RxFragment {
 
     private static final String ARG_SERVER = "argServer";
 
-    @Bind(R.id.list) RecyclerView listView;
+    @BindView(R.id.list) RecyclerView listView;
 
     private Realm relam;
 
@@ -52,11 +50,12 @@ public class InboxListFragment extends RxFragment {
     private InboxAdapter adapter;
 
     private List<OHInboxItem> items = new ArrayList<>();
-    private OHCallback<List<OHInboxItem>> inboxCallback;
 
     private boolean showIgnored = false;
     private MenuItem actionHide;
     private MenuItem actionShow;
+
+    private Unbinder unbinder;
 
     /**
      * Creates a new instance of inbox list fragment.
@@ -84,24 +83,13 @@ public class InboxListFragment extends RxFragment {
 
         relam = Realm.getDefaultInstance();
         server = ServerDB.load(relam, getArguments().getLong(ARG_SERVER));
-
-        inboxCallback = new OHCallback<List<OHInboxItem>>() {
-            @Override
-            public void onUpdate(OHResponse<List<OHInboxItem>> response) {
-                items = response.body();
-                setItems(items, showIgnored);
-            }
-
-            @Override
-            public void onError() {}
-        };
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inbox, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         setupActionbar();
         hookupInboxList();
@@ -163,21 +151,15 @@ public class InboxListFragment extends RxFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.inbox, menu);
         actionHide = menu.findItem(R.id.action_hide);
-        actionHide.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                showIgnoredItems(false);
-                return true;
-            }
+        actionHide.setOnMenuItemClickListener(item -> {
+            showIgnoredItems(false);
+            return true;
         });
 
         actionShow = menu.findItem(R.id.action_show);
-        actionShow.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                showIgnoredItems(true);
-                return true;
-            }
+        actionShow.setOnMenuItemClickListener(item -> {
+            showIgnoredItems(true);
+            return true;
         });
 
         updateIgnoreButtons(showIgnored);
@@ -247,12 +229,9 @@ public class InboxListFragment extends RxFragment {
         final View rootView = getView();
         if(rootView != null) {
             Snackbar.make(rootView, R.string.hide_item, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            unignoreInboxItem(item);
-                            Snackbar.make(rootView, R.string.restore_item, Snackbar.LENGTH_SHORT).show();
-                        }
+                    .setAction(R.string.undo, view -> {
+                        unignoreInboxItem(item);
+                        Snackbar.make(rootView, R.string.restore_item, Snackbar.LENGTH_SHORT).show();
                     }).show();
         }
         setItems(items, showIgnored);
@@ -275,13 +254,19 @@ public class InboxListFragment extends RxFragment {
     public void onResume() {
         super.onResume();
 
-        Openhab.instance(server.toGeneric()).requestInboxItems(inboxCallback);
+        Openhab.instance(server.toGeneric())
+                .requestInboxItemsRx()
+                .compose(RxUtil.newToMainSchedulers())
+                .compose(this.bindToLifecycle())
+                .subscribe(ohInboxItems -> {
+                    setItems(ohInboxItems, showIgnored);
+                });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

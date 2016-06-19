@@ -28,10 +28,7 @@ public class IconAdapter extends RecyclerView.Adapter<IconAdapter.IconHolder> {
     /**
      * Listener that does nothing
      */
-    private IconSelectListener dummyIconSelectListener = new IconSelectListener() {
-        @Override
-        public void iconSelected(IIcon icon) {}
-    };
+    private IconSelectListener dummyIconSelectListener = icon -> {};
     private IconSelectListener selectListener = dummyIconSelectListener;
 
     public IconAdapter(Context context) {
@@ -52,12 +49,7 @@ public class IconAdapter extends RecyclerView.Adapter<IconAdapter.IconHolder> {
     public void onBindViewHolder(IconAdapter.IconHolder holder, int position) {
         final IIcon icon = icons.get(position);
         holder.setDrawable(new IconicsDrawable(context, icon).color(Color.BLACK).sizeDp(20));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectListener.iconSelected(icon);
-            }
-        });
+        holder.itemView.setOnClickListener(v -> selectListener.iconSelected(icon));
     }
 
     @Override

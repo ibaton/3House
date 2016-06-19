@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 public interface IFireReciever {
 
-    public static final String BUNDLE_EXTRA_TYPE    = "treehou.se.habit.extra.TYPE";
+    String BUNDLE_EXTRA_TYPE    = "treehou.se.habit.extra.TYPE";
 
-    public boolean fire(Context context, Bundle bundle);
+    boolean fire(Context context, Bundle bundle);
 }

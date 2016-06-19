@@ -81,10 +81,10 @@ public class CellFactory<T> {
         return remoteViews;
     }
 
-    public static interface CellBuilder {
+    public interface CellBuilder {
 
-        public View build(Context context, ControllerDB controller, CellDB cell);
-        public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell);
+        View build(Context context, ControllerDB controller, CellDB cell);
+        RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell);
     }
 
     public static class DefaultBuilder implements CellBuilder {

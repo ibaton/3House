@@ -16,8 +16,9 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -41,11 +42,11 @@ public class CellIncDecConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    @Bind(R.id.spr_items) Spinner sprItems;
-    @Bind(R.id.txtMax) EditText txtMax;
-    @Bind(R.id.txtMin) EditText txtMin;
-    @Bind(R.id.txtValue) EditText txtValue;
-    @Bind(R.id.btn_set_icon) ImageButton btnSetIcon;
+    @BindView(R.id.spr_items) Spinner sprItems;
+    @BindView(R.id.txtMax) EditText txtMax;
+    @BindView(R.id.txtMin) EditText txtMin;
+    @BindView(R.id.txtValue) EditText txtValue;
+    @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
@@ -54,6 +55,7 @@ public class CellIncDecConfigFragment extends Fragment {
     private Cell cell;
     private OHItem item;
     private Realm realm;
+    private Unbinder unbinder;
 
     public static CellIncDecConfigFragment newInstance(CellDB cell) {
         CellIncDecConfigFragment fragment = new CellIncDecConfigFragment();
@@ -99,7 +101,7 @@ public class CellIncDecConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.inc_dec_controller_action, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         txtMax.setText("" + incDecCell.getMax());
         txtMin.setText("" + incDecCell.getMin());
@@ -121,12 +123,7 @@ public class CellIncDecConfigFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-        sprItems.post(new Runnable() {
-            @Override
-            public void run() {
-                sprItems.setAdapter(mItemAdapter);
-            }
-        });
+        sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
         mItems.clear();
 
@@ -159,12 +156,9 @@ public class CellIncDecConfigFragment extends Fragment {
         }
 
         updateIconImage();
-        btnSetIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
-                startActivityForResult(intent, REQUEST_ICON);
-            }
+        btnSetIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+            startActivityForResult(intent, REQUEST_ICON);
         });
 
         return rootView;
@@ -214,7 +208,7 @@ public class CellIncDecConfigFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

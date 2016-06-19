@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,8 +18,9 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -43,10 +43,10 @@ public class CellButtonConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    @Bind(R.id.spr_items) Spinner sprItems;
-    @Bind(R.id.tgl_on_off) ToggleButton tglOnOff;
-    @Bind(R.id.txt_command) TextView txtCommand;
-    @Bind(R.id.btn_set_icon) ImageView btnSetIcon;
+    @BindView(R.id.spr_items) Spinner sprItems;
+    @BindView(R.id.tgl_on_off) ToggleButton tglOnOff;
+    @BindView(R.id.txt_command) TextView txtCommand;
+    @BindView(R.id.btn_set_icon) ImageView btnSetIcon;
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
@@ -54,6 +54,7 @@ public class CellButtonConfigFragment extends Fragment {
     private ButtonCellDB buttonCell;
     private CellDB cell;
     private Realm realm;
+    private Unbinder unbinder;
 
     public static CellButtonConfigFragment newInstance(CellDB cell) {
         CellButtonConfigFragment fragment = new CellButtonConfigFragment();
@@ -97,7 +98,7 @@ public class CellButtonConfigFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_cell_button_config, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -135,12 +136,7 @@ public class CellButtonConfigFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-        sprItems.post(new Runnable() {
-            @Override
-            public void run() {
-                sprItems.setAdapter(mItemAdapter);
-            }
-        });
+        sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
         mItems.clear();
 
@@ -178,12 +174,9 @@ public class CellButtonConfigFragment extends Fragment {
         txtCommand.setText(buttonCell.getCommand());
 
         updateIconImage();
-        btnSetIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
-                startActivityForResult(intent, REQUEST_ICON);
-            }
+        btnSetIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+            startActivityForResult(intent, REQUEST_ICON);
         });
 
         return rootView;
@@ -232,7 +225,7 @@ public class CellButtonConfigFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

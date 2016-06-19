@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -32,11 +33,12 @@ public class ScanServersFragment extends Fragment {
 
     private static final String TAG = "ScanServersFragment";
 
-    @Bind(R.id.empty) View viwEmpty;
-    @Bind(R.id.list) RecyclerView lstServer;
+    @BindView(R.id.empty) View viwEmpty;
+    @BindView(R.id.list) RecyclerView lstServer;
 
     private ServersAdapter serversAdapter;
     private OHCallback<List<OHServer>> discoveryListener;
+    private Unbinder unbinder;
 
     public static ScanServersFragment newInstance() {
         ScanServersFragment fragment = new ScanServersFragment();
@@ -85,7 +87,7 @@ public class ScanServersFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View rootView = inflater.inflate(R.layout.fragment_scan_servers, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
@@ -109,12 +111,9 @@ public class ScanServersFragment extends Fragment {
             @Override
             public void onUpdate(final OHResponse<List<OHServer>> response) {
                 if(isAdded()){
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (OHServer server : response.body()) {
-                                serversAdapter.addItem(server);
-                            }
+                    getActivity().runOnUiThread(() -> {
+                        for (OHServer server : response.body()) {
+                            serversAdapter.addItem(server);
                         }
                     });
                 }
@@ -137,7 +136,7 @@ public class ScanServersFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     /**
@@ -184,12 +183,7 @@ public class ScanServersFragment extends Fragment {
 
             serverHolder.lblName.setText(server.getDisplayName());
             serverHolder.lblHost.setText(server.getLocalUrl());
-            serverHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.onItemClickListener(serverHolder);
-                }
-            });
+            serverHolder.itemView.setOnClickListener(v -> itemListener.onItemClickListener(serverHolder));
         }
 
         @Override

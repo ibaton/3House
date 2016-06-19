@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -23,15 +24,16 @@ public class SetupServerFragment extends Fragment {
 
     private static final String EXTRA_SERVER_ID = "EXTRA_SERVER_ID";
 
-    @Bind(R.id.txt_server_name) EditText txtName;
-    @Bind(R.id.txt_server_local) EditText txtLocalUrl;
-    @Bind(R.id.txt_server_remote) EditText txtRemoteUrl;
-    @Bind(R.id.txt_username) EditText txtUsername;
-    @Bind(R.id.txt_password) EditText txtPassword;
-    @Bind(R.id.btn_back) Button btnBack;
+    @BindView(R.id.txt_server_name) EditText txtName;
+    @BindView(R.id.txt_server_local) EditText txtLocalUrl;
+    @BindView(R.id.txt_server_remote) EditText txtRemoteUrl;
+    @BindView(R.id.txt_username) EditText txtUsername;
+    @BindView(R.id.txt_password) EditText txtPassword;
+    @BindView(R.id.btn_back) Button btnBack;
 
     private long serverId = -1;
     private int buttonTextId = R.string.back;
+    private Unbinder unbinder;
 
     public static SetupServerFragment newInstance() {
         SetupServerFragment fragment = new SetupServerFragment();
@@ -68,7 +70,7 @@ public class SetupServerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_setup_server, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         btnBack.setText(buttonTextId);
 
@@ -107,23 +109,20 @@ public class SetupServerFragment extends Fragment {
         super.onPause();
 
         Realm realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                ServerDB server = new ServerDB();
-                if(serverId <= 0) {
-                    server.setId(ServerDB.getUniqueId());
-                    serverId = server.getId();
-                } else {
-                    server.setId(serverId);
-                }
-                server.setName(txtName.getText().toString());
-                server.setLocalUrl(toUrl(txtLocalUrl.getText().toString()));
-                server.setRemoteUrl(toUrl(txtRemoteUrl.getText().toString()));
-                server.setUsername(txtUsername.getText().toString());
-                server.setPassword(txtPassword.getText().toString());
-                realm.copyToRealmOrUpdate(server);
+        realm.executeTransaction(realm1 -> {
+            ServerDB server = new ServerDB();
+            if(serverId <= 0) {
+                server.setId(ServerDB.getUniqueId());
+                serverId = server.getId();
+            } else {
+                server.setId(serverId);
             }
+            server.setName(txtName.getText().toString());
+            server.setLocalUrl(toUrl(txtLocalUrl.getText().toString()));
+            server.setRemoteUrl(toUrl(txtRemoteUrl.getText().toString()));
+            server.setUsername(txtUsername.getText().toString());
+            server.setPassword(txtPassword.getText().toString());
+            realm1.copyToRealmOrUpdate(server);
         });
         realm.close();
     }
@@ -131,7 +130,7 @@ public class SetupServerFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override

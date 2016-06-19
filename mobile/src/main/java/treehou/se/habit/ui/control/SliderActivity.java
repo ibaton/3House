@@ -122,7 +122,6 @@ public class SliderActivity extends AppCompatActivity {
         @Override
         public void onDestroy() {
             super.onDestroy();
-            ButterKnife.unbind(this);
             realm.close();
         }
     }

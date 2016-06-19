@@ -49,32 +49,29 @@ public class ItemFragment extends Fragment {
         menuAdapter.addItem(new MenuItem(getString(R.string.label_switch), MENU_ITEM_SWITCH, R.drawable.ic_icon_sitemap));
         menuAdapter.addItem(new MenuItem(getString(R.string.inc_dec), MENU_ITEM_INC_DEC, R.drawable.ic_icon_sitemap));
 
-        menuAdapter.setOnItemSelectListener(new MenuAdapter.OnItemSelectListener() {
-            @Override
-            public void itemClicked(int id) {
-                switch (id){
-                    case MENU_ITEM_SWITCH :
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(container.getId(), SwitchActionFragment.newInstance())
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-                    case MENU_ITEM_COMMAND :
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(container.getId(), CommandActionFragment.newInstance())
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-                    case MENU_ITEM_INC_DEC :
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(container.getId(), IncDecActionFragment.newInstance())
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-                }
+        menuAdapter.setOnItemSelectListener(id -> {
+            switch (id){
+                case MENU_ITEM_SWITCH :
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(container.getId(), SwitchActionFragment.newInstance())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                case MENU_ITEM_COMMAND :
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(container.getId(), CommandActionFragment.newInstance())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
+                case MENU_ITEM_INC_DEC :
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(container.getId(), IncDecActionFragment.newInstance())
+                            .addToBackStack(null)
+                            .commit();
+                    break;
             }
         });
 

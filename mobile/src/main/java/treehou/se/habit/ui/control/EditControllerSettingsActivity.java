@@ -45,42 +45,31 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
         txtName.setText(controller.getName());
 
         btnColor = (Button) findViewById(R.id.btn_color);
-        btnColor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                Fragment fragment = ColorDialog.instance();
-                fragmentManager.beginTransaction()
-                        .add(fragment, "colordialog")
-                        .commit();
-            }
+        btnColor.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = ColorDialog.instance();
+            fragmentManager.beginTransaction()
+                    .add(fragment, "colordialog")
+                    .commit();
         });
 
         cbxAsNotification = (CheckBox) findViewById(R.id.as_notification);
         cbxAsNotification.setChecked(controller.isShowNotification());
-        cbxAsNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                realm.beginTransaction();
-                controller.setShowNotification(isChecked);
-                realm.commitTransaction();
+        cbxAsNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            realm.beginTransaction();
+            controller.setShowNotification(isChecked);
+            realm.commitTransaction();
 
-                if(controller.isShowNotification()) {
-                    ControlHelper.showNotification(EditControllerSettingsActivity.this, controller);
-                }else {
-                    ControlHelper.hideNotification(EditControllerSettingsActivity.this, controller);
-                }
+            if(controller.isShowNotification()) {
+                ControlHelper.showNotification(EditControllerSettingsActivity.this, controller);
+            }else {
+                ControlHelper.hideNotification(EditControllerSettingsActivity.this, controller);
             }
         });
 
         updateColorPalette(controller.getColor());
 
-        findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.container).setOnClickListener(v -> finish());
     }
 
     /**

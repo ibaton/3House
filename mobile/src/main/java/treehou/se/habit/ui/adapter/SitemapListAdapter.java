@@ -140,24 +140,14 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
             holder.lblName.setText(sitemap.getDisplayName());
             holder.lblServer.setText(server.getDisplayName());
 
-            sitemapHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sitemapSelectedListener.onSelected(server, sitemap);
-                }
-            });
+            sitemapHolder.itemView.setOnClickListener(v -> sitemapSelectedListener.onSelected(server, sitemap));
         } else if (STATE_LOADING == type) {
             SitemapLoadHolder holder = (SitemapLoadHolder) sitemapHolder;
             holder.lblServer.setText(server.getDisplayName());
         } else if (STATE_ERROR == type) {
             SitemapErrorHolder holder = (SitemapErrorHolder) sitemapHolder;
             holder.lblServer.setText(server.getDisplayName());
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sitemapSelectedListener.onErrorSelected(server);
-                }
-            });
+            holder.itemView.setOnClickListener(v -> sitemapSelectedListener.onErrorSelected(server));
         }
     }
 

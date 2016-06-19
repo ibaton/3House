@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.sitemaps;
 
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,24 +15,20 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import rx.Subscription;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import se.treehou.ng.ohcommunicator.services.Connector;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.ThreadPool;
 
 public class PageFragment extends RxFragment {
@@ -46,7 +41,7 @@ public class PageFragment extends RxFragment {
 
     private static final String STATE_PAGE = "STATE_PAGE";
 
-    @Bind(R.id.lou_widgets) LinearLayout louFragments;
+    @BindView(R.id.lou_widgets) LinearLayout louFragments;
 
     private Realm realm;
 
@@ -58,7 +53,7 @@ public class PageFragment extends RxFragment {
     private List<OHWidget> widgets = new ArrayList<>();
     private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
 
-    private Connector.ServerHandler.PageRequestTask pageRequestTask;
+    private Unbinder unbinder;
 
     private boolean initialized = false;
 
@@ -114,7 +109,7 @@ public class PageFragment extends RxFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_widget, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         updatePage(page);
 
@@ -132,52 +127,36 @@ public class PageFragment extends RxFragment {
     private void requestPageUpdate(){
         Openhab.instance(server.toGeneric())
                 .requestPageRx(page)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.<OHLinkedPage>bindToLifecycle())
-                .subscribe(new Subscriber<OHLinkedPage>() {
-                            @Override
-                            public void onCompleted() {}
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e(TAG, "Error when requesting page ", e);
-                                Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
-                                getActivity().getSupportFragmentManager().popBackStack();
-                            }
-
-                            @Override
-                            public void onNext(OHLinkedPage ohLinkedPage) {
-                                final OHLinkedPage linkedPage = ohLinkedPage;
-                                Log.d(TAG, "Received update " + linkedPage.getWidgets().size() + " widgets from  " + page.getLink());
-                                ThreadPool.instance().submit(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        updatePage(linkedPage);
-                                    }
-                                });
-                            }
-                        });
+                .compose(RxUtil.newToMainSchedulers())
+                .compose(this.bindToLifecycle())
+                .subscribe(ohLinkedPage -> {
+                    Log.d(TAG, "Received update " + ohLinkedPage.getWidgets().size() + " widgets from  " + page.getLink());
+                    ThreadPool.instance().submit(() -> updatePage(ohLinkedPage));
+                }, throwable -> {
+                    Log.e(TAG, "Error when requesting page ", throwable);
+                    Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                });
     }
 
-    private Connector.ServerHandler.PageRequestTask createLongPoller() {
+    /**
+     * Create longpoller listening for updates of page.
+     *
+     * @return
+     */
+    private Subscription createLongPoller() {
         final long serverId = server.getId();
 
         Realm realm = Realm.getDefaultInstance();
         OHServer server = ServerDB.load(realm, serverId).toGeneric();
         realm.close();
-
-        Connector.ServerHandler.PageRequestTask pageRequestTask = Openhab.instance(server).requestPageUpdates(server, page, new OHCallback<OHLinkedPage>() {
-            @Override
-            public void onUpdate(OHResponse<OHLinkedPage> items) {
-                updatePage(items.body());
-            }
-
-            @Override
-            public void onError() {
-            }
-        });
-        return pageRequestTask;
+        return Openhab.instance(server)
+                .requestPageUpdatesRx(server, page)
+                .compose(RxUtil.newToMainSchedulers())
+                .compose(this.bindToLifecycle())
+                .subscribe(ohLinkedPage -> {
+                    updatePage(ohLinkedPage);
+                });
     }
 
     @Override
@@ -186,7 +165,7 @@ public class PageFragment extends RxFragment {
 
         // Start listening for server updates
         if (supportsLongPolling()) {
-            pageRequestTask = createLongPoller();
+            createLongPoller();
         }
     }
 
@@ -201,7 +180,7 @@ public class PageFragment extends RxFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     /**
@@ -232,14 +211,11 @@ public class PageFragment extends RxFragment {
         }
 
         final boolean invalidateWidgets = invalidate;
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(invalidateWidgets) {
-                    invalidateWidgets(pageWidgets);
-                } else {
-                    updateWidgets(pageWidgets);
-                }
+        getActivity().runOnUiThread(() -> {
+            if(invalidateWidgets) {
+                invalidateWidgets(pageWidgets);
+            } else {
+                updateWidgets(pageWidgets);
             }
         });
     }
@@ -282,16 +258,6 @@ public class PageFragment extends RxFragment {
             } catch (Exception e) {
                 Log.w(TAG, "Updating widget failed", e);
             }
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // Stop listening for server updates
-        if (pageRequestTask != null) {
-            pageRequestTask.stop();
         }
     }
 

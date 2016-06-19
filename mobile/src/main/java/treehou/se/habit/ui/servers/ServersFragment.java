@@ -21,9 +21,11 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Bind;
+
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.functions.Action1;
@@ -40,14 +42,15 @@ public class ServersFragment extends RxFragment {
     private static final String TAG = "ServersFragment";
 
     private ViewGroup container;
-    @Bind(R.id.list) RecyclerView lstServer;
-    @Bind(R.id.empty) View viwEmpty;
-    @Bind(R.id.fab_add) FloatingActionButton fabAdd;
+    @BindView(R.id.list) RecyclerView lstServer;
+    @BindView(R.id.empty) View viwEmpty;
+    @BindView(R.id.fab_add) FloatingActionButton fabAdd;
 
     @Inject Settings settings;
 
     private ServersAdapter serversAdapter;
     private RealmResults<ServerDB> servers;
+    private Unbinder unbinder;
 
     private Realm realm;
 
@@ -74,7 +77,7 @@ public class ServersFragment extends RxFragment {
 
         this.container = container;
         View rootView = inflater.inflate(R.layout.fragment_servers, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstServer.setLayoutManager(gridLayoutManager);
@@ -103,7 +106,7 @@ public class ServersFragment extends RxFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override
@@ -128,17 +131,14 @@ public class ServersFragment extends RxFragment {
      */
     private void setupAdapter(){
         realm.where(ServerDB.class).findAllAsync().asObservable()
-                .compose(this.<RealmResults<ServerDB>>bindToLifecycle())
-                .subscribe(new Action1<RealmResults<ServerDB>>() {
-                    @Override
-                    public void call(RealmResults<ServerDB> servers) {
-                        Log.d(TAG, "Loaded " + servers.size() + " servers");
-                        ServersFragment.this.servers = servers;
-                        updateEmptyView(servers.size());
-                        serversAdapter = new ServersAdapter(getContext(), servers);
-                        serversAdapter.setItemListener(serverListener);
-                        lstServer.setAdapter(serversAdapter);
-                    }
+                .compose(this.bindToLifecycle())
+                .subscribe(servers1 -> {
+                    Log.d(TAG, "Loaded " + servers1.size() + " servers");
+                    ServersFragment.this.servers = servers1;
+                    updateEmptyView(servers1.size());
+                    serversAdapter = new ServersAdapter(getContext(), servers1);
+                    serversAdapter.setItemListener(serverListener);
+                    lstServer.setAdapter(serversAdapter);
                 });
 
         if(!settings.getServerSetupAsked()){
@@ -153,18 +153,8 @@ public class ServersFragment extends RxFragment {
         settings.setServerSetupAsked(true);
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.start_scan_question)
-                .setNeutralButton(R.string.new_server, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startNewServerFlow();
-                    }
-                })
-                .setPositiveButton(R.string.scan, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openServerScan();
-                    }
-                })
+                .setNeutralButton(R.string.new_server, (dialog, which) -> startNewServerFlow())
+                .setPositiveButton(R.string.scan, (dialog, which) -> openServerScan())
                 .setNegativeButton(R.string.cancel, null)
                 .show();
     }
@@ -230,20 +220,17 @@ public class ServersFragment extends RxFragment {
 
             final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
             new AlertDialog.Builder(getActivity())
-                    .setItems(R.array.server_manager, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case 0:
-                                    openBindingsPage(server);
-                                    break;
-                                case 1:
-                                    openInboxPage(server);
-                                    break;
-                                case 2:
-                                    showRemoveDialog(serverHolder, server);
-                                    break;
-                            }
+                    .setItems(R.array.server_manager, (dialog, which) -> {
+                        switch (which) {
+                            case 0:
+                                openBindingsPage(server);
+                                break;
+                            case 1:
+                                openInboxPage(server);
+                                break;
+                            case 2:
+                                showRemoveDialog(serverHolder, server);
+                                break;
                         }
                     })
                     .create().show();
@@ -280,16 +267,13 @@ public class ServersFragment extends RxFragment {
     private void showRemoveDialog(final ServersAdapter.ServerHolder serverHolder, final ServerDB server){
         new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.remove_server_question)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        realm.beginTransaction();
-                        int position = serverHolder.getAdapterPosition();
-                        int i = servers.indexOf(server);
-                        if(i >= 0) { servers.deleteFromRealm(i);}
-                        realm.commitTransaction();
-                        serversAdapter.notifyItemRemoved(position);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    realm.beginTransaction();
+                    int position = serverHolder.getAdapterPosition();
+                    int i = servers.indexOf(server);
+                    if(i >= 0) { servers.deleteFromRealm(i);}
+                    realm.commitTransaction();
+                    serversAdapter.notifyItemRemoved(position);
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();

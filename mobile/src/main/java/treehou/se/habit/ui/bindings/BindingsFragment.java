@@ -17,8 +17,9 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
@@ -38,7 +39,7 @@ public class BindingsFragment extends Fragment {
 
     private static final String STATE_BINDINGS = "STATE_BINDINGS";
 
-    @Bind(R.id.lst_bindings) RecyclerView lstBinding;
+    @BindView(R.id.lst_bindings) RecyclerView lstBinding;
 
     private BindingAdapter bindingAdapter;
     private ServerDB server;
@@ -47,6 +48,7 @@ public class BindingsFragment extends Fragment {
     private List<OHBinding> bindings = new ArrayList<>();
 
     private Realm realm;
+    private Unbinder unbinder;
 
     private OHCallback<List<OHBinding>> bindingListener = new OHCallback<List<OHBinding>>(){
 
@@ -101,7 +103,7 @@ public class BindingsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_bindings_list, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         this.container = container;
 
@@ -111,12 +113,7 @@ public class BindingsFragment extends Fragment {
         }
 
         bindingAdapter = new BindingAdapter(this);
-        bindingAdapter.setItemClickListener(new BindingAdapter.ItemClickListener() {
-            @Override
-            public void onClick(OHBinding binding) {
-                openBinding(binding);
-            }
-        });
+        bindingAdapter.setItemClickListener(binding -> openBinding(binding));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstBinding.setLayoutManager(gridLayoutManager);
@@ -156,7 +153,7 @@ public class BindingsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override
