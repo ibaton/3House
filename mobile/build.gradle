@@ -105,6 +105,7 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'design'
     }
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
     androidTestCompile 'com.android.support:recyclerview-v7:24.0.0'
 }
 

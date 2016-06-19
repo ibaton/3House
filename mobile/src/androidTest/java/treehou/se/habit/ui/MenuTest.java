@@ -2,6 +2,7 @@ package treehou.se.habit.ui;
 
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import static org.hamcrest.Matchers.allOf;
@@ -9,8 +10,6 @@ import static org.hamcrest.Matchers.allOf;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
-import android.test.suitebuilder.annotation.SmallTest;
 
 import junit.framework.Assert;
 
@@ -20,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import treehou.se.habit.DaggerActivityTestRule;
-import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.TestUtil;
