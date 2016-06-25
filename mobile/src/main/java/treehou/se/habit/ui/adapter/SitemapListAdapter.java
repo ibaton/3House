@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.model.ServerDB;
 
 public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.SitemapBaseHolder> {
 
@@ -27,16 +27,16 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
 
     protected LayoutInflater inflater;
     protected Context context;
-    private Map<ServerDB, SitemapItem> items = new HashMap<>();
+    private Map<OHServer, SitemapItem> items = new HashMap<>();
     private SitemapSelectedListener sitemapSelectedListener = new DummySitemapSelectListener();
 
     private static class SitemapItem{
 
-        public ServerDB server;
+        public OHServer server;
         public @ServerState int state = STATE_LOADING;
         public List<OHSitemap> sitemaps = new ArrayList<>();
 
-        public SitemapItem(ServerDB server) {
+        public SitemapItem(OHServer server) {
             this.server = server;
         }
 
@@ -67,16 +67,16 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
     }
 
     public interface SitemapSelectedListener {
-        void onSelected(ServerDB server, OHSitemap sitemap);
-        void onErrorSelected(ServerDB server);
+        void onSelected(OHServer server, OHSitemap sitemap);
+        void onErrorSelected(OHServer server);
     }
 
     class DummySitemapSelectListener implements SitemapSelectedListener {
         @Override
-        public void onSelected(ServerDB server, OHSitemap sitemap) {}
+        public void onSelected(OHServer server, OHSitemap sitemap) {}
 
         @Override
-        public void onErrorSelected(ServerDB server) {}
+        public void onErrorSelected(OHServer server) {}
     }
 
     public class SitemapErrorHolder extends SitemapBaseHolder {
@@ -133,7 +133,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
         final GetResult item = getItem(position);
 
         final OHSitemap sitemap = item.sitemap;
-        final ServerDB server = item.item.server;
+        final OHServer server = item.item.server;
         if (STATE_SUCCESS == type) {
             SitemapHolder holder = (SitemapHolder) sitemapHolder;
 
@@ -221,13 +221,13 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
         return result;
     }
 
-    public void addAll(ServerDB server, List<OHSitemap> sitemapIds) {
+    public void addAll(OHServer server, List<OHSitemap> sitemapIds) {
         for (OHSitemap sitemap : sitemapIds) {
             add(server, sitemap);
         }
     }
 
-    public void add(ServerDB server, OHSitemap sitemap) {
+    public void add(OHServer server, OHSitemap sitemap) {
         SitemapItem item = items.get(server);
         if (item == null) {
             item = new SitemapItem(server);
@@ -298,7 +298,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
      * @param server server to get sitemap item for.
      * @return
      */
-    private SitemapItem getItem(ServerDB server) {
+    private SitemapItem getItem(OHServer server) {
         SitemapItem item = items.get(server);
         if (item == null) {
             item = new SitemapItem(server);
@@ -307,7 +307,7 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
         return item;
     }
 
-    public void setServerState(ServerDB server, @ServerState int state) {
+    public void setServerState(OHServer server, @ServerState int state) {
         SitemapItem item = getItem(server);
         item.state = state;
 

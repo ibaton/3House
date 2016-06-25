@@ -24,7 +24,7 @@ import butterknife.Unbinder;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
-import treehou.se.habit.ui.settings.subsettings.NotificationsSettingsFragment;
+import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.settings.subsettings.WidgetSettingsFragment;
 import treehou.se.habit.util.IntentHelper;
 
@@ -35,13 +35,13 @@ public class SettingsFragment extends Fragment {
     @Retention(RetentionPolicy.SOURCE)
     @IntDef ({
         SettingsItems.ITEM_WIDGETS,
-        SettingsItems.ITEM_NOTIFICATIONS,
+        SettingsItems.ITEM_GENERAL,
         SettingsItems.ITEM_CUSTOM_WIDGETS,
         SettingsItems.ITEM_LICENSES,
         SettingsItems.ITEM_TRANSLATE})
     public @interface SettingsItems {
         int ITEM_WIDGETS = 1;
-        int ITEM_NOTIFICATIONS = 2;
+        int ITEM_GENERAL = 2;
         int ITEM_CUSTOM_WIDGETS = 3;
         int ITEM_LICENSES = 4;
         int ITEM_TRANSLATE = 5;
@@ -78,7 +78,7 @@ public class SettingsFragment extends Fragment {
 
         ArrayList<ImageItem> items = new ArrayList<>();
         items.add(new ImageItem(SettingsItems.ITEM_WIDGETS, getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
-        items.add(new ImageItem(SettingsItems.ITEM_NOTIFICATIONS, getString(R.string.settings_notification), R.drawable.ic_item_notification));
+        items.add(new ImageItem(SettingsItems.ITEM_GENERAL, getString(R.string.settings_general), R.drawable.ic_item_notification));
         items.add(new ImageItem(SettingsItems.ITEM_LICENSES, getString(R.string.open_source_libraries), R.drawable.ic_license));
         items.add(new ImageItem(SettingsItems.ITEM_TRANSLATE, getString(R.string.help_translate), R.drawable.ic_language));
 
@@ -118,8 +118,8 @@ public class SettingsFragment extends Fragment {
             case SettingsItems.ITEM_WIDGETS:
                 fragment = WidgetSettingsFragment.newInstance();
                 break;
-            case SettingsItems.ITEM_NOTIFICATIONS :
-                fragment = NotificationsSettingsFragment.newInstance();
+            case SettingsItems.ITEM_GENERAL:
+                fragment = GeneralSettingsFragment.newInstance();
                 break;
             case SettingsItems.ITEM_LICENSES :
                 fragment = new LibsBuilder().supportFragment();

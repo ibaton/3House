@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">3Hou.se</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -34,6 +33,7 @@
     <string name="image">Image</string>
     <string name="settings_widgets">Widgets</string>
     <string name="settings_notification">Notifications</string>
+    <string name="settings_general">General</string>
     <string name="settings_widget">Widget</string>
     <string name="label_widget_text">Widget text</string>
     <string name="hdr_text">Text</string>
@@ -119,4 +119,5 @@
     <string name="open_source_libraries">Libraries</string>
     <string name="delete">Delete</string>
     <string name="help_translate">Help translate</string>
+    <string name="open_last_sitemap_on_upstart">Open last sitemap on upstart</string>
 </resources>

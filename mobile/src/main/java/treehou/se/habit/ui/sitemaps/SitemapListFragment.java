@@ -2,6 +2,7 @@ package treehou.se.habit.ui.sitemaps;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.List;
@@ -23,19 +25,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import rx.Subscriber;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import se.treehou.ng.ohcommunicator.Openhab;
+import rx.subjects.BehaviorSubject;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 
-import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
+import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.Settings;
 
 public class SitemapListFragment extends RxFragment {
@@ -51,6 +50,7 @@ public class SitemapListFragment extends RxFragment {
     private String showSitemap = "";
     private Realm realm;
     private Unbinder unbinder;
+    private BehaviorSubject<OHServer> serverBehaviorSubject = BehaviorSubject.create();
 
     /**
      * Create fragment where user can select sitemap.
@@ -109,15 +109,16 @@ public class SitemapListFragment extends RxFragment {
 
         sitemapAdapter = new SitemapListAdapter(getContext());
         sitemapAdapter.setSitemapSelectedListener(new SitemapListAdapter.SitemapSelectedListener() {
+
             @Override
-            public void onSelected(ServerDB server, OHSitemap sitemap) {
+            public void onSelected(OHServer server, OHSitemap sitemap) {
                 settings.setDefaultSitemap(sitemap);
                 openSitemap(server, sitemap);
             }
 
             @Override
-            public void onErrorSelected(ServerDB server) {
-                requestSitemap(server);
+            public void onErrorSelected(OHServer server) {
+                serverBehaviorSubject.onNext(server);
             }
         });
         listView.setAdapter(sitemapAdapter);
@@ -139,7 +140,7 @@ public class SitemapListFragment extends RxFragment {
      * @param server the server of default sitemap.
      * @param sitemap the name of sitemap to show.
      */
-    private void openSitemap(ServerDB server, OHSitemap sitemap){
+    private void openSitemap(OHServer server, OHSitemap sitemap){
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.page_container, SitemapFragment.newInstance(server, sitemap))
@@ -155,9 +156,20 @@ public class SitemapListFragment extends RxFragment {
         if(actionBar != null) actionBar.setTitle(R.string.sitemaps);
     }
 
+    /**
+     * Clears list of sitemaps.
+     */
+    private void clearList() {
+        emptyView.setVisibility(View.VISIBLE);
+        sitemapAdapter.clear();
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+
+        clearList();
         loadSitemapsFromServers();
     }
 
@@ -177,59 +189,31 @@ public class SitemapListFragment extends RxFragment {
      * Load servers from database and request their sitemaps.
      */
     private void loadSitemapsFromServers(){
-        realm.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0)
-                .findAllAsync().asObservable()
-                .compose(this.bindToLifecycle())
-                .subscribe(servers -> {
-                    int emptyVisibility = servers.size() <= 0 ? View.VISIBLE : View.GONE;
-                    if(emptyVisibility != emptyView.getVisibility()){
-                        emptyView.setVisibility(emptyVisibility);
-                    }
-                    sitemapAdapter.clear();
-                    for (final ServerDB server : servers) {
-                        requestSitemap(server);
-                    }
-                });
-    }
-
-    /**
-     * Request and load sitemaps for server.
-     * Prioritize sitemaps on local network.
-     *
-     * @param server
-     */
-    private void requestSitemap(final ServerDB server){
-        Connector.ServerHandler serverHandler = Openhab.instance(server.toGeneric());
-
-        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING);
-        serverHandler.requestSitemapObservable()
-                .subscribeOn(Schedulers.newThread())
+        Observable.merge(Realm.getDefaultInstance().asObservable().compose(RxUtil.loadServers()),
+                serverBehaviorSubject.asObservable())
+                .doOnNext(server -> sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING))
+                .compose(RxUtil.serverToSitemap())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.bindToLifecycle())
-                .subscribe(new Subscriber<List<OHSitemap>>() {
+                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .subscribe(serverSitemaps -> {
+                    OHServer server = serverSitemaps.first;
+                    List<OHSitemap> sitemaps = serverSitemaps.second;
+                    emptyView.setVisibility(View.GONE);
 
-                    @Override
-                    public void onCompleted() {                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "Request sitemap failed", e);
+                    if(sitemaps.size() <= 0){
                         sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
-                    }
-
-                    @Override
-                    public void onNext(List<OHSitemap> sitemaps) {
-                        Log.d(TAG, "Received response sitemaps " + sitemaps.size());
+                    } else {
+                        boolean autoloadLast = settings.getAutoloadSitemapRx().get();
                         for (OHSitemap sitemap : sitemaps) {
-                            sitemap.setServer(server.toGeneric());
                             sitemapAdapter.add(server, sitemap);
-
-                            if(sitemap.getName().equals(showSitemap)) {
+                            if (autoloadLast && sitemap.getName().equals(showSitemap)) {
                                 showSitemap = null; // Prevents sitemap from being accessed again.
                                 openSitemap(server, sitemap);
                             }
                         }
                     }
+                }, throwable -> {
+                    Log.e(TAG, "Request sitemap failed", throwable);
                 });
     }
 }

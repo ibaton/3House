@@ -18,6 +18,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -75,7 +76,7 @@ dependencies {
     compile 'com.trello:rxlifecycle-components:0.5.0'
 
     compile 'com.wefika:flowlayout:0.4.1'
-
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
     compile 'com.github.matthewyork:ColoursLibrary:1.0.+@aar'
     compile 'commons-io:commons-io:2.4'
     compile 'com.jakewharton:butterknife:8.1.0'

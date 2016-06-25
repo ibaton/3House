@@ -2,6 +2,11 @@ package treehou.se.habit.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+
+import com.f2prateek.rx.preferences.Preference;
+import com.f2prateek.rx.preferences.RxSharedPreferences;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import javax.inject.Inject;
 
@@ -14,11 +19,14 @@ public class Settings {
     private static final String PREF_DEFAULT_SITEMAP = "default_sitemap";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private static final String PREF_SERVER_SETUP_QUESTION = "pref_server_setup_question";
+    private static final String PREF_AUTOLOAD_SITEMAP = "pref_autoload_sitemap";
 
     @Inject SharedPreferences preferences;
+    RxSharedPreferences rxPreferences;
 
     public Settings(Context context) {
         preferences = context.getSharedPreferences(PREF_MANAGER, Context.MODE_PRIVATE);
+        rxPreferences = RxSharedPreferences.create(preferences);
     }
 
     public static Settings instance(Context context){
@@ -57,6 +65,14 @@ public class Settings {
             editor.remove(PREF_DEFAULT_SITEMAP);
         }
         editor.apply();
+    }
+
+    /**
+     * Check if sitemap should be autoloaded when sitemap list starts up.
+     * @return get preference as rx pref.
+     */
+    public Preference<Boolean> getAutoloadSitemapRx() {
+         return rxPreferences.getBoolean(PREF_AUTOLOAD_SITEMAP);
     }
 
     /**

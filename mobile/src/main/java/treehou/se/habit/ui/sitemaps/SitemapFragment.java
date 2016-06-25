@@ -28,6 +28,7 @@ import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
@@ -47,6 +48,22 @@ public class SitemapFragment extends Fragment {
     private Realm realm;
     private ServerDB server;
     private OHSitemap sitemap;
+
+    /**
+     * Creates a new instance of fragment showing sitemap.
+     *
+     * @param server the server to use to open sitemap.
+     * @param sitemap the sitemap to load.
+     * @return Fragment displaying sitemap.
+     */
+    public static SitemapFragment newInstance(OHServer server, OHSitemap sitemap){
+        ServerDB serverDB = Realm.getDefaultInstance()
+                .where(ServerDB.class)
+                .equalTo("name", server.getName())
+                .findFirst();
+
+        return newInstance(serverDB, sitemap);
+    }
 
     /**
      * Creates a new instance of fragment showing sitemap.

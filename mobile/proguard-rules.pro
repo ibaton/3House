@@ -31,3 +31,5 @@
 
 -dontwarn org.apache.http.**
 -dontwarn android.net.http.AndroidHttpClient
+
+-dontwarn java.lang.invoke.*
