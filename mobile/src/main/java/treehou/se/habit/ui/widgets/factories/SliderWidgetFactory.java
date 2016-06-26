@@ -5,9 +5,10 @@ import android.view.View;
 import android.widget.SeekBar;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -81,7 +82,8 @@ public class SliderWidgetFactory implements IWidgetFactory {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     if(widget.getItem() != null) {
                         try {
-                            Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), String.valueOf(skbDim.getProgress()));
+                            IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                            serverHandler.sendCommand(widget.getItem().getName(), String.valueOf(skbDim.getProgress()));
                         } catch (Exception e) {}
                     }
                 }

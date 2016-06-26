@@ -18,11 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
-import rx.functions.Func1;
-import rx.functions.Func2;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 
@@ -116,10 +114,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             louProperties.addView(louProperty);
         }
 
+        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), context);
         serverHolder.itemView.setOnClickListener(v -> new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.approve_item))
                 .setMessage(context.getString(R.string.approve_this_item))
-                .setPositiveButton(R.string.ok, (dialog, which) -> Openhab.instance(server.toGeneric()).approveInboxItem(inboxItem))
+                .setPositiveButton(R.string.ok, (dialog, which) -> serverHandler.approveInboxItem(inboxItem))
                 .setNegativeButton(R.string.cancel, null)
                 .show());
     }

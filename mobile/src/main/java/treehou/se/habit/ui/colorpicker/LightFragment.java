@@ -18,10 +18,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -125,13 +126,15 @@ public class LightFragment extends Fragment {
 
                 @Override
                 public void run() {
+                    IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
+
                     hsv[1] *= 100;
                     hsv[2] *= 100;
                     Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                     if (hsv[2] > 5) {
-                        Openhab.instance(server).sendCommand(widget.getItem().getName(), String.format(Locale.getDefault(), Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
+                        serverHandler.sendCommand(widget.getItem().getName(), String.format(Locale.getDefault(), Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
                     } else {
-                        Openhab.instance(server).sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
+                        serverHandler.sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
                     }
                 }
             }, 300);

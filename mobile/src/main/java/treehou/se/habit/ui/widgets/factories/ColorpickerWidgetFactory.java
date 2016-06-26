@@ -19,11 +19,12 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
@@ -123,18 +124,20 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
             View btnIncrement = itemView.findViewById(R.id.btn_increment);
             final OHServer server = widgetFactory.getServer();
             final String itemName = widget.getItem().getName();
+
+            IServerHandler serverHandler = new Connector.ServerHandler(server, context);
             btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0){
-                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_INCREMENT);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_INCREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0){
-                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_ON);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_ON);
                     }
                 }
             }));
@@ -144,14 +147,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0) {
-                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_DECREMENT);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_DECREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0) {
-                        Openhab.instance(server).sendCommand(itemName, Constants.COMMAND_OFF);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_OFF);
                     }
                 }
             }));

@@ -6,9 +6,10 @@ import android.view.View;
 import android.widget.Button;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -70,12 +71,8 @@ public class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         final OHMapping mapSingle = widget.getMapping().get(0);
         btnSingle.setText(mapSingle.getLabel());
-        btnSingle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), mapSingle.getCommand());
-            }
-        });
+        IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+        btnSingle.setOnClickListener(v -> serverHandler.sendCommand(widget.getItem().getName(), mapSingle.getCommand()));
 
         baseHolder.update(widget);
     }

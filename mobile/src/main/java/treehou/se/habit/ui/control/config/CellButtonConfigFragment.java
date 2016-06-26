@@ -22,9 +22,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -136,7 +137,7 @@ public class CellButtonConfigFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-        sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
+        sprItems.setAdapter(mItemAdapter);
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
         mItems.clear();
 
@@ -165,7 +166,8 @@ public class CellButtonConfigFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(server).requestItem(callback);
+            IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
+            serverHandler.requestItem(callback);
         }
 
         tglOnOff.setChecked(

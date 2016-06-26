@@ -6,8 +6,9 @@ import android.view.View;
 import android.widget.Switch;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
@@ -49,15 +50,13 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
         swtSwitch = (Switch) itemView.findViewById(R.id.swt_switch);
         swtSwitch.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * swtSwitch.getTextSize());
 
-        getView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean newState = !(swtSwitch.isChecked());
-                Log.d(TAG, widget.getLabel() + " " + newState);
-                if (widget.getItem() != null) {
-                    swtSwitch.setChecked(newState);
-                    Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
-                }
+        IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+        getView().setOnClickListener(v -> {
+            boolean newState = !(swtSwitch.isChecked());
+            Log.d(TAG, widget.getLabel() + " " + newState);
+            if (widget.getItem() != null) {
+                swtSwitch.setChecked(newState);
+                serverHandler.sendCommand(widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
             }
         });
 

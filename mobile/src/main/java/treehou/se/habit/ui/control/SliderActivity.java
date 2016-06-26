@@ -12,8 +12,9 @@ import android.widget.SeekBar;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
@@ -109,7 +110,8 @@ public class SliderActivity extends AppCompatActivity {
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         if (numberCell != null) {
                             OHServer server = numberCell.getItem().getServer().toGeneric();
-                            Openhab.instance(server).sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
+                            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+                            serverHandler.sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
                         }
                     }
                 });

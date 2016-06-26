@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,14 +25,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.IScanner;
+import se.treehou.ng.ohcommunicator.services.Scanner;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.util.RxUtil;
 
-public class ScanServersFragment extends Fragment {
+public class ScanServersFragment extends RxFragment {
 
     private static final String TAG = "ScanServersFragment";
 
@@ -39,6 +44,7 @@ public class ScanServersFragment extends Fragment {
     private ServersAdapter serversAdapter;
     private OHCallback<List<OHServer>> discoveryListener;
     private Unbinder unbinder;
+    private IScanner scanner;
 
     public static ScanServersFragment newInstance() {
         ScanServersFragment fragment = new ScanServersFragment();
@@ -54,6 +60,8 @@ public class ScanServersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        scanner = new Scanner(getContext());
 
         serversAdapter = new ServersAdapter(getActivity());
         // TODO serversAdapter.addAll(OHServer.loadAll());
@@ -122,14 +130,11 @@ public class ScanServersFragment extends Fragment {
             @Override
             public void onError() {}
         };
-        Openhab.registerServerDiscoveryListener(discoveryListener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        Openhab.deregisterServerDiscoveryListener(discoveryListener);
+        scanner.registerRx().compose(RxUtil.newToMainSchedulers())
+                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .subscribe(server -> {
+            serversAdapter.addItem(server);
+        });
     }
 
     @Override

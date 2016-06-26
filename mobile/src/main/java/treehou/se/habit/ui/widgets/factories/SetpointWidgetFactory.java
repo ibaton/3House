@@ -4,9 +4,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -109,7 +110,8 @@ public class SetpointWidgetFactory implements IWidgetFactory {
                         lblValue.setText(widget.getItem().getFormatedValue());
                     }
 
-                    Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), String.valueOf(value));
+                    IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                    serverHandler.sendCommand(widget.getItem().getName(), String.valueOf(value));
                 } catch (Exception e) {}
             }
         }

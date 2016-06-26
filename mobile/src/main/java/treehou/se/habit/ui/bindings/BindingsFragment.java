@@ -21,9 +21,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -141,7 +142,8 @@ public class BindingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Openhab.instance(server.toGeneric()).requestBindings(bindingListener);
+        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+        serverHandler.requestBindings(bindingListener);
     }
 
     @Override

@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import se.treehou.ng.ohcommunicator.Openhab;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.module.AndroidModule;
@@ -57,7 +56,6 @@ public class HabitApplication extends Application {
         component().inject(this);
 
         ohRealm.setup(this);
-        Openhab.setup(this);
 
         // TODO Remove when support for self signed certificates
         TrustModifier.NukeSSLCerts.nuke();

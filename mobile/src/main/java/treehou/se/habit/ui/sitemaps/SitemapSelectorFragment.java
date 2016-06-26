@@ -15,9 +15,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -103,7 +104,8 @@ public class SitemapSelectorFragment extends Fragment {
     private void requestSitemap(final OHServer server){
 
         mSitemapAdapter.setServerState(server, SitemapAdapter.SitemapItem.STATE_LOADING);
-        Openhab.instance(server).requestSitemaps(new OHCallback<List<OHSitemap>>() {
+        IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+        serverHandler.requestSitemaps(new OHCallback<List<OHSitemap>>() {
             @Override
             public void onUpdate(OHResponse<List<OHSitemap>> items) {
                 List<OHSitemap> sitemaps = items.body();

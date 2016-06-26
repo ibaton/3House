@@ -6,38 +6,33 @@ apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 24
     buildToolsVersion = '24.0.0'
-
     defaultConfig {
         applicationId "treehou.se.habit"
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 49
         versionName "5.0.1"
-
         // Enabling multidex support.
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     dexOptions {
         maxProcessCount 4
         javaMaxHeapSize "4g"
     }
-
     buildTypes {
         release {
             minifyEnabled false
         }
     }
-
     lintOptions {
         checkReleaseBuilds false
     }
+
 
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
@@ -56,9 +51,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    wearApp project(':wear')
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.larswerkman:HoloColorPicker:1.5'
     compile 'com.android.support:recyclerview-v7:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:cardview-v7:24.0.0'
@@ -66,19 +59,17 @@ dependencies {
     compile 'com.android.support:support-annotations:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile 'com.intellij:annotations:12.0@jar'
-
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.4.0'
-    compile 'io.reactivex:rxandroid:1.2.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
-    compile 'com.trello:rxlifecycle:0.5.0'
-    compile 'com.trello:rxlifecycle-components:0.5.0'
-
+    compile 'com.trello:rxlifecycle:0.6.1'
+    compile 'com.trello:rxlifecycle-components:0.6.1'
     compile 'com.wefika:flowlayout:0.4.1'
     compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
     compile 'com.github.matthewyork:ColoursLibrary:1.0.+@aar'
-    compile 'commons-io:commons-io:2.4'
+    compile 'commons-io:commons-io:2.5'
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -89,13 +80,12 @@ dependencies {
     compile 'net.danlew:android.joda:2.9.3.1'
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.google.android.gms:play-services-wearable:9.0.2'
-    compile 'javax.jmdns:jmdns:3.4.1'
     compile 'com.android.support:multidex:1.0.1'
-    compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
+    compile('com.mikepenz:aboutlibraries:5.6.8@aar') {
         transitive = true
         exclude module: 'iconics-core'
     }
-    compile 'com.github.ibaton:android-openhab-connect:1.1.12'
+    compile 'com.github.ibaton:android-openhab-connect:1.1.13'
     compile 'com.google.firebase:firebase-core:9.0.2'
     compile 'com.google.firebase:firebase-crash:9.0.2'
     compile 'com.google.dagger:dagger:2.2'
@@ -104,12 +94,10 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
         exclude module: 'support-annotations'
         exclude module: 'design'
     }
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
     androidTestCompile 'com.android.support:recyclerview-v7:24.0.0'
 }
-
-apply plugin: 'com.google.gms.google-services'

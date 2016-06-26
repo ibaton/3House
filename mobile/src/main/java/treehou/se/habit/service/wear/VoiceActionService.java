@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.connector.Constants;
 
 public class VoiceActionService extends IntentService {
@@ -37,7 +38,8 @@ public class VoiceActionService extends IntentService {
             }*/
 
             if(server != null) {
-                Openhab.instance(server).sendCommand(Constants.ITEM_VOICE_COMMAND, command);
+                IServerHandler serverHandler = new Connector.ServerHandler(server, this);
+                serverHandler.sendCommand(Constants.ITEM_VOICE_COMMAND, command);
             }
         }
     }

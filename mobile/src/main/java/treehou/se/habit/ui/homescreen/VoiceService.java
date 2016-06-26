@@ -9,7 +9,8 @@ import android.util.Log;
 import java.util.List;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.core.db.model.ServerDB;
 
 public class VoiceService extends IntentService {
@@ -52,7 +53,8 @@ public class VoiceService extends IntentService {
             Log.d(TAG, "Received " + results.size() + " voice results.");
 
             String command = results.get(0);
-            Openhab.instance(server.toGeneric()).sendCommand(VOICE_ITEM, command);
+            IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), this);
+            serverHandler.sendCommand(VOICE_ITEM, command);
         }
         realm.close();
     }

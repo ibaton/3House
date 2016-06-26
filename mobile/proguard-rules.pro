@@ -33,3 +33,9 @@
 -dontwarn android.net.http.AndroidHttpClient
 
 -dontwarn java.lang.invoke.*
+
+# About library
+-keep class .R
+-keep class **.R$* {
+    <fields>;
+}

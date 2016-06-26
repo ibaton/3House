@@ -13,8 +13,9 @@ import android.widget.RemoteViews;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
@@ -49,11 +50,16 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         Log.d(TAG, "Build: Button icon " + buttonCell.getIcon());
 
         imgIcon.setImageDrawable(Util.getIconDrawable(context, buttonCell.getIcon()));
-        imgIcon.setOnClickListener(v -> {
-            ItemDB item = buttonCell.getItem();
-            if(item != null) {
-                OHServer server = item.getServer().toGeneric();
-                Openhab.instance(server).sendCommand(item.getName(), buttonCell.getCommand());
+
+        imgIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ItemDB item = buttonCell.getItem();
+                if (item != null) {
+                    OHServer server = item.getServer().toGeneric();
+                    IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+                    serverHandler.sendCommand(item.getName(), buttonCell.getCommand());
+                }
             }
         });
         realm.close();

@@ -18,8 +18,9 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -83,7 +84,8 @@ public class SwitchActionFragment extends Fragment {
                 }
             };
 
-            Openhab.instance(server.toGeneric()).requestItem(callback);
+            IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+            serverHandler.requestItem(callback);
         }
 
         tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);

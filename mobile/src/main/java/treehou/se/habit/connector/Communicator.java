@@ -14,16 +14,16 @@ import com.squareup.picasso.LruCache;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
@@ -56,6 +56,7 @@ public class Communicator {
 
     public void incDec(final OHServer server, final String itemName, final int value, final int min, final int max){
 
+        final IServerHandler serverHandler = new Connector.ServerHandler(server, context);
         OHCallback<OHItem> callback = new OHCallback<OHItem>() {
             @Override
             public void onUpdate(OHResponse<OHItem> newItem) {
@@ -64,17 +65,17 @@ public class Communicator {
                 if (treehou.se.habit.util.Constants.SUPPORT_INC_DEC.contains(newItem.body().getType())) {
                     if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
                         if (value > 0) {
-                            Openhab.instance(server).sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
+                            serverHandler.sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
                         }
                     } else if (Constants.COMMAND_ON.equals(state)) {
                         if (value < 0) {
-                            Openhab.instance(server).sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
+                            serverHandler.sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
                         }
                     } else {
                         try {
                             int itemVal = scrubNumberValue(Integer.parseInt(newItem.body().getState()) + value, min, max);
                             Log.e(TAG, "Sending sendCommand " + itemVal + " value " + value);
-                            Openhab.instance(server).sendCommand(newItem.body().getName(), String.valueOf(itemVal));
+                            serverHandler.sendCommand(newItem.body().getName(), String.valueOf(itemVal));
                         } catch (NumberFormatException e) {
                             Log.e(TAG, "Could not parse state " + newItem.body().getState(), e);
                         }
@@ -87,7 +88,7 @@ public class Communicator {
                 Log.d(TAG, "incDec onError");
             }
         };
-        Openhab.instance(server).requestItem(itemName, callback);
+        serverHandler.requestItem(itemName, callback);
     }
 
     public Picasso buildPicasso(Context context, final OHServer server){

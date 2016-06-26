@@ -14,9 +14,10 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
@@ -123,7 +124,8 @@ public class CellColorConfigFragment extends Fragment {
 
                 }
             };
-            Openhab.instance(server).requestItem(callback);
+            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            serverHandler.requestItem(callback);
         }
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -8,10 +8,11 @@ import android.widget.Spinner;
 
 import java.util.List;
 
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -85,7 +86,8 @@ public class SelectionWidgetFactory implements IWidgetFactory {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if(position != lastPosition) {
                                 OHMapping mapping = mappings.get(position);
-                                Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), mapping.getCommand());
+                                final IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                                serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
                                 lastPosition = position;
                             }
                         }

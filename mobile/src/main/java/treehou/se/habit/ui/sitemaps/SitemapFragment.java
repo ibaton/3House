@@ -25,11 +25,12 @@ import org.greenrobot.eventbus.Subscribe;
 import javax.inject.Inject;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.HabitApplication;
@@ -119,7 +120,8 @@ public class SitemapFragment extends Fragment {
         super.onResume();
 
         if(!hasPage()) {
-            Openhab.instance(sitemap.getServer()).requestPage(sitemap.getHomepage(), requestPageCallback);
+            final IServerHandler serverHandler = new Connector.ServerHandler(sitemap.getServer(), getActivity());
+            serverHandler.requestPage(sitemap.getHomepage(), requestPageCallback);
         }
         EventBus.getDefault().register(this);
     }

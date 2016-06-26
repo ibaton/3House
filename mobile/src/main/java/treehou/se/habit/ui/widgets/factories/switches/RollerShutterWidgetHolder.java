@@ -4,9 +4,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -36,33 +37,26 @@ public class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
         final OHItem item = widget.getItem();
         View itemView = factory.getInflater().inflate(R.layout.item_widget_rollershutters, null);
 
+        IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+
         ImageButton btnUp = (ImageButton) itemView.findViewById(R.id.btn_up);
-        btnUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (widget.getItem() != null) {
-                    Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), Constants.COMMAND_UP);
-                }
+        btnUp.setOnClickListener(v -> {
+            if (widget.getItem() != null) {
+                serverHandler.sendCommand(widget.getItem().getName(), Constants.COMMAND_UP);
             }
         });
 
         ImageButton btnCancel = (ImageButton) itemView.findViewById(R.id.btn_cancel);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (widget.getItem() != null) {
-                    Openhab.instance(factory.getServer()).sendCommand(item.getName(), Constants.COMMAND_STOP);
-                }
+        btnCancel.setOnClickListener(v -> {
+            if (widget.getItem() != null) {
+                serverHandler.sendCommand(item.getName(), Constants.COMMAND_STOP);
             }
         });
 
         ImageButton btnDown = (ImageButton) itemView.findViewById(R.id.btn_down);
-        btnDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (widget.getItem() != null) {
-                    Openhab.instance(factory.getServer()).sendCommand(item.getName(), Constants.COMMAND_DOWN);
-                }
+        btnDown.setOnClickListener(v -> {
+            if (widget.getItem() != null) {
+                serverHandler.sendCommand(item.getName(), Constants.COMMAND_DOWN);
             }
         });
 

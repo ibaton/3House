@@ -7,10 +7,11 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -76,19 +77,12 @@ public class TextWidgetFactory implements IWidgetFactory {
                         }
                         builder.setView(inputView);
 
-                        builder.setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String text = input.getText().toString();
-                                Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), text);
-                            }
+                        IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                        builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
+                            String text = input.getText().toString();
+                            serverHandler.sendCommand(widget.getItem().getName(), text);
                         });
-                        builder.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
+                        builder.setNegativeButton(context.getString(R.string.cancel), (dialog, which) -> dialog.cancel());
                         builder.show();
 
                         return false;

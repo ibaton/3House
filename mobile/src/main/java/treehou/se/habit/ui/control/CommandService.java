@@ -6,9 +6,10 @@ import android.content.Context;
 import android.util.Log;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.ItemDB;
 
@@ -91,6 +92,7 @@ public class CommandService extends IntentService {
     private void handleActionCommand(String command, OHItem item) {
 
         OHServer server = item.getServer();
-        Openhab.instance(server).sendCommand(item.getName(), command);
+        IServerHandler serverHandler = new Connector.ServerHandler(server, this);
+        serverHandler.sendCommand(item.getName(), command);
     }
 }

@@ -13,10 +13,10 @@ import android.widget.SeekBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
@@ -66,7 +66,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
                 }
 
                 OHServer server = sliderCell.getItem().getServer().toGeneric();
-                Openhab.instance(server).sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress());
+                IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+                serverHandler.sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });
         realm.close();

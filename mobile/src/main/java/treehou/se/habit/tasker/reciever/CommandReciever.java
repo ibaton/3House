@@ -6,7 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
@@ -54,7 +55,8 @@ public class CommandReciever implements IFireReciever {
             Realm realm = Realm.getDefaultInstance();
             ItemDB item = ItemDB.load(realm, itemId);
             if(item != null){
-                Openhab.instance(item.getServer().toGeneric()).sendCommand(item.getName(), command);
+                IServerHandler serverHandler = new Connector.ServerHandler(item.getServer().toGeneric(), context);
+                serverHandler.sendCommand(item.getName(), command);
                 Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");

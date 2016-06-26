@@ -20,11 +20,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
 import rx.Subscription;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -125,8 +126,8 @@ public class PageFragment extends RxFragment {
      * Request page from server.
      */
     private void requestPageUpdate(){
-        Openhab.instance(server.toGeneric())
-                .requestPageRx(page)
+        final IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+        serverHandler.requestPageRx(page)
                 .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())
                 .subscribe(ohLinkedPage -> {
@@ -150,8 +151,8 @@ public class PageFragment extends RxFragment {
         Realm realm = Realm.getDefaultInstance();
         OHServer server = ServerDB.load(realm, serverId).toGeneric();
         realm.close();
-        return Openhab.instance(server)
-                .requestPageUpdatesRx(server, page)
+        final IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
+        return serverHandler.requestPageUpdatesRx(server, page)
                 .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())
                 .subscribe(ohLinkedPage -> {

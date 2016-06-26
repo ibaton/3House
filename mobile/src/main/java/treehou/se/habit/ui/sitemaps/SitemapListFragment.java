@@ -192,7 +192,7 @@ public class SitemapListFragment extends RxFragment {
         Observable.merge(Realm.getDefaultInstance().asObservable().compose(RxUtil.loadServers()),
                 serverBehaviorSubject.asObservable())
                 .doOnNext(server -> sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING))
-                .compose(RxUtil.serverToSitemap())
+                .compose(RxUtil.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .subscribe(serverSitemaps -> {

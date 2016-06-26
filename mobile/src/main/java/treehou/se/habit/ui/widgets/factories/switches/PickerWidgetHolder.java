@@ -8,9 +8,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -71,12 +72,10 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
             if (widget.getItem().getState().equals(mapping.getCommand())) {
                 rbtMap.setChecked(true);
             }
-            rbtMap.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        Openhab.instance(factory.getServer()).sendCommand(widget.getItem().getName(), mapping.getCommand());
-                    }
+            rbtMap.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                    serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
                 }
             });
             rgpMapping.addView(rbtMap);

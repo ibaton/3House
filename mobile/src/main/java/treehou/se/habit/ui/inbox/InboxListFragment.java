@@ -28,9 +28,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import rx.functions.Action1;
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.InboxAdapter;
@@ -224,7 +224,8 @@ public class InboxListFragment extends RxFragment {
      */
     private void ignoreInboxItem(final OHInboxItem item){
         item.setFlag(OHInboxItem.FLAG_IGNORED);
-        Openhab.instance(server.toGeneric()).ignoreInboxItem(item);
+        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getContext());
+        serverHandler.ignoreInboxItem(item);
 
         final View rootView = getView();
         if(rootView != null) {
@@ -246,7 +247,8 @@ public class InboxListFragment extends RxFragment {
      */
     private void unignoreInboxItem(final OHInboxItem item) {
         item.setFlag("");
-        Openhab.instance(server.toGeneric()).unignoreInboxItem(item);
+        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getContext());
+        serverHandler.unignoreInboxItem(item);
         setItems(items, showIgnored);
     }
 
@@ -254,8 +256,8 @@ public class InboxListFragment extends RxFragment {
     public void onResume() {
         super.onResume();
 
-        Openhab.instance(server.toGeneric())
-                .requestInboxItemsRx()
+        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getContext());
+        serverHandler.requestInboxItemsRx()
                 .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())
                 .subscribe(ohInboxItems -> {

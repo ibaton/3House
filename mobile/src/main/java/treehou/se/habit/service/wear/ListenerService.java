@@ -6,9 +6,10 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.google.gson.Gson;
 
-import se.treehou.ng.ohcommunicator.Openhab;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.service.wear.connector.messages.VoiceCommandMessage;
 
@@ -44,7 +45,8 @@ public class ListenerService extends WearableListenerService {
         }
 
         if(server != null) {
-            Openhab.instance(server).sendCommand(Constants.ITEM_VOICE_COMMAND, message.getMessage());
+            IServerHandler serverHandler = new Connector.ServerHandler(server, this);
+            serverHandler.sendCommand(Constants.ITEM_VOICE_COMMAND, message.getMessage());
         }
     }
 
