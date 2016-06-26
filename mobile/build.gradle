@@ -27,7 +27,6 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.config
         }
     }
     lintOptions {
