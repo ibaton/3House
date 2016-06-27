@@ -17,7 +17,7 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class ChartWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "ChartWidgetFactory";
+    private static final String TAG = ChartWidgetFactory.class.getSimpleName();
 
     @Override
     public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
@@ -57,8 +57,6 @@ public class ChartWidgetFactory implements IWidgetFactory {
 
         @Override
         public void update(final OHWidget widget) {
-            Log.d(TAG, "update " + widget);
-
             if (widget == null) {
                 return;
             }

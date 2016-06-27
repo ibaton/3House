@@ -66,7 +66,7 @@ public class WidgetSettingsFragment extends Fragment {
         realm = Realm.getDefaultInstance();
 
         displayWidget = new OHWidget();
-        displayWidget.setType(OHWidget.TYPE_DUMMY);
+        displayWidget.setType("Dummy");
         displayWidget.setLabel(getActivity().getString(R.string.label_widget_text));
     }
 

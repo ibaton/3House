@@ -12,6 +12,7 @@ import java.util.Map;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
@@ -46,18 +47,18 @@ public class WidgetFactory {
         this.page = page;
 
         // Populate factory
-        builders.put(OHWidget.TYPE_FRAME, new FrameWidgetFactory());
-        builders.put(OHWidget.TYPE_CHART, new ChartWidgetFactory());
-        builders.put(OHWidget.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
-        builders.put(OHWidget.TYPE_IMAGE, new ImageWidgetFactory());
-        builders.put(OHWidget.TYPE_VIDEO, new VideoWidgetFactory());
-        builders.put(OHWidget.TYPE_WEB, new WebWidgetFactory());
-        builders.put(OHWidget.TYPE_SLIDER, new SliderWidgetFactory());
-        builders.put(OHWidget.TYPE_SWITCH, new SwitchWidgetFactory());
-        builders.put(OHWidget.TYPE_SELECTION, new SelectionWidgetFactory());
-        builders.put(OHWidget.TYPE_SETPOINT, new SetpointWidgetFactory());
-        builders.put(OHWidget.TYPE_TEXT, new TextWidgetFactory());
-        builders.put(OHWidget.TYPE_GROUP, new GroupWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_FRAME, new FrameWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_CHART, new ChartWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_IMAGE, new ImageWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_VIDEO, new VideoWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_WEB, new WebWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_SLIDER, new SliderWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_SWITCH, new SwitchWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_SELECTION, new SelectionWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_SETPOINT, new SetpointWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_TEXT, new TextWidgetFactory());
+        builders.put(OpenhabConstants.TYPE_GROUP, new GroupWidgetFactory());
     }
 
     public IWidgetHolder createWidget(final OHWidget widget , final OHWidget parent){
