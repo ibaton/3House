@@ -72,7 +72,7 @@ public class Settings {
      * @return get preference as rx pref.
      */
     public Preference<Boolean> getAutoloadSitemapRx() {
-         return rxPreferences.getBoolean(PREF_AUTOLOAD_SITEMAP);
+         return rxPreferences.getBoolean(PREF_AUTOLOAD_SITEMAP, true);
     }
 
     /**

@@ -68,7 +68,7 @@ public class SitemapSelectorFragment extends Fragment {
         return rootView;
     }
 
-    SitemapAdapter.OnSitemapSelectListener sitemapSelectListener = new SitemapAdapter.OnSitemapSelectListener() {
+    private SitemapAdapter.OnSitemapSelectListener sitemapSelectListener = new SitemapAdapter.OnSitemapSelectListener() {
         @Override
         public void onSitemapSelect(OHSitemap sitemap) {
             if(getTargetFragment() != null){
@@ -102,7 +102,6 @@ public class SitemapSelectorFragment extends Fragment {
      * @param server the server to request sitemap for.
      */
     private void requestSitemap(final OHServer server){
-
         mSitemapAdapter.setServerState(server, SitemapAdapter.SitemapItem.STATE_LOADING);
         IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
         serverHandler.requestSitemaps(new OHCallback<List<OHSitemap>>() {
@@ -119,7 +118,6 @@ public class SitemapSelectorFragment extends Fragment {
                     }
                 }
                 mSitemapAdapter.notifyDataSetChanged();
-                Log.d(TAG, "Received " + sitemaps.size() + " servers");
             }
 
             @Override
