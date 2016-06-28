@@ -43,6 +43,7 @@ public class InboxListFragment extends RxFragment {
     private static final String ARG_SERVER = "argServer";
 
     @BindView(R.id.list) RecyclerView listView;
+    @BindView(R.id.error_view) View empty;
 
     private Realm relam;
 
@@ -256,13 +257,32 @@ public class InboxListFragment extends RxFragment {
     public void onResume() {
         super.onResume();
 
+        showErrorView(false);
         IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getContext());
         serverHandler.requestInboxItemsRx()
                 .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())
                 .subscribe(ohInboxItems -> {
+                    showErrorView(false);
                     setItems(ohInboxItems, showIgnored);
+                }, throwable -> {
+                    showErrorView(true);
                 });
+    }
+
+    /**
+     * Updates ui to show error.
+     * @param showError the error to show.
+     */
+    private void showErrorView(boolean showError){
+        if(showError){
+            empty.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+        }
+        else {
+            empty.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

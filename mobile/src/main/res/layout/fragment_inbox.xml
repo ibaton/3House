@@ -11,9 +11,11 @@
         android:layout_height="match_parent"/>
 
     <TextView
-        android:id="@android:id/empty"
+        android:id="@+id/error_view"
+        android:text="@string/failed_to_get_inbox_items"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:gravity="center" />
 
 </FrameLayout>
