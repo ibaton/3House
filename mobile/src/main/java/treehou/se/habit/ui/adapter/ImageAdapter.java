@@ -33,5 +33,4 @@ public class ImageAdapter extends ArrayAdapter<ImageItem> {
 
         return item;
     }
-
 }

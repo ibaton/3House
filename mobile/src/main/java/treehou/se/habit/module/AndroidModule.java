@@ -3,6 +3,7 @@ package treehou.se.habit.module;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 
 import com.google.gson.Gson;
 
@@ -60,6 +61,7 @@ public class AndroidModule {
         void inject(SitemapListFragment sitemapListFragment);
         void inject(GeneralSettingsFragment fragment);
         void inject(NavigationDrawerFragment drawerFragment);
+        void inject(Fragment fragment);
         void inject(Settings settings);
     }
 }

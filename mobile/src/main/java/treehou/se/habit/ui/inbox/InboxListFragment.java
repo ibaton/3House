@@ -61,13 +61,13 @@ public class InboxListFragment extends RxFragment {
     /**
      * Creates a new instance of inbox list fragment.
      *
-     * @param server the server to connect to.
+     * @param serverId the server to connect to.
      * @return new fragment instance.
      */
-    public static InboxListFragment newInstance(ServerDB server) {
+    public static InboxListFragment newInstance(long serverId) {
         InboxListFragment fragment = new InboxListFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_SERVER, server.getId());
+        args.putLong(ARG_SERVER, serverId);
         fragment.setArguments(args);
         return fragment;
     }

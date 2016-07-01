@@ -188,29 +188,7 @@ public class ServersFragment extends RxFragment {
          */
         private void openServerPage(ServerDB server){
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.page_container, SetupServerFragment.newInstance(server.getId()))
-                    .addToBackStack(null)
-                    .commit();
-        }
-
-        /**
-         * Open inbox page
-         * @param server the server to open page for.
-         */
-        private void openInboxPage(ServerDB server){
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(container.getId(), InboxListFragment.newInstance(server))
-                    .addToBackStack(null)
-                    .commit();
-        }
-
-        /**
-         * Open bindings page for server.
-         * @param server the server to open page for.
-         */
-        private void openBindingsPage(ServerDB server){
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(container.getId(), BindingsFragment.newInstance(server))
+                    .replace(R.id.page_container, ServerMenuFragment.newInstance(server.getId()))
                     .addToBackStack(null)
                     .commit();
         }
@@ -219,21 +197,7 @@ public class ServersFragment extends RxFragment {
         public boolean onItemLongClickListener(final ServersAdapter.ServerHolder serverHolder) {
 
             final ServerDB server = serversAdapter.getItem(serverHolder.getAdapterPosition());
-            new AlertDialog.Builder(getActivity())
-                    .setItems(R.array.server_manager, (dialog, which) -> {
-                        switch (which) {
-                            case 0:
-                                openBindingsPage(server);
-                                break;
-                            case 1:
-                                openInboxPage(server);
-                                break;
-                            case 2:
-                                showRemoveDialog(serverHolder, server);
-                                break;
-                        }
-                    })
-                    .create().show();
+            showRemoveDialog(serverHolder, server);
             return true;
         }
     };

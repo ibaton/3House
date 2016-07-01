@@ -3,6 +3,7 @@ package treehou.se.habit;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -36,6 +37,7 @@ public class HabitApplication extends Application {
         void inject(GeneralSettingsFragment fragment);
         void inject(ServersFragment serversFragment);
         void inject(NavigationDrawerFragment drawerFragment);
+        void inject(Fragment drawerFragment);
         void inject(PageFragment pageFragment);
         void inject(Settings settings);
     }

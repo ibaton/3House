@@ -66,10 +66,10 @@ public class BindingsFragment extends Fragment {
         }
     };
 
-    public static BindingsFragment newInstance(ServerDB server) {
+    public static BindingsFragment newInstance(long serverId) {
         BindingsFragment fragment = new BindingsFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_SERVER, server.getId());
+        args.putLong(ARG_SERVER, serverId);
         fragment.setArguments(args);
         return fragment;
     }

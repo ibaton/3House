@@ -51,8 +51,6 @@
     </string-array>
 
     <string-array name="server_manager">
-        <item>Bindings</item>
-        <item>Inbox</item>
         <item>@string/delete</item>
     </string-array>
 </resources>

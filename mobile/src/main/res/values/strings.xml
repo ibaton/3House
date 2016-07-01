@@ -121,4 +121,5 @@
     <string name="help_translate">Help translate</string>
     <string name="open_last_sitemap_on_upstart">Open last sitemap on upstart</string>
     <string name="failed_to_get_inbox_items">Failed to get inbox items</string>
+    <string name="edit">Edit</string>
 </resources>

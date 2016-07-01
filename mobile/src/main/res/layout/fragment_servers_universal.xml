@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.servers.ServersFragment">
 
     <android.support.v7.widget.RecyclerView
@@ -27,5 +28,5 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/fab_add_icon" />
+        app:srcCompat="@drawable/fab_add_icon" />
 </FrameLayout>
