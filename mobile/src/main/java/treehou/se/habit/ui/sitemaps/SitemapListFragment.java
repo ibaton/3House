@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,27 +26,33 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
 import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.Settings;
 
 public class SitemapListFragment extends RxFragment {
 
-    private static final String TAG = "SitemapListFragment";
+    private static final String TAG = "SitemapSelectFragment";
 
     private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
     @Inject Settings settings;
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
+
     private SitemapListAdapter sitemapAdapter;
     private String showSitemap = "";
     private Realm realm;
@@ -198,6 +205,7 @@ public class SitemapListFragment extends RxFragment {
                 .compose(RxUtil.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxUtil.filterDisplaySitemaps(realm))
                 .subscribe(serverSitemaps -> {
                     OHServer server = serverSitemaps.first;
                     List<OHSitemap> sitemaps = serverSitemaps.second;

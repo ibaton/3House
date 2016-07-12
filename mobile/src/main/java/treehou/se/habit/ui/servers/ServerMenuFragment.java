@@ -27,6 +27,8 @@ import treehou.se.habit.ui.adapter.ImageItem;
 import treehou.se.habit.ui.adapter.ImageItemAdapter;
 import treehou.se.habit.ui.bindings.BindingsFragment;
 import treehou.se.habit.ui.inbox.InboxListFragment;
+import treehou.se.habit.ui.servers.sitemaps.SitemapSelectFragment;
+import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 
 public class ServerMenuFragment extends Fragment {
 
@@ -103,7 +105,7 @@ public class ServerMenuFragment extends Fragment {
         items.add(new ImageItem(ServerActions.ITEM_EDIT, getString(R.string.edit), R.drawable.ic_edit));
         items.add(new ImageItem(ServerActions.ITEM_INBOX, getString(R.string.inbox), R.drawable.ic_inbox));
         items.add(new ImageItem(ServerActions.ITEM_BINDINGS, getString(R.string.bindings), R.drawable.ic_binding));
-        //items.add(new ImageItem(ServerActions.ITEM_SITEMAP_FILTER, getString(R.string.sitemaps), R.drawable.ic_sitemap));
+        items.add(new ImageItem(ServerActions.ITEM_SITEMAP_FILTER, getString(R.string.sitemaps), R.drawable.ic_sitemap));
         adapter = new ImageItemAdapter(getActivity(), R.layout.item_menu_image_box);
 
         // Set the adapter
@@ -149,6 +151,17 @@ public class ServerMenuFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * Open sitemap page for server.
+     * @param serverId the server to open page for.
+     */
+    private void openSitemapSettingsPage(long serverId){
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(container.getId(), SitemapSelectFragment.newInstance(serverId))
+                .addToBackStack(null)
+                .commit();
+    }
+
     private ImageItemAdapter.OnItemClickListener optionsSelectListener = id -> {
 
         Fragment fragment = null;
@@ -163,6 +176,7 @@ public class ServerMenuFragment extends Fragment {
                 openBindingsPage(serverId);
                 break;
             case ServerActions.ITEM_SITEMAP_FILTER:
+                openSitemapSettingsPage(serverId);
                 break;
         }
 

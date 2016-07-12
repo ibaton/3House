@@ -2,6 +2,7 @@ package treehou.se.habit.core.db.model;
 
 import android.net.Uri;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -15,6 +16,8 @@ public class SitemapDB extends RealmObject {
     private String link;
     private ServerDB server;
     private LinkedPageDB homepage;
+
+    private SitemapSettingsDB settingsDB;
 
     public long getId() {
         return id;
@@ -64,34 +67,6 @@ public class SitemapDB extends RealmObject {
         this.server = server;
     }
 
-    public static SitemapDB load(long id){
-        //return OHRealm.realm().where(SitemapDB.class).equalTo("id", id).findFirst();
-        return null;
-    }
-
-    public static void save(SitemapDB item){
-        /*Realm realm = OHRealm.realm();
-        realm.beginTransaction();
-        if(item.getId() <= 0) {
-            item.setId(getUniqueId());
-        }
-
-        realm.copyToRealmOrUpdate(item);
-        realm.commitTransaction();
-        realm.close();*/
-    }
-
-    public static long getUniqueId() {
-        /*Realm realm = OHRealm.realm();
-        long id = 1;
-        Number num = realm.where(SitemapDB.class).max("id");
-        if (num != null) id = num.longValue() + 1;
-        realm.close();
-
-        return id;*/
-        return 0;
-    }
-
     public static boolean isLocal(SitemapDB sitemap){
         Uri uri = Uri.parse(sitemap.getLink());
 
@@ -100,5 +75,26 @@ public class SitemapDB extends RealmObject {
         }catch (Exception e){}
 
         return false;
+    }
+
+    public SitemapSettingsDB getSettingsDB() {
+        return settingsDB;
+    }
+
+    public void setSettingsDB(SitemapSettingsDB settingsDB) {
+        this.settingsDB = settingsDB;
+    }
+
+    /**
+     * Generate a unique id for realm object
+     * @param realm
+     * @return
+     */
+    public static long getUniqueId(Realm realm) {
+        long id = 1;
+        Number num = realm.where(SitemapDB.class).max("id");
+        if (num != null) id = num.longValue() + 1;
+
+        return id;
     }
 }

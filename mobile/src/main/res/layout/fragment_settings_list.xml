@@ -10,7 +10,7 @@
         android:divider="@drawable/null_divider"
         android:dividerHeight="0dp"/>
 
-    <TextView android:id="@android:id/empty" android:layout_width="match_parent"
+    <TextView android:id="@+id/textView" android:layout_width="match_parent"
         android:layout_height="match_parent" android:gravity="center" />
 
 </FrameLayout>

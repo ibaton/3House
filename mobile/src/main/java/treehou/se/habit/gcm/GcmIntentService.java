@@ -31,12 +31,11 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import java.util.Locale;
 
 import io.realm.Realm;
+import treehou.se.habit.service.wear.VoiceActionService;
 import treehou.se.habit.util.Constants;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.NotificationSettingsDB;
-import treehou.se.habit.service.wear.VoiceActionService;
-
 
 public class GcmIntentService extends IntentService {
 

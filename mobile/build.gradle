@@ -46,6 +46,7 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
+    buildToolsVersion '24.0.0'
 }
 
 dependencies {
@@ -77,8 +78,7 @@ dependencies {
     compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
     compile 'net.danlew:android.joda:2.9.3.1'
-    compile 'com.google.android.gms:play-services-gcm:9.0.2'
-    compile 'com.google.android.gms:play-services-wearable:9.0.2'
+    compile 'com.google.android.gms:play-services-gcm:9.2.0'
     compile 'com.android.support:multidex:1.0.1'
     compile('com.mikepenz:aboutlibraries:5.6.8@aar') {
         transitive = true

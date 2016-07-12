@@ -24,56 +24,45 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
-import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.Settings;
 
-public class SitemapListFragment extends RxFragment {
+public class SitemapSelectFragment extends RxFragment {
 
-    private static final String TAG = "SitemapListFragment";
+    private static final String TAG = "SitemapSelectFragment";
 
-    private static final String ARG_SHOW_SITEMAP = "showSitemap";
+    private static final String ARG_SHOW_SERVER = "ARG_SHOW_SERVER";
 
     @Inject Settings settings;
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
     private SitemapListAdapter sitemapAdapter;
-    private String showSitemap = "";
     private Realm realm;
     private Unbinder unbinder;
     private BehaviorSubject<OHServer> serverBehaviorSubject = BehaviorSubject.create();
-
-    /**
-     * Create fragment where user can select sitemap.
-     *
-     * @return Fragment
-     */
-    public static SitemapListFragment newInstance() {
-        SitemapListFragment fragment = new SitemapListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private long serverId = -1;
 
     /**
      * Load sitemaps for servers.
      * Open provided sitemap if loaded.
      *
-     * @param sitemap name of sitemap to load
+     * @param serverId the server to load
      * @return Fragment
      */
-    public static SitemapListFragment newInstance(String sitemap) {
-        SitemapListFragment fragment = new SitemapListFragment();
+    public static SitemapSelectFragment newInstance(long serverId) {
+        SitemapSelectFragment fragment = new SitemapSelectFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_SHOW_SITEMAP, sitemap);
+        args.putLong(ARG_SHOW_SERVER, serverId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,18 +71,14 @@ public class SitemapListFragment extends RxFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SitemapListFragment() {}
+    public SitemapSelectFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //getComponent().inject(this);
-
         realm = Realm.getDefaultInstance();
-
-        if(savedInstanceState != null) showSitemap = "";
-        else showSitemap = getArguments().getString(ARG_SHOW_SITEMAP);
+        serverId = getArguments().getLong(ARG_SHOW_SERVER);
     }
 
     @Override
@@ -111,8 +96,14 @@ public class SitemapListFragment extends RxFragment {
 
             @Override
             public void onSelected(OHServer server, OHSitemap sitemap) {
-                settings.setDefaultSitemap(sitemap);
-                openSitemap(server, sitemap);
+                SitemapDB sitemapDB = realm.where(SitemapDB.class)
+                        .equalTo("server.id", serverId)
+                        .equalTo("name", sitemap.getName())
+                        .findFirst();
+
+                if(sitemapDB != null){
+                    openSitemap(sitemapDB);
+                }
             }
 
             @Override
@@ -126,23 +117,14 @@ public class SitemapListFragment extends RxFragment {
     }
 
     /**
-     * Get application component
-     * @return application component
-     */
-    protected HabitApplication.ApplicationComponent getComponent() {
-        return ((HabitApplication) getActivity().getApplication()).component();
-    }
-
-    /**
      * Open fragment showing sitemap.
      *
-     * @param server the server of default sitemap.
      * @param sitemap the name of sitemap to show.
      */
-    private void openSitemap(OHServer server, OHSitemap sitemap){
+    private void openSitemap(SitemapDB sitemap){
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.page_container, SitemapFragment.newInstance(server, sitemap))
+                .replace(R.id.page_container, SitemapSettingsFragment.newInstance(sitemap.getId()))
                 .addToBackStack(null)
                 .commit();
     }
@@ -188,30 +170,21 @@ public class SitemapListFragment extends RxFragment {
      * Load servers from database and request their sitemaps.
      */
     private void loadSitemapsFromServers(){
-        Observable.merge(Realm.getDefaultInstance().asObservable().compose(RxUtil.loadServers()),
-                serverBehaviorSubject.asObservable())
-                .doOnNext(server -> {
-                    sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING);
-                    emptyView.setVisibility(View.GONE);
-                })
+        realm.where(ServerDB.class).equalTo("id", serverId).findAll().asObservable()
+                .flatMap(Observable::from)
+                .map(ServerDB::toGeneric)
+                .distinct()
                 .compose(RxUtil.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .subscribe(serverSitemaps -> {
+                    emptyView.setVisibility(View.GONE);
+
                     OHServer server = serverSitemaps.first;
                     List<OHSitemap> sitemaps = serverSitemaps.second;
 
-                    if(sitemaps.size() <= 0){
-                        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
-                    } else {
-                        boolean autoloadLast = settings.getAutoloadSitemapRx().get();
-                        for (OHSitemap sitemap : sitemaps) {
-                            sitemapAdapter.add(server, sitemap);
-                            if (autoloadLast && sitemap.getName().equals(showSitemap)) {
-                                showSitemap = null; // Prevents sitemap from being accessed again.
-                                openSitemap(server, sitemap);
-                            }
-                        }
+                    for (OHSitemap sitemap : sitemaps) {
+                        sitemapAdapter.add(server, sitemap);
                     }
                 }, throwable -> {
                     Log.e(TAG, "Request sitemap failed", throwable);
