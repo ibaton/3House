@@ -52,7 +52,6 @@ public class ServersTest {
     private void deleteServer(String testServerName){
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))));
         onView(withId(R.id.list)).perform(actionOnItem(hasDescendant(withText(testServerName)), longClick()));
-        onView(withText(R.string.delete)).perform(click());
         onView(withText(R.string.ok)).perform(click());
         onView(withId(R.id.txt_server_name)).check(doesNotExist());
     }
@@ -72,9 +71,11 @@ public class ServersTest {
         createServer(testServerName);
 
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
+        onView(withText("Edit")).perform(click());
         onView(withId(R.id.txt_server_name)).perform(ViewActions.clearText());
         onView(withId(R.id.txt_server_name)).perform(ViewActions.typeText(testServerName));
         closeSoftKeyboard();
+        pressBack();
         pressBack();
 
         deleteServer(testServerName);
@@ -86,10 +87,11 @@ public class ServersTest {
         NavigationUtil.navigateToServer();
         createServer(testServerName);
 
-        onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
         closeSoftKeyboard();
+        onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
+        onView(withText("Edit")).perform(click());
         onView(withId(R.id.btn_back)).perform(click());
-
+        pressBack();
         deleteServer(testServerName);
     }
 
