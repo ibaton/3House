@@ -9,7 +9,6 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
     <item name="fragment_widget" type="layout">@layout/fragment_widget_grid</item>
-    <item name="fragment_control" type="layout">@layout/fragment_control_universal</item>
     <item name="fragment_servers" type="layout">@layout/fragment_servers_universal</item>
     <item name="fragment_settings" type="layout">@layout/fragment_settings_grid</item>
 </resources>

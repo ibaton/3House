@@ -61,21 +61,11 @@ public class ControllsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_control, container, false);
+        View view = inflater.inflate(R.layout.fragment_control_universal, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        viwEmpty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewController();
-            }
-        });
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createNewController();
-            }
-        });
+        viwEmpty.setOnClickListener(view1 -> createNewController());
+        fabAdd.setOnClickListener(v -> createNewController());
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.controllers);
