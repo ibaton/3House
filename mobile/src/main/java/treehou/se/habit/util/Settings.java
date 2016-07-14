@@ -16,7 +16,7 @@ public class Settings {
 
     private static final String PREF_MANAGER = "treePref";
 
-    private static final String PREF_DEFAULT_SITEMAP = "default_sitemap";
+    private static final String PREF_DEFAULT_SITEMAP = "default_sitemap_name";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private static final String PREF_SERVER_SETUP_QUESTION = "pref_server_setup_question";
     private static final String PREF_AUTOLOAD_SITEMAP = "pref_autoload_sitemap";

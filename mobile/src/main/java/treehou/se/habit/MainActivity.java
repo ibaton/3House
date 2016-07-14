@@ -58,6 +58,16 @@ public class MainActivity extends AppCompatActivity
         // Set up the drawer.
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        setupFragments(savedInstanceState);
+
+        showControllerInNotification();
+    }
+
+    /**
+     * Setup the saved instance state.
+     * @param savedInstanceState saved instance state
+     */
+    private void setupFragments(Bundle savedInstanceState){
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentById(R.id.page_container) == null) {
 
@@ -82,8 +92,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-
-        showControllerInNotification();
     }
 
     protected HabitApplication.ApplicationComponent getApplicationComponent() {
