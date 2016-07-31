@@ -54,7 +54,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
         getView().setOnClickListener(v -> {
             boolean newState = !(swtSwitch.isChecked());
             Log.d(TAG, widget.getLabel() + " " + newState);
-            if (widget.getItem() != null) {
+            if (widget.getItem() != null && !widget.getItem().getStateDescription().isReadOnly()) {
                 swtSwitch.setChecked(newState);
                 serverHandler.sendCommand(widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
             }
@@ -73,6 +73,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
         }
 
         boolean isOn = widget.getItem().getState().equals(Constants.COMMAND_ON);
+        swtSwitch.setEnabled(!widget.getItem().getStateDescription().isReadOnly());
         swtSwitch.setChecked(isOn);
         baseHolder.update(widget);
     }
