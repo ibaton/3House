@@ -141,7 +141,7 @@ public class Communicator {
                 int imageBackground = Util.getBackground(context, bitmap, settings.getImageBackground());
                 realm.close();
 
-                 imageView.setBackgroundColor(imageBackground);
+                imageView.setBackgroundColor(imageBackground);
             }
 
             @Override

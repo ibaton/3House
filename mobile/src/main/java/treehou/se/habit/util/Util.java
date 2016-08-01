@@ -192,7 +192,7 @@ public class Util {
     }
 
     public static int getBackground(Context context, Bitmap bitmap){
-        return getBackground(context, bitmap, WidgetSettingsDB.MUTED_COLOR);
+        return getBackground(context, bitmap, WidgetSettingsDB.NO_COLOR);
     }
 
     public static int getBackground(Context context, Bitmap bitmap, int type){
@@ -209,7 +209,7 @@ public class Util {
         }else if(type == WidgetSettingsDB.DARK_VIBRANT_COLOR) {
             return Palette.from(bitmap).generate().getDarkVibrantColor(context.getResources().getColor(R.color.image_background));
         }else {
-            return Palette.from(bitmap).generate().getMutedColor(context.getResources().getColor(R.color.image_background));
+            return Color.TRANSPARENT;
         }
     }
 

@@ -10,23 +10,29 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import io.realm.RealmResults;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.util.Constants;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.DummyWidgetFactory;
 
-public class WidgetSettingsFragment extends Fragment {
+public class WidgetSettingsFragment extends RxFragment {
 
     private static final String TAG = "WidgetSettingsFragment";
 
@@ -41,6 +47,8 @@ public class WidgetSettingsFragment extends Fragment {
     @BindView(R.id.img_widget_icon4) ImageView img4;
     @BindView(R.id.img_widget_icon5) ImageView img5;
     @BindView(R.id.img_widget_icon6) ImageView img6;
+    @BindView(R.id.cbx_enable_image_background) CheckBox cbxEnableImageBackground;
+    @BindView(R.id.lou_icon_backgrounds) View louIconBackground;
     @BindView(R.id.bar_image_size) SeekBar barImageSize;
     @BindView(R.id.bar_text_size) SeekBar barTextSize;
     @BindView(R.id.swt_compressed_button) Switch swtCompressButton;
@@ -160,6 +168,22 @@ public class WidgetSettingsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        WidgetSettingsDB.loadGlobalRx(realm)
+                .map(widgetSettingsDBs -> widgetSettingsDBs.first().getImageBackground() >= 0)
+                .compose(bindToLifecycle())
+                .subscribe(useBackground -> {
+                    cbxEnableImageBackground.setOnCheckedChangeListener(null);
+                    cbxEnableImageBackground.setChecked(useBackground);
+                    cbxEnableImageBackground.setOnCheckedChangeListener((compoundButton, checked) -> updateBackground(checked ?  WidgetSettingsDB.MUTED_COLOR : WidgetSettingsDB.NO_COLOR));
+
+                    louIconBackground.setVisibility(useBackground ? View.VISIBLE : View.GONE);
+                });
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -195,6 +219,15 @@ public class WidgetSettingsFragment extends Fragment {
         widgetHolder.addView(widget);
     }
 
+    private void updateBackground(int backgroundType){
+        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
+        realm.beginTransaction();
+        settings.setImageBackground(backgroundType);
+        realm.commitTransaction();
+
+        redrawWidget();
+    }
+
     private class BackgroundSelectListener implements View.OnClickListener{
 
         private int backgroundType;
@@ -205,12 +238,7 @@ public class WidgetSettingsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-            realm.beginTransaction();
-            settings.setImageBackground(backgroundType);
-            realm.commitTransaction();
-
-            redrawWidget();
+            updateBackground(backgroundType);
         }
     }
 }

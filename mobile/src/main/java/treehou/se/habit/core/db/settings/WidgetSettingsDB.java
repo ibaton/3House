@@ -4,6 +4,7 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
+import rx.Observable;
 import treehou.se.habit.util.Constants;
 
 public class WidgetSettingsDB extends RealmObject {
@@ -11,6 +12,7 @@ public class WidgetSettingsDB extends RealmObject {
     private static final String TAG = "WidgetSettings";
     public static final String PREF_GLOBAL = "NotificationSettings";
 
+    public static final int NO_COLOR = -1;
     public static final int MUTED_COLOR = 0;
     public static final int LIGHT_MUTED_COLOR = 1;
     public static final int DARK_MUTED_COLOR = 2;
@@ -97,6 +99,10 @@ public class WidgetSettingsDB extends RealmObject {
     }
 
     public static WidgetSettingsDB loadGlobal(Realm realm){
+        return loadGlobalRx(realm).toBlocking().first().first();
+    }
+
+    public static Observable<RealmResults<WidgetSettingsDB>> loadGlobalRx(Realm realm){
 
         RealmResults<WidgetSettingsDB> result = realm.where(WidgetSettingsDB.class).findAll();
         WidgetSettingsDB widgetSettingsDB;
@@ -108,10 +114,9 @@ public class WidgetSettingsDB extends RealmObject {
             widgetSettingsDB.setIconSize(DEFAULT_ICON_SIZE);
 
             realm.commitTransaction();
-        } else {
-            widgetSettingsDB = result.first();
         }
+        result = realm.where(WidgetSettingsDB.class).findAll();
 
-        return widgetSettingsDB;
+        return result.asObservable();
     }
 }
