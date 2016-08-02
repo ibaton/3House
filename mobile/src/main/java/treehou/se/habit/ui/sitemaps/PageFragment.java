@@ -128,11 +128,11 @@ public class PageFragment extends RxFragment {
     private void requestPageUpdate(){
         final IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
         serverHandler.requestPageRx(page)
-                .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())
+                .compose(RxUtil.newToMainSchedulers())
                 .subscribe(ohLinkedPage -> {
                     Log.d(TAG, "Received update " + ohLinkedPage.getWidgets().size() + " widgets from  " + page.getLink());
-                    ThreadPool.instance().submit(() -> updatePage(ohLinkedPage));
+                    updatePage(ohLinkedPage);
                 }, throwable -> {
                     Log.e(TAG, "Error when requesting page ", throwable);
                     Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
@@ -153,11 +153,9 @@ public class PageFragment extends RxFragment {
         realm.close();
         final IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
         return serverHandler.requestPageUpdatesRx(server, page)
-                .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())
-                .subscribe(ohLinkedPage -> {
-                    updatePage(ohLinkedPage);
-                });
+                .compose(RxUtil.newToMainSchedulers())
+                .subscribe(this::updatePage);
     }
 
     @Override
@@ -212,13 +210,11 @@ public class PageFragment extends RxFragment {
         }
 
         final boolean invalidateWidgets = invalidate;
-        getActivity().runOnUiThread(() -> {
-            if(invalidateWidgets) {
-                invalidateWidgets(pageWidgets);
-            } else {
-                updateWidgets(pageWidgets);
-            }
-        });
+        if(invalidateWidgets) {
+            invalidateWidgets(pageWidgets);
+        } else {
+            updateWidgets(pageWidgets);
+        }
     }
 
     /**

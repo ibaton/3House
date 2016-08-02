@@ -16,6 +16,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,7 +31,7 @@ import treehou.se.habit.ui.adapter.ControllerAdapter;
 /**
  * Fragment listing all app controllers.
  */
-public class ControllsFragment extends Fragment {
+public class ControllsFragment extends RxFragment {
 
     private static final String TAG = "ControllsFragment";
 

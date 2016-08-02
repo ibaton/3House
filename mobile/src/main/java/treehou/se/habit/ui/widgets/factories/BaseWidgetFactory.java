@@ -143,12 +143,7 @@ public class BaseWidgetFactory {
             /*TODO implement*/
             if (widget.getLinkedPage() != null) {
                 btnNextPage.setVisibility(View.VISIBLE);
-                rootView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        EventBus.getDefault().post(widget.getLinkedPage());
-                    }
-                });
+                rootView.setOnClickListener(v -> EventBus.getDefault().post(widget.getLinkedPage()));
             } else {
                 btnNextPage.setVisibility(View.GONE);
             }

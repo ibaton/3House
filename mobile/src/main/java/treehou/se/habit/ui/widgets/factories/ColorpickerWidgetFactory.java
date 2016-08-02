@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
@@ -58,18 +57,8 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
 
             timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS);
 
-            touchSubject = new Action1<Long>() {
-                @Override
-                public void call(Long time) {
-                    updateTick();
-                }
-            };
-            timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS).doOnUnsubscribe(new Action0() {
-                @Override
-                public void call() {
-                    listener.onRelease(tick);
-                }
-            });
+            touchSubject = time -> updateTick();
+            timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS).doOnUnsubscribe(() -> listener.onRelease(tick));
         }
 
         @Override
