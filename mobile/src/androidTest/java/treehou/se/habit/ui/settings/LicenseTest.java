@@ -2,7 +2,7 @@ package treehou.se.habit.ui.settings;
 
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.SmallTest;
+import android.support.test.filters.SmallTest;
 
 import org.junit.Before;
 import org.junit.Rule;

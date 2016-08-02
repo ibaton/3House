@@ -1,9 +1,10 @@
 package treehou.se.habit.ui.settings;
 
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.SmallTest;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +18,8 @@ import treehou.se.habit.TestUtil;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static treehou.se.habit.ViewActions.SliderActions.setProgress;
@@ -32,6 +35,14 @@ public class WidgetSettingsTest {
     public void moveToWidget(){
         NavigationUtil.navigateToSettings();
         onView(withText(R.string.settings_widgets)).perform(ViewActions.click());
+    }
+
+    @Test
+    public void testImageClearBackgroundColor() {
+        onView(withId(R.id.lou_icon_backgrounds)).check(matches(isDisplayed()));
+        onView(withId(R.id.cbx_enable_image_background)).perform(scrollTo(), ViewActions.click());
+        onView(withId(R.id.lou_icon_backgrounds)).check(matches(CoreMatchers.not(isDisplayed())));
+        onView(withId(R.id.cbx_enable_image_background)).perform(scrollTo(), ViewActions.click());
     }
 
     @Test
