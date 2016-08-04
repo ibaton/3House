@@ -31,28 +31,6 @@ public class RxUtil {
     }
 
     /**
-     * Fetches sitemaps from server.
-     * @param context the used to fetch sitemaps.
-     * @return
-     */
-    public static Observable.Transformer<OHServer, Pair<OHServer, List<OHSitemap>>> serverToSitemap(Context context) {
-        return observable -> observable.flatMap(new Func1<OHServer, Observable<List<OHSitemap>>>() {
-            @Override
-            public Observable<List<OHSitemap>> call(OHServer server) {
-                IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                return serverHandler.requestSitemapObservable().subscribeOn(Schedulers.io())
-                        .onErrorReturn(throwable -> new ArrayList<>());
-            }
-        }, (server, sitemaps) -> {
-            for (OHSitemap sitemap : sitemaps) {
-                sitemap.setServer(server);
-            }
-            return new Pair<>(server, sitemaps);
-        })
-        .doOnNext(saveSitemap());
-    }
-
-    /**
      * Save sitemap to database
      * @return action that saves sitemap.
      */

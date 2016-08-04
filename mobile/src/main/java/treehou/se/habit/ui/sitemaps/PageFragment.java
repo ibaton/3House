@@ -15,6 +15,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -24,13 +26,13 @@ import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
-import treehou.se.habit.util.ThreadPool;
 
 public class PageFragment extends RxFragment {
 
@@ -44,7 +46,7 @@ public class PageFragment extends RxFragment {
 
     @BindView(R.id.lou_widgets) LinearLayout louFragments;
 
-    private Realm realm;
+    @Inject ConnectionFactory connectionFactory;
 
     private ServerDB server;
     private OHLinkedPage page;
@@ -85,7 +87,9 @@ public class PageFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        realm = Realm.getDefaultInstance();
+        getComponent().inject(this);
+
+        Realm realm = Realm.getDefaultInstance();
 
         Bundle args = getArguments();
         Gson gson = GsonHelper.createGsonBuilder();
@@ -126,7 +130,7 @@ public class PageFragment extends RxFragment {
      * Request page from server.
      */
     private void requestPageUpdate(){
-        final IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+        final IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getActivity());
         serverHandler.requestPageRx(page)
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())
@@ -140,6 +144,10 @@ public class PageFragment extends RxFragment {
                 });
     }
 
+    protected HabitApplication.ApplicationComponent getComponent() {
+        return ((HabitApplication) getActivity().getApplication()).component();
+    }
+
     /**
      * Create longpoller listening for updates of page.
      *
@@ -151,7 +159,7 @@ public class PageFragment extends RxFragment {
         Realm realm = Realm.getDefaultInstance();
         OHServer server = ServerDB.load(realm, serverId).toGeneric();
         realm.close();
-        final IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
+        final IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
         return serverHandler.requestPageUpdatesRx(server, page)
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())

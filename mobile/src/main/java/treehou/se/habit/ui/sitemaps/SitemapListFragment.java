@@ -40,6 +40,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
+import treehou.se.habit.util.RxConnectorUtil;
 import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.Settings;
 
@@ -50,6 +51,8 @@ public class SitemapListFragment extends RxFragment {
     private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
     @Inject Settings settings;
+    @Inject RxConnectorUtil rxConnectorUtil;
+
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
 
@@ -202,7 +205,7 @@ public class SitemapListFragment extends RxFragment {
                     sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING);
                     emptyView.setVisibility(View.GONE);
                 })
-                .compose(RxUtil.serverToSitemap(getActivity()))
+                .compose(rxConnectorUtil.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .compose(RxUtil.filterDisplaySitemaps(realm))

@@ -34,6 +34,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
+import treehou.se.habit.util.RxConnectorUtil;
 import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.Settings;
 
@@ -44,6 +45,8 @@ public class SitemapSelectFragment extends RxFragment {
     private static final String ARG_SHOW_SERVER = "ARG_SHOW_SERVER";
 
     @Inject Settings settings;
+    @Inject RxConnectorUtil rxConnectorUtil;
+
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
     private SitemapListAdapter sitemapAdapter;
@@ -174,7 +177,7 @@ public class SitemapSelectFragment extends RxFragment {
                 .flatMap(Observable::from)
                 .map(ServerDB::toGeneric)
                 .distinct()
-                .compose(RxUtil.serverToSitemap(getActivity()))
+                .compose(rxConnectorUtil.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .subscribe(serverSitemaps -> {

@@ -21,6 +21,7 @@ import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Settings;
 
 public class HabitApplication extends Application {
@@ -40,6 +41,7 @@ public class HabitApplication extends Application {
         void inject(Fragment drawerFragment);
         void inject(PageFragment pageFragment);
         void inject(Settings settings);
+        void inject(ConnectionFactory connectionFactory);
     }
 
     protected ApplicationComponent component;

@@ -19,6 +19,8 @@ import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.RxConnectorUtil;
 import treehou.se.habit.util.Settings;
 
 @Module
@@ -39,6 +41,11 @@ public class AndroidModule {
     }
 
     @Provides @Singleton
+    public RxConnectorUtil provideConnectorUtil(){
+        return new RxConnectorUtil();
+    }
+
+    @Provides @Singleton
     public OHRealm provideRealm() {
         return new OHRealm(application);
     }
@@ -53,6 +60,11 @@ public class AndroidModule {
         return Settings.instance(application);
     }
 
+    @Provides @Singleton
+    public ConnectionFactory provideConnectionFactory(){
+        return new ConnectionFactory();
+    }
+
     @Singleton
     @Component(modules = AndroidModule.class)
     public interface ApplicationComponent {
@@ -63,5 +75,6 @@ public class AndroidModule {
         void inject(NavigationDrawerFragment drawerFragment);
         void inject(Fragment fragment);
         void inject(Settings settings);
+        void inject(ConnectionFactory connectionFactory);
     }
 }
