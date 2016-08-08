@@ -17,12 +17,12 @@ import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.servers.ServersFragment;
+import treehou.se.habit.ui.servers.sitemaps.SitemapSelectFragment;
 import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
-import treehou.se.habit.util.ConnectionFactory;
-import treehou.se.habit.util.Settings;
+import treehou.se.habit.util.DatabaseServerLoaderFactory;
 
 public class HabitApplication extends Application {
 
@@ -34,14 +34,14 @@ public class HabitApplication extends Application {
         void inject(HabitApplication application);
         void inject(MainActivity homeActivity);
         void inject(SitemapListFragment sitemapListFragment);
+        void inject(SitemapSelectFragment fragment);
         void inject(SitemapFragment sitemapFragment);
+        void inject(DatabaseServerLoaderFactory serverLoaderFactory);
         void inject(GeneralSettingsFragment fragment);
         void inject(ServersFragment serversFragment);
         void inject(NavigationDrawerFragment drawerFragment);
         void inject(Fragment drawerFragment);
         void inject(PageFragment pageFragment);
-        void inject(Settings settings);
-        void inject(ConnectionFactory connectionFactory);
     }
 
     protected ApplicationComponent component;

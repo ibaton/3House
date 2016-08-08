@@ -1,5 +1,6 @@
 package treehou.se.habit.ui.sitemaps;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
@@ -47,6 +49,7 @@ public class PageFragment extends RxFragment {
     @BindView(R.id.lou_widgets) LinearLayout louFragments;
 
     @Inject ConnectionFactory connectionFactory;
+    @Inject ServerLoaderFactory serverLoaderFactory;
 
     private ServerDB server;
     private OHLinkedPage page;
@@ -87,7 +90,7 @@ public class PageFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getComponent().inject(this);
+        ((HabitApplication) getActivity().getApplication()).component().inject(this);
 
         Realm realm = Realm.getDefaultInstance();
 
@@ -144,10 +147,6 @@ public class PageFragment extends RxFragment {
                 });
     }
 
-    protected HabitApplication.ApplicationComponent getComponent() {
-        return ((HabitApplication) getActivity().getApplication()).component();
-    }
-
     /**
      * Create longpoller listening for updates of page.
      *
@@ -157,7 +156,7 @@ public class PageFragment extends RxFragment {
         final long serverId = server.getId();
 
         Realm realm = Realm.getDefaultInstance();
-        OHServer server = ServerDB.load(realm, serverId).toGeneric();
+        OHServer server = serverLoaderFactory.loadServer(realm, serverId);
         realm.close();
         final IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
         return serverHandler.requestPageUpdatesRx(server, page)

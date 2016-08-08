@@ -17,7 +17,6 @@ import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.module.ForApplication;
 import treehou.se.habit.util.ConnectionFactory;
-import treehou.se.habit.util.RxConnectorUtil;
 import treehou.se.habit.util.Settings;
 
 public class TestAndroidModule extends AndroidModule {
@@ -46,11 +45,6 @@ public class TestAndroidModule extends AndroidModule {
     @Provides @Singleton
     public Settings provideSettingsManager(){
         return Settings.instance(application);
-    }
-
-    @Provides @Singleton
-    public RxConnectorUtil provideConnectorUtil(){
-        return new RxConnectorUtil();
     }
 
     @Provides @Singleton

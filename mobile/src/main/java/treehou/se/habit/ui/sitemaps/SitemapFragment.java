@@ -2,6 +2,7 @@ package treehou.se.habit.ui.sitemaps;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
@@ -29,14 +30,13 @@ import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.homescreen.VoiceService;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.RxUtil;
 
 public class SitemapFragment extends Fragment {
 
@@ -45,6 +45,7 @@ public class SitemapFragment extends Fragment {
     private static final String ARG_SERVER = "ARG_SERVER";
 
     @Inject Gson gson;
+    @Inject ConnectionFactory connectionFactory;
 
     private Realm realm;
     private ServerDB server;
@@ -67,7 +68,7 @@ public class SitemapFragment extends Fragment {
     }
 
     /**
-     * Creates a new instance of fragment showing sitemap.
+     * Creates a new instance of fragment showing sitemap.,
      *
      * @param serverDB the server to use to open sitemap.
      * @param sitemap the sitemap to load.
@@ -120,8 +121,15 @@ public class SitemapFragment extends Fragment {
         super.onResume();
 
         if(!hasPage()) {
-            final IServerHandler serverHandler = new Connector.ServerHandler(sitemap.getServer(), getActivity());
-            serverHandler.requestPage(sitemap.getHomepage(), requestPageCallback);
+            final IServerHandler serverHandler = connectionFactory.createServerHandler(sitemap.getServer(), getActivity());
+            serverHandler.requestPageRx(sitemap.getHomepage())
+                    .compose(RxUtil.newToMainSchedulers())
+                    .subscribe(linkedPage -> {
+                        Log.d(TAG, "Received page " + linkedPage);
+                        addPage(linkedPage);
+                    }, e -> {
+                        Log.d(TAG, "Received page failed", e);
+                    });
         }
         EventBus.getDefault().register(this);
     }
@@ -239,20 +247,4 @@ public class SitemapFragment extends Fragment {
         super.onDestroy();
         realm.close();
     }
-    
-    private OHCallback<OHLinkedPage> requestPageCallback = new OHCallback<OHLinkedPage>() {
-        @Override
-        public void onUpdate(OHResponse<OHLinkedPage> items) {
-            if (isDetached()) return; // TODO remove callback
-
-            OHLinkedPage linkedPage = items.body();
-            Log.d(TAG, "Received page " + linkedPage);
-            addPage(linkedPage);
-        }
-
-        @Override
-        public void onError() {
-            Log.d(TAG, "Received page failed");
-        }
-    };
 }

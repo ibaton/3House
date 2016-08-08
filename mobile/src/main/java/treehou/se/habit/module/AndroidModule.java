@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 
 import com.google.gson.Gson;
+import com.ning.http.client.Realm;
 
 import javax.inject.Singleton;
 
@@ -20,7 +21,7 @@ import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.util.ConnectionFactory;
-import treehou.se.habit.util.RxConnectorUtil;
+import treehou.se.habit.util.DatabaseServerLoaderFactory;
 import treehou.se.habit.util.Settings;
 
 @Module
@@ -38,11 +39,6 @@ public class AndroidModule {
     @Provides @Singleton
     public android.content.SharedPreferences provideSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(application);
-    }
-
-    @Provides @Singleton
-    public RxConnectorUtil provideConnectorUtil(){
-        return new RxConnectorUtil();
     }
 
     @Provides @Singleton
@@ -65,16 +61,8 @@ public class AndroidModule {
         return new ConnectionFactory();
     }
 
-    @Singleton
-    @Component(modules = AndroidModule.class)
-    public interface ApplicationComponent {
-        void inject(HabitApplication application);
-        void inject(MainActivity homeActivity);
-        void inject(SitemapListFragment sitemapListFragment);
-        void inject(GeneralSettingsFragment fragment);
-        void inject(NavigationDrawerFragment drawerFragment);
-        void inject(Fragment fragment);
-        void inject(Settings settings);
-        void inject(ConnectionFactory connectionFactory);
+    @Provides
+    public ServerLoaderFactory provideServerLoaderFactory(){
+        return new DatabaseServerLoaderFactory();
     }
 }

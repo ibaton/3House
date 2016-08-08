@@ -6,11 +6,14 @@ import android.support.v4.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Unbinder;
 import io.realm.Realm;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.observers.Subscribers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
@@ -112,28 +115,6 @@ public class RxUtil {
                     realm.commitTransaction();
                 }
                 return sitemapDB;
-            }
-        });
-    }
-
-    public static Observable.Transformer<Pair<OHServer,List<OHSitemap>>, Pair<OHServer,List<OHSitemap>>> filterDisplaySitemaps(Realm realm) {
-        return observable -> observable.map(new Func1<Pair<OHServer, List<OHSitemap>>, Pair<OHServer, List<OHSitemap>>>() {
-            @Override
-            public Pair<OHServer, List<OHSitemap>> call(Pair<OHServer, List<OHSitemap>> ohServerListPair) {
-                List<OHSitemap> sitemaps = new ArrayList<>();
-                for(OHSitemap sitemap : ohServerListPair.second){
-                    SitemapDB sitemapDB = realm.where(SitemapDB.class)
-                            .equalTo("name", sitemap.getName())
-                            .equalTo("server.name", ohServerListPair.first.getName())
-                            .findFirst();
-
-                    if(sitemapDB == null || sitemapDB.getSettingsDB() == null
-                            || sitemapDB.getSettingsDB().isDisplay()){
-
-                        sitemaps.add(sitemap);
-                    }
-                }
-                return new Pair<>(ohServerListPair.first, sitemaps);
             }
         });
     }

@@ -24,18 +24,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
+import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
-import treehou.se.habit.util.RxConnectorUtil;
-import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.Settings;
 
 public class SitemapSelectFragment extends RxFragment {
@@ -45,10 +44,11 @@ public class SitemapSelectFragment extends RxFragment {
     private static final String ARG_SHOW_SERVER = "ARG_SHOW_SERVER";
 
     @Inject Settings settings;
-    @Inject RxConnectorUtil rxConnectorUtil;
+    @Inject ServerLoaderFactory serverLoader;
 
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
+
     private SitemapListAdapter sitemapAdapter;
     private Realm realm;
     private Unbinder unbinder;
@@ -70,15 +70,13 @@ public class SitemapSelectFragment extends RxFragment {
         return fragment;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public SitemapSelectFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((HabitApplication) getActivity().getApplication()).component().inject(this);
 
         realm = Realm.getDefaultInstance();
         serverId = getArguments().getLong(ARG_SHOW_SERVER);
@@ -177,7 +175,7 @@ public class SitemapSelectFragment extends RxFragment {
                 .flatMap(Observable::from)
                 .map(ServerDB::toGeneric)
                 .distinct()
-                .compose(rxConnectorUtil.serverToSitemap(getActivity()))
+                .compose(serverLoader.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .subscribe(serverSitemaps -> {

@@ -2,7 +2,6 @@ package treehou.se.habit.ui.sitemaps;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,22 +24,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 
-import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.core.db.model.SitemapDB;
+import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
-import treehou.se.habit.util.RxConnectorUtil;
-import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.Settings;
 
 public class SitemapListFragment extends RxFragment {
@@ -51,7 +43,7 @@ public class SitemapListFragment extends RxFragment {
     private static final String ARG_SHOW_SITEMAP = "showSitemap";
 
     @Inject Settings settings;
-    @Inject RxConnectorUtil rxConnectorUtil;
+    @Inject ServerLoaderFactory serverLoaderFactory;
 
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
@@ -99,7 +91,7 @@ public class SitemapListFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getComponent().inject(this);
+        ((HabitApplication) getActivity().getApplication()).component().inject(this);
 
         realm = Realm.getDefaultInstance();
 
@@ -134,14 +126,6 @@ public class SitemapListFragment extends RxFragment {
         listView.setAdapter(sitemapAdapter);
 
         return view;
-    }
-
-    /**
-     * Get application component
-     * @return application component
-     */
-    protected HabitApplication.ApplicationComponent getComponent() {
-        return ((HabitApplication) getActivity().getApplication()).component();
     }
 
     /**
@@ -199,16 +183,16 @@ public class SitemapListFragment extends RxFragment {
      * Load servers from database and request their sitemaps.
      */
     private void loadSitemapsFromServers(){
-        Observable.merge(Realm.getDefaultInstance().asObservable().compose(RxUtil.loadServers()),
+        Observable.merge(Realm.getDefaultInstance().asObservable().compose(serverLoaderFactory.loadServersRx()),
                 serverBehaviorSubject.asObservable())
                 .doOnNext(server -> {
-                    sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING);
+                    //sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_LOADING);
                     emptyView.setVisibility(View.GONE);
                 })
-                .compose(rxConnectorUtil.serverToSitemap(getActivity()))
+                .compose(serverLoaderFactory.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
-                .compose(RxUtil.filterDisplaySitemaps(realm))
+                .compose(serverLoaderFactory.filterDisplaySitemaps())
                 .subscribe(serverSitemaps -> {
                     OHServer server = serverSitemaps.first;
                     List<OHSitemap> sitemaps = serverSitemaps.second;
