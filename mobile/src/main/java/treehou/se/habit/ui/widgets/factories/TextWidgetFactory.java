@@ -2,6 +2,7 @@ package treehou.se.habit.ui.widgets.factories;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.View;

@@ -22,7 +22,6 @@ import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
-import treehou.se.habit.util.DatabaseServerLoaderFactory;
 
 public class HabitApplication extends Application {
 
@@ -36,7 +35,6 @@ public class HabitApplication extends Application {
         void inject(SitemapListFragment sitemapListFragment);
         void inject(SitemapSelectFragment fragment);
         void inject(SitemapFragment sitemapFragment);
-        void inject(DatabaseServerLoaderFactory serverLoaderFactory);
         void inject(GeneralSettingsFragment fragment);
         void inject(ServersFragment serversFragment);
         void inject(NavigationDrawerFragment drawerFragment);

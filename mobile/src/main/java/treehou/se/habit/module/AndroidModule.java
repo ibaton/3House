@@ -32,37 +32,37 @@ public class AndroidModule {
         this.application = application;
     }
 
-    @Provides @Singleton @ForApplication  Context provideApplicationContext() {
+    @Provides @Singleton @ForApplication Context provideApplicationContext() {
         return application;
     }
 
-    @Provides @Singleton
+    @Provides
     public android.content.SharedPreferences provideSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
-    @Provides @Singleton
+    @Provides
     public OHRealm provideRealm() {
         return new OHRealm(application);
     }
 
-    @Provides @Singleton
+    @Provides
     public Gson provideGson() {
         return GsonHelper.createGsonBuilder();
     }
 
-    @Provides @Singleton
+    @Provides
     public Settings provideSettingsManager(){
         return Settings.instance(application);
     }
 
-    @Provides @Singleton
+    @Provides
     public ConnectionFactory provideConnectionFactory(){
         return new ConnectionFactory();
     }
 
     @Provides
-    public ServerLoaderFactory provideServerLoaderFactory(){
-        return new DatabaseServerLoaderFactory();
+    public ServerLoaderFactory provideServerLoaderFactory(DatabaseServerLoaderFactory databaseServerLoaderFactory){
+        return databaseServerLoaderFactory;
     }
 }

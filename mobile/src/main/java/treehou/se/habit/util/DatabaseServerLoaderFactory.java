@@ -15,7 +15,6 @@ import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import treehou.se.habit.HabitApplication;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
@@ -23,8 +22,14 @@ import treehou.se.habit.module.ServerLoaderFactory;
 
 public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
 
-    @Inject OHRealm realm;
-    @Inject ConnectionFactory connectionFactory;
+    private OHRealm realm;
+    private ConnectionFactory connectionFactory;
+
+    @Inject
+    public DatabaseServerLoaderFactory(OHRealm realm, ConnectionFactory connectionFactory) {
+        this.realm = realm;
+        this.connectionFactory = connectionFactory;
+    }
 
     @Override
     public OHServer loadServer(Realm realm, long serverId) {
@@ -43,8 +48,6 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
      * @return
      */
     public Observable.Transformer<OHServer, Pair<OHServer, List<OHSitemap>>> serverToSitemap(Context context) {
-        ((HabitApplication)context.getApplicationContext()).component().inject(this);
-
         return observable -> observable.flatMap(new Func1<OHServer, Observable<List<OHSitemap>>>() {
             @Override
             public Observable<List<OHSitemap>> call(OHServer server) {

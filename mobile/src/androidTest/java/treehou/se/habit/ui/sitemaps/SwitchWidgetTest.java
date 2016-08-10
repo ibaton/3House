@@ -7,13 +7,15 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.util.Pair;
 import android.test.RenamingDelegatingContext;
 
-import org.junit.Before;
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -23,14 +25,18 @@ import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.DaggerHabitApplication_ApplicationComponent;
 import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
+import treehou.se.habit.R;
+import treehou.se.habit.connector.Constants;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.data.TestConnectionFactory;
 import treehou.se.habit.data.TestServerLoaderFactory;
@@ -39,44 +45,79 @@ import treehou.se.habit.util.ConnectionFactory;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class WidgetTest {
+public class SwitchWidgetTest {
 
     static final String SERVER_NAME = "Test Server";
     static final String SITEMAP_NAME = "Test Sitemap";
     static final String WIDGET_LABEL = "Widget test";
     static final String WIDGET_ITEM = "Item test";
 
-    OHLinkedPage linkedPage = new OHLinkedPage();
+    private OHLinkedPage linkedPageState1 = new OHLinkedPage();
     {
         OHItem item = new OHItem();
-        item.setLink("");
+        item.setType(OHItem.TYPE_SWITCH);
+        item.setState(Constants.COMMAND_OFF);
         item.setName(WIDGET_ITEM);
-        item.setState("");
-        item.setType(OHItem.TYPE_STRING);
+        item.setLink("");
+
+        OHStateDescription stateDescription = new OHStateDescription();
+        stateDescription.setReadOnly(false);
+        item.setStateDescription(stateDescription);
 
         OHWidget testWidget = new OHWidget();
         testWidget.setLabel(WIDGET_LABEL);
         testWidget.setIcon("");
-        testWidget.setType("");
+        testWidget.setType(OpenhabConstants.TYPE_SWITCH);
         testWidget.setWidgetId("");
         testWidget.setItem(item);
 
         List<OHWidget> widgets = new ArrayList<>();
         widgets.add(testWidget);
 
-        linkedPage.setTitle(SITEMAP_NAME);
-        linkedPage.setId("");
-        linkedPage.setLink("");
-        linkedPage.setTitle("");
-        linkedPage.setWidgets(widgets);
+        linkedPageState1.setTitle(SITEMAP_NAME);
+        linkedPageState1.setId("");
+        linkedPageState1.setLink("");
+        linkedPageState1.setTitle("");
+        linkedPageState1.setWidgets(widgets);
     }
 
-    private BehaviorSubject<OHLinkedPage> linkedPageBehaviorSubject = BehaviorSubject.create(linkedPage);
+    private OHLinkedPage linkedPageState2 = new OHLinkedPage();
+    {
+        OHItem item = new OHItem();
+        item.setType(OHItem.TYPE_SWITCH);
+        item.setState(Constants.COMMAND_ON);
+        item.setName(WIDGET_ITEM);
+        item.setLink("");
+
+        OHStateDescription stateDescription = new OHStateDescription();
+        stateDescription.setReadOnly(false);
+        item.setStateDescription(stateDescription);
+
+        OHWidget testWidget = new OHWidget();
+        testWidget.setLabel(WIDGET_LABEL);
+        testWidget.setIcon("");
+        testWidget.setType(OpenhabConstants.TYPE_SWITCH);
+        testWidget.setWidgetId("");
+        testWidget.setItem(item);
+
+        List<OHWidget> widgets = new ArrayList<>();
+        widgets.add(testWidget);
+
+        linkedPageState2.setTitle(SITEMAP_NAME);
+        linkedPageState2.setId("");
+        linkedPageState2.setLink("");
+        linkedPageState2.setTitle("");
+        linkedPageState2.setWidgets(widgets);
+    }
+
+    private BehaviorSubject<OHLinkedPage> linkedPageBehaviorSubject = BehaviorSubject.create(linkedPageState1);
     private OHServer server = new OHServer();
 
     @Rule
@@ -169,5 +210,8 @@ public class WidgetTest {
         NavigationUtil.navigateToSitemap();
         onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
+        onView(withId(R.id.swt_switch)).check(matches(CoreMatchers.not(isChecked())));
+        linkedPageBehaviorSubject.onNext(linkedPageState2);
+        onView(withId(R.id.swt_switch)).check(matches(isChecked()));
     }
 }

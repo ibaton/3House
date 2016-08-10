@@ -40,6 +40,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
                 .setShowLabel(true)
                 .setParent(parent)
                 .build();
+
         float percentage = Util.toPercentage(settings.getTextSize());
         realm.close();
 
@@ -73,7 +74,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
         }
 
         boolean isOn = widget.getItem().getState().equals(Constants.COMMAND_ON);
-        swtSwitch.setEnabled(!widget.getItem().getStateDescription().isReadOnly());
+        swtSwitch.setEnabled(widget.getItem().getStateDescription() == null || !widget.getItem().getStateDescription().isReadOnly());
         swtSwitch.setChecked(isOn);
         baseHolder.update(widget);
     }

@@ -16,6 +16,7 @@ import treehou.se.habit.core.db.model.OHRealmModule;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.module.ForApplication;
+import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Settings;
 
@@ -37,17 +38,17 @@ public class TestAndroidModule extends AndroidModule {
         return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
-    @Provides @Singleton
+    @Provides
     public Gson provideGson() {
         return GsonHelper.createGsonBuilder();
     }
 
-    @Provides @Singleton
+    @Provides
     public Settings provideSettingsManager(){
         return Settings.instance(application);
     }
 
-    @Provides @Singleton
+    @Provides
     public ConnectionFactory provideConnectionFactory(){
         return new ConnectionFactory();
     }
@@ -55,6 +56,11 @@ public class TestAndroidModule extends AndroidModule {
     @Override
     public OHRealm provideRealm() {
         return new TestOHRealm(application);
+    }
+
+    @Provides
+    public ServerLoaderFactory provideServerLoaderFactory(ConnectionFactory connectionFactory){
+        return new TestServerLoaderFactory(connectionFactory);
     }
 
     class TestOHRealm extends OHRealm {

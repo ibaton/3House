@@ -23,7 +23,12 @@ import treehou.se.habit.util.RxUtil;
 
 public class TestServerLoaderFactory implements ServerLoaderFactory {
 
-    @Inject ConnectionFactory connectionFactory;
+    private ConnectionFactory connectionFactory;
+
+    @Inject
+    public TestServerLoaderFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
 
     @Override
     public OHServer loadServer(Realm realm, long serverId) {
@@ -49,9 +54,6 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
         return observable -> observable.flatMap(new Func1<OHServer, Observable<List<OHSitemap>>>() {
             @Override
             public Observable<List<OHSitemap>> call(OHServer server) {
-
-                ((HabitApplication)context.getApplicationContext()).component().inject(TestServerLoaderFactory.this);
-
                 IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
                 return serverHandler.requestSitemapObservable().subscribeOn(Schedulers.io())
                         .onErrorReturn(throwable -> new ArrayList<>());
