@@ -8,6 +8,9 @@ import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.sql.Time;
+import java.util.Random;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

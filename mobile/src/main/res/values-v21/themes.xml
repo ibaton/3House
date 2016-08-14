@@ -22,4 +22,14 @@
 
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
     </style>
+
+    <style name="AppTheme.Base.habdroid.Light" parent="AppTheme.Base">
+
+        <item name="colorPrimary">#FF5722</item>
+        <item name="colorAccent">#FF5722</item>
+        <item name="colorPrimaryDark">#BF360C</item>
+
+        <item name="colorControlActivated">#FF5722</item>
+        <item name="colorControlHighlight">#ff8660</item>
+    </style>
 </resources>
