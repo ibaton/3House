@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         getApplicationComponent().inject(this);
+        setTheme(settings.getTheme());
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         realm = Realm.getDefaultInstance();

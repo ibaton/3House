@@ -7,10 +7,41 @@
     android:id="@+id/scrollView6"
     tools:context="treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_margin">
+        android:padding="@dimen/item_margin"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/item_margin"
+            card_view:cardElevation="@dimen/item_elevation"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardBackgroundColor="@color/item_background">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="@dimen/default_item_padding">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/theme"
+                    style="@style/MenuItemText"/>
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spr_themes" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_view"
@@ -34,5 +65,5 @@
 
         </LinearLayout>
         </android.support.v7.widget.CardView>
-    </FrameLayout>
+    </LinearLayout>
 </ScrollView>

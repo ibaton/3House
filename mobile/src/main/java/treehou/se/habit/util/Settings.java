@@ -10,23 +10,31 @@ import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import treehou.se.habit.R;
 
 public class Settings {
 
     private static final String PREF_MANAGER = "treePref";
 
     private static final String PREF_DEFAULT_SITEMAP = "default_sitemap_name";
+    private static final String PREF_THEME = "pref_them";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private static final String PREF_SERVER_SETUP_QUESTION = "pref_server_setup_question";
     private static final String PREF_AUTOLOAD_SITEMAP = "pref_autoload_sitemap";
 
+    private static final int DEFAULT_THEME = R.style.AppTheme_Base_habdroid_Light;
+
     @Inject SharedPreferences preferences;
     RxSharedPreferences rxPreferences;
+
+    private Preference<Integer> prefTheme;
 
     public Settings(Context context) {
         preferences = context.getSharedPreferences(PREF_MANAGER, Context.MODE_PRIVATE);
         rxPreferences = RxSharedPreferences.create(preferences);
+        prefTheme = rxPreferences.getInteger(PREF_THEME, DEFAULT_THEME);
     }
 
     public static Settings instance(Context context){
@@ -50,6 +58,31 @@ public class Settings {
      */
     public String getDefaultSitemap(){
         return preferences.getString(PREF_DEFAULT_SITEMAP, "");
+    }
+
+    /**
+     * Get theme of application
+     * @return application theme.
+     */
+    public int getTheme(){
+        return prefTheme.get();
+    }
+
+    /**
+     * Get theme of application
+     * @return application theme.
+     */
+    public Observable<Integer> getThemeRx(){
+        return prefTheme.asObservable();
+    }
+
+    /**
+     * Set application theme.
+     *
+     * @param theme application theme
+     */
+    public void setTheme(int theme){
+        prefTheme.set(theme);
     }
 
     /**

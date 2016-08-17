@@ -124,4 +124,7 @@
     <string name="edit">Edit</string>
     <string name="display_sitemap">Display sitemap</string>
     <string name="enable_icon_background">Enable icon background</string>
+    <string name="theme">Theme</string>
+    <string name="treehouse">3house</string>
+    <string name="habdroid">habdroid</string>
 </resources>

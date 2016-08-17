@@ -25,6 +25,7 @@ import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
+import treehou.se.habit.util.Settings;
 
 public class HabitApplication extends Application {
 
@@ -48,17 +49,20 @@ public class HabitApplication extends Application {
     protected ApplicationComponent component;
 
     @Inject OHRealm ohRealm;
+    @Inject Settings settings;
 
     @Override
     public void onCreate() {
-        super.onCreate();
-
-        JodaTimeAndroid.init(this);
-
         if(component == null) {
             component = createComponent();
         }
         component().inject(this);
+
+        setTheme(settings.getTheme());
+        super.onCreate();
+
+        JodaTimeAndroid.init(this);
+
 
         ohRealm.setup(this);
 
