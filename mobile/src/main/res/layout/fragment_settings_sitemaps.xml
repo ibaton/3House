@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/scrollView6"
-    tools:context="treehou.se.habit.ui.settings.subsettings.NotificationsSettingsFragment">
+    tools:context="treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

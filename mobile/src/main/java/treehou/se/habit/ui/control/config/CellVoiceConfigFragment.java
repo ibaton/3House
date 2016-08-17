@@ -16,12 +16,22 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.controller.VoiceCellDB;
+import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.VoiceCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -32,14 +42,19 @@ public class CellVoiceConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
+    @BindView(R.id.spr_items) Spinner sprItems;
+    @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
+
     private VoiceCellDB voiceCell;
-    private Spinner sprItems;
-    private ImageButton btnSetIcon;
+    private Cell cell;
 
-    private CellDB cell;
+    private OHItem item;
 
-    private ArrayAdapter<ItemDB> mItemAdapter ;
-    private ArrayList<ItemDB> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
+
+    private Realm realm;
+    private Unbinder unbinder;
 
     public static CellVoiceConfigFragment newInstance(CellDB cell) {
         CellVoiceConfigFragment fragment = new CellVoiceConfigFragment();
@@ -57,24 +72,98 @@ public class CellVoiceConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(CellDB.class, id);
-            if((voiceCell=cell.voiceCell())==null){
+            long id = getArguments().getLong(ARG_CELL_ID);
+            cell = new Cell(CellDB.load(realm, id));
+            voiceCell = VoiceCellDB.getCell(realm, cell.getDB());
+            if(voiceCell == null){
+                realm.beginTransaction();
                 voiceCell = new VoiceCellDB();
-                voiceCell.setCell(cell);
-                voiceCell.save();
+                voiceCell.setId(VoiceCellDB.getUniqueId(realm));
+                voiceCell = realm.copyToRealm(voiceCell);
+                voiceCell.setCell(cell.getDB());
+                realm.commitTransaction();
+            }
+
+            ItemDB itemDB = voiceCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
             }
         }
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
-            if(item.getType().equals(ItemDB.TYPE_STRING)){
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false);
+        unbinder = ButterKnife.bind(this, rootView);
+
+        sprItems.setAdapter(mItemAdapter);
+
+        List<ServerDB> servers = realm.where(ServerDB.class).findAll();
+        mItems.clear();
+
+        for(final ServerDB serverDB : servers) {
+            final OHServer server = serverDB.toGeneric();
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
+
+                @Override
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
+                    mItems.addAll(items);
+                    mItemAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onError() {
+                    Log.d("Get Items", "Failure");
+                }
+            };
+            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            serverHandler.requestItem(callback);
+        }
+
+        sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                OHItem item = mItems.get(position);
+                if(item != null) {
+                    realm.beginTransaction();
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    voiceCell.setItem(itemDB);
+                    realm.commitTransaction();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
+        }
+
+        updateIconImage();
+        btnSetIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+            startActivityForResult(intent, REQUEST_ICON);
+        });
+
+        return rootView;
+    }
+
+    private List<OHItem> filterItems(List<OHItem> items){
+
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(item.getType().equals(OHItem.TYPE_STRING)){
                 tempItems.add(item);
             }
         }
@@ -85,73 +174,16 @@ public class CellVoiceConfigFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        Log.d(TAG, "onPause");
-
-        voiceCell.save();
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onDestroy() {
+        super.onDestroy();
 
-        View rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false);
-
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
-        sprItems.setAdapter(mItemAdapter);
-
-        Communicator communicator = Communicator.instance(getActivity());
-        List<ServerDB> servers = ServerDB.getServers();
-        mItems.clear();
-
-        if(voiceCell.getItem() != null) {
-            mItems.add(voiceCell.getItem());
-        }
-
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
-                @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
-                    mItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
-                }
-            });
-        }
-
-        sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ItemDB item = mItems.get(position);
-                item.save();
-
-                voiceCell.setItem(item);
-                voiceCell.save();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
-        updateIconImage();
-        btnSetIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
-                startActivityForResult(intent, REQUEST_ICON);
-            }
-        });
-
-        return rootView;
+        realm.close();
     }
 
     private void updateIconImage(){
@@ -164,10 +196,11 @@ public class CellVoiceConfigFragment extends Fragment {
                 resultCode == Activity.RESULT_OK &&
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
+            realm.beginTransaction();
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
             voiceCell.setIcon(iconName.equals("") ? null : iconName);
-            voiceCell.save();
             updateIconImage();
+            realm.commitTransaction();
         }
     }
 }

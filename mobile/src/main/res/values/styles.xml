@@ -15,6 +15,11 @@
         <item name="android:lines">1</item>
     </style>
 
+    <style name="MenuItemTextSmaller" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textSize">20sp</item>
+        <item name="android:lines">1</item>
+    </style>
+
     <style name="MenuItemTextSub" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">14sp</item>
         <item name="android:lines">1</item>
@@ -66,11 +71,15 @@
     <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
     </style>
 
-    <style name="draver_item_text">
+    <style name="drawer_item_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:textColor">@color/drawer_text</item>
         <item name="android:layout_gravity">left|center_vertical</item>
+    </style>
+
+    <style name="inbox_item_button" parent="Widget.AppCompat.ImageButton">
+        <item name="android:padding">10dp</item>
     </style>
 </resources>

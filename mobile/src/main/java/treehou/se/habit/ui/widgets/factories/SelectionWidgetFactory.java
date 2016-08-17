@@ -8,16 +8,18 @@ import android.widget.Spinner;
 
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class SelectionWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
 
         return new SelectWidgetHolder(widget, parent, widgetFactory);
     }
@@ -34,7 +36,7 @@ public class SelectionWidgetFactory implements IWidgetFactory {
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public SelectWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        public SelectWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
             this.factory = factory;
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
@@ -55,7 +57,7 @@ public class SelectionWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
             if (widget == null) {
                 return;
@@ -63,8 +65,8 @@ public class SelectionWidgetFactory implements IWidgetFactory {
 
             sprSelect.setOnItemSelectedListener(null);
 
-            final List<Widget.Mapping> mappings = widget.getMapping();
-            final ArrayAdapter<Widget.Mapping> mappingAdapter = new ArrayAdapter<>(factory.getContext(), R.layout.item_text, mappings);
+            final List<OHMapping> mappings = widget.getMapping();
+            final ArrayAdapter<OHMapping> mappingAdapter = new ArrayAdapter<>(factory.getContext(), R.layout.item_text, mappings);
             sprSelect.setAdapter(mappingAdapter);
             for(int i=0; i<mappings.size(); i++){
                 if (mappings.get(i).getCommand().equals(widget.getItem().getState())){
@@ -83,9 +85,9 @@ public class SelectionWidgetFactory implements IWidgetFactory {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if(position != lastPosition) {
-                                Widget.Mapping mapping = mappings.get(position);
-                                Communicator communicator = Communicator.instance(factory.getContext());
-                                communicator.command(factory.getServer(), widget.getItem(), mapping.getCommand());
+                                OHMapping mapping = mappings.get(position);
+                                final IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                                serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
                                 lastPosition = position;
                             }
                         }

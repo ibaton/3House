@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer-array name="custom_theme">
+    <integer-array name="custom_theme" translatable="false">
         <item>@color/colorPrimaryDarker</item> <!-- really much darker color of main color -->
         <item>@color/colorPrimaryDark</item> <!-- a bit darker color of your main color -->
         <item>@color/colorPrimary</item> <!-- main color of your theme -->
         <item>@color/colorPrimaryLighter</item> <!-- really much lighter color of main color -->
     </integer-array>
 
-    <array name="cell_colors">
+    <array name="cell_colors" translatable="false">
         <item>#00000000</item>
         <item>#33000000</item>
         <item>#ff3c9e4c</item>
@@ -25,7 +25,7 @@
         <item>#ff3e9e80</item>
     </array>
 
-    <string-array name="empty">
+    <string-array name="empty" translatable="false">
         <item></item>
     </string-array>
 
@@ -35,10 +35,9 @@
         <item>Slider</item>
         <item>Inc/Dec</item>
         <item>Voice</item>
-        <!--<item>Color</item>-->
     </string-array>
 
-    <integer-array name="cell_types_values">
+    <integer-array name="cell_types_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>4</item>
@@ -48,11 +47,10 @@
 
     <string-array name="controll_manager">
         <item>Edit</item>
-        <item>Delete</item>
+        <item>@string/delete</item>
     </string-array>
 
     <string-array name="server_manager">
-        <item>Bindings</item>
-        <item>Delete</item>
+        <item>@string/delete</item>
     </string-array>
 </resources>

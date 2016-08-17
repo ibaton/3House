@@ -36,7 +36,7 @@
                 android:paddingBottom="@dimen/item_spacing_half"
                 android:id="@+id/lbl_widget_name"
                 android:layout_gravity="center_horizontal" />
-            </FrameLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

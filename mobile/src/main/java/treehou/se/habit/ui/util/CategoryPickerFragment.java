@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,18 +52,19 @@ public class CategoryPickerFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_icon_picker, null);
         lstIcons = (RecyclerView) rootView.findViewById(R.id.lst_categories);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
+        lstIcons.setLayoutManager(gridLayoutManager);
         lstIcons.setItemAnimator(new DefaultItemAnimator());
-        lstIcons.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // Hookup list of categories
-        adapter = new CategoryAdapter(getActivity());
-        adapter.add(new CategoryPicker(null, getString(R.string.empty), Util.IconCategory.EMPTY));
-        adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_play, getString(R.string.media), Util.IconCategory.MEDIA));
-        adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
-        adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_power, getString(R.string.command), Util.IconCategory.COMMANDS));
-        adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_arrow_up, getString(R.string.arrows), Util.IconCategory.ARROWS));
-        adapter.add(new CategoryPicker(CommunityMaterial.Icon.cmd_view_module, getString(R.string.all), Util.IconCategory.ALL));
-
+        List<CategoryPicker> categoryList = new ArrayList<>();
+        categoryList.add(new CategoryPicker(null, getString(R.string.empty), Util.IconCategory.EMPTY));
+        categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_play, getString(R.string.media), Util.IconCategory.MEDIA));
+        categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
+        categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_power, getString(R.string.command), Util.IconCategory.COMMANDS));
+        categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_arrow_up, getString(R.string.arrows), Util.IconCategory.ARROWS));
+        categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_view_module, getString(R.string.all), Util.IconCategory.ALL));
+        adapter = new CategoryAdapter(getActivity(), categoryList);
         lstIcons.setAdapter(adapter);
 
         this.container = container;
@@ -113,7 +114,6 @@ public class CategoryPickerFragment extends Fragment {
         private Context context;
         private List<CategoryPicker> categories = new ArrayList<>();
 
-
         class CategoryHolder extends RecyclerView.ViewHolder {
 
             public ImageView imgIcon;
@@ -127,8 +127,9 @@ public class CategoryPickerFragment extends Fragment {
             }
         }
 
-        public CategoryAdapter(Context context) {
+        public CategoryAdapter(Context context, List<CategoryPicker> categories) {
             this.context = context;
+            this.categories = categories;
         }
 
         public void add(CategoryPicker category){
@@ -139,7 +140,7 @@ public class CategoryPickerFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_category, parent, false);
+            View itemView = inflater.inflate(R.layout.item_category, null);
 
             return new CategoryHolder(itemView);
         }

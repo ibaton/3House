@@ -7,22 +7,26 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
 
 public class DefaultConfigCellBuilder implements CellFactory.CellBuilder {
 
-    public View build(Context context, ControllerDB controller, CellDB cell){
+    @BindView(R.id.img_icon_button) ImageButton imgView;
 
-        int[] pallete = ControllerUtil.generateColor(controller, cell);
+    public View build(Context context, ControllerDB controller, CellDB cell){
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View rootView = inflater.inflate(R.layout.cell_conf_button, null);
+        ButterKnife.bind(this, rootView);
 
-        ImageButton imgView = (ImageButton) rootView.findViewById(R.id.img_icon_button);
+        int[] pallete = ControllerUtil.generateColor(controller, cell);
+
         imgView.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
         return rootView;

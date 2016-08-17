@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?android:selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/WidgetText"
@@ -54,7 +54,7 @@
                     android:autoLink="web|email|phone"
                     android:id="@+id/lbl_widget_name" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/lbl_value"
@@ -84,14 +84,14 @@
                     android:layout_height="match_parent"
                     android:id="@+id/btn_decrement"
                     android:visibility="visible"
-                    android:src="@drawable/cell_down"/>
+                    app:srcCompat="@drawable/cell_down_action"/>
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:id="@+id/btn_increment"
                     android:visibility="visible"
-                    android:src="@drawable/cell_up"/>
+                    app:srcCompat="@drawable/cell_up_action"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -107,6 +107,6 @@
             android:clickable="false"
             android:selectable="false"
             android:background="@null"
-            android:src="@drawable/next_page"/>
+            app:srcCompat="@drawable/next_page_icon"/>
     </LinearLayout>
 </FrameLayout>

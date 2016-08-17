@@ -14,13 +14,16 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.controller.ColorCellDB;
-import treehou.se.habit.ui.control.IconAdapter;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ColorCellDB;
+import treehou.se.habit.ui.adapter.IconAdapter;
 
 public class CellColorConfigFragment extends Fragment {
 
@@ -33,8 +36,8 @@ public class CellColorConfigFragment extends Fragment {
     private ColorCellDB colorCell;
     private Spinner sprItems;
 
-    private ArrayAdapter<ItemDB> mItemAdapter ;
-    private ArrayList<ItemDB> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> mItemAdapter ;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
 
     public static CellColorConfigFragment newInstance(CellDB cell) {
         CellColorConfigFragment fragment = new CellColorConfigFragment();
@@ -54,23 +57,24 @@ public class CellColorConfigFragment extends Fragment {
 
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
 
-        if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(CellDB.class, id);
-            if((colorCell =cell.colorCell())==null){
+        /*if (getArguments() != null) {
+            int id = getArguments().getInt(ARG_CELL_ID);
+            cell = CellDB.load(id);
+            colorCell = ColorCellDB.getCell(cell);
+            if(colorCell == null){
                 colorCell = new ColorCellDB();
                 colorCell.setCell(cell);
-                colorCell.save();
+                ColorCellDB.save(colorCell);
             }
-        }
+        }*/
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
-            if(item.getType().equals(ItemDB.TYPE_COLOR) ||
-                    item.getType().equals(ItemDB.TYPE_GROUP)){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(item.getType().equals(OHItem.TYPE_COLOR) ||
+                    item.getType().equals(OHItem.TYPE_GROUP)){
                 tempItems.add(item);
             }
         }
@@ -86,7 +90,7 @@ public class CellColorConfigFragment extends Fragment {
 
         Log.d(TAG, "onPause");
 
-        colorCell.save();
+        //ColorCellDB.save(colorCell);
     }
 
     @Override
@@ -99,38 +103,39 @@ public class CellColorConfigFragment extends Fragment {
         sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setAdapter(mItemAdapter);
 
-        Communicator communicator = Communicator.instance(getActivity());
-        List<ServerDB> servers = ServerDB.getServers();
+        List<OHServer> servers = null; // TODO OHServer.loadAll();
         mItems.clear();
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
+        for(final OHServer server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
 
-                    int position = mItems.indexOf(colorCell.item);
+                    int position = mItems.indexOf(colorCell.getItem());
                     if(position != -1){
                         sprItems.setSelection(position);
                     }
                 }
 
                 @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
+                public void onError() {
+
                 }
-            });
+            };
+            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            serverHandler.requestItem(callback);
         }
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ItemDB item = (ItemDB) sprItems.getItemAtPosition(position);
-                item.save();
+                OHItem item = (OHItem) sprItems.getItemAtPosition(position);
+                // TODO item.save();
 
-                colorCell.setItem(item);
-                colorCell.save();
+                // colorCell.setItem(item.getDB());
+                //ColorCellDB.save(colorCell);
             }
 
             @Override

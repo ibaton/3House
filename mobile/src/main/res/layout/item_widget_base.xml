@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?android:selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -19,11 +19,11 @@
             android:visibility="gone">
 
             <ImageView
+                android:id="@+id/img_widget_icon"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:minHeight="50dp"
-                android:padding="@dimen/short_space"
-                android:id="@+id/img_widget_icon"/>
+                android:padding="@dimen/short_space"/>
         </FrameLayout>
 
         <LinearLayout
@@ -44,7 +44,7 @@
                 android:paddingBottom="@dimen/widget_default_padding_vertical"
                 android:paddingRight="@dimen/widget_default_padding_vertical">
 
-                <android.support.v7.widget.AppCompatTextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/WidgetText"
@@ -81,6 +81,6 @@
             android:clickable="false"
             android:selectable="false"
             android:background="@null"
-            android:src="@drawable/next_page"/>
+            app:srcCompat="@drawable/next_page_icon"/>
     </LinearLayout>
 </FrameLayout>

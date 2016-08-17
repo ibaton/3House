@@ -1,1 +1,0 @@
-ALTER TABLE Controllers ADD COLUMN showNotification BOOLEAN;

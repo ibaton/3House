@@ -29,14 +29,14 @@
                     android:layout_height="fill_parent"
                     android:padding="@dimen/default_item_padding">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/item_type"
                         android:id="@+id/hdr_item_type" />
 
-                    <android.support.v7.widget.AppCompatSpinner
+                    <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/spr_items"
@@ -44,7 +44,7 @@
                         android:entries="@array/empty"
                         android:layout_gravity="center_horizontal" />
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/image" />
@@ -61,14 +61,14 @@
                         android:visibility="gone"
                         android:id="@+id/lou_range">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/max"
                             android:id="@+id/hdr_max"/>
 
-                        <android.support.v7.widget.AppCompatEditText
+                        <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/txt_max"

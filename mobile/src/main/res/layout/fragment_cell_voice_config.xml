@@ -18,13 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:padding="@dimen/default_item_padding">
-            <android.support.v7.widget.AppCompatSpinner
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spr_items"
                 android:layout_gravity="center_horizontal" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/image" />

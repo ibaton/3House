@@ -4,8 +4,8 @@ import android.graphics.Color;
 
 import com.mattyork.colours.Colour;
 
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.util.Util;
 
 public class ControllerUtil {

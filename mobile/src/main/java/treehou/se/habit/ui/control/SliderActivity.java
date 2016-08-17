@@ -9,11 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 
 public class SliderActivity extends AppCompatActivity {
     public static final String TAG = "SliderActivity";
@@ -27,6 +31,7 @@ public class SliderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slider);
+        ButterKnife.bind(this);
         long id = getIntent().getExtras().getLong(ARG_CELL);
         SliderFragment sliderFragment = SliderFragment.newInstance(id);
         if (savedInstanceState == null) {
@@ -34,12 +39,6 @@ public class SliderActivity extends AppCompatActivity {
                     .add(R.id.container, sliderFragment, SLIDER_TAG)
                     .commit();
         }
-        findViewById(R.id.container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -55,12 +54,18 @@ public class SliderActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    @OnClick(R.id.container)
+    void closeClick() {
+        finish();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class SliderFragment extends Fragment {
 
         private SliderCellDB numberCell;
+        private Realm realm;
 
         public SliderFragment() {}
 
@@ -73,14 +78,21 @@ public class SliderActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            realm = Realm.getDefaultInstance();
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             try {
                 View rootView = inflater.inflate(R.layout.fragment_slider, null, false);
 
                 if (getArguments() != null) {
-                    Long id = getArguments().getLong(ARG_CELL);
-                    CellDB cell = CellDB.load(CellDB.class, id);
-                    numberCell = cell.sliderCell();
+                    long id = getArguments().getLong(ARG_CELL);
+                    CellDB cell = CellDB.load(realm, id);
+                    numberCell = SliderCellDB.getCell(realm, cell);
                 }
 
                 SeekBar sbrNumber = (SeekBar) rootView.findViewById(R.id.sbrNumber);
@@ -97,9 +109,9 @@ public class SliderActivity extends AppCompatActivity {
                     @Override
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         if (numberCell != null) {
-                            ServerDB server = numberCell.getItem().getServer();
-                            Communicator communicator = Communicator.instance(getActivity());
-                            communicator.command(server, numberCell.getItem(), "" + seekBar.getProgress());
+                            OHServer server = numberCell.getItem().getServer().toGeneric();
+                            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+                            serverHandler.sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
                         }
                     }
                 });
@@ -107,6 +119,12 @@ public class SliderActivity extends AppCompatActivity {
             }catch (Exception e){
                 return inflater.inflate(R.layout.item_widget_null, null, false);
             }
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            realm.close();
         }
     }
 }

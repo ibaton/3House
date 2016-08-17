@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ItemDB;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
 public class CommandReciever implements IFireReciever {
@@ -50,15 +52,18 @@ public class CommandReciever implements IFireReciever {
             final long itemId = bundle.getLong(BUNDLE_EXTRA_ITEM);
             final String command = bundle.getString(BUNDLE_EXTRA_COMMAND);
 
-            ItemDB item = ItemDB.load(ItemDB.class, itemId);
+            Realm realm = Realm.getDefaultInstance();
+            ItemDB item = ItemDB.load(realm, itemId);
             if(item != null){
-                Communicator.instance(context).command(item.getServer(), item, command);
-                Log.d(TAG, "Sent command " + command + " to item " + item.getName());
+                IServerHandler serverHandler = new Connector.ServerHandler(item.getServer().toGeneric(), context);
+                serverHandler.sendCommand(item.getName(), command);
+                Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");
             }
+            realm.close();
 
-            Log.d(TAG, "Sending command " + command);
+            Log.d(TAG, "Sending sendCommand " + command);
         }else {
             Log.d(TAG, "Boundle not valid.");
         }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -20,5 +21,15 @@
         <item name="windowActionModeOverlay">false</item>
 
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
+    </style>
+
+    <style name="AppTheme.Base.habdroid.Light" parent="AppTheme.Base">
+
+        <item name="colorPrimary">#FF5722</item>
+        <item name="colorAccent">#FF5722</item>
+        <item name="colorPrimaryDark">#BF360C</item>
+
+        <item name="colorControlActivated">#FF5722</item>
+        <item name="colorControlHighlight">#ff8660</item>
     </style>
 </resources>

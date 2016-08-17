@@ -6,19 +6,17 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class WebWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
 
-        WidgetFactory.IWidgetHolder rootView = WebWidgetHolder.create(widgetFactory, widget, parent);
-
-        return rootView;
+        return WebWidgetHolder.create(widgetFactory, widget, parent);
     }
 
     public static class WebWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -28,14 +26,14 @@ public class WebWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
         private WebView webView;
-        private Widget widget;
+        private OHWidget widget;
 
-        public static WebWidgetHolder create(WidgetFactory factory, Widget widget, Widget parent){
+        public static WebWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
 
             return new WebWidgetHolder(widget, parent, factory);
         }
 
-        private WebWidgetHolder(Widget widget, Widget parent, WidgetFactory factory) {
+        private WebWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
                     .setWidget(widget)
@@ -64,13 +62,13 @@ public class WebWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {
                 return;
             }
-            Widget oldWidget = this.widget;
+            OHWidget oldWidget = this.widget;
 
             if(oldWidget == null || !oldWidget.getUrl().equals(widget.getUrl())){
                 webView.loadUrl(widget.getUrl());

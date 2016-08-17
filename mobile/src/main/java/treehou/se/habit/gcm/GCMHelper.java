@@ -5,26 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.List;
-
-import javax.security.auth.callback.Callback;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import treehou.se.habit.Constants;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
 
 public class GCMHelper {
 
@@ -61,6 +45,7 @@ public class GCMHelper {
      * Register treehou.se.habit.gcm to listen for notifications
      */
     public static void gcmRegisterBackground(final Context context) {
+        return;/*
         final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
         new AsyncTask<Void,Void,String>() {
 
@@ -76,8 +61,8 @@ public class GCMHelper {
                     String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
                     Communicator communicator = Communicator.instance(context);
-                    List<ServerDB> servers = ServerDB.getServers();
-                    for(final ServerDB server : servers) {
+                    List<OHServerWrapper> servers = OHServerWrapper.loadAll();
+                    for(final OHServerWrapper server : servers) {
 
                         String regid = GCMHelper.getRegistrationId(context);
                         if (regid.isEmpty()) {
@@ -122,7 +107,7 @@ public class GCMHelper {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
             }
-        }.execute();
+        }.execute();*/
     }
 
     public static boolean checkPlayServices(Activity context) {

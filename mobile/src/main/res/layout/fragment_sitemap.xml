@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.view.ViewPager
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/pgr_sitemap"
-    tools:context="treehou.se.habit.ui.SitemapFragment">
+    tools:context=".ui.sitemaps.SitemapFragment">
 
-    <android.support.v4.view.PagerTitleStrip
-        android:id="@+id/pager_title_strip"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@color/colorPrimary"
-        android:visibility="gone"
-        android:elevation="@dimen/item_elevation"/>
-</android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"
+        android:id="@+id/pgr_sitemap" />
+</FrameLayout>

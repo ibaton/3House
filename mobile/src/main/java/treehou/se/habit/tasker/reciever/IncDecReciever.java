@@ -4,8 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import io.realm.Realm;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 
 public class IncDecReciever implements IFireReciever {
@@ -43,7 +44,7 @@ public class IncDecReciever implements IFireReciever {
     public boolean fire(Context context, Bundle bundle) {
 
         if (isBundleValid(bundle)) {
-            final long itemId = bundle.getLong(BUNDLE_EXTRA_ITEM);
+            final int itemId = bundle.getInt(BUNDLE_EXTRA_ITEM);
 
             final int min = bundle.getInt(BUNDLE_EXTRA_MIN);
             final int max = bundle.getInt(BUNDLE_EXTRA_MAX);
@@ -51,13 +52,15 @@ public class IncDecReciever implements IFireReciever {
 
             final int value = Math.max(Math.min(bundle.getInt(BUNDLE_EXTRA_VALUE), range), -range);
 
-            ItemDB item = ItemDB.load(ItemDB.class, itemId);
+            Realm realm = Realm.getDefaultInstance();
+            ItemDB item = ItemDB.load(realm, itemId);
             if(item != null){
-                Communicator.instance(context).incDec(item.getServer(), item, value, min, max);
-                Log.d(TAG, "Sent command " + value + " to item " + item.getName());
+                Communicator.instance(context).incDec(item.getServer().toGeneric(), item.getName(), value, min, max);
+                Log.d(TAG, "Sent sendCommand " + value + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");
             }
+            realm.close();
         }else {
             Log.d(TAG, "Boundle not valid.");
         }

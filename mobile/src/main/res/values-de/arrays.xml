@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="cell_types">
-    <!-- main color of your theme -->
         <item>Leer</item>
-    <!-- main color of your theme -->
         <item>Schalter</item>
-    <!-- main color of your theme -->
-        <item>Slider</item>
-    <!-- main color of your theme -->
+        <item>Schieberegler</item>
         <item>+/-</item>
-    <!-- main color of your theme -->
         <item>Sprache</item>
     </string-array>
     <string-array name="controll_manager">
         <item>Bearbeiten</item>
-        <item>Löschen</item>
+        <item>@string/delete</item>
     </string-array>
+
     <string-array name="server_manager">
         <item>Bindings</item>
-        <item>Löschen</item>
+        <item>Inbox</item>
+        <item>@string/delete</item>
     </string-array>
 </resources>

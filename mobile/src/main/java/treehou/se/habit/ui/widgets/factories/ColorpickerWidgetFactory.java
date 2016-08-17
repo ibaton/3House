@@ -17,15 +17,16 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscription;
-import rx.functions.Action0;
 import rx.functions.Action1;
+import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.connector.GsonHelper;
-import treehou.se.habit.core.LinkedPage;
-import treehou.se.habit.core.Widget;
-import treehou.se.habit.ui.ColorpickerActivity;
+import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
 public class ColorpickerWidgetFactory implements IWidgetFactory {
@@ -33,7 +34,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
     private static final String TAG = "ColorpickerWidget";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, LinkedPage page, final Widget widget, final Widget parent) {
+    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
         return ColorWidgetHolder.create(widgetFactory, widget, parent);
     }
 
@@ -56,18 +57,8 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
 
             timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS);
 
-            touchSubject = new Action1<Long>() {
-                @Override
-                public void call(Long time) {
-                    updateTick();
-                }
-            };
-            timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS).doOnUnsubscribe(new Action0() {
-                @Override
-                public void call() {
-                    listener.onRelease(tick);
-                }
-            });
+            touchSubject = time -> updateTick();
+            timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS).doOnUnsubscribe(() -> listener.onRelease(tick));
         }
 
         @Override
@@ -108,11 +99,11 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         private int color;
         private View clrView;
 
-        public static ColorWidgetHolder create(WidgetFactory widgetFactory, Widget widget, Widget parent){
+        public static ColorWidgetHolder create(WidgetFactory widgetFactory, OHWidget widget, OHWidget parent){
             return new ColorWidgetHolder(widget, parent, widgetFactory);
         }
 
-        private ColorWidgetHolder(final Widget widget, Widget parent, final WidgetFactory widgetFactory) {
+        private ColorWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory widgetFactory) {
 
             LayoutInflater inflater = widgetFactory.getInflater();
             final Context context = widgetFactory.getContext();
@@ -120,18 +111,22 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
             clrView = itemView.findViewById(R.id.clr_color);
 
             View btnIncrement = itemView.findViewById(R.id.btn_increment);
+            final OHServer server = widgetFactory.getServer();
+            final String itemName = widget.getItem().getName();
+
+            IServerHandler serverHandler = new Connector.ServerHandler(server, context);
             btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0){
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_INCREMENT);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_INCREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0){
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_ON);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_ON);
                     }
                 }
             }));
@@ -141,14 +136,14 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 @Override
                 public void onTick(int tick) {
                     if (tick > 0) {
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_DECREMENT);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_DECREMENT);
                     }
                 }
 
                 @Override
                 public void onRelease(int tick) {
                     if (tick <= 0) {
-                        Communicator.instance(context).command(widgetFactory.getServer(), widget.getItem(), Constants.COMMAND_OFF);
+                        serverHandler.sendCommand(itemName, Constants.COMMAND_OFF);
                     }
                 }
             }));
@@ -167,7 +162,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                     if (widget.getItem() != null) {
                         Intent intent = new Intent(context, ColorpickerActivity.class);
                         Gson gson = GsonHelper.createGsonBuilder();
-                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServer().getId());
+                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServerDB().getId());
                         intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
                         intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
 
@@ -188,7 +183,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         }
 
         @Override
-        public void update(final Widget widget) {
+        public void update(final OHWidget widget) {
             Log.d(TAG, "update " + widget);
 
             if (widget == null) {

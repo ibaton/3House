@@ -23,5 +23,5 @@
         android:id="@+id/btn_add_column"
         android:padding="10dp"
         android:background="@drawable/cell_button_conf"
-        android:src="@drawable/add_row" />
+        android:src="@drawable/add_row_icon" />
 </LinearLayout>

@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <permission
         android:name="com.example.treehou.se.habit.gcm.permission.C2D_MESSAGE"
@@ -44,12 +45,11 @@
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ColorpickerActivity"
+            android:name=".ui.colorpicker.ColorpickerActivity"
             android:label="@string/title_activity_colorpicker" >
         </activity>
 
@@ -90,17 +90,6 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/controller_widget_info" />
-        </receiver>
-        <receiver
-            android:name=".ui.homescreen.SitemapWidget"
-            android:label="3Hou.se Sitemap" >
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/sitemap_widget_info" />
         </receiver>
 
         <activity android:name=".ui.homescreen.ControllerWidgetConfigureActivity" >
@@ -160,16 +149,6 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
             </intent-filter>
         </receiver>
-
-        <service android:name=".service.wear.ListenerService" >
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".service.wear.VoiceActionService"
-            android:exported="false" >
-        </service>
 
         <activity android:name=".ui.homescreen.SitemapWidgetConfigureActivity" >
             <intent-filter>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">3Hou.se</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -34,6 +33,7 @@
     <string name="image">Image</string>
     <string name="settings_widgets">Widgets</string>
     <string name="settings_notification">Notifications</string>
+    <string name="settings_general">General</string>
     <string name="settings_widget">Widget</string>
     <string name="label_widget_text">Widget text</string>
     <string name="hdr_text">Text</string>
@@ -94,10 +94,34 @@
     <string name="empty_controllers">No controller found. Press here to create your first controller.</string>
     <string name="empty_servers">No servers found. Press here to add your first server.</string>
     <string name="scan_for_servers">Searching for servers. The servers will show up here when found.</string>
-    <string name="minus">-</string>
-    <string name="plus">+</string>
+    <string name="minus" translatable="false">-</string>
+    <string name="plus" translatable="false">+</string>
     <string name="delete_cell">Delete cell?</string>
     <string name="name">Name</string>
     <string name="empty">Empty</string>
+    <string name="no_sitemaps_found">No sitemaps found</string>
     <string name="start_scan_question">No server is configured. Do you want to search for one on your local network?</string>
+    <string name="inbox">Inbox</string>
+    <string name="inbox_property" translatable="false">%1$s:%2$s</string>
+    <string name="ignore">Ignore</string>
+    <string name="ignore_item">Don\'t show this item in the list again. Don\'t worry you\'ll be able to find them later.</string>
+    <string name="approve_item">Approve</string>
+    <string name="approve_this_item">Add this item to your item list.</string>
+    <string name="undo">UNDO</string>
+    <string name="hide_item">Item is now hidden</string>
+    <string name="restore_item">Item is restored!</string>
+    <string name="show_ignored_items">Show ignored items</string>
+    <string name="hide_ignored_items">Hide ignored items</string>
+    <string name="show_ignored">Showing ignored items.</string>
+    <string name="hide_ignored">Hide ignored items.</string>
+    <string name="scan">Scan</string>
+    <string name="new_server">New Server</string>
+    <string name="open_source_libraries">Libraries</string>
+    <string name="delete">Delete</string>
+    <string name="help_translate">Help translate</string>
+    <string name="open_last_sitemap_on_upstart">Open last sitemap on upstart</string>
+    <string name="failed_to_get_inbox_items">Failed to get inbox items</string>
+    <string name="edit">Edit</string>
+    <string name="display_sitemap">Display sitemap</string>
+    <string name="enable_icon_background">Enable icon background</string>
 </resources>

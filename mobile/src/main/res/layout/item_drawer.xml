@@ -14,5 +14,5 @@
     <TextView
         android:text="@string/menu_item"
         android:id="@+id/lbl_name"
-        style="@style/draver_item_text" />
+        style="@style/drawer_item_text" />
 </LinearLayout>

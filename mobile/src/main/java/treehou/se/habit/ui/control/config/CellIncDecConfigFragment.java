@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,23 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ItemDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.controller.IncDecCellDB;
+import treehou.se.habit.core.controller.Cell;
+import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.IncDecCellDB;
+import treehou.se.habit.util.Constants;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -33,17 +43,20 @@ public class CellIncDecConfigFragment extends Fragment {
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
 
-    private CellDB cell;
+    @BindView(R.id.spr_items) Spinner sprItems;
+    @BindView(R.id.txtMax) EditText txtMax;
+    @BindView(R.id.txtMin) EditText txtMin;
+    @BindView(R.id.txtValue) EditText txtValue;
+    @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
 
-    private IncDecCellDB numberCell;
-    private Spinner sprItems;
-    private EditText txtMax;
-    private EditText txtMin;
-    private EditText txtValue;
-    private ImageButton btnSetIcon;
+    private ArrayAdapter<OHItem> mItemAdapter;
+    private ArrayList<OHItem> mItems = new ArrayList<>();
 
-    private ArrayAdapter<ItemDB> mItemAdapter ;
-    private ArrayList<ItemDB> mItems = new ArrayList<>();
+    private IncDecCellDB incDecCell;
+    private Cell cell;
+    private OHItem item;
+    private Realm realm;
+    private Unbinder unbinder;
 
     public static CellIncDecConfigFragment newInstance(CellDB cell) {
         CellIncDecConfigFragment fragment = new CellIncDecConfigFragment();
@@ -61,100 +74,107 @@ public class CellIncDecConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(CellDB.class, id);
-            if((numberCell =cell.incDecCell())==null){
-                numberCell = new IncDecCellDB();
-                numberCell.setCell(cell);
-                numberCell.save();
+            long id = getArguments().getLong(ARG_CELL_ID);
+            cell = new Cell(CellDB.load(realm, id));
+            incDecCell = IncDecCellDB.getCell(realm, cell.getDB());
+
+            if (incDecCell == null) {
+                realm.beginTransaction();
+                incDecCell = new IncDecCellDB();
+                incDecCell.setId(IncDecCellDB.getUniqueId(realm));
+                incDecCell = realm.copyToRealm(incDecCell);
+                incDecCell.setCell(cell.getDB());
+                realm.commitTransaction();
+            }
+
+            ItemDB itemDB = incDecCell.getItem();
+            if(itemDB != null){
+                item = itemDB.toGeneric();
             }
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.inc_dec_controller_action, container, false);
+        unbinder = ButterKnife.bind(this, rootView);
 
-        txtMax = (EditText) rootView.findViewById(R.id.txtMax);
-        txtMax.setText("" + numberCell.getMax());
+        txtMax.setText("" + incDecCell.getMax());
+        txtMin.setText("" + incDecCell.getMin());
+        txtValue.setText("" + incDecCell.getValue());
 
-        txtMin = (EditText) rootView.findViewById(R.id.txtMin);
-        txtMin.setText("" + numberCell.getMin());
-
-        txtValue = (EditText) rootView.findViewById(R.id.txtValue);
-        txtValue.setText("" + numberCell.getValue());
-
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ItemDB item = mItems.get(position);
+                realm.beginTransaction();
+                OHItem item = mItems.get(position);
                 if(item != null) {
-                    item.save();
-
-                    numberCell.setItem(item);
-                    numberCell.save();
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    incDecCell.setItem(itemDB);
                 }
+                realm.commitTransaction();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-        sprItems.post(new Runnable() {
-            @Override
-            public void run() {
-                sprItems.setAdapter(mItemAdapter);
-            }
-        });
-        Communicator communicator = Communicator.instance(getActivity());
-        List<ServerDB> servers = ServerDB.getServers();
+        sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
+        List<ServerDB> servers = realm.where(ServerDB.class).findAll();
         mItems.clear();
-        if(numberCell.getItem() != null) {
-            mItems.add(numberCell.getItem());
+
+        if(item != null){
+            mItems.add(item);
+            mItemAdapter.add(item);
+            mItemAdapter.notifyDataSetChanged();
         }
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
+
+        if(incDecCell.getItem() != null) {
+            //mItems.add(incDecCell.getItem());
+        }
+        for(final ServerDB serverDB : servers) {
+            final OHServer server = serverDB.toGeneric();
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     mItems.addAll(items);
                     mItemAdapter.notifyDataSetChanged();
                 }
 
                 @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
+                public void onError() {
+
                 }
-            });
+            };
+
+            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            serverHandler.requestItem(callback);
         }
 
-        btnSetIcon = (ImageButton) rootView.findViewById(R.id.btn_set_icon);
         updateIconImage();
-        btnSetIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), IconPickerActivity.class);
-                startActivityForResult(intent, REQUEST_ICON);
-            }
+        btnSetIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), IconPickerActivity.class);
+            startActivityForResult(intent, REQUEST_ICON);
         });
 
         return rootView;
     }
 
     private void updateIconImage(){
-        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
+        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), incDecCell.getIcon()));
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
+    private List<OHItem> filterItems(List<OHItem> items){
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
-            if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }
         }
@@ -168,23 +188,36 @@ public class CellIncDecConfigFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        realm.beginTransaction();
         try {
-            numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
+            incDecCell.setMax(Integer.parseInt(txtMax.getText().toString()));
         }catch (NumberFormatException e) {
-            numberCell.setMax(100);
+            incDecCell.setMax(100);
         }
         try {
-            numberCell.setMin(Integer.parseInt(txtMin.getText().toString()));
+            incDecCell.setMin(Integer.parseInt(txtMin.getText().toString()));
         }catch (NumberFormatException e) {
-            numberCell.setMin(0);
+            incDecCell.setMin(0);
         }
         try {
-            numberCell.setValue(Integer.parseInt(txtValue.getText().toString()));
+            incDecCell.setValue(Integer.parseInt(txtValue.getText().toString()));
         }catch (NumberFormatException e) {
-            numberCell.setValue(1);
+            incDecCell.setValue(1);
         }
+        realm.commitTransaction();
+    }
 
-        numberCell.save();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     @Override
@@ -194,8 +227,9 @@ public class CellIncDecConfigFragment extends Fragment {
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
-            numberCell.setIcon(iconName.equals("") ? null : iconName);
-            numberCell.save();
+            realm.beginTransaction();
+            incDecCell.setIcon(iconName.equals("") ? null : iconName);
+            realm.commitTransaction();
             updateIconImage();
         }
     }

@@ -6,16 +6,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 /**
  * The configuration screen for the {@link ControllerWidget ControllerWidget} AppWidget.
@@ -27,8 +32,11 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     private static final String PREF_PREFIX_KEY             = "appwidget_";
     private static final String PREF_POSTFIX_SHOW_TITLE     = "_show_title";
 
-    private Spinner sprControllers;
-    private CheckBox cbxShowTitle;
+    @BindView(R.id.spr_controller) Spinner sprControllers;
+    @BindView(R.id.cbx_show_title) CheckBox cbxShowTitle;
+
+    private Realm realm;
+    private Unbinder unbinder;
 
     public ControllerWidgetConfigureActivity() {
         super();
@@ -38,21 +46,21 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        setContentView(R.layout.controller_widget_configure);
+
+        unbinder = ButterKnife.bind(this);
+        realm = Realm.getDefaultInstance();
+
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
 
-        setContentView(R.layout.controller_widget_configure);
+        List<ControllerDB> controllers = realm.where(ControllerDB.class).findAll();
+        List<ControllerItem> controllerItems = new ArrayList<>();
+        for(ControllerDB controllerDB : controllers) controllerItems.add(new ControllerItem(controllerDB));
 
-        sprControllers = (Spinner) findViewById(R.id.spr_controller);
-        List<ControllerDB> controllers = ControllerDB.getControllers();
-        ArrayAdapter mAdapter = new ArrayAdapter<>(this
-                , android.R.layout.simple_list_item_1, controllers);
+        ArrayAdapter<ControllerItem> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, controllerItems);
         sprControllers.setAdapter(mAdapter);
-
-        cbxShowTitle = (CheckBox) findViewById(R.id.cbx_show_title);
-
-        findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -66,34 +74,56 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
         }
-
     }
 
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            final Context context = ControllerWidgetConfigureActivity.this;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+        realm.close();
+    }
 
-            ControllerDB controller = (ControllerDB) sprControllers.getSelectedItem();
-            if(controller == null){
-                Toast.makeText(ControllerWidgetConfigureActivity.this, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show();
-                setResult(RESULT_CANCELED);
-                finish();
-                return;
-            }
+    class ControllerItem{
+        private ControllerDB controllerDB;
 
-            saveControllerIdPref(context, mAppWidgetId, controller, cbxShowTitle.isChecked());
-
-            // It is the responsibility of the configuration activity to update the app widget
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            ControllerWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
-
-            // Make sure we pass back the original appWidgetId
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            setResult(RESULT_OK, resultValue);
-            finish();
+        public ControllerItem(ControllerDB controllerDB) {
+            this.controllerDB = controllerDB;
         }
-    };
+
+        public ControllerDB getControllerDB() {
+            return controllerDB;
+        }
+
+        @Override
+        public String toString() {
+            return controllerDB.getName();
+        }
+    }
+
+    @OnClick(R.id.add_button)
+    public void onAddClick() {
+        final Context context = ControllerWidgetConfigureActivity.this;
+
+        ControllerDB controller = ((ControllerItem) sprControllers.getSelectedItem()).getControllerDB();
+        if(controller == null){
+            Toast.makeText(ControllerWidgetConfigureActivity.this, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show();
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
+
+        saveControllerIdPref(context, mAppWidgetId, controller, cbxShowTitle.isChecked());
+
+        // It is the responsibility of the configuration activity to update the app widget
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ControllerWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+
+        // Make sure we pass back the original appWidgetId
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        setResult(RESULT_OK, resultValue);
+        finish();
+    }
 
     // Write the prefix to the SharedPreferences object for this widget
     static void saveControllerIdPref(Context context, int appWidgetId, ControllerDB controller, boolean showTitle) {

@@ -1,4 +1,7 @@
+/mobile.iml
 /build
 *.properties
 *.apk
 *.iml
+
+google-services.json

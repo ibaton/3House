@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="treehou.se.habit.ui.control.EditControlFragment">
 
@@ -76,7 +77,7 @@
                     android:layout_height="@dimen/controller_button_space"
                     android:id="@+id/btn_add_row"
                     android:padding="10dp"
-                    android:src="@drawable/add_row"
+                    app:srcCompat="@drawable/add_row_icon"
                     android:layout_weight="1"
                     android:background="@drawable/cell_button_conf"
                     android:layout_marginRight="@dimen/margin_controller_cell"

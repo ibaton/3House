@@ -11,8 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.ServerDB;
+import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.adapter.ServerArrayAdapter;
 
 /**
  * The configuration screen for the {@link VoiceControlWidget VoiceControlWidget} AppWidget.
@@ -24,9 +30,9 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
     private static final String PREF_POSTFIX_SHOW_TITLE     = "_show_title";
     private static final String PREF_PREFIX_KEY = "appwidget_voice_";
 
-    private Spinner sprServers;
-
-    private CheckBox cbxShowTitle;
+    @BindView(R.id.spr_server) Spinner sprServers;
+    @BindView(R.id.cbx_show_title) CheckBox cbxShowTitle;
+    private Unbinder unbinder;
 
     public VoiceControlWidgetConfigureActivity() {
         super();
@@ -41,14 +47,16 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.voice_control_widget_configure);
+        unbinder = ButterKnife.bind(this);
 
-        sprServers = (Spinner) findViewById(R.id.spr_server);
-        ArrayAdapter<ServerDB> serverAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ServerDB.getServers());
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
+        realm.close();
+
+        ArrayAdapter<ServerDB> serverAdapter = new ServerArrayAdapter(this, servers);
         sprServers.setAdapter(serverAdapter);
 
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
-
-        cbxShowTitle = (CheckBox) findViewById(R.id.cbx_show_title);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -71,7 +79,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-            //TODO check that server is selectes
+            //TODO check that server is selected
             saveServerPref(VoiceControlWidgetConfigureActivity.this, mAppWidgetId, (ServerDB)sprServers.getSelectedItem(), cbxShowTitle.isChecked());
 
             VoiceControlWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
@@ -110,6 +118,13 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
         prefs.apply();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+
 }
 
 

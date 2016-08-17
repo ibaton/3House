@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
-import java.util.List;
-
-import treehou.se.habit.connector.Communicator;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.connector.Constants;
-import treehou.se.habit.core.db.ServerDB;
 
 public class VoiceActionService extends IntentService {
 
@@ -29,16 +28,18 @@ public class VoiceActionService extends IntentService {
 
         String command = getMessageText(intent);
         if(command != null){
-            Log.d(TAG, "Received command " + intent);
+            Log.d(TAG, "Received sendCommand " + intent);
 
-            ServerDB server = null;
-            List<ServerDB> servers = ServerDB.getServers();
+            OHServer server = null;
+            // TODO server
+            /*List<OHServer> servers = OHServer.loadAll();
             if(servers.size() > 0) {
                 server = servers.get(0);
-            }
+            }*/
 
             if(server != null) {
-                Communicator.instance(this).command(server, Constants.ITEM_VOICE_COMMAND, command);
+                IServerHandler serverHandler = new Connector.ServerHandler(server, this);
+                serverHandler.sendCommand(Constants.ITEM_VOICE_COMMAND, command);
             }
         }
     }

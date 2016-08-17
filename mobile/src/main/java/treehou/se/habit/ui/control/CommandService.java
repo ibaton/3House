@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.content.Context;
 import android.util.Log;
 
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.model.ItemDB;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -30,7 +34,7 @@ public class CommandService extends IntentService {
     private static final String ARG_MIN     = "ARG_MIN";
     private static final String ARG_VALUE   = "ARG_VALUE";
 
-    public static void startActionCommand(Context context, String command, ItemDB item) {
+    public static void startActionCommand(Context context, String command, OHItem item) {
         Intent intent = new Intent(context, CommandService.class);
         intent.setAction(ACTION_COMMAND);
         intent.putExtra(ARG_COMMAND, command);
@@ -38,21 +42,21 @@ public class CommandService extends IntentService {
         context.startService(intent);
     }
 
-    public static Intent getActionCommand(Context context, String command, ItemDB item) {
+    public static Intent getActionCommand(Context context, String command, long itemId) {
         Intent intent = new Intent(context, CommandService.class);
         intent.setAction(ACTION_COMMAND);
         intent.putExtra(ARG_COMMAND, command);
-        intent.putExtra(ARG_ITEM, item.getId());
+        intent.putExtra(ARG_ITEM, itemId);
         return intent;
     }
 
-    public static Intent getActionIncDec(Context context, int min, int max, int value, ItemDB item) {
+    public static Intent getActionIncDec(Context context, int min, int max, int value, long itemId) {
         Intent intent = new Intent(context, CommandService.class);
         intent.setAction(ACTION_INC_DEC);
         intent.putExtra(ARG_MIN, min);
         intent.putExtra(ARG_MAX, max);
         intent.putExtra(ARG_VALUE, value);
-        intent.putExtra(ARG_ITEM, item.getId());
+        intent.putExtra(ARG_ITEM, itemId);
         return intent;
     }
 
@@ -63,31 +67,32 @@ public class CommandService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "onHandleIntent");
+        Realm realm = Realm.getDefaultInstance();
         if (intent != null) {
+            final long itemId = intent.getLongExtra(ARG_ITEM,-1);
             final String action = intent.getAction();
-            if (ACTION_COMMAND.equals(action)) {
+            if (ACTION_COMMAND.equals(action) && itemId > 0) {
                 final String command = intent.getStringExtra(ARG_COMMAND);
-                final long itemId = intent.getLongExtra(ARG_ITEM,-1);
-                ItemDB item = ItemDB.load(ItemDB.class, itemId);
-                handleActionCommand(command, item);
-            }else if (ACTION_INC_DEC.equals(action)) {
+                ItemDB item = ItemDB.load(realm, itemId);
+                handleActionCommand(command, item.toGeneric());
+            }else if (ACTION_INC_DEC.equals(action) && itemId > 0) {
                 final int min = intent.getIntExtra(ARG_MIN,0);
                 final int max = intent.getIntExtra(ARG_MAX,0);
                 final int value = intent.getIntExtra(ARG_VALUE,0);
-                final long itemId = intent.getLongExtra(ARG_ITEM, -1);
-                ItemDB item = ItemDB.load(ItemDB.class, itemId);
+                ItemDB item = ItemDB.load(realm, itemId);
 
                 Communicator communicator = Communicator.instance(this);
-                ServerDB server = item.getServer();
-                communicator.incDec(server, item, value, min, max);
+                OHServer server = item.getServer().toGeneric();
+                communicator.incDec(server, item.getName(), value, min, max);
             }
         }
+        realm.close();
     }
 
-    private void handleActionCommand(String command, ItemDB item) {
+    private void handleActionCommand(String command, OHItem item) {
 
-        Communicator communicator = Communicator.instance(this);
-        ServerDB server = item.getServer();
-        communicator.command(server, item, command);
+        OHServer server = item.getServer();
+        IServerHandler serverHandler = new Connector.ServerHandler(server, this);
+        serverHandler.sendCommand(item.getName(), command);
     }
 }

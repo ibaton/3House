@@ -10,10 +10,13 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -22,30 +25,28 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderConfigCellBuilder";
 
-    public View build(Context context, ControllerDB controller, CellDB cell){
+    @BindView(R.id.viw_background) View viwBackground;
+    @BindView(R.id.sbr_value) SeekBar sbrValue;
+    @BindView(R.id.img_icon) ImageView imgIcon;
 
-        SliderCellDB numberCell = cell.sliderCell();
+    public View build(Context context, ControllerDB controller, CellDB cell){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View cellView = inflater.inflate(R.layout.cell_conf_slider, null);
+        ButterKnife.bind(this, cellView);
+
+        Realm realm = Realm.getDefaultInstance();
+        SliderCellDB numberCell = SliderCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View cellView = inflater.inflate(R.layout.cell_conf_slider, null);
-        View viwBackground = cellView.findViewById(R.id.viw_background);
         viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
-
-        SeekBar sbrValue = (SeekBar) cellView.findViewById(R.id.sbr_value);
-        sbrValue.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        sbrValue.setOnTouchListener((v, event) -> true);
 
         Drawable icon = Util.getIconDrawable(context, numberCell.getIcon());
         if(icon != null) {
-            ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon);
             imgIcon.setImageDrawable(icon);
         }
+        realm.close();
 
         return cellView;
     }

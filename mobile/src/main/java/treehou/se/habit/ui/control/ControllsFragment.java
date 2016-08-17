@@ -1,41 +1,48 @@
 package treehou.se.habit.ui.control;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.ui.adapter.ControllerAdapter;
 
 /**
  * Fragment listing all app controllers.
  */
-public class ControllsFragment extends Fragment {
+public class ControllsFragment extends RxFragment {
 
     private static final String TAG = "ControllsFragment";
 
-    private RecyclerView mListView;
     private ControllerAdapter mAdapter;
 
-    private View viwEmpty;
+    @BindView(R.id.list) RecyclerView mListView;
+    @BindView(R.id.empty) View viwEmpty;
+    @BindView(R.id.fab_add) FloatingActionButton fabAdd;
+
+    private Realm realm;
+    private Unbinder unbinder;
 
     public static ControllsFragment newInstance() {
         ControllsFragment fragment = new ControllsFragment();
@@ -50,24 +57,17 @@ public class ControllsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, ""+ ControllerDB.getControllers().size());
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_control, container, false);
+        View view = inflater.inflate(R.layout.fragment_control_universal, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-        viwEmpty = view.findViewById(R.id.empty);
-        viwEmpty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewController();
-            }
-        });
-
-        mListView = (RecyclerView) view.findViewById(R.id.list);
-
+        viwEmpty.setOnClickListener(view1 -> createNewController());
+        fabAdd.setOnClickListener(v -> createNewController());
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.controllers);
@@ -102,7 +102,15 @@ public class ControllsFragment extends Fragment {
                                         break;
                                     case 1:
                                         mAdapter.removeItem(controllerHolder.getAdapterPosition());
-                                        controller.deleteController(getActivity());
+
+                                        final long id = controller.getId();
+                                        realm.executeTransactionAsync(new Realm.Transaction() {
+                                            @Override
+                                            public void execute(Realm realm) {
+                                                ControllerDB controller = ControllerDB.load(realm, id);
+                                                controller.deleteFromRealm();
+                                            }
+                                        });
                                         break;
                                 }
                             }
@@ -110,7 +118,7 @@ public class ControllsFragment extends Fragment {
                 return true;
             }
         });
-        final List<ControllerDB> controllers = ControllerDB.getControllers();
+        final List<ControllerDB> controllers = realm.where(ControllerDB.class).findAll();
         mAdapter.addAll(controllers);
 
         // Set the adapter
@@ -126,6 +134,18 @@ public class ControllsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
     /**
      * Show empty view if no controllers exist
      */
@@ -133,7 +153,7 @@ public class ControllsFragment extends Fragment {
         viwEmpty.setVisibility(itemCount <= 0 ? View.VISIBLE : View.GONE);
     }
 
-    public void loadController(Long id){
+    public void loadController(long id){
         getActivity().getSupportFragmentManager().beginTransaction()
             .replace(R.id.page_container, EditControlFragment.newInstance(id))
             .addToBackStack(null)
@@ -145,133 +165,16 @@ public class ControllsFragment extends Fragment {
         inflater.inflate(R.menu.controllers, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_add_controller:
-                createNewController();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
      * Creates a new empty controller.
      */
     private void createNewController(){
         ControllerDB controller = new ControllerDB();
         String name = "Controller";
-        Long id = controller.save();
         controller.setName(name);
-        controller.save();
-        controller.addRow();
-        loadController(id);
-    }
+        ControllerDB.save(realm, controller);
+        controller.addRow(realm);
 
-    public static class ControllerAdapter extends RecyclerView.Adapter<ControllerAdapter.ControllerHolder>{
-
-        private List<ControllerDB> items = new ArrayList<>();
-        private Context context;
-        private ItemListener itemListener = new DummyItemListener();
-
-        public class ControllerHolder extends RecyclerView.ViewHolder {
-            public final TextView lblName;
-
-            public ControllerHolder(View view) {
-                super(view);
-                lblName = (TextView) view.findViewById(R.id.lbl_controller);
-            }
-        }
-
-        public ControllerAdapter(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public ControllerHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_controller, null);
-
-            return new ControllerHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(final ControllerHolder controllerHolder, int position) {
-            final ControllerDB controller = items.get(position);
-            controllerHolder.lblName.setText(controller.getName());
-            controllerHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.itemClickListener(controllerHolder);
-                }
-            });
-            controllerHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return itemListener.itemLongClickListener(controllerHolder);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
-        }
-
-        interface ItemListener {
-            void itemCountUpdated(int itemCount);
-            void itemClickListener(ControllerHolder controllerHolder);
-            boolean itemLongClickListener(ControllerHolder controllerHolder);
-        }
-
-        class DummyItemListener implements ItemListener {
-
-            @Override
-            public void itemCountUpdated(int itemCount) {}
-
-            @Override
-            public void itemClickListener(ControllerHolder controllerHolder) {}
-
-            @Override
-            public boolean itemLongClickListener(ControllerHolder controllerHolder) {
-                return false;
-            }
-        }
-
-        public void setItemListener(ItemListener itemListener) {
-            if(itemListener == null){
-                this.itemListener = new DummyItemListener();
-                return;
-            }
-            this.itemListener = itemListener;
-        }
-
-        public ControllerDB getItem(int position) {
-            return items.get(position);
-        }
-
-        public void removeItem(int position) {
-            Log.d(TAG, "removeItem: " + position);
-            items.remove(position);
-            notifyItemRemoved(position);
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void addItem(ControllerDB controller) {
-            items.add(0, controller);
-            notifyItemInserted(0);
-            itemListener.itemCountUpdated(items.size());
-        }
-
-        public void addAll(List<ControllerDB> controllers) {
-            for(ControllerDB controller : controllers) {
-                items.add(0, controller);
-                notifyItemRangeInserted(0, controllers.size());
-            }
-            itemListener.itemCountUpdated(items.size());
-        }
+        loadController(controller.getId());
     }
 }

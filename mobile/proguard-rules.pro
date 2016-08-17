@@ -16,6 +16,26 @@
 #   public *;
 #}
 
+-dontobfuscate
+
 -keep class com.google.gson.** { *; }
 -keep class com.google.inject.* { *; }
 -keep class org.apache.http.* { *; }
+
+-keep class io.realm.annotations.RealmModule
+-keep @io.realm.annotations.RealmModule class *
+-keep class io.realm.internal.Keep
+-keep @io.realm.internal.Keep class * { *; }
+-dontwarn javax.**
+-dontwarn io.realm.**
+
+-dontwarn org.apache.http.**
+-dontwarn android.net.http.AndroidHttpClient
+
+-dontwarn java.lang.invoke.*
+
+# About library
+-keep class .R
+-keep class **.R$* {
+    <fields>;
+}

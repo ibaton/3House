@@ -1,30 +1,26 @@
 package treehou.se.habit.core.db;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-
-import org.joda.time.DateTime;
-
 import java.util.Date;
 
-@Table(name = "Notification")
-public class NotificationDB extends Model {
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import treehou.se.habit.core.db.model.OHRealm;
 
-    @Column(name = "message")
+public class NotificationDB extends RealmObject {
+
+    @PrimaryKey
+    private long id = 0;
     private String message = "";
+    private Date date;
+    private boolean viewed;
 
-    @Column(name = "date")
-    Date date;
-
-    @Column(name = "viewed")
-    boolean viewed;
-
-    public NotificationDB() {
+    public long getId() {
+        return id;
     }
 
-    public NotificationDB(String message) {
-        this.message = message;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getMessage() {
@@ -35,12 +31,12 @@ public class NotificationDB extends Model {
         this.message = message;
     }
 
-    public DateTime getDate() {
-        return new DateTime(date);
+    public Date getDate() {
+        return date;
     }
 
-    public void setDate(DateTime date) {
-        this.date = date.toDate();
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public boolean isViewed() {
@@ -49,5 +45,25 @@ public class NotificationDB extends Model {
 
     public void setViewed(boolean viewed) {
         this.viewed = viewed;
+    }
+
+    public static void save(NotificationDB item){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
+        }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+        realm.close();
+    }
+
+    public static long getUniqueId() {
+        Realm realm = Realm.getDefaultInstance();
+        Number num = realm.where(NotificationDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
     }
 }

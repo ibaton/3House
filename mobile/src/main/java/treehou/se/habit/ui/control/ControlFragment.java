@@ -9,14 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.mattyork.colours.Colour;
 
+import io.realm.Realm;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.controller.CellRowDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.CellRowDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
 import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
 import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
@@ -37,6 +37,8 @@ public class ControlFragment extends Fragment {
     private ActionBar actionBar;
     private AppCompatActivity activity;
 
+    private Realm realm;
+
     public static ControlFragment newInstance(long id) {
         ControlFragment fragment = new ControlFragment();
         Bundle args = new Bundle();
@@ -53,6 +55,8 @@ public class ControlFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        realm = Realm.getDefaultInstance();
+
         cellFactory = new CellFactory<>();
         cellFactory.setDefaultBuilder(new EmptyCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonCellBuilder());
@@ -61,8 +65,8 @@ public class ControlFragment extends Fragment {
         cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
 
         if (getArguments() != null) {
-            Long id = getArguments().getLong(ARG_ID);
-            controller = ControllerDB.load(ControllerDB.class, id);
+            long id = getArguments().getLong(ARG_ID);
+            controller = ControllerDB.load(realm, id);
         }
     }
 
@@ -118,12 +122,19 @@ public class ControlFragment extends Fragment {
         super.onDestroyView();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
+    }
+
     public void redrawController(){
 
         louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-        for (final CellRowDB row : controller.cellRows()) {
+        for (final CellRowDB row : controller.getCellRows()) {
             final LinearLayout louRow = (LinearLayout) inflater.inflate(R.layout.controller_row, null);
             LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -131,7 +142,7 @@ public class ControlFragment extends Fragment {
             louRow.setLayoutParams(rowParam);
 
             final LinearLayout louColumnHolder = (LinearLayout) louRow.findViewById(R.id.lou_btn_holder);
-            for (final CellDB cell : row.cells()) {
+            for (final CellDB cell : row.getCells()) {
                 final View itemView = cellFactory.create(getActivity(), controller, cell);
 
                 louColumnHolder.addView(itemView);

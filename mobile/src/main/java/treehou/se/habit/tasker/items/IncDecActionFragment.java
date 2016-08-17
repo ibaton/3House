@@ -17,11 +17,18 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
+import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.ItemDB;
+import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
+import treehou.se.habit.util.Constants;
 
 public class IncDecActionFragment extends Fragment {
 
@@ -32,8 +39,10 @@ public class IncDecActionFragment extends Fragment {
     private TextView txtMin;
     private TextView txtMax;
 
-    private ArrayAdapter<ItemDB> itemAdapter;
-    private List<ItemDB> filteredItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> itemAdapter;
+    private List<OHItem> filteredItems = new ArrayList<>();
+
+    private Realm realm;
 
     public static IncDecActionFragment newInstance() {
         IncDecActionFragment fragment = new IncDecActionFragment();
@@ -49,6 +58,7 @@ public class IncDecActionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -63,49 +73,49 @@ public class IncDecActionFragment extends Fragment {
         txtMax = (TextView) rootView.findViewById(R.id.txtMax);
 
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, filteredItems);
-        sprItems.post(new Runnable() {
-            @Override
-            public void run() {
-                sprItems.setAdapter(itemAdapter);
-            }
-        });
-        Communicator communicator = Communicator.instance(getActivity());
-        List<ServerDB> servers = ServerDB.getServers();
+        sprItems.post(() -> sprItems.setAdapter(itemAdapter));
+        RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
         filteredItems.clear();
 
-        for(ServerDB server : servers) {
-            communicator.requestItems(server, new Communicator.ItemsRequestListener() {
+        for(final ServerDB server : servers) {
+            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
                 @Override
-                public void onSuccess(List<ItemDB> items) {
-                    items = filterItems(items);
+                public void onUpdate(OHResponse<List<OHItem>> response) {
+                    List<OHItem> items = filterItems(response.body());
                     filteredItems.addAll(items);
                     itemAdapter.notifyDataSetChanged();
                 }
 
                 @Override
-                public void onFailure(String message) {
-                    Log.d("Get Items", "Failure " + message);
+                public void onError() {
+
                 }
-            });
+            };
+
+            IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+            serverHandler.requestItem(callback);
         }
 
         Button btnSave = (Button) rootView.findViewById(R.id.btn_save);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-                getActivity().finish();
-            }
+        btnSave.setOnClickListener(v -> {
+            save();
+            getActivity().finish();
         });
 
         return rootView;
     }
 
-    private List<ItemDB> filterItems(List<ItemDB> items){
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
 
-        List<ItemDB> tempItems = new ArrayList<>();
-        for(ItemDB item : items){
-            if(treehou.se.habit.Constants.SUPPORT_INC_DEC.contains(item.getType())){
+    private List<OHItem> filterItems(List<OHItem> items){
+
+        List<OHItem> tempItems = new ArrayList<>();
+        for(OHItem item : items){
+            if(Constants.SUPPORT_INC_DEC.contains(item.getType())){
                 tempItems.add(item);
             }
         }
@@ -125,10 +135,12 @@ public class IncDecActionFragment extends Fragment {
             int min = Integer.parseInt(txtMin.getText().toString());
             int max = Integer.parseInt(txtMax.getText().toString());
 
-            ItemDB item = (ItemDB) sprItems.getSelectedItem();
-            item.save();
+            OHItem item = (OHItem) sprItems.getSelectedItem();
+            realm.beginTransaction();
+            ItemDB itemDb = ItemDB.createOrLoadFromGeneric(realm, item);
+            realm.commitTransaction();
 
-            final Bundle resultBundle = IncDecBoundleManager.generateCommandBundle(getActivity(), item, value, min, max);
+            final Bundle resultBundle = IncDecBoundleManager.generateCommandBundle(getActivity(), itemDb.getId(), value, min, max);
 
             resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_STRING_BLURB, item.getName() + " - " + value);
             resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_BUNDLE, resultBundle);

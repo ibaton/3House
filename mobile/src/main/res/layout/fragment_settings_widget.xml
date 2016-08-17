@@ -90,14 +90,21 @@
                         android:text="@string/hdr_background"
                         android:id="@+id/hdr_image_background"/>
 
+                    <CheckBox
+                        android:text="@string/enable_icon_background"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cbx_enable_image_background" />
+
                     <LinearLayout
+                        android:id="@+id/lou_icon_backgrounds"
                         android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:orientation="horizontal"
                             android:layout_weight="1">
 
@@ -142,6 +149,7 @@
                                     android:src="@drawable/ic_item_settings_widget"/>
                             </FrameLayout>
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
@@ -189,27 +197,22 @@
                                     android:src="@drawable/ic_item_settings_widget"/>
                             </FrameLayout>
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/hdr_text_size"/>
-
-                            <SeekBar
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/bar_image_size"
-                                android:max="150"
-                                android:indeterminate="false" />
-                        </LinearLayout>
                     </LinearLayout>
 
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hdr_text_size"/>
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bar_image_size"
+                        android:max="150"
+                        android:indeterminate="false" />
                 </LinearLayout>
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -238,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/compressed"/>
 
-                    <android.support.v7.widget.SwitchCompat
+                    <Switch
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/swt_compressed_button" />
@@ -261,7 +264,6 @@
                     android:layout_height="fill_parent"
                     android:padding="@dimen/default_item_padding">
 
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -273,7 +275,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/compressed"/>
 
-                    <android.support.v7.widget.SwitchCompat
+                    <Switch
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/swt_compressed_slider"/>

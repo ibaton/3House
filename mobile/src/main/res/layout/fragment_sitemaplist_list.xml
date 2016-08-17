@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="treehou.se.habit.ui.SitemapListFragment">
+    tools:context=".ui.sitemaps.SitemapListFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
@@ -11,9 +11,10 @@
         android:layout_height="match_parent"/>
 
     <TextView
-        android:id="@android:id/empty"
+        android:id="@id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" />
+        android:gravity="center"
+        android:text="@string/no_sitemaps_found"/>
 
 </FrameLayout>

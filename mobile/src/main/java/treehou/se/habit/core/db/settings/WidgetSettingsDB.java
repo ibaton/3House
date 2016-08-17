@@ -1,20 +1,18 @@
 package treehou.se.habit.core.db.settings;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.PrimaryKey;
+import rx.Observable;
+import treehou.se.habit.util.Constants;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-
-import treehou.se.habit.Constants;
-
-@Table(name = "WidgetSettings")
-public class WidgetSettingsDB extends Model {
+public class WidgetSettingsDB extends RealmObject {
 
     private static final String TAG = "WidgetSettings";
     public static final String PREF_GLOBAL = "NotificationSettings";
 
+    public static final int NO_COLOR = -1;
     public static final int MUTED_COLOR = 0;
     public static final int LIGHT_MUTED_COLOR = 1;
     public static final int DARK_MUTED_COLOR = 2;
@@ -22,25 +20,23 @@ public class WidgetSettingsDB extends Model {
     public static final int LIGHT_VIBRANT_COLOR = 4;
     public static final int DARK_VIBRANT_COLOR = 5;
 
-    @Column(name = "textSize")
-    private int textSize;
+    public static final int DEFAULT_TEXT_SIZE = 100;
+    public static final int DEFAULT_ICON_SIZE = 100;
 
-    @Column(name = "imageBackground")
+    @PrimaryKey
+    private long id = -1;
+    private int textSize = DEFAULT_TEXT_SIZE;
     private int imageBackground;
-
-    @Column(name = "iconSize")
-    private int iconSize = 100;
-
-    @Column(name = "compressedSingleButton")
+    private int iconSize = DEFAULT_ICON_SIZE;
     private boolean compressedSingleButton = true;
-
-    @Column(name = "compressedSlider")
     private boolean compressedSlider = true;
 
-    public WidgetSettingsDB() {
-        super();
-        textSize = Constants.DEFAULT_TEXT_ADDON;
-        imageBackground = DARK_MUTED_COLOR;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getTextSize() {
@@ -73,7 +69,6 @@ public class WidgetSettingsDB extends Model {
 
     public void setCompressedSingleButton(boolean compressedSingleButton) {
         this.compressedSingleButton = compressedSingleButton;
-        save();
     }
 
     public boolean isCompressedSlider() {
@@ -82,29 +77,46 @@ public class WidgetSettingsDB extends Model {
 
     public void setCompressedSlider(boolean compressedSingleButton) {
         this.compressedSlider = compressedSingleButton;
-        save();
     }
 
-    public static WidgetSettingsDB loadGlobal(Context context){
-
-        SharedPreferences preferences = context.getSharedPreferences(Constants.PREFERENCE_SERVER, Context.MODE_PRIVATE);
-        long id = preferences.getLong(PREF_GLOBAL,-1);
-
-        WidgetSettingsDB notificationSettings = null;
-
-        if(id != -1) {
-            notificationSettings = WidgetSettingsDB.load(WidgetSettingsDB.class, id);
+    public static void save(WidgetSettingsDB item){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        if(item.getId() <= 0) {
+            item.setId(getUniqueId());
         }
+        realm.copyToRealmOrUpdate(item);
+        realm.commitTransaction();
+    }
 
-        if(notificationSettings == null) {
-            notificationSettings = new WidgetSettingsDB();
-            notificationSettings.save();
+    public static long getUniqueId() {
+        Realm realm = Realm.getDefaultInstance();
+        Number num = realm.where(WidgetSettingsDB.class).max("id");
+        long newId = 1;
+        if (num != null) newId = num.longValue() + 1;
+        realm.close();
+        return newId;
+    }
 
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putLong(PREF_GLOBAL, notificationSettings.getId());
-            editor.apply();
+    public static WidgetSettingsDB loadGlobal(Realm realm){
+        return loadGlobalRx(realm).toBlocking().first().first();
+    }
+
+    public static Observable<RealmResults<WidgetSettingsDB>> loadGlobalRx(Realm realm){
+
+        RealmResults<WidgetSettingsDB> result = realm.where(WidgetSettingsDB.class).findAll();
+        WidgetSettingsDB widgetSettingsDB;
+        if(result.size() <= 0){
+            realm.beginTransaction();
+            widgetSettingsDB = realm.createObject(WidgetSettingsDB.class);
+            widgetSettingsDB.setId(WidgetSettingsDB.getUniqueId());
+            widgetSettingsDB.setTextSize(DEFAULT_TEXT_SIZE);
+            widgetSettingsDB.setIconSize(DEFAULT_ICON_SIZE);
+
+            realm.commitTransaction();
         }
+        result = realm.where(WidgetSettingsDB.class).findAll();
 
-        return notificationSettings;
+        return result.asObservable();
     }
 }

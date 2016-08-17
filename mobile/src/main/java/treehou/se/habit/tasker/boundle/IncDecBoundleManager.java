@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import treehou.se.habit.core.db.ItemDB;
 import treehou.se.habit.tasker.reciever.IFireReciever;
 import treehou.se.habit.tasker.reciever.IncDecReciever;
 
@@ -19,16 +18,16 @@ public class IncDecBoundleManager {
      * @param value The toast message to be displayed by the plug-in. Cannot be null.
      * @return A plug-in bundle.
      */
-    public static Bundle generateCommandBundle(final Context context, final ItemDB item, final int value, final int min, final int max) {
+    public static Bundle generateCommandBundle(final Context context, final long itemId, final int value, final int min, final int max) {
 
-        Log.d(TAG, "Item " + item + " inc/dec " + value);
+        Log.d(TAG, "Item " + itemId + " inc/dec " + value);
 
         final Bundle result = new Bundle();
         result.putInt(IFireReciever.BUNDLE_EXTRA_TYPE, TYPE_COMMAND);
         result.putInt(IncDecReciever.BUNDLE_EXTRA_VALUE, value);
         result.putInt(IncDecReciever.BUNDLE_EXTRA_MIN, min);
         result.putInt(IncDecReciever.BUNDLE_EXTRA_MAX, max);
-        result.putLong(IncDecReciever.BUNDLE_EXTRA_ITEM, item.getId());
+        result.putLong(IncDecReciever.BUNDLE_EXTRA_ITEM, itemId);
 
         return result;
     }

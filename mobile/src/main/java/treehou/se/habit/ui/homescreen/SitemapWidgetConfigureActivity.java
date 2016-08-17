@@ -9,15 +9,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
-import treehou.se.habit.core.Sitemap;
-import treehou.se.habit.core.db.SitemapDB;
-import treehou.se.habit.ui.SitemapSelectorFragment;
+import treehou.se.habit.core.db.model.SitemapDB;
+import treehou.se.habit.ui.adapter.SitemapAdapter;
+import treehou.se.habit.ui.sitemaps.SitemapSelectorFragment;
 
 /**
  * The configuration screen for the {@link SitemapWidget SitemapWidget} AppWidget.
  */
-public class SitemapWidgetConfigureActivity extends AppCompatActivity implements SitemapSelectorFragment.OnSitemapSelectListener {
+public class SitemapWidgetConfigureActivity extends AppCompatActivity implements SitemapAdapter.OnSitemapSelectListener {
 
     private static final String TAG = "SitemapWidgetConfigure";
     private static final String VOLLEY_TAG_SITEMAPS = "SitemapListFragmentSitemaps2";
@@ -56,7 +58,7 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSitemapSelect(Sitemap sitemap) {
+    public void onSitemapSelect(OHSitemap sitemap) {
         saveSitemapIdPref(SitemapWidgetConfigureActivity.this, mAppWidgetId, sitemap);
 
         // It is the responsibility of the configuration activity to update the app widget
@@ -71,25 +73,23 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    static void saveSitemapIdPref(Context context, int appWidgetId, Sitemap sitemap) {
+    static void saveSitemapIdPref(Context context, int appWidgetId, OHSitemap sitemap) {
 
-        SitemapDB sitemapDb = new SitemapDB(sitemap);
-
-        long sitemapId = sitemapDb.save();
-        Log.d(TAG, "saveSitemapIdPref " + sitemapId);
+        /*sitemap.save();
+        Log.d(TAG, "saveSitemapIdPref " + sitemap.getId());
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putLong(PREF_PREFIX_KEY + appWidgetId, sitemapId);
-        prefs.apply();
+        prefs.putLong(PREF_PREFIX_KEY + appWidgetId, sitemap.getId());
+        prefs.apply();*/
     }
 
     // Read the prefix from the SharedPreferences object for this widget.
     // If there is no preference saved, get the default from a resource
-    static SitemapDB loadSitemap(Context context, int appWidgetId) {
+    static OHSitemap loadSitemap(Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        Long sitemapId = prefs.getLong(PREF_PREFIX_KEY + appWidgetId, -1);
+        long sitemapId = prefs.getLong(PREF_PREFIX_KEY + appWidgetId, -1);
         Log.d(TAG, "loadSitemap " + sitemapId);
 
-        return SitemapDB.load(SitemapDB.class, sitemapId);
+        return null; // OHSitemap.load(sitemapId);
     }
 
     static void deletePref(Context context, int appWidgetId) {
@@ -97,5 +97,8 @@ public class SitemapWidgetConfigureActivity extends AppCompatActivity implements
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
         prefs.apply();
     }
+
+    @Override
+    public void onErrorClicked(OHServer server) {}
 }
 

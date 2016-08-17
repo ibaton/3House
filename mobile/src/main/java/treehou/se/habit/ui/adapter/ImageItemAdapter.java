@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
 
@@ -19,20 +20,24 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
 
     private List<ImageItem> items = new ArrayList<>();
     private Context context;
+    private @LayoutRes int layoutItem;
 
     private OnItemClickListener itemClickListener;
 
     public ImageItemAdapter(Context context) {
+        this(context, R.layout.item_menu_image);
+    }
+
+    public ImageItemAdapter(Context context, @LayoutRes int layout) {
         this.context = context;
+        this.layoutItem = layout;
     }
 
     @Override
     public ImageItemHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.item_menu_image, null);
-
-        Log.d(TAG, "Created ImageItemHolder");
+        View itemView = inflater.inflate(layoutItem, viewGroup, false);
         return new ImageItemHolder(itemView);
     }
 
@@ -42,12 +47,9 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
 
         itemHolder.lblName.setText(item.getName());
         itemHolder.imgIcon.setImageResource(item.getImage());
-        itemHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null){
-                    itemClickListener.onItemClicked(item.getId());
-                }
+        itemHolder.itemView.setOnClickListener(v -> {
+            if(itemClickListener != null){
+                itemClickListener.onItemClicked(item.getId());
             }
         });
     }
@@ -79,10 +81,8 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
     }
 
     public void addAll(List<ImageItem> items) {
-        for(ImageItem item : items) {
-            this.items.add(0, item);
-        }
-        notifyItemRangeInserted(0, items.size());
+        this.items.addAll(items);
+        notifyDataSetChanged();
     }
 
     public void setItemClickListener(OnItemClickListener itemClickListener) {
@@ -90,6 +90,6 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
     }
 
     public interface OnItemClickListener{
-        public void onItemClicked(int id);
+        void onItemClicked(int id);
     }
 }

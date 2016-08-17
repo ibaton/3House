@@ -11,13 +11,17 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.SeekBar;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
+import se.treehou.ng.ohcommunicator.services.Connector;
+import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.controller.CellDB;
-import treehou.se.habit.core.db.ServerDB;
-import treehou.se.habit.core.db.controller.ControllerDB;
-import treehou.se.habit.core.db.controller.SliderCellDB;
-import treehou.se.habit.ui.ViewHelper;
+import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.core.db.model.controller.SliderCellDB;
+import treehou.se.habit.ui.util.ViewHelper;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -27,22 +31,24 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
     private static final String TAG = "SliderCellBuilder";
 
-    public View build(final Context context, ControllerDB controller, final CellDB cell){
+    @BindView(R.id.img_icon_button) ImageView imgIcon;
+    @BindView(R.id.sbrNumber) SeekBar sbrNumber;
+    @BindView(R.id.viw_background) View viwBackground;
 
-        final SliderCellDB numberCell = cell.sliderCell();
+    public View build(final Context context, ControllerDB controller, final CellDB cell){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View cellView = inflater.inflate(R.layout.cell_slider, null);
+        ButterKnife.bind(this, cellView);
+
+        Realm realm = Realm.getDefaultInstance();
+        final SliderCellDB sliderCell = SliderCellDB.getCell(realm, cell);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View cellView = inflater.inflate(R.layout.cell_slider, null);
-        View viwBackground = cellView.findViewById(R.id.viw_background);
         viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
 
-        ImageView imgIcon = (ImageView) cellView.findViewById(R.id.img_icon_button);
-        imgIcon.setImageDrawable(Util.getIconDrawable(context, numberCell.getIcon()));
-
-        SeekBar sbrNumber = (SeekBar) cellView.findViewById(R.id.sbrNumber);
-        sbrNumber.setMax(numberCell.getMax());
+        imgIcon.setImageDrawable(Util.getIconDrawable(context, sliderCell.getIcon()));
+        sbrNumber.setMax(sliderCell.getMax());
         sbrNumber.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -55,22 +61,24 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(numberCell.getItem() == null){
+                if(sliderCell.getItem() == null){
                     return;
                 }
 
-                ServerDB server = numberCell.getItem().getServer();
-                Communicator communicator = Communicator.instance(context);
-                communicator.command(server, numberCell.getItem(), ""+seekBar.getProgress());
+                OHServer server = sliderCell.getItem().getServer().toGeneric();
+                IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+                serverHandler.sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });
+        realm.close();
 
         return cellView;
     }
 
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
-        final SliderCellDB numberCell = cell.sliderCell();
+        Realm realm = Realm.getDefaultInstance();
+        final SliderCellDB numberCell = SliderCellDB.getCell(realm, cell);
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
@@ -89,6 +97,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         //TODO give intent unique id
         PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
+        realm.close();
 
         return cellView;
     }
