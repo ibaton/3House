@@ -24,7 +24,7 @@ public class Settings {
     private static final String PREF_SERVER_SETUP_QUESTION = "pref_server_setup_question";
     private static final String PREF_AUTOLOAD_SITEMAP = "pref_autoload_sitemap";
 
-    private static final int DEFAULT_THEME = R.style.AppTheme_Base_habdroid_Light;
+    private static final int DEFAULT_THEME = R.style.AppTheme_Base;
 
     @Inject SharedPreferences preferences;
     RxSharedPreferences rxPreferences;
@@ -73,7 +73,7 @@ public class Settings {
      * @return application theme.
      */
     public Observable<Integer> getThemeRx(){
-        return prefTheme.asObservable();
+        return prefTheme.asObservable().distinctUntilChanged();
     }
 
     /**
