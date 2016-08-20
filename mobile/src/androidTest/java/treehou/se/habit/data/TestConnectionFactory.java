@@ -22,7 +22,7 @@ public class TestConnectionFactory extends ConnectionFactory {
         return new Connector.ServerHandler(server, context);
     }
 
-    public class TestServerHandler implements IServerHandler{
+    public static class TestServerHandler implements IServerHandler{
 
         @Override
         public void requestBindings(OHCallback<List<OHBinding>> ohCallback) {

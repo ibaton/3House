@@ -34,6 +34,7 @@ import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.ui.homescreen.VoiceService;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
@@ -140,7 +141,7 @@ public class SitemapFragment extends Fragment {
         super.onPause();
     }
 
-    protected HabitApplication.ApplicationComponent getComponent() {
+    protected ApplicationComponent getComponent() {
         return ((HabitApplication) getActivity().getApplication()).component();
     }
 

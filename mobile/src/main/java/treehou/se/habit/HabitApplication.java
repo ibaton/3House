@@ -3,48 +3,22 @@ package treehou.se.habit;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import java.sql.Time;
-import java.util.Random;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import dagger.Component;
 import treehou.se.habit.connector.TrustModifier;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.module.AndroidModule;
-import treehou.se.habit.ui.menu.NavigationDrawerFragment;
-import treehou.se.habit.ui.servers.ServersFragment;
-import treehou.se.habit.ui.servers.sitemaps.SitemapSelectFragment;
-import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
-import treehou.se.habit.ui.sitemaps.PageFragment;
-import treehou.se.habit.ui.sitemaps.SitemapFragment;
-import treehou.se.habit.ui.sitemaps.SitemapListFragment;
+import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.module.DaggerApplicationComponent;
 import treehou.se.habit.util.Settings;
 
 public class HabitApplication extends Application {
 
     private static final String TAG = HabitApplication.class.getSimpleName();
-
-    @Singleton
-    @Component(modules = AndroidModule.class)
-    public interface ApplicationComponent {
-        void inject(HabitApplication application);
-        void inject(MainActivity homeActivity);
-        void inject(SitemapListFragment sitemapListFragment);
-        void inject(SitemapSelectFragment fragment);
-        void inject(SitemapFragment sitemapFragment);
-        void inject(GeneralSettingsFragment fragment);
-        void inject(ServersFragment serversFragment);
-        void inject(NavigationDrawerFragment drawerFragment);
-        void inject(Fragment drawerFragment);
-        void inject(PageFragment pageFragment);
-    }
 
     protected ApplicationComponent component;
 
@@ -72,7 +46,7 @@ public class HabitApplication extends Application {
 
     protected ApplicationComponent createComponent(){
         Log.d(TAG, "Creating app component");
-        ApplicationComponent component = DaggerHabitApplication_ApplicationComponent.builder()
+        ApplicationComponent component = DaggerApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))
                 .build();
         return component;

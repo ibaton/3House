@@ -1,11 +1,11 @@
 package treehou.se.habit.ui.sitemaps;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.util.Pair;
-import android.test.RenamingDelegatingContext;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,17 +27,16 @@ import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
-import treehou.se.habit.DaggerHabitApplication_ApplicationComponent;
-import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 import treehou.se.habit.ViewActions.SliderActions;
-import treehou.se.habit.connector.Constants;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.data.TestConnectionFactory;
 import treehou.se.habit.data.TestServerLoaderFactory;
+import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.module.DaggerApplicationComponent;
 import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 
@@ -118,9 +117,25 @@ public class SliderWidgetTest {
     private OHServer server = new OHServer();
 
     @Rule
-    public DaggerActivityTestRule<MainActivity> activityRule = new DaggerActivityTestRule<>(MainActivity.class, (application, activity) -> {
+    public DaggerActivityTestRule<MainActivity> activityRule = new DaggerActivityTestRule<MainActivity>(MainActivity.class) {
+        @Override
+        public ApplicationComponent setupComponent(HabitApplication application, Activity activity) {
+            return createComponent(application);
+        }
+    };
 
-        HabitApplication.ApplicationComponent component = DaggerHabitApplication_ApplicationComponent.builder()
+    @Test
+    public void testDisplaySitemaps() {
+        NavigationUtil.navigateToSitemap();
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
+        onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(0)));
+        linkedPageBehaviorSubject.onNext(linkedPageState2);
+        onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(100)));
+    }
+
+    private ApplicationComponent createComponent(HabitApplication application){
+        ApplicationComponent component = DaggerApplicationComponent.builder()
                 .androidModule(new TestAndroidModule(application){
 
                     @Override
@@ -197,18 +212,6 @@ public class SliderWidgetTest {
                     }
                 }).build();
 
-        ((HabitApplication) application).setTestComponent(component);
-        Context renamedContext = new RenamingDelegatingContext(application, "Testus");
-        DatabaseUtil.init(renamedContext);
-    });
-
-    @Test
-    public void testDisplaySitemaps() {
-        NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
-        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
-        onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(0)));
-        linkedPageBehaviorSubject.onNext(linkedPageState2);
-        onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(100)));
+        return component;
     }
 }

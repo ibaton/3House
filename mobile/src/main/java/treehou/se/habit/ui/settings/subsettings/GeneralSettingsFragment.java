@@ -27,6 +27,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
+import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.util.Settings;
 
 public class GeneralSettingsFragment extends RxFragment {
@@ -51,7 +52,7 @@ public class GeneralSettingsFragment extends RxFragment {
         getApplicationComponent().inject(this);
     }
 
-    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+    protected ApplicationComponent getApplicationComponent() {
         return ((HabitApplication) getContext().getApplicationContext()).component();
     }
 

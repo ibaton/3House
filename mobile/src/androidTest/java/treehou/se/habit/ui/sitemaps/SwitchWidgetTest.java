@@ -1,11 +1,11 @@
 package treehou.se.habit.ui.sitemaps;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.util.Pair;
-import android.test.RenamingDelegatingContext;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
@@ -14,8 +14,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -30,8 +28,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
-import treehou.se.habit.DaggerHabitApplication_ApplicationComponent;
-import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
@@ -40,6 +36,8 @@ import treehou.se.habit.connector.Constants;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.data.TestConnectionFactory;
 import treehou.se.habit.data.TestServerLoaderFactory;
+import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.module.DaggerApplicationComponent;
 import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 
@@ -121,9 +119,26 @@ public class SwitchWidgetTest {
     private OHServer server = new OHServer();
 
     @Rule
-    public DaggerActivityTestRule<MainActivity> activityRule = new DaggerActivityTestRule<>(MainActivity.class, (application, activity) -> {
+    public DaggerActivityTestRule<MainActivity> activityRule = new DaggerActivityTestRule<MainActivity>(MainActivity.class){
 
-        HabitApplication.ApplicationComponent component = DaggerHabitApplication_ApplicationComponent.builder()
+        @Override
+        public ApplicationComponent setupComponent(HabitApplication application, Activity activity) {
+            return createComponent(application);
+        }
+    };
+
+    @Test
+    public void testDisplaySitemaps() {
+        NavigationUtil.navigateToSitemap();
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
+        onView(withId(R.id.swt_switch)).check(matches(CoreMatchers.not(isChecked())));
+        linkedPageBehaviorSubject.onNext(linkedPageState2);
+        onView(withId(R.id.swt_switch)).check(matches(isChecked()));
+    }
+
+    private ApplicationComponent createComponent(HabitApplication application){
+        ApplicationComponent component = DaggerApplicationComponent.builder()
                 .androidModule(new TestAndroidModule(application){
 
                     @Override
@@ -200,18 +215,6 @@ public class SwitchWidgetTest {
                     }
                 }).build();
 
-        ((HabitApplication) application).setTestComponent(component);
-        Context renamedContext = new RenamingDelegatingContext(application, "Testus");
-        DatabaseUtil.init(renamedContext);
-    });
-
-    @Test
-    public void testDisplaySitemaps() {
-        NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
-        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
-        onView(withId(R.id.swt_switch)).check(matches(CoreMatchers.not(isChecked())));
-        linkedPageBehaviorSubject.onNext(linkedPageState2);
-        onView(withId(R.id.swt_switch)).check(matches(isChecked()));
+        return component;
     }
 }

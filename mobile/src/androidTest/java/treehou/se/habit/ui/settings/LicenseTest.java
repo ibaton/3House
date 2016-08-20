@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.settings;
 
 import android.support.test.espresso.action.ViewActions;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.filters.SmallTest;
 
@@ -13,7 +14,6 @@ import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
-import treehou.se.habit.TestUtil;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.*;
@@ -25,7 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class LicenseTest {
 
     @Rule
-    public DaggerActivityTestRule<MainActivity> activityRule = TestUtil.TestRule();
+    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setup(){

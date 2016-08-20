@@ -1,19 +1,21 @@
 package treehou.se.habit.ui.sitemaps;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.util.Pair;
-import android.test.RenamingDelegatingContext;
 
-import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -28,8 +30,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
-import treehou.se.habit.DaggerHabitApplication_ApplicationComponent;
-import treehou.se.habit.DatabaseUtil;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
@@ -38,12 +38,13 @@ import treehou.se.habit.connector.Constants;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.data.TestConnectionFactory;
 import treehou.se.habit.data.TestServerLoaderFactory;
+import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.module.DaggerApplicationComponent;
 import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -56,6 +57,8 @@ public class RollershutterWidgetTest {
     static final String SITEMAP_NAME = "Test Sitemap";
     static final String WIDGET_LABEL = "Widget test";
     static final String WIDGET_ITEM = "Item test";
+
+    private Queue<Pair<String, String>> commandQueue = new LinkedBlockingQueue<>();
 
     private OHLinkedPage linkedPageState1 = new OHLinkedPage();
     {
@@ -90,9 +93,82 @@ public class RollershutterWidgetTest {
     private OHServer server = new OHServer();
 
     @Rule
-    public DaggerActivityTestRule<MainActivity> activityRule = new DaggerActivityTestRule<>(MainActivity.class, (application, activity) -> {
+    public DaggerActivityTestRule<MainActivity> activityRule = new DaggerActivityTestRule<MainActivity>(MainActivity.class) {
+        @Override
+        public ApplicationComponent setupComponent(HabitApplication application, Activity activity) {
+            return createComponent(application);
+        }
+    };
 
-        HabitApplication.ApplicationComponent component = DaggerHabitApplication_ApplicationComponent.builder()
+    @Test
+    public void testDisplaySitemaps() {
+        NavigationUtil.navigateToSitemap();
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_up)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_down)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_cancel)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testUp() throws InterruptedException {
+        NavigationUtil.navigateToSitemap();
+
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        commandQueue.clear();
+        onView(withId(R.id.btn_up)).perform(ViewActions.click());
+        Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
+        Pair<String, String> command = commandQueue.remove();
+        Assert.assertEquals("Up command wasn't sent", new Pair<>(WIDGET_ITEM, Constants.COMMAND_UP), command);
+        Assert.assertTrue("Command queue should have no commands", commandQueue.size() == 0);
+    }
+
+    @Test
+    public void testDown() throws InterruptedException {
+        NavigationUtil.navigateToSitemap();
+
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        commandQueue.clear();
+        onView(withId(R.id.btn_down)).perform(ViewActions.click());
+        Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
+        Pair<String, String> command = commandQueue.remove();
+        Assert.assertEquals("Up command wasn't sent", new Pair<>(WIDGET_ITEM, Constants.COMMAND_DOWN), command);
+        Assert.assertTrue("Command queue should have no commands", commandQueue.size() == 0);
+    }
+
+    @Test
+    public void testCancel() throws InterruptedException {
+        NavigationUtil.navigateToSitemap();
+
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        commandQueue.clear();
+        onView(withId(R.id.btn_cancel)).perform(ViewActions.click());
+        Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
+        Pair<String, String> command = commandQueue.remove();
+        Assert.assertEquals("Up command wasn't sent", new Pair<>(WIDGET_ITEM, Constants.COMMAND_STOP), command);
+        Assert.assertTrue("Command queue should have no commands", commandQueue.size() == 0);
+    }
+
+    @Test
+    public void testFlow() throws InterruptedException {
+        NavigationUtil.navigateToSitemap();
+
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        commandQueue.clear();
+        onView(withId(R.id.btn_up)).perform(ViewActions.click());
+        onView(withId(R.id.btn_cancel)).perform(ViewActions.click());
+        onView(withId(R.id.btn_down)).perform(ViewActions.click());
+        Assert.assertTrue("Command queue should have 3 command", commandQueue.size() == 3);
+        Pair<String, String> command = commandQueue.remove();
+        Assert.assertEquals("Up command wasn't sent", new Pair<>(WIDGET_ITEM, Constants.COMMAND_UP), command);
+        command = commandQueue.remove();
+        Assert.assertEquals("Stop command wasn't sent", new Pair<>(WIDGET_ITEM, Constants.COMMAND_STOP), command);
+        command = commandQueue.remove();
+        Assert.assertEquals("Down command wasn't sent", new Pair<>(WIDGET_ITEM, Constants.COMMAND_DOWN), command);
+    }
+
+    private ApplicationComponent createComponent(HabitApplication application){
+        ApplicationComponent component = DaggerApplicationComponent.builder()
                 .androidModule(new TestAndroidModule(application){
 
                     @Override
@@ -163,24 +239,17 @@ public class RollershutterWidgetTest {
                                     public Observable<OHLinkedPage> requestPageRx(OHLinkedPage ohLinkedPage) {
                                         return linkedPageBehaviorSubject.asObservable().first();
                                     }
+
+                                    @Override
+                                    public void sendCommand(String itemName, String command) {
+                                        commandQueue.add(new Pair<>(itemName, command));
+                                    }
                                 };
                             }
                         };
                     }
                 }).build();
 
-        ((HabitApplication) application).setTestComponent(component);
-        Context renamedContext = new RenamingDelegatingContext(application, "Testus");
-        DatabaseUtil.init(renamedContext);
-    });
-
-    @Test
-    public void testDisplaySitemaps() {
-        NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
-        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_up)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_down)).check(matches(isDisplayed()));
-        onView(withId(R.id.btn_cancel)).check(matches(isDisplayed()));
+        return component;
     }
 }

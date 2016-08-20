@@ -5,6 +5,7 @@ import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.matcher.IntentMatchers;
 import android.support.test.filters.SmallTest;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
@@ -17,7 +18,6 @@ import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
-import treehou.se.habit.TestUtil;
 import treehou.se.habit.util.IntentHelper;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -28,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class TranslationTest {
 
     @Rule
-    public DaggerActivityTestRule<MainActivity> activityRule = TestUtil.TestRule();
+    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setup(){

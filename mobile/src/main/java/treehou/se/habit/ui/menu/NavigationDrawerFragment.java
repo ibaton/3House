@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
+import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.util.Settings;
 
 public class NavigationDrawerFragment extends Fragment {
@@ -96,7 +97,7 @@ public class NavigationDrawerFragment extends Fragment {
         menuAdapter = new DrawerAdapter(getActivity(), items);
     }
 
-    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+    protected ApplicationComponent getApplicationComponent() {
         return ((HabitApplication) getActivity().getApplication()).component();
     }
 

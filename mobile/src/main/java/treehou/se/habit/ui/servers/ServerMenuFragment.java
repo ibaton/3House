@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
+import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.ui.adapter.ImageItem;
 import treehou.se.habit.ui.adapter.ImageItemAdapter;
 import treehou.se.habit.ui.bindings.BindingsFragment;
@@ -88,7 +89,7 @@ public class ServerMenuFragment extends Fragment {
         getApplicationComponent().inject(this);
     }
 
-    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+    protected ApplicationComponent getApplicationComponent() {
         return ((HabitApplication) getContext().getApplicationContext()).component();
     }
 

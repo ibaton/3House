@@ -1,10 +1,10 @@
 package treehou.se.habit;
 
 import android.app.Activity;
-import android.app.Application;
-import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
+
+import treehou.se.habit.module.ApplicationComponent;
 
 /**
  * {@link ActivityTestRule} which provides hook for
@@ -13,36 +13,32 @@ import android.support.test.rule.ActivityTestRule;
  *
  * @author Tomasz Rozbicki
  */
-public class DaggerActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
+public abstract class DaggerActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
 
-    private final OnBeforeActivityLaunchedListener<T> mListener;
+    public DaggerActivityTestRule(Class<T> activityClass) {
+        this(activityClass, false);
+    }
 
-    public DaggerActivityTestRule(Class<T> activityClass,
-                                  @NonNull OnBeforeActivityLaunchedListener<T> listener) {
-        this(activityClass, false, listener);
+    public DaggerActivityTestRule(Class<T> activityClass, boolean initialTouchMode) {
+        this(activityClass, initialTouchMode, true);
     }
 
     public DaggerActivityTestRule(Class<T> activityClass, boolean initialTouchMode,
-                                  @NonNull OnBeforeActivityLaunchedListener<T> listener) {
-        this(activityClass, initialTouchMode, true, listener);
-    }
-
-    public DaggerActivityTestRule(Class<T> activityClass, boolean initialTouchMode,
-                                  boolean launchActivity,
-                                  @NonNull OnBeforeActivityLaunchedListener<T> listener) {
+                                  boolean launchActivity) {
         super(activityClass, initialTouchMode, launchActivity);
-        mListener = listener;
     }
 
     @Override
     protected void beforeActivityLaunched() {
         super.beforeActivityLaunched();
-        mListener.beforeActivityLaunched((Application) InstrumentationRegistry.getInstrumentation()
-                .getTargetContext().getApplicationContext(), getActivity());
+
+        HabitApplication application = (HabitApplication)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+
+        DatabaseUtil.init(application);
+
+        ApplicationComponent component = setupComponent(application, getActivity());
+        application.setTestComponent(component);
     }
 
-    public interface OnBeforeActivityLaunchedListener<T> {
-
-        void beforeActivityLaunched(@NonNull Application application, @NonNull T activity);
-    }
+    public abstract ApplicationComponent setupComponent(HabitApplication application, Activity activity);
 }

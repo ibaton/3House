@@ -32,6 +32,7 @@ import rx.functions.Action1;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.ui.inbox.InboxListFragment;
 import treehou.se.habit.ui.adapter.ServersAdapter;
 import treehou.se.habit.ui.bindings.BindingsFragment;
@@ -87,7 +88,7 @@ public class ServersFragment extends RxFragment {
         return rootView;
     }
 
-    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+    protected ApplicationComponent getApplicationComponent() {
         return ((HabitApplication) getContext().getApplicationContext()).component();
     }
 

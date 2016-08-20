@@ -17,6 +17,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.ui.control.ControlHelper;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    protected HabitApplication.ApplicationComponent getApplicationComponent() {
+    protected ApplicationComponent getApplicationComponent() {
         return ((HabitApplication) getApplication()).component();
     }
 
