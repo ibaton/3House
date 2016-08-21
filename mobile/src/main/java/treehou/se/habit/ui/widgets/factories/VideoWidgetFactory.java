@@ -1,14 +1,17 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -16,9 +19,8 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 public class VideoWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-
-        return new VideoWidgetHolder(widget, parent, widgetFactory);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return new VideoWidgetHolder(context, factory, server, page, widget, parent);
     }
 
     public static class VideoWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -26,19 +28,19 @@ public class VideoWidgetFactory implements IWidgetFactory {
         private static final String TAG = "VideoWidgetHolder";
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
-        private WidgetFactory factory;
+        private Context context;
 
         private View itemView;
         private VideoView mVideoView;
         private OHWidget widget;
 
-        public VideoWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
-            this.factory = factory;
+        public VideoWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+            this.context = context;
 
-            itemView = factory.getInflater().inflate(R.layout.item_widget_video, null);
+            itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_video, null);
             mVideoView = (VideoView) itemView.findViewById(R.id.vidView);
 
-            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
                     .setParent(parent)
                     .setShowLabel(false)
@@ -78,7 +80,7 @@ public class VideoWidgetFactory implements IWidgetFactory {
 
         private void launchVideo(){
             //Initializing the video player’s media controller.
-            MediaController controller = new MediaController(factory.getContext());
+            MediaController controller = new MediaController(context);
             mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {

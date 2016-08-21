@@ -1,11 +1,15 @@
 package treehou.se.habit.ui.widgets.factories.switches;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Switch;
 
 import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -26,15 +30,15 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
     private BaseWidgetFactory.BaseWidgetHolder baseHolder;
     private Switch swtSwitch;
 
-    public static SwitchWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
-        return new SwitchWidgetHolder(widget, parent, factory);
+    public static SwitchWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new SwitchWidgetHolder(context, factory, server, page, widget, parent);
     }
 
-    private SwitchWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
+    private SwitchWidgetHolder(Context context, final WidgetFactory factory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
 
         Realm realm = Realm.getDefaultInstance();
         WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                 .setWidget(widget)
                 .setFlat(true)
                 .setShowLabel(true)
@@ -46,12 +50,12 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         Log.d(TAG, "Switch state " + widget.getItem().getState() + " : " + widget.getItem().getName());
 
-        View itemView = factory.getInflater().inflate(R.layout.item_widget_switch, null);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_switch, null);
 
         swtSwitch = (Switch) itemView.findViewById(R.id.swt_switch);
         swtSwitch.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * swtSwitch.getTextSize());
 
-        IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+        IServerHandler serverHandler = new Connector.ServerHandler(server, context);
         getView().setOnClickListener(v -> {
             boolean newState = !(swtSwitch.isChecked());
             Log.d(TAG, widget.getLabel() + " " + newState);

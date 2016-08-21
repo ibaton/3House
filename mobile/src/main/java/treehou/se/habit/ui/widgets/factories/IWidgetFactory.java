@@ -1,6 +1,9 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.content.Context;
+
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 
@@ -9,5 +12,5 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
  */
 public interface IWidgetFactory {
 
-    WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, OHWidget widget, OHWidget parent);
+    WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent);
 }

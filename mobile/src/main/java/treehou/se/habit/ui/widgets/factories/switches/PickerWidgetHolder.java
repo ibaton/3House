@@ -1,14 +1,18 @@
 package treehou.se.habit.ui.widgets.factories.switches;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -26,23 +30,25 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
     private static final String TAG = "PickerWidgetHolder";
 
     private BaseWidgetFactory.BaseWidgetHolder baseHolder;
-    private WidgetFactory factory;
+    private OHServer server;
     private RadioGroup rgpMapping;
+    private Context context;
 
-    public static PickerWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
-        return new PickerWidgetHolder(widget, parent, factory);
+    public static PickerWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new PickerWidgetHolder(context, factory, server, page, widget, parent);
     }
 
-    private PickerWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
+    private PickerWidgetHolder(Context context, final WidgetFactory factory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
 
-        this.factory = factory;
-        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+        this.context = context;
+        this.server = server;
+        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                 .setWidget(widget)
                 .setShowLabel(true)
                 .setParent(parent)
                 .build();
 
-        View itemView = factory.getInflater().inflate(R.layout.item_widget_switch_mapping, null);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_switch_mapping, null);
         rgpMapping = (RadioGroup) itemView.findViewById(R.id.rgp_mapping);
 
         baseHolder.getSubView().addView(itemView);
@@ -64,8 +70,9 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         //TODO do this smother
         rgpMapping.removeAllViews();
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
         for (final OHMapping mapping : widget.getMapping()) {
-            RadioButton rbtMap = (RadioButton) factory.getInflater().inflate(R.layout.radio_button, null);
+            RadioButton rbtMap = (RadioButton) layoutInflater.inflate(R.layout.radio_button, null);
             rbtMap.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage*rbtMap.getTextSize());
             rbtMap.setText(mapping.getLabel());
             rbtMap.setId(rbtMap.hashCode());
@@ -74,7 +81,7 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
             }
             rbtMap.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                    IServerHandler serverHandler = new Connector.ServerHandler(server, context);
                     serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
                 }
             });

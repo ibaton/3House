@@ -1,6 +1,8 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -8,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
@@ -16,9 +19,8 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 public class ImageWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-
-        return new ImageWidgetHolder(widget, parent, widgetFactory);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return new ImageWidgetHolder(context, factory, server, page, widget, parent);
     }
 
     public static class ImageWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -27,15 +29,17 @@ public class ImageWidgetFactory implements IWidgetFactory {
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private ImageView imgImage;
-        private WidgetFactory factory;
+        private Context context;
+        private OHServer server;
 
-        ImageWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
-            this.factory = factory;
+        ImageWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+            this.server = server;
+            this.context = context;
 
-            View itemView = factory.getInflater().inflate(R.layout.item_widget_image, null);
+            View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_image, null);
             imgImage = (ImageView) itemView.findViewById(R.id.img_image);
 
-            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
                     .setParent(parent)
                     .setShowLabel(false)
@@ -56,8 +60,8 @@ public class ImageWidgetFactory implements IWidgetFactory {
             try {
                 Log.d(TAG, "Image url " + widget.getUrl());
                 URL imageUrl = new URL(widget.getUrl());
-                Communicator communicator = Communicator.instance(factory.getContext());
-                communicator.loadImage(factory.getServer(), imageUrl, imgImage);
+                Communicator communicator = Communicator.instance(context);
+                communicator.loadImage(server, imageUrl, imgImage);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

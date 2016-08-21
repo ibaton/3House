@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
@@ -32,15 +33,16 @@ public class BaseWidgetFactory {
 
     private static final String TAG = "BaseWidgetFactory";
 
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-        return build(widgetFactory, page, widget, parent, false);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory widgetFactory, OHServer server, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
+        return build(context, widgetFactory, server, page, widget, parent, false);
     }
 
     public WidgetFactory.IWidgetHolder build(
-            WidgetFactory widgetFactory, final OHLinkedPage page,
+            Context context, WidgetFactory widgetFactory,
+            OHServer server, OHLinkedPage page,
             final OHWidget widget, final OHWidget parent, boolean flat) {
 
-        final LayoutInflater inflater = widgetFactory.getInflater();
+        final LayoutInflater inflater = LayoutInflater.from(context);
         View rootView = flat ? inflater.inflate(R.layout.item_widget_base_flat, null) : inflater.inflate(R.layout.item_widget_base, null);
 
 
@@ -53,7 +55,7 @@ public class BaseWidgetFactory {
             rootView = holderView;
         }
 
-        BaseWidgetHolder holder = new BaseWidgetHolder(widgetFactory.getContext(), rootView, widget, widgetFactory);
+        BaseWidgetHolder holder = new BaseWidgetHolder(context, rootView, server, page, widget, widgetFactory);
         holder.update(widget);
 
         return holder;
@@ -71,14 +73,17 @@ public class BaseWidgetFactory {
         WidgetFactory widgetFactory;
         LinearLayout subView;
         boolean showLabel = true;
+        private WidgetFactory factory;
 
         private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
         private List<OHWidget> widgets = new ArrayList<>();
         private OHWidget widget;
+        private OHLinkedPage page;
+        private OHServer server;
 
-        public static BaseWidgetHolder create(Builder builder){
+        public static BaseWidgetHolder create(Context context, WidgetFactory factory, Builder builder){
 
-            final LayoutInflater inflater = builder.getFactory().getInflater();
+            final LayoutInflater inflater = LayoutInflater.from(context);
 
             View rootView = builder.getView();
             if(rootView == null) {
@@ -94,7 +99,7 @@ public class BaseWidgetFactory {
                 rootView = holderView;
             }
 
-            BaseWidgetHolder holder = new BaseWidgetHolder(builder.getFactory().getContext(), rootView, builder.getWidget(), builder.getFactory());
+            BaseWidgetHolder holder = new BaseWidgetHolder(context, rootView, builder.getServer(), builder.getPage(), builder.getWidget(), factory);
 
             Realm realm = Realm.getDefaultInstance();
             final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
@@ -114,10 +119,13 @@ public class BaseWidgetFactory {
             return holder;
         }
 
-        BaseWidgetHolder(Context context, View view, OHWidget widget, WidgetFactory factory) {
+        BaseWidgetHolder(Context context, View view, OHServer server, OHLinkedPage page, OHWidget widget, WidgetFactory factory) {
             super(view);
 
             this.context = context;
+            this.page = page;
+            this.widget = widget;
+            this.server = server;
             widgetFactory = factory;
 
             rootView = view;
@@ -176,7 +184,7 @@ public class BaseWidgetFactory {
                 subView.removeAllViews();
 
                 for (OHWidget widget : pageWidgets) {
-                    WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
+                    WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(context, server, page, widget, null);
                     widgetHolders.add(result);
                     subView.addView(result.getView());
                 }
@@ -234,10 +242,10 @@ public class BaseWidgetFactory {
                 iconHolder.setVisibility(View.VISIBLE);
                 imgIcon.setVisibility(View.GONE);
                 try {
-                    Log.d(TAG, "widget.getIconPath " + widget.getIconPath() + " : " + widgetFactory.getPage().getBaseUrl());
-                    URL imageUrl = new URL(widgetFactory.getPage().getBaseUrl() + widget.getIconPath());
-                    Communicator communicator = Communicator.instance(widgetFactory.getContext());
-                    communicator.loadImage(widgetFactory.getServer(), imageUrl, imgIcon);
+                    Log.d(TAG, "widget.getIconPath " + widget.getIconPath() + " : " + page.getBaseUrl());
+                    URL imageUrl = new URL(page.getBaseUrl() + widget.getIconPath());
+                    Communicator communicator = Communicator.instance(context);
+                    communicator.loadImage(server, imageUrl, imgIcon);
                     Log.d(TAG, "Loading image url " + imageUrl);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
@@ -265,14 +273,20 @@ public class BaseWidgetFactory {
 
         public static class Builder {
 
-            private WidgetFactory factory;
             private OHWidget widget;
             private OHWidget parent;
             private View view;
             private boolean flat = false;
             private boolean showLabel = true;
+            private Context context;
+            private OHServer server;
+            private OHLinkedPage page;
+            private WidgetFactory factory;
 
-            public Builder(WidgetFactory factory) {
+            public Builder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page) {
+                this.context = context;
+                this.page = page;
+                this.server = server;
                 this.factory = factory;
             }
 
@@ -301,16 +315,20 @@ public class BaseWidgetFactory {
                 return this;
             }
 
-            public WidgetFactory getFactory() {
-                return factory;
-            }
-
             public OHWidget getWidget() {
                 return widget;
             }
 
             public OHWidget getParent() {
                 return parent;
+            }
+
+            public OHServer getServer() {
+                return server;
+            }
+
+            public OHLinkedPage getPage() {
+                return page;
             }
 
             public View getView() {
@@ -327,7 +345,7 @@ public class BaseWidgetFactory {
 
             public BaseWidgetHolder build(){
 
-                BaseWidgetHolder baseBuilderHolder = BaseWidgetHolder.create(this);
+                BaseWidgetHolder baseBuilderHolder = BaseWidgetHolder.create(context, factory, this);
                 baseBuilderHolder.setShowLabel(showLabel);
 
                 return baseBuilderHolder;

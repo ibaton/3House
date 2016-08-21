@@ -1,12 +1,15 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -14,9 +17,8 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 public class WebWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-
-        return WebWidgetHolder.create(widgetFactory, widget, parent);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return new WebWidgetHolder(context, factory, server, page, widget, parent);
     }
 
     public static class WebWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -28,21 +30,16 @@ public class WebWidgetFactory implements IWidgetFactory {
         private WebView webView;
         private OHWidget widget;
 
-        public static WebWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
+        private WebWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
 
-            return new WebWidgetHolder(widget, parent, factory);
-        }
-
-        private WebWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
-
-            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
                     .setFlat(false)
                     .setShowLabel(true)
                     .setParent(parent)
                     .build();
 
-            final View itemView = factory.getInflater().inflate(R.layout.item_widget_web, null);
+            final View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_web, null);
             webView = (WebView) itemView.findViewById(R.id.webView);
             WebViewClient client = new WebViewClient();
             webView.setWebViewClient(client);

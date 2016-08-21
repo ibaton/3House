@@ -1,9 +1,7 @@
 package treehou.se.habit.ui.widgets;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import java.util.HashMap;
@@ -13,16 +11,13 @@ import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
-import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
-import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.FrameWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.GroupWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.IWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ImageWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SelectionWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SetpointWidgetFactory;
-import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.switches.SwitchWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.TextWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.VideoWidgetFactory;
@@ -32,28 +27,18 @@ public class WidgetFactory {
 
     private static final String TAG = "WidgetFactory";
 
-    private FragmentActivity context;
-    private ServerDB server;
-    private OHLinkedPage page;
-    private LayoutInflater inflater;
-
     private IWidgetFactory defaultBuilder = new TextWidgetFactory();
 
     private Map<String, IWidgetFactory> builders = new HashMap<>();
 
-    public WidgetFactory(FragmentActivity context, ServerDB server, OHLinkedPage page){
-        this.context = context;
-        this.server = server;
-        this.page = page;
+    public WidgetFactory(){
 
         // Populate factory
         builders.put(OpenhabConstants.TYPE_FRAME, new FrameWidgetFactory());
         builders.put(OpenhabConstants.TYPE_CHART, new ChartWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_COLORPICKER, new ColorpickerWidgetFactory());
         builders.put(OpenhabConstants.TYPE_IMAGE, new ImageWidgetFactory());
         builders.put(OpenhabConstants.TYPE_VIDEO, new VideoWidgetFactory());
         builders.put(OpenhabConstants.TYPE_WEB, new WebWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_SLIDER, new SliderWidgetFactory());
         builders.put(OpenhabConstants.TYPE_SWITCH, new SwitchWidgetFactory());
         builders.put(OpenhabConstants.TYPE_SELECTION, new SelectionWidgetFactory());
         builders.put(OpenhabConstants.TYPE_SETPOINT, new SetpointWidgetFactory());
@@ -61,41 +46,28 @@ public class WidgetFactory {
         builders.put(OpenhabConstants.TYPE_GROUP, new GroupWidgetFactory());
     }
 
-    public IWidgetHolder createWidget(final OHWidget widget , final OHWidget parent){
-        inflater = LayoutInflater.from(context);
+    public IWidgetHolder createWidget(Context context, OHServer server, OHLinkedPage page, OHWidget widget , final OHWidget parent){
 
         IWidgetHolder itemHolder;
         try {
             if (builders.containsKey(widget.getType())) {
                 Log.w(TAG, "Building widget with type " + widget.getType());
                 IWidgetFactory builder = builders.get(widget.getType());
-                itemHolder = builder.build(this, page, widget, parent);
+                itemHolder = builder.build(context, this, server, page, widget, parent);
             } else {
                 Log.w(TAG, "Error: No builder with type " + widget.getType());
-                return defaultBuilder.build(this, page, widget, parent);
+                return defaultBuilder.build(context, this, server, page, widget, parent);
             }
         }catch (Exception e){
             e.printStackTrace();
-            itemHolder = defaultBuilder.build(this, page, widget, parent);
+            itemHolder = defaultBuilder.build(context, this, server, page, widget, parent);
         }
 
         return itemHolder;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public LayoutInflater getInflater() {
-        return inflater;
-    }
-
-    public OHServer getServer() {
-        return server.toGeneric();
-    }
-
-    public ServerDB getServerDB() {
-        return server;
+    public void addWidgetFactory(String type, IWidgetFactory sliderWidgetFactory){
+        builders.put(type, sliderWidgetFactory);
     }
 
     public interface IWidgetHolder {
@@ -115,9 +87,5 @@ public class WidgetFactory {
         }
 
         public void update(OHWidget widget) {}
-    }
-
-    public OHLinkedPage getPage() {
-        return page;
     }
 }

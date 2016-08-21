@@ -1,14 +1,17 @@
 package treehou.se.habit.ui.widgets.factories.switches;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 
 import javax.inject.Inject;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -28,25 +31,24 @@ public class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
 
     @Inject ConnectionFactory connectionFactory;
 
-
-    public static RollerShutterWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
-        return new RollerShutterWidgetHolder(widget, parent, factory);
+    public static RollerShutterWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new RollerShutterWidgetHolder(context, factory, server, page, widget, parent);
     }
 
-    private RollerShutterWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
+    private RollerShutterWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
 
-        ((HabitApplication)factory.getContext().getApplicationContext()).component().inject(this);
+        ((HabitApplication)context.getApplicationContext()).component().inject(this);
 
-        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                 .setWidget(widget)
                 .setShowLabel(true)
                 .setParent(parent)
                 .build();
 
         final OHItem item = widget.getItem();
-        View itemView = factory.getInflater().inflate(R.layout.item_widget_rollershutters, null);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_rollershutters, null);
 
-        IServerHandler serverHandler = connectionFactory.createServerHandler(factory.getServer(), factory.getContext());
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
 
         ImageButton btnUp = (ImageButton) itemView.findViewById(R.id.btn_up);
         btnUp.setOnClickListener(v -> {

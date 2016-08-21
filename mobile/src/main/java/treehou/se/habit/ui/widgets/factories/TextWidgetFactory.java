@@ -5,11 +5,13 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -19,9 +21,8 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 public class TextWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-
-        return new TextWidgetHolder(widget, parent, widgetFactory);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return new TextWidgetHolder(context, factory, server, page, widget, parent);
     }
 
     private static class TextWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -29,13 +30,15 @@ public class TextWidgetFactory implements IWidgetFactory {
         private static final String TAG = "TextWidgetHolder";
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
-        private WidgetFactory factory;
+        private Context context;
+        private OHServer server;
 
-        TextWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
+        TextWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
 
-            this.factory = factory;
+            this.server = server;
+            this.context = context;
 
-            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
                     .setParent(parent)
                     .setFlat(false)
@@ -56,7 +59,6 @@ public class TextWidgetFactory implements IWidgetFactory {
             }
 
             final OHItem item = widget.getItem();
-            final Context context = factory.getContext();
             if(item != null && item.getType().equals(OHItem.TYPE_STRING) && item.getType().equals(OHItem.TYPE_STRING)){
 
                 baseHolder.getView().setOnLongClickListener(new View.OnLongClickListener() {
@@ -65,7 +67,7 @@ public class TextWidgetFactory implements IWidgetFactory {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(context.getString(R.string.send_text_command));
 
-                        View inputView = factory.getInflater().inflate(R.layout.dialog_input_text, null);
+                        View inputView = LayoutInflater.from(context).inflate(R.layout.dialog_input_text, null);
 
                         final EditText input = (EditText) inputView.findViewById(R.id.txt_command);
                         input.setText(item.getState());
@@ -78,7 +80,7 @@ public class TextWidgetFactory implements IWidgetFactory {
                         }
                         builder.setView(inputView);
 
-                        IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                        IServerHandler serverHandler = new Connector.ServerHandler(server, context);
                         builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
                             String text = input.getText().toString();
                             serverHandler.sendCommand(widget.getItem().getName(), text);

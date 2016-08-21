@@ -1,6 +1,8 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,6 +12,7 @@ import java.util.List;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -19,9 +22,8 @@ import treehou.se.habit.ui.widgets.WidgetFactory;
 public class SelectionWidgetFactory implements IWidgetFactory {
 
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-
-        return new SelectWidgetHolder(widget, parent, widgetFactory);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return new SelectWidgetHolder(context, factory, server, page, widget, parent);
     }
 
     public static class SelectWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -31,20 +33,24 @@ public class SelectionWidgetFactory implements IWidgetFactory {
         private View itemView;
         private Spinner sprSelect;
         private WidgetFactory factory;
+        private OHServer server;
+        private Context context;
 
         private int lastPosition = -1;
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public SelectWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
+        public SelectWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
             this.factory = factory;
+            this.context = context;
+            this.server = server;
 
-            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
                     .setParent(parent)
                     .build();
 
-            itemView = factory.getInflater().inflate(R.layout.item_widget_selection, null);
+            itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_selection, null);
             sprSelect = (Spinner) itemView.findViewById(R.id.spr_selector);
             baseHolder.getSubView().addView(itemView);
 
@@ -66,7 +72,7 @@ public class SelectionWidgetFactory implements IWidgetFactory {
             sprSelect.setOnItemSelectedListener(null);
 
             final List<OHMapping> mappings = widget.getMapping();
-            final ArrayAdapter<OHMapping> mappingAdapter = new ArrayAdapter<>(factory.getContext(), R.layout.item_text, mappings);
+            final ArrayAdapter<OHMapping> mappingAdapter = new ArrayAdapter<>(context, R.layout.item_text, mappings);
             sprSelect.setAdapter(mappingAdapter);
             for(int i=0; i<mappings.size(); i++){
                 if (mappings.get(i).getCommand().equals(widget.getItem().getState())){
@@ -86,7 +92,7 @@ public class SelectionWidgetFactory implements IWidgetFactory {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if(position != lastPosition) {
                                 OHMapping mapping = mappings.get(position);
-                                final IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+                                final IServerHandler serverHandler = new Connector.ServerHandler(server, context);
                                 serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
                                 lastPosition = position;
                             }

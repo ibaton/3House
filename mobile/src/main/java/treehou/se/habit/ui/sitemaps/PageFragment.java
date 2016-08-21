@@ -49,11 +49,10 @@ public class PageFragment extends RxFragment {
 
     @Inject ConnectionFactory connectionFactory;
     @Inject ServerLoaderFactory serverLoaderFactory;
+    @Inject WidgetFactory widgetFactory;
 
     private ServerDB server;
     private OHLinkedPage page;
-
-    private WidgetFactory widgetFactory;
 
     private List<OHWidget> widgets = new ArrayList<>();
     private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
@@ -198,7 +197,6 @@ public class PageFragment extends RxFragment {
     private synchronized void updatePage(final OHLinkedPage page){
         Log.d(TAG, "Updating page " + page.getTitle() + " widgets " + widgets.size() + " : " + page.getWidgets().size());
         this.page = page;
-        widgetFactory = new WidgetFactory(getActivity(), server, page);
 
         final List<OHWidget> pageWidgets = page.getWidgets();
         boolean invalidate = pageWidgets.size() != widgets.size();
@@ -233,7 +231,7 @@ public class PageFragment extends RxFragment {
 
         for (OHWidget widget : pageWidgets) {
             try {
-                WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, null);
+                WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(getContext(), server.toGeneric(), page, widget, null);
                 widgetHolders.add(result);
                 louFragments.addView(result.getView());
             } catch (Exception e) {

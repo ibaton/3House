@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -26,16 +28,24 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
+import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class ColorpickerWidgetFactory implements IWidgetFactory {
 
     private static final String TAG = "ColorpickerWidget";
 
+    private ConnectionFactory connectionFactory;
+
+    public ColorpickerWidgetFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     @Override
-    public WidgetFactory.IWidgetHolder build(final WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-        return ColorWidgetHolder.create(widgetFactory, widget, parent);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return new ColorWidgetHolder(context, factory, connectionFactory, server, page, widget, parent);
     }
 
     static class HoldListener implements View.OnTouchListener {
@@ -99,22 +109,16 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
         private int color;
         private View clrView;
 
-        public static ColorWidgetHolder create(WidgetFactory widgetFactory, OHWidget widget, OHWidget parent){
-            return new ColorWidgetHolder(widget, parent, widgetFactory);
-        }
+        private ColorWidgetHolder(Context context, WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page,OHWidget widget, OHWidget parent) {
 
-        private ColorWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory widgetFactory) {
-
-            LayoutInflater inflater = widgetFactory.getInflater();
-            final Context context = widgetFactory.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
             View itemView = inflater.inflate(R.layout.item_widget_color, null);
             clrView = itemView.findViewById(R.id.clr_color);
 
             View btnIncrement = itemView.findViewById(R.id.btn_increment);
-            final OHServer server = widgetFactory.getServer();
             final String itemName = widget.getItem().getName();
 
-            IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
             btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
                 @Override
                 public void onTick(int tick) {
@@ -148,7 +152,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                 }
             }));
 
-            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(widgetFactory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
                     .setFlat(true)
                     .setShowLabel(true)
@@ -162,7 +166,7 @@ public class ColorpickerWidgetFactory implements IWidgetFactory {
                     if (widget.getItem() != null) {
                         Intent intent = new Intent(context, ColorpickerActivity.class);
                         Gson gson = GsonHelper.createGsonBuilder();
-                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, widgetFactory.getServerDB().getId());
+                        intent.putExtra(ColorpickerActivity.EXTRA_SERVER, server.getId());
                         intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
                         intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
 

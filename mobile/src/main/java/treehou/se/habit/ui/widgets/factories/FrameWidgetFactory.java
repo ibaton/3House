@@ -3,6 +3,7 @@ package treehou.se.habit.ui.widgets.factories;
 import android.content.Context;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
@@ -23,8 +25,8 @@ public class FrameWidgetFactory implements IWidgetFactory {
     private static final String TAG = "FrameWidgetFactory";
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, OHWidget widget, OHWidget parent) {
-        return FrameWidget.create(widgetFactory, widget);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return FrameWidget.create(context, factory, server, page, widget);
     }
 
     public static class FrameWidget extends WidgetFactory.WidgetHolder {
@@ -33,20 +35,23 @@ public class FrameWidgetFactory implements IWidgetFactory {
         private View titleHolder;
         private WidgetFactory widgetFactory;
         private LinearLayout subView;
+        private Context context;
         private boolean showLabel = true;
 
         private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
+        private OHServer server;
+        private OHLinkedPage page;
         private OHWidget widget;
         private List<OHWidget> widgets = new ArrayList<>();
 
-        public static FrameWidget create(WidgetFactory factory, OHWidget widget){
+        public static FrameWidget create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget){
 
-            View rootView = factory.getInflater().inflate(R.layout.widget_frame, null);
+            View rootView = LayoutInflater.from(context).inflate(R.layout.widget_frame, null);
             TextView lblTitle = (TextView) rootView.findViewById(R.id.lbl_widget_name);
             View lblTitleHolder = rootView.findViewById(R.id.lbl_widget_name_holder);
             LinearLayout louWidgetHolder = (LinearLayout) rootView.findViewById(R.id.lou_widget_frame_holder);
 
-            FrameWidget holder = new FrameWidget(factory.getContext(), rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget, factory);
+            FrameWidget holder = new FrameWidget(context, factory, server, page, rootView, louWidgetHolder, lblTitleHolder, lblTitle, widget);
 
             Log.d(TAG, "update " + widget.getLabel());
             Realm realm = Realm.getDefaultInstance();
@@ -60,13 +65,17 @@ public class FrameWidgetFactory implements IWidgetFactory {
             return holder;
         }
 
-        private FrameWidget(Context context, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, OHWidget widget, WidgetFactory factory) {
+        private FrameWidget(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, View view, LinearLayout louWidgetHolder, View titleHolder, TextView lblName, OHWidget widget) {
             super(view);
 
             Log.d(TAG, "Crating frame " + widget.getLabel());
 
+            this.server = server;
+            this.page = page;
+
             widgetFactory = factory;
             this.lblName = lblName;
+            this.context = context;
 
             lblName.setText(widget.getLabel());
 
@@ -119,7 +128,7 @@ public class FrameWidgetFactory implements IWidgetFactory {
 
                 for (OHWidget widget : pageWidgets) {
                     try {
-                        WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(widget, this.widget);
+                        WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(context, server, page, widget, this.widget);
                         widgetHolders.add(result);
                         subView.addView(result.getView());
                     }catch (Exception e){

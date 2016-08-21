@@ -1,6 +1,8 @@
 package treehou.se.habit.ui.widgets.factories;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -9,6 +11,7 @@ import java.net.URL;
 
 import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import treehou.se.habit.R;
@@ -20,8 +23,8 @@ public class ChartWidgetFactory implements IWidgetFactory {
     private static final String TAG = ChartWidgetFactory.class.getSimpleName();
 
     @Override
-    public WidgetFactory.IWidgetHolder build(WidgetFactory widgetFactory, OHLinkedPage page, final OHWidget widget, final OHWidget parent) {
-        return ChartWidgetHolder.create(widgetFactory, widget, parent);
+    public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        return ChartWidgetHolder.create(context, factory, server, page, widget, parent);
     }
 
     public static class ChartWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -31,23 +34,27 @@ public class ChartWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
         private ImageView imgImage;
+        private Context context;
+        private OHServer server;
         private WidgetFactory factory;
 
-        public static ChartWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
-            return new ChartWidgetHolder(widget, parent, factory);
+        public static ChartWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+            return new ChartWidgetHolder(context, factory, server, page, widget, parent);
         }
 
-        private ChartWidgetHolder(OHWidget widget, OHWidget parent, WidgetFactory factory) {
+        private ChartWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
             this.factory = factory;
+            this.server = server;
+            this.context = context;
 
-            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+            baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
                     .setParent(parent)
                     .setFlat(false)
                     .setShowLabel(false)
                     .build();
 
-            View itemView = factory.getInflater().inflate(R.layout.item_widget_chart, null);
+            View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_chart, null);
 
             imgImage = (ImageView) itemView.findViewById(R.id.img_chart);
             baseHolder.getSubView().addView(itemView);
@@ -62,10 +69,10 @@ public class ChartWidgetFactory implements IWidgetFactory {
             }
 
             try {
-                String url = Connector.ServerHandler.getUrl(factory.getContext(), factory.getServer());
+                String url = Connector.ServerHandler.getUrl(context, server);
                 URL imageUrl = new URL(ConnectorUtil.buildChartRequestString(url, widget));
-                Communicator communicator = Communicator.instance(factory.getContext());
-                communicator.loadImage(factory.getServer(), imageUrl, imgImage, false);
+                Communicator communicator = Communicator.instance(context);
+                communicator.loadImage(server, imageUrl, imgImage, false);
             } catch (MalformedURLException e) {
                 Log.e(TAG, "Failed to update chart", e);
             }

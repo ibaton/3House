@@ -1,12 +1,17 @@
 package treehou.se.habit.ui.widgets.factories.switches;
 
+import android.content.Context;
 import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
 import io.realm.Realm;
+import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -24,18 +29,22 @@ public class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 
     private BaseWidgetFactory.BaseWidgetHolder baseHolder;
     private WidgetFactory factory;
+    private Context context;
+    private OHServer server;
 
     private Button btnSingle;
 
-    public static SingleButtonWidgetHolder create(WidgetFactory factory, OHWidget widget, OHWidget parent){
-        return new SingleButtonWidgetHolder(widget, parent, factory);
+    public static SingleButtonWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new SingleButtonWidgetHolder(context, server, page, widget, parent, factory);
     }
 
-    private SingleButtonWidgetHolder(final OHWidget widget, OHWidget parent, final WidgetFactory factory) {
+    private SingleButtonWidgetHolder(Context context, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent, final WidgetFactory factory) {
+        this.server = server;
         this.factory = factory;
+        this.context = context;
         Realm realm = Realm.getDefaultInstance();
         WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(factory)
+        baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                 .setWidget(widget)
                 .setFlat(settings.isCompressedSingleButton())
                 .setShowLabel(true)
@@ -44,13 +53,13 @@ public class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
         realm.close();
 
 
-        View itemView = factory.getInflater().inflate(R.layout.item_widget_switch_mapping_single, null);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_switch_mapping_single, null);
         btnSingle = (Button) itemView.findViewById(R.id.btnSingle);
         if(widget.getMapping().size() == 1){
 
             OHMapping mapping = widget.getMapping().get(0);
             if(widget.getItem() != null && mapping.getCommand().equals(widget.getItem().getState())) {
-                btnSingle.getBackground().setColorFilter(factory.getContext().getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                btnSingle.getBackground().setColorFilter(ContextCompat.getColor(context, R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
             }
             else {
                 btnSingle.getBackground().clearColorFilter();
@@ -71,7 +80,7 @@ public class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         final OHMapping mapSingle = widget.getMapping().get(0);
         btnSingle.setText(mapSingle.getLabel());
-        IServerHandler serverHandler = new Connector.ServerHandler(factory.getServer(), factory.getContext());
+        IServerHandler serverHandler = new Connector.ServerHandler(server, context);
         btnSingle.setOnClickListener(v -> serverHandler.sendCommand(widget.getItem().getName(), mapSingle.getCommand()));
 
         baseHolder.update(widget);
