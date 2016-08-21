@@ -18,6 +18,7 @@ import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.ui.widgets.factories.BaseWidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 
 /**
@@ -29,13 +30,15 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 
     private BaseWidgetFactory.BaseWidgetHolder baseHolder;
     private Switch swtSwitch;
+    private ConnectionFactory connectionFactory;
 
-    public static SwitchWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
-        return new SwitchWidgetHolder(context, factory, server, page, widget, parent);
+    public static SwitchWidgetHolder create(Context context, WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new SwitchWidgetHolder(context, factory, connectionFactory, server, page, widget, parent);
     }
 
-    private SwitchWidgetHolder(Context context, final WidgetFactory factory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
+    private SwitchWidgetHolder(Context context, final WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
 
+        this.connectionFactory = connectionFactory;
         Realm realm = Realm.getDefaultInstance();
         WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
         baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
@@ -55,7 +58,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
         swtSwitch = (Switch) itemView.findViewById(R.id.swt_switch);
         swtSwitch.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * swtSwitch.getTextSize());
 
-        IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
         getView().setOnClickListener(v -> {
             boolean newState = !(swtSwitch.isChecked());
             Log.d(TAG, widget.getLabel() + " " + newState);

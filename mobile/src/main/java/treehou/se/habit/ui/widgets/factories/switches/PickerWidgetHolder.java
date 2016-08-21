@@ -20,6 +20,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.ui.widgets.factories.BaseWidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 
 /**
@@ -33,15 +34,17 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
     private OHServer server;
     private RadioGroup rgpMapping;
     private Context context;
+    private ConnectionFactory connectionFactory;
 
-    public static PickerWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
-        return new PickerWidgetHolder(context, factory, server, page, widget, parent);
+    public static PickerWidgetHolder create(Context context, WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new PickerWidgetHolder(context, factory, connectionFactory, server, page, widget, parent);
     }
 
-    private PickerWidgetHolder(Context context, final WidgetFactory factory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
+    private PickerWidgetHolder(Context context, final WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
 
         this.context = context;
         this.server = server;
+        this.connectionFactory = connectionFactory;
         baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                 .setWidget(widget)
                 .setShowLabel(true)
@@ -81,7 +84,7 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
             }
             rbtMap.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
-                    IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+                    IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
                     serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
                 }
             });

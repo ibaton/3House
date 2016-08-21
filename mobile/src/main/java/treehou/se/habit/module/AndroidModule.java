@@ -25,6 +25,7 @@ import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.switches.SwitchWidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.DatabaseServerLoaderFactory;
 import treehou.se.habit.util.Settings;
@@ -73,11 +74,12 @@ public class AndroidModule {
 
     @Provides
     public WidgetFactory provideWidgetFactory(SliderWidgetFactory sliderWidgetFactory,
-                                              ColorpickerWidgetFactory provideColorWidgetFactory){
+                  SwitchWidgetFactory switchWidgetFactory, ColorpickerWidgetFactory provideColorWidgetFactory){
 
         WidgetFactory factory = new WidgetFactory();
         factory.addWidgetFactory(OpenhabConstants.TYPE_SLIDER, sliderWidgetFactory);
         factory.addWidgetFactory(OpenhabConstants.TYPE_COLORPICKER, provideColorWidgetFactory);
+        factory.addWidgetFactory(OpenhabConstants.TYPE_SWITCH, switchWidgetFactory);
 
         return factory;
     }
@@ -93,6 +95,12 @@ public class AndroidModule {
     public ColorpickerWidgetFactory provideColorWidgetFactory(ConnectionFactory connectionFactory){
         ColorpickerWidgetFactory factory = new ColorpickerWidgetFactory(connectionFactory);
 
+        return factory;
+    }
+
+    @Provides
+    public SwitchWidgetFactory provideSwitchWidgetFactory(ConnectionFactory connectionFactory){
+        SwitchWidgetFactory factory = new SwitchWidgetFactory(connectionFactory);
         return factory;
     }
 }

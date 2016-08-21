@@ -6,14 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 
-import javax.inject.Inject;
-
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -29,15 +26,11 @@ public class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
 
     private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-    @Inject ConnectionFactory connectionFactory;
-
-    public static RollerShutterWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
-        return new RollerShutterWidgetHolder(context, factory, server, page, widget, parent);
+    public static RollerShutterWidgetHolder create(Context context, WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new RollerShutterWidgetHolder(context, factory, connectionFactory, server, page, widget, parent);
     }
 
-    private RollerShutterWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
-
-        ((HabitApplication)context.getApplicationContext()).component().inject(this);
+    private RollerShutterWidgetHolder(Context context, WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, final OHWidget widget, OHWidget parent) {
 
         baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                 .setWidget(widget)

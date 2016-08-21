@@ -14,8 +14,6 @@ import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
-import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
-import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 
 @Singleton

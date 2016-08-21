@@ -19,6 +19,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.ui.widgets.factories.BaseWidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 
 /**
  * Widget with single button
@@ -28,20 +29,22 @@ public class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
     private static final String TAG = "SingleButtonBuilder";
 
     private BaseWidgetFactory.BaseWidgetHolder baseHolder;
+    private ConnectionFactory connectionFactory;
     private WidgetFactory factory;
     private Context context;
     private OHServer server;
 
     private Button btnSingle;
 
-    public static SingleButtonWidgetHolder create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
-        return new SingleButtonWidgetHolder(context, server, page, widget, parent, factory);
+    public static SingleButtonWidgetHolder create(Context context, WidgetFactory factory, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent){
+        return new SingleButtonWidgetHolder(context, connectionFactory, server, page, widget, parent, factory);
     }
 
-    private SingleButtonWidgetHolder(Context context, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent, final WidgetFactory factory) {
+    private SingleButtonWidgetHolder(Context context, ConnectionFactory connectionFactory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent, final WidgetFactory factory) {
         this.server = server;
         this.factory = factory;
         this.context = context;
+        this.connectionFactory = connectionFactory;
         Realm realm = Realm.getDefaultInstance();
         WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
         baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
@@ -80,7 +83,7 @@ public class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         final OHMapping mapSingle = widget.getMapping().get(0);
         btnSingle.setText(mapSingle.getLabel());
-        IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
         btnSingle.setOnClickListener(v -> serverHandler.sendCommand(widget.getItem().getName(), mapSingle.getCommand()));
 
         baseHolder.update(widget);

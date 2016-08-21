@@ -39,7 +39,6 @@ public class WidgetFactory {
         builders.put(OpenhabConstants.TYPE_IMAGE, new ImageWidgetFactory());
         builders.put(OpenhabConstants.TYPE_VIDEO, new VideoWidgetFactory());
         builders.put(OpenhabConstants.TYPE_WEB, new WebWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_SWITCH, new SwitchWidgetFactory());
         builders.put(OpenhabConstants.TYPE_SELECTION, new SelectionWidgetFactory());
         builders.put(OpenhabConstants.TYPE_SETPOINT, new SetpointWidgetFactory());
         builders.put(OpenhabConstants.TYPE_TEXT, new TextWidgetFactory());
