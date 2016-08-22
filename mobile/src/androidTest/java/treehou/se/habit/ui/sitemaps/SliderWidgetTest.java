@@ -7,12 +7,17 @@ import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.util.Pair;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -54,6 +59,8 @@ public class SliderWidgetTest {
     static final String SITEMAP_NAME = "Test Sitemap";
     static final String WIDGET_LABEL = "Widget test";
     static final String WIDGET_ITEM = "Item test";
+
+    private Queue<Pair<String, String>> commandQueue = new LinkedBlockingQueue<>();
 
     private OHLinkedPage linkedPageState1 = new OHLinkedPage();
     {
@@ -124,6 +131,11 @@ public class SliderWidgetTest {
         }
     };
 
+    @Before
+    public void setup(){
+        commandQueue.clear();
+    }
+
     @Test
     public void testDisplaySitemaps() {
         NavigationUtil.navigateToSitemap();
@@ -133,6 +145,27 @@ public class SliderWidgetTest {
         linkedPageBehaviorSubject.onNext(linkedPageState2);
         onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(100)));
     }
+
+    /*@Test
+    public void testSliderCommunication() {
+        NavigationUtil.navigateToSitemap();
+        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
+
+        Pair<String, String> expected1 = new Pair<>(WIDGET_ITEM, "80.0");
+        Pair<String, String> expected2 = new Pair<>(WIDGET_ITEM, "70.0");
+        Pair<String, String> expected3 = new Pair<>(WIDGET_ITEM, "60.0");
+
+        onView(withId(R.id.skb_dim)).perform(SliderActions.setProgress(80));
+        onView(withId(R.id.skb_dim)).perform(SliderActions.setProgress(70));
+        onView(withId(R.id.skb_dim)).perform(SliderActions.setProgress(60));
+
+        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %d actually sent %d", 3, commandQueue.size()), commandQueue.size(), 3);
+        Pair<String, String> message = commandQueue.remove();
+        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %s actually sent %s", expected1, message), message, expected1);
+        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %s actually sent %s", expected2, message), message, expected2);
+        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %s actually sent %s", expected3, message), message, expected3);
+    }*/
 
     private ApplicationComponent createComponent(HabitApplication application){
         ApplicationComponent component = DaggerApplicationComponent.builder()
@@ -205,6 +238,11 @@ public class SliderWidgetTest {
                                     @Override
                                     public Observable<OHLinkedPage> requestPageRx(OHLinkedPage ohLinkedPage) {
                                         return linkedPageBehaviorSubject.asObservable().first();
+                                    }
+
+                                    @Override
+                                    public void sendCommand(String itemName, String command) {
+                                        commandQueue.add(new Pair<>(itemName, command));
                                     }
                                 };
                             }
