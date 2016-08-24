@@ -146,27 +146,6 @@ public class SliderWidgetTest {
         onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(100)));
     }
 
-    /*@Test
-    public void testSliderCommunication() {
-        NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
-        onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
-
-        Pair<String, String> expected1 = new Pair<>(WIDGET_ITEM, "80.0");
-        Pair<String, String> expected2 = new Pair<>(WIDGET_ITEM, "70.0");
-        Pair<String, String> expected3 = new Pair<>(WIDGET_ITEM, "60.0");
-
-        onView(withId(R.id.skb_dim)).perform(SliderActions.setProgress(80));
-        onView(withId(R.id.skb_dim)).perform(SliderActions.setProgress(70));
-        onView(withId(R.id.skb_dim)).perform(SliderActions.setProgress(60));
-
-        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %d actually sent %d", 3, commandQueue.size()), commandQueue.size(), 3);
-        Pair<String, String> message = commandQueue.remove();
-        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %s actually sent %s", expected1, message), message, expected1);
-        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %s actually sent %s", expected2, message), message, expected2);
-        Assert.assertEquals(String.format(Locale.getDefault(), "Should have sent %s actually sent %s", expected3, message), message, expected3);
-    }*/
-
     private ApplicationComponent createComponent(HabitApplication application){
         ApplicationComponent component = DaggerApplicationComponent.builder()
                 .androidModule(new TestAndroidModule(application){

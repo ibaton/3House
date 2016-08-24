@@ -10,6 +10,9 @@ import android.widget.SeekBar;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class SliderActions {
 
     private SliderActions() {}
@@ -19,7 +22,7 @@ public class SliderActions {
             @Override
             public void perform(UiController uiController, View view) {
                 SeekBar seekBar = (SeekBar) view;
-                seekBar.setProgress(progress);
+                setSeekBarProgress(seekBar, progress, true);
             }
             @Override
             public String getDescription() {
@@ -30,6 +33,18 @@ public class SliderActions {
                 return ViewMatchers.isAssignableFrom(SeekBar.class);
             }
         };
+    }
+
+    private static void setSeekBarProgress(SeekBar seekBar, int newProgress, boolean fromUser) {
+
+        Method privateSetProgressMethod = null;
+        try {
+            privateSetProgressMethod = SeekBar.class.getDeclaredMethod("setProgress", Integer.TYPE, Boolean.TYPE);
+            privateSetProgressMethod.setAccessible(true);
+            privateSetProgressMethod.invoke(seekBar, newProgress, fromUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static Matcher<View> withProgress(final int expectedProgress) {
