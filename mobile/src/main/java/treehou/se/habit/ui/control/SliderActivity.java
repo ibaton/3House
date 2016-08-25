@@ -151,15 +151,17 @@ public class SliderActivity extends AppCompatActivity {
                     .compose(bindToLifecycle())
                     .subscribe(ohItem -> {
                         try {
-                            if(ohItem != null && ohItem.getState() != null) {
+                            if (ohItem != null && ohItem.getState() != null) {
                                 sbrNumber.setOnSeekBarChangeListener(null);
                                 float progress = Float.valueOf(ohItem.getState());
                                 sbrNumber.setProgress((int) progress);
                                 sbrNumber.setOnSeekBarChangeListener(sliderListener);
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             Log.e(TAG, "Failed to update progress", e);
                         }
+                    }, e -> {
+                        Log.e(TAG, "Error getting slider data", e);
                     });
         }
 
