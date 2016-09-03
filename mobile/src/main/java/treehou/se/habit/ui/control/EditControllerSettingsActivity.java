@@ -61,9 +61,9 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
             realm.commitTransaction();
 
             if(controller.isShowNotification()) {
-                ControlHelper.showNotification(EditControllerSettingsActivity.this, controller);
+                ControllerUtil.showNotification(EditControllerSettingsActivity.this, controller);
             }else {
-                ControlHelper.hideNotification(EditControllerSettingsActivity.this, controller);
+                ControllerUtil.hideNotification(EditControllerSettingsActivity.this, controller);
             }
         });
 

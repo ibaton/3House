@@ -27,17 +27,12 @@ public class HabitApplication extends Application {
 
     @Override
     public void onCreate() {
-        if(component == null) {
-            component = createComponent();
-        }
+        if(component == null) component = createComponent();
         component().inject(this);
-
         setTheme(settings.getTheme());
         super.onCreate();
 
         JodaTimeAndroid.init(this);
-
-
         ohRealm.setup(this);
 
         // TODO Remove when support for self signed certificates
@@ -46,10 +41,9 @@ public class HabitApplication extends Application {
 
     protected ApplicationComponent createComponent(){
         Log.d(TAG, "Creating app component");
-        ApplicationComponent component = DaggerApplicationComponent.builder()
+        return DaggerApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))
                 .build();
-        return component;
     }
 
     public void setTestComponent(ApplicationComponent appComponent) {

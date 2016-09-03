@@ -113,10 +113,11 @@ public class FrameWidgetFactory implements IWidgetFactory {
                     OHWidget currentWidget = widgets.get(i);
                     OHWidget newWidget = pageWidgets.get(i);
 
-                    if(currentWidget.needUpdate(newWidget)){
+                    // TODO handle updates
+                    //if(currentWidget.needUpdate(newWidget)){
                         invalidate = true;
-                        break;
-                    }
+                    //    break;
+                    //}
                 }
             }
 

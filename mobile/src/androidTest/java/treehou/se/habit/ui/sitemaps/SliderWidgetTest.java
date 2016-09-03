@@ -77,7 +77,7 @@ public class SliderWidgetTest {
         OHWidget testWidget = new OHWidget();
         testWidget.setLabel(WIDGET_LABEL);
         testWidget.setIcon("");
-        testWidget.setType(OpenhabConstants.TYPE_SLIDER);
+        testWidget.setType(OHWidget.WIDGET_TYPE_SLIDER);
         testWidget.setWidgetId("");
         testWidget.setItem(item);
 
@@ -106,7 +106,7 @@ public class SliderWidgetTest {
         OHWidget testWidget = new OHWidget();
         testWidget.setLabel(WIDGET_LABEL);
         testWidget.setIcon("");
-        testWidget.setType(OpenhabConstants.TYPE_SLIDER);
+        testWidget.setType(OHWidget.WIDGET_TYPE_SLIDER);
         testWidget.setWidgetId("");
         testWidget.setItem(item);
 
@@ -198,7 +198,7 @@ public class SliderWidgetTest {
                                 return new TestServerHandler(){
 
                                     @Override
-                                    public Observable<List<OHSitemap>> requestSitemapObservable() {
+                                    public Observable<List<OHSitemap>> requestSitemapRx() {
                                         OHSitemap sitemap = new OHSitemap();
                                         sitemap.setName(SITEMAP_NAME);
                                         sitemap.setServer(server);

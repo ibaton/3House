@@ -33,15 +33,15 @@ public class WidgetFactory {
     public WidgetFactory(){
 
         // Populate factory
-        builders.put(OpenhabConstants.TYPE_FRAME, new FrameWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_CHART, new ChartWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_IMAGE, new ImageWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_VIDEO, new VideoWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_WEB, new WebWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_SELECTION, new SelectionWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_SETPOINT, new SetpointWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_TEXT, new TextWidgetFactory());
-        builders.put(OpenhabConstants.TYPE_GROUP, new GroupWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_FRAME, new FrameWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_CHART, new ChartWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_IMAGE, new ImageWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_VIDEO, new VideoWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_WEB, new WebWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_SELECTION, new SelectionWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_SETPOINT, new SetpointWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_TEXT, new TextWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_GROUP, new GroupWidgetFactory());
     }
 
     public IWidgetHolder createWidget(Context context, OHServer server, OHLinkedPage page, OHWidget widget , final OHWidget parent){

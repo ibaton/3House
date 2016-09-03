@@ -167,7 +167,7 @@ public class CellButtonConfigFragment extends Fragment {
             };
 
             IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
-            serverHandler.requestItem(callback);
+            serverHandler.requestItems(callback);
         }
 
         tglOnOff.setChecked(

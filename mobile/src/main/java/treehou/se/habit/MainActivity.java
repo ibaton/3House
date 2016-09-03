@@ -18,7 +18,7 @@ import io.realm.RealmResults;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.module.ApplicationComponent;
-import treehou.se.habit.ui.control.ControlHelper;
+import treehou.se.habit.ui.control.ControllerUtil;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
         realm = Realm.getDefaultInstance();
-        ControlHelper.showNotifications(this);
+        ControllerUtil.showNotifications(this);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
 
         setupFragments(savedInstanceState);
 
-        showControllerInNotification();
+        ControllerUtil.showNotifications(this);
     }
 
     /**
@@ -138,17 +138,6 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.page_container, fragment)
                     .commit();
-        }
-    }
-
-    /**
-     * Show controllers in notification tray
-     */
-    private void showControllerInNotification() {
-        for(ControllerDB controller : realm.where(ControllerDB.class).findAll()){
-            if (controller.isShowNotification()) {
-                ControlHelper.showNotification(this, controller);
-            }
         }
     }
 

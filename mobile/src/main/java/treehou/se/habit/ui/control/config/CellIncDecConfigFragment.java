@@ -154,7 +154,7 @@ public class CellIncDecConfigFragment extends Fragment {
             };
 
             IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
-            serverHandler.requestItem(callback);
+            serverHandler.requestItems(callback);
         }
 
         updateIconImage();

@@ -3,13 +3,17 @@ package treehou.se.habit.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mattyork.colours.Colour;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -127,6 +131,18 @@ public class Util {
         IIcon icon = CELL_ICON_MAP.get(value);
 
         return icon;
+    }
+
+    /**
+     * Create label text correctly formated to display values.
+     *
+     * @param context calling context.
+     * @param name the label.
+     * @return formated label
+     */
+    public static Spanned createLabel(Context context, String name){
+        String nameSpaned = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & ContextCompat.getColor(context, R.color.colorAccent)) +"'>$2</font>");
+        return Html.fromHtml(nameSpaned);
     }
 
     /**

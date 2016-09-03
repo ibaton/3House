@@ -60,7 +60,7 @@ public class TestConnectionFactory extends ConnectionFactory {
         }
 
         @Override
-        public void requestItem(OHCallback<List<OHItem>> ohCallback) {
+        public void requestItems(OHCallback<List<OHItem>> ohCallback) {
 
         }
 
@@ -72,6 +72,11 @@ public class TestConnectionFactory extends ConnectionFactory {
         @Override
         public void requestPage(OHLinkedPage ohLinkedPage, OHCallback<OHLinkedPage> ohCallback) {
 
+        }
+
+        @Override
+        public Observable<OHItem> requestItemRx(String s) {
+            return null;
         }
 
         @Override
@@ -110,7 +115,7 @@ public class TestConnectionFactory extends ConnectionFactory {
         }
 
         @Override
-        public Observable<List<OHSitemap>> requestSitemapObservable() {
+        public Observable<List<OHSitemap>> requestSitemapRx() {
             return null;
         }
     }
