@@ -85,7 +85,7 @@ public class SwitchActionFragment extends Fragment {
             };
 
             IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
-            serverHandler.requestItem(callback);
+            serverHandler.requestItems(callback);
         }
 
         tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);

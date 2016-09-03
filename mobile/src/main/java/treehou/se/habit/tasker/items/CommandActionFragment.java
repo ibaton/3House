@@ -84,7 +84,7 @@ public class CommandActionFragment extends Fragment {
             };
 
             IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
-            serverHandler.requestItem(callback);
+            serverHandler.requestItems(callback);
         }
 
         txtCommand = (TextView) rootView.findViewById(R.id.txt_command);

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.trello.rxlifecycle.components.support.RxFragment;
 
@@ -29,6 +30,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
 import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class SliderActivity extends AppCompatActivity {
     public static final String TAG = "SliderActivity";
@@ -78,6 +80,7 @@ public class SliderActivity extends AppCompatActivity {
         private SliderCellDB numberCell;
         private Realm realm;
         private SeekBar sbrNumber;
+        private TextView itemName;
 
         @Inject ConnectionFactory connectionFactory;
 
@@ -130,6 +133,7 @@ public class SliderActivity extends AppCompatActivity {
                     numberCell = SliderCellDB.getCell(realm, cell);
                 }
 
+                itemName = (TextView) rootView.findViewById(R.id.item_name);
                 sbrNumber = (SeekBar) rootView.findViewById(R.id.sbrNumber);
                 sbrNumber.setMax(numberCell.getMax());
                 sbrNumber.setOnSeekBarChangeListener(sliderListener);
@@ -152,6 +156,13 @@ public class SliderActivity extends AppCompatActivity {
                     .subscribe(ohItem -> {
                         try {
                             if (ohItem != null && ohItem.getState() != null) {
+                                if(ohItem.getLabel() != null){
+                                    itemName.setVisibility(View.VISIBLE);
+                                    itemName.setText(Util.createLabel(getContext(), ohItem.getLabel()));
+                                } else {
+                                    itemName.setVisibility(View.GONE);
+                                }
+
                                 sbrNumber.setOnSeekBarChangeListener(null);
                                 float progress = Float.valueOf(ohItem.getState());
                                 sbrNumber.setProgress((int) progress);

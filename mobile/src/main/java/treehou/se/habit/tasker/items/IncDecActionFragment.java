@@ -93,7 +93,7 @@ public class IncDecActionFragment extends Fragment {
             };
 
             IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
-            serverHandler.requestItem(callback);
+            serverHandler.requestItems(callback);
         }
 
         Button btnSave = (Button) rootView.findViewById(R.id.btn_save);

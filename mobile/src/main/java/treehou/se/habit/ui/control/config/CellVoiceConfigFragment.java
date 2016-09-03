@@ -124,7 +124,7 @@ public class CellVoiceConfigFragment extends Fragment {
                 }
             };
             IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
-            serverHandler.requestItem(callback);
+            serverHandler.requestItems(callback);
         }
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

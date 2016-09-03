@@ -205,11 +205,12 @@ public class PageFragment extends RxFragment {
                 OHWidget currentWidget = widgets.get(i);
                 OHWidget newWidget = pageWidgets.get(i);
 
-                if(currentWidget.needUpdate(newWidget)){
+                // TODO check if widget needs updating
+                //if(currentWidget.needUpdate(newWidget)){
                     Log.d(TAG, "Widget " + currentWidget.getType() + " " + currentWidget.getLabel() + " needs update");
                     invalidate = true;
                     break;
-                }
+                //}
             }
         }
 

@@ -74,7 +74,7 @@ public class ColorpickerWidgetTest {
         OHWidget testWidget = new OHWidget();
         testWidget.setLabel(WIDGET_LABEL);
         testWidget.setIcon("");
-        testWidget.setType(OpenhabConstants.TYPE_COLORPICKER);
+        testWidget.setType(OHWidget.WIDGET_TYPE_COLORPICKER);
         testWidget.setWidgetId("");
         testWidget.setItem(item);
 
@@ -201,7 +201,7 @@ public class ColorpickerWidgetTest {
                                 return new TestServerHandler(){
 
                                     @Override
-                                    public Observable<List<OHSitemap>> requestSitemapObservable() {
+                                    public Observable<List<OHSitemap>> requestSitemapRx() {
                                         OHSitemap sitemap = new OHSitemap();
                                         sitemap.setName(SITEMAP_NAME);
                                         sitemap.setServer(server);

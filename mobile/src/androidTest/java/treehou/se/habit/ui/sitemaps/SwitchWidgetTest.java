@@ -72,7 +72,7 @@ public class SwitchWidgetTest {
         OHWidget testWidget = new OHWidget();
         testWidget.setLabel(WIDGET_LABEL);
         testWidget.setIcon("");
-        testWidget.setType(OpenhabConstants.TYPE_SWITCH);
+        testWidget.setType(OHWidget.WIDGET_TYPE_SWITCH);
         testWidget.setWidgetId("");
         testWidget.setItem(item);
 
@@ -101,7 +101,7 @@ public class SwitchWidgetTest {
         OHWidget testWidget = new OHWidget();
         testWidget.setLabel(WIDGET_LABEL);
         testWidget.setIcon("");
-        testWidget.setType(OpenhabConstants.TYPE_SWITCH);
+        testWidget.setType(OHWidget.WIDGET_TYPE_SWITCH);
         testWidget.setWidgetId("");
         testWidget.setItem(item);
 
@@ -189,7 +189,7 @@ public class SwitchWidgetTest {
                                 return new TestServerHandler(){
 
                                     @Override
-                                    public Observable<List<OHSitemap>> requestSitemapObservable() {
+                                    public Observable<List<OHSitemap>> requestSitemapRx() {
                                         OHSitemap sitemap = new OHSitemap();
                                         sitemap.setName(SITEMAP_NAME);
                                         sitemap.setServer(server);

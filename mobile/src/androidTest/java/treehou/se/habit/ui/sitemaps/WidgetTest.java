@@ -146,7 +146,7 @@ public class WidgetTest {
                                     return new TestServerHandler(){
 
                                         @Override
-                                        public Observable<List<OHSitemap>> requestSitemapObservable() {
+                                        public Observable<List<OHSitemap>> requestSitemapRx() {
                                             OHSitemap sitemap = new OHSitemap();
                                             sitemap.setName(SITEMAP_NAME);
                                             sitemap.setServer(server);

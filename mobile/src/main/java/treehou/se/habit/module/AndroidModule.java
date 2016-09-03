@@ -14,6 +14,7 @@ import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.HabitApplication;
@@ -77,9 +78,9 @@ public class AndroidModule {
                   SwitchWidgetFactory switchWidgetFactory, ColorpickerWidgetFactory provideColorWidgetFactory){
 
         WidgetFactory factory = new WidgetFactory();
-        factory.addWidgetFactory(OpenhabConstants.TYPE_SLIDER, sliderWidgetFactory);
-        factory.addWidgetFactory(OpenhabConstants.TYPE_COLORPICKER, provideColorWidgetFactory);
-        factory.addWidgetFactory(OpenhabConstants.TYPE_SWITCH, switchWidgetFactory);
+        factory.addWidgetFactory(OHWidget.WIDGET_TYPE_SLIDER, sliderWidgetFactory);
+        factory.addWidgetFactory(OHWidget.WIDGET_TYPE_COLORPICKER, provideColorWidgetFactory);
+        factory.addWidgetFactory(OHWidget.WIDGET_TYPE_SWITCH, switchWidgetFactory);
 
         return factory;
     }

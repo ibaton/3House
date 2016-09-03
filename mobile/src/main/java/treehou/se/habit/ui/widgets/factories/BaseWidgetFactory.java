@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -170,10 +171,11 @@ public class BaseWidgetFactory {
                     OHWidget currentWidget = widgets.get(i);
                     OHWidget newWidget = pageWidgets.get(i);
 
-                    if(currentWidget.needUpdate(newWidget)){
+                    // TODO handle update
+                    //if(currentWidget.needUpdate(newWidget)){
                         invalidate = true;
-                        break;
-                    }
+                    //    break;
+                    //}
                 }
             }
 
@@ -215,8 +217,7 @@ public class BaseWidgetFactory {
         private void setName(String name){
             Log.d(TAG, "setName " + name);
 
-            name = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & context.getResources().getColor(R.color.colorAccent)) +"'>$2</font>");
-            lblName.setText(Html.fromHtml(name));
+            lblName.setText(Util.createLabel(context, name));
 
             if(baseDataHolder != null && "".equals(name.trim())) {
                 baseDataHolder.setVisibility(View.GONE);
@@ -237,10 +238,17 @@ public class BaseWidgetFactory {
             }
         }
 
+        /**
+         * Load icon and populate image view with it.
+         * @param widget the widget to load icon for.
+         */
         private void loadIcon(OHWidget widget) {
-            if (widget.getIconPath() != null) {
+
+            // TODO text is default value. Remove when fixed on server
+            boolean ignoreDefault = "text".equalsIgnoreCase(widget.getIcon());
+            if (widget.getIconPath() != null && !ignoreDefault) {
                 iconHolder.setVisibility(View.VISIBLE);
-                imgIcon.setVisibility(View.GONE);
+                imgIcon.setVisibility(View.INVISIBLE);
                 try {
                     Log.d(TAG, "widget.getIconPath " + widget.getIconPath() + " : " + page.getBaseUrl());
                     URL imageUrl = new URL(page.getBaseUrl() + widget.getIconPath());
@@ -251,7 +259,8 @@ public class BaseWidgetFactory {
                     e.printStackTrace();
                 }
             } else {
-                imgIcon.setVisibility(View.GONE);
+                iconHolder.setVisibility(View.INVISIBLE);
+                imgIcon.setVisibility(View.INVISIBLE);
                 if (baseDataHolder != null && (widget.getLabel() == null || "".equals(widget.getLabel().trim()))) {
                     baseDataHolder.setVisibility(View.GONE);
                 }
@@ -290,21 +299,44 @@ public class BaseWidgetFactory {
                 this.factory = factory;
             }
 
+            /**
+             * Set the widget to populate view with.
+             *
+             * @param widget the widget to display.
+             * @return this builder.
+             */
             public Builder setWidget(OHWidget widget) {
                 this.widget = widget;
                 return this;
             }
 
+            /**
+             * Set if the widget should be displayed compressed.
+             *
+             * @param flat true to show it compressed, else false.
+             * @return this builder.
+             */
             public Builder setFlat(boolean flat) {
                 this.flat = flat;
                 return this;
             }
 
+            /**
+             * Set parent widget
+             * @param parent the parent of widget.
+             * @return this builder.
+             */
             public Builder setParent(OHWidget parent) {
                 this.parent = parent;
                 return this;
             }
 
+            /**
+             * The view to display widget in.
+             *
+             * @param view the view to display.
+             * @return this builder.
+             */
             public Builder setView(View view) {
                 this.view = view;
                 return this;

@@ -10,8 +10,8 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 56
-        versionName "5.0.8"
+        versionCode 57
+        versionName "5.1.0"
         // Enabling multidex support.
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -49,15 +49,22 @@ android {
     buildToolsVersion '24.0.0'
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-annotations:24.2.0'
+        force 'com.android.support:support-v4:24.2.0'
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.android.support:recyclerview-v7:24.1.1'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:cardview-v7:24.1.1'
-    compile 'com.android.support:palette-v7:24.1.1'
-    compile 'com.android.support:support-annotations:24.1.1'
-    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.android.support:palette-v7:24.2.0'
+    compile 'com.android.support:support-annotations:24.2.0'
+    compile 'com.android.support:design:24.2.0'
     compile 'com.intellij:annotations:12.0@jar'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.4.0'
@@ -77,13 +84,13 @@ dependencies {
     compile 'com.mikepenz.iconics:octicons-typeface:2.2.0@aar'
     compile 'com.mikepenz.iconics:community-material-typeface:1.0.0@aar'
     compile 'net.danlew:android.joda:2.9.3.1'
-    compile 'com.google.android.gms:play-services-gcm:9.2.1'
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.android.support:multidex:1.0.1'
     compile('com.mikepenz:aboutlibraries:5.6.8@aar') {
         transitive = true
         exclude module: 'iconics-core'
     }
-    compile 'com.github.ibaton:android-openhab-connect:1.1.18'
+    compile 'com.github.ibaton:android-openhab-connect:1.1.22'
     compile 'com.google.firebase:firebase-core:9.2.0'
     compile 'com.google.firebase:firebase-crash:9.2.0'
     compile 'com.google.dagger:dagger:2.6'
@@ -97,7 +104,7 @@ dependencies {
         exclude module: 'design'
     }
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
-    androidTestCompile 'com.android.support:recyclerview-v7:24.1.1'
+    androidTestCompile 'com.android.support:recyclerview-v7:24.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

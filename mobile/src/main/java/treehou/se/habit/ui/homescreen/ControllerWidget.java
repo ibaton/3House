@@ -9,7 +9,8 @@ import android.widget.RemoteViews;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
-import treehou.se.habit.ui.control.ControlHelper;
+import treehou.se.habit.ui.control.ControllerUtil;
+
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in {@link ControllerWidgetConfigureActivity ControllerWidgetConfigureActivity}
@@ -66,7 +67,7 @@ public class ControllerWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.lbl_title, controller.getName());
         views.setViewVisibility(R.id.lbl_title, showTitle ? View.VISIBLE:View.GONE);
 
-        ControlHelper.drawRemoteController(context, views, controller);
+        ControllerUtil.drawRemoteController(context, views, controller);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

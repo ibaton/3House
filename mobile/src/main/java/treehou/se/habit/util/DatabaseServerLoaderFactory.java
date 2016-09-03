@@ -52,7 +52,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
             @Override
             public Observable<List<OHSitemap>> call(OHServer server) {
                 IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
-                return serverHandler.requestSitemapObservable().subscribeOn(Schedulers.io())
+                return serverHandler.requestSitemapRx().subscribeOn(Schedulers.io())
                         .onErrorReturn(throwable -> new ArrayList<>());
             }
         }, (server, sitemaps) -> {
