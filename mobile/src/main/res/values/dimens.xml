@@ -29,8 +29,11 @@
     <dimen name="item_spacing">6dp</dimen>
     <dimen name="item_spacing_half">3dp</dimen>
 
+    <dimen name="larger_spacing">20dp</dimen>
     <dimen name="large_spacing">14dp</dimen>
-    <dimen name="large_spacing_half">7dp</dimen>
+    <dimen name="medium_spacing">7dp</dimen>
+    <dimen name="small_spacing">3dp</dimen>
+
     <dimen name="item_elevation">3dp</dimen>
 
     <dimen name="menu_image_size">@dimen/menu_item_image_size</dimen>

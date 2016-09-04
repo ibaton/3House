@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.module.ApplicationComponent;
@@ -50,7 +52,6 @@ public class MainActivity extends AppCompatActivity
         ControllerUtil.showNotifications(this);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
 
         // Fragment managing the behaviors, interactions and presentation of the navigation drawer.
         NavigationDrawerFragment navigationDrawerFragment = (NavigationDrawerFragment)
@@ -115,6 +116,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onSitemapItemSelected(OHSitemap sitemap) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.page_container, SitemapListFragment.newInstance(sitemap.getName()))
+                .commit();
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(@NavigationDrawerFragment.NavigationItems int value) {
         Fragment fragment = null;
         switch (value) {
@@ -143,6 +152,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.page_container);
         if(fragment instanceof SitemapFragment){
@@ -152,7 +167,6 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
         }
-
         super.onBackPressed();
     }
 
