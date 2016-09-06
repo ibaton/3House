@@ -2,6 +2,7 @@
 
 ### Enhancements
 * Option to hide sitemaps from menu.
+* Partial translation into turkish. Thanks (Nurettin Alp)
 
 ### Bug Fixes
 Fix flickering, and hanging when changing theme.

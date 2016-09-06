@@ -26,14 +26,20 @@
     </array>
 
     <string-array name="empty" translatable="false">
+    <!-- a bit darker color of your main color -->
         <item></item>
     </string-array>
 
     <string-array name="cell_types">
+    <!-- main color of your theme -->
         <item>Empty</item>
+    <!-- main color of your theme -->
         <item>Switch</item>
+    <!-- main color of your theme -->
         <item>Slider</item>
+    <!-- main color of your theme -->
         <item>Inc/Dec</item>
+    <!-- main color of your theme -->
         <item>Voice</item>
     </string-array>
 
@@ -47,10 +53,6 @@
 
     <string-array name="controll_manager">
         <item>Edit</item>
-        <item>@string/delete</item>
-    </string-array>
-
-    <string-array name="server_manager">
         <item>@string/delete</item>
     </string-array>
 </resources>

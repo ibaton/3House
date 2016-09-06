@@ -2,18 +2,18 @@
 <resources>
     <string-array name="cell_types">
     <!-- main color of your theme -->
-        <item>Leer</item>
+        <item>Boş</item>
     <!-- main color of your theme -->
-        <item>Schalter</item>
+        <item>Anahtar</item>
     <!-- main color of your theme -->
-        <item>Schieberegler</item>
+        <item>Notlar</item>
     <!-- main color of your theme -->
-        <item>+/-</item>
+        <item>Artış/Azalış</item>
     <!-- main color of your theme -->
-        <item>Sprache</item>
+        <item>Ses</item>
     </string-array>
     <string-array name="controll_manager">
-        <item>Bearbeiten</item>
+        <item>Düzenle</item>
         <item>@string/delete</item>
     </string-array>
 </resources>
