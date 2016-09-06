@@ -5,8 +5,8 @@
 * Partial translation into turkish. Thanks (Nurettin Alp)
 
 ### Bug Fixes
-Fix flickering, and hanging when changing theme.
-Fix names of sitemap in lists.
+* Fix flickering, and hanging when changing theme.
+* Fix names of sitemap in lists.
 
 
 ## 5.1.0
