@@ -1,5 +1,13 @@
 ## 5.1.1
 
+### Enhancements
+* Option to hide sitemaps from menu.
+
+### Bug Fixes
+Fix flickering, and hanging when changing theme.
+Fix names of sitemap in lists.
+
+
 ## 5.1.0
 
 ### Enhancements
@@ -9,4 +17,4 @@
 
 ### Bug Fixes
 * Close navigation drawer on back pressed.
-* Hide text icon, it os sent out by default from server when no icon selected.
+* Hide text icon, it os sent out by defNault from server when no icon selected.

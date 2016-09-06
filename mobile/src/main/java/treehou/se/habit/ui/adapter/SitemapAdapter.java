@@ -117,7 +117,7 @@ public class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapB
             SitemapHolder holder = (SitemapHolder) sitemapHolder;
             final OHSitemap sitemap = item.sitemap;
 
-            holder.lblName.setText(item.sitemap.getName());
+            holder.lblName.setText(item.sitemap.getLabel());
             holder.lblServer.setText(item.sitemap.getServer().getName());
 
             sitemapHolder.itemView.setOnClickListener(new View.OnClickListener() {

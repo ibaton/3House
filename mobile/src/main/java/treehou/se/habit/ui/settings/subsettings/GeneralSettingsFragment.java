@@ -18,13 +18,9 @@ import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.module.ApplicationComponent;
@@ -61,6 +57,7 @@ public class GeneralSettingsFragment extends RxFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_settings_general, container, false);
         CheckBox cbxAutoLoadSitemap = (CheckBox) rootView.findViewById(R.id.cbx_open_last_sitemap);
+        CheckBox cbxShowSitemapInMenu = (CheckBox) rootView.findViewById(R.id.cbx_show_sitemap_menu);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.settings_general);
@@ -76,6 +73,16 @@ public class GeneralSettingsFragment extends RxFragment {
                 .skip(1)
                 .subscribe(settingsAutoloadSitemapRx.asAction());
 
+        Preference<Boolean> settingsShowSitemapInMenuRx = settings.getShowSitemapsInMenuRx();
+        settingsShowSitemapInMenuRx.asObservable()
+                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(RxCompoundButton.checked(cbxShowSitemapInMenu));
+        RxCompoundButton.checkedChanges(cbxShowSitemapInMenu)
+                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .skip(1)
+                .subscribe(settingsShowSitemapInMenuRx.asAction());
+
         Spinner spinnerThemes = (Spinner) rootView.findViewById(R.id.spr_themes);
         ThemeItem[] themeSpinner = new ThemeItem[] {
                 new ThemeItem(R.style.AppTheme_Base, getString(R.string.treehouse)),
@@ -87,8 +94,10 @@ public class GeneralSettingsFragment extends RxFragment {
         AdapterView.OnItemSelectedListener themeListener = new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                    settings.setTheme(themeSpinner[position].theme);
-                    getActivity().recreate();
+                    if(settings.getTheme() != themeSpinner[position].theme){
+                        settings.setTheme(themeSpinner[position].theme);
+                        getActivity().recreate();
+                    }
                 }
 
                 @Override

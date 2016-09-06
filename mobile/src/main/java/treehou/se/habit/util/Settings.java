@@ -23,6 +23,7 @@ public class Settings {
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     private static final String PREF_SERVER_SETUP_QUESTION = "pref_server_setup_question";
     private static final String PREF_AUTOLOAD_SITEMAP = "pref_autoload_sitemap";
+    private static final String PREF_SHOW_SITEMAPS_IN_MENU = "pref_show_sitemap_in_menu";
 
     private static final int DEFAULT_THEME = R.style.AppTheme_Base;
 
@@ -30,11 +31,13 @@ public class Settings {
     RxSharedPreferences rxPreferences;
 
     private Preference<Integer> prefTheme;
+    private Preference<Boolean> prefSitemapInMenu;
 
     public Settings(Context context) {
         preferences = context.getSharedPreferences(PREF_MANAGER, Context.MODE_PRIVATE);
         rxPreferences = RxSharedPreferences.create(preferences);
         prefTheme = rxPreferences.getInteger(PREF_THEME, DEFAULT_THEME);
+        prefSitemapInMenu = rxPreferences.getBoolean(PREF_SHOW_SITEMAPS_IN_MENU, true);
     }
 
     public static Settings instance(Context context){
@@ -101,11 +104,27 @@ public class Settings {
     }
 
     /**
+     * Returns observable returning a stream of anwets if we should show sitemaps in menu.
+     * @return observable emitting true if sitemaps should be shown, else false.
+     */
+    public Preference<Boolean> getShowSitemapsInMenuRx() {
+         return prefSitemapInMenu;
+    }
+
+    /**
+     * Set if sitemap should be shown in menu.
+     * @param value true to show in menu, else false.
+     */
+    public void setShowSitemapsInMenu(boolean value) {
+        prefSitemapInMenu.set(value);
+    }
+
+    /**
      * Check if sitemap should be autoloaded when sitemap list starts up.
      * @return get preference as rx pref.
      */
     public Preference<Boolean> getAutoloadSitemapRx() {
-         return rxPreferences.getBoolean(PREF_AUTOLOAD_SITEMAP, true);
+        return rxPreferences.getBoolean(PREF_AUTOLOAD_SITEMAP, true);
     }
 
     /**

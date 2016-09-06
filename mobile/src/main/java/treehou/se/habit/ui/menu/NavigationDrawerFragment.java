@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.f2prateek.rx.preferences.Preference;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
@@ -33,6 +34,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -159,7 +161,17 @@ public class NavigationDrawerFragment extends RxFragment {
     public void onResume() {
         super.onResume();
 
-        loadSitemapsFromServers();
+        Preference<Boolean> settingsShowSitemapInMenuRx = settings.getShowSitemapsInMenuRx();
+        settingsShowSitemapInMenuRx.asObservable()
+                .compose(bindToLifecycle())
+                .subscribe(showSitemaps -> {
+                    if(showSitemaps){
+                        loadSitemapsFromServers();
+                    }else {
+                        sitemaps.clear();
+                        menuAdapter.clearSitemaps();
+                    }
+                });
     }
 
     public boolean isDrawerOpen() {

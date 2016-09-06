@@ -60,6 +60,12 @@
             <CheckBox
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/show_sitemaps_in_menu"
+                android:id="@+id/cbx_show_sitemap_menu" />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/open_last_sitemap_on_upstart"
                 android:id="@+id/cbx_open_last_sitemap" />
 
