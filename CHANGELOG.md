@@ -1,3 +1,12 @@
+## 5.1.2
+
+### Enhancements
+Updated realm dependency.
+
+### Development
+Fixed espresso tests.
+
+
 ## 5.1.1
 
 ### Enhancements
@@ -7,7 +16,6 @@
 ### Bug Fixes
 * Fix flickering, and hanging when changing theme.
 * Fix names of sitemap in lists.
-
 
 ## 5.1.0
 

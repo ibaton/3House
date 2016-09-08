@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import static org.hamcrest.Matchers.allOf;
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Func1;
@@ -28,7 +29,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
@@ -45,6 +45,7 @@ import treehou.se.habit.util.ConnectionFactory;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -103,7 +104,7 @@ public class RollershutterWidgetTest {
     @Test
     public void testDisplaySitemaps() {
         NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(withText(SITEMAP_NAME), isDescendantOfA(withId(R.id.list)))).perform(ViewActions.click());
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_up)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_down)).check(matches(isDisplayed()));
@@ -114,7 +115,7 @@ public class RollershutterWidgetTest {
     public void testUp() throws InterruptedException {
         NavigationUtil.navigateToSitemap();
 
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(isDescendantOfA(withId(R.id.list)), withText(SITEMAP_NAME))).perform(ViewActions.click());
         commandQueue.clear();
         onView(withId(R.id.btn_up)).perform(ViewActions.click());
         Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
@@ -127,7 +128,7 @@ public class RollershutterWidgetTest {
     public void testDown() throws InterruptedException {
         NavigationUtil.navigateToSitemap();
 
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(isDescendantOfA(withId(R.id.list)), withText(SITEMAP_NAME))).perform(ViewActions.click());
         commandQueue.clear();
         onView(withId(R.id.btn_down)).perform(ViewActions.click());
         Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
@@ -140,7 +141,7 @@ public class RollershutterWidgetTest {
     public void testCancel() throws InterruptedException {
         NavigationUtil.navigateToSitemap();
 
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(isDescendantOfA(withId(R.id.list)), withText(SITEMAP_NAME))).perform(ViewActions.click());
         commandQueue.clear();
         onView(withId(R.id.btn_cancel)).perform(ViewActions.click());
         Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
@@ -153,7 +154,7 @@ public class RollershutterWidgetTest {
     public void testFlow() throws InterruptedException {
         NavigationUtil.navigateToSitemap();
 
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(isDescendantOfA(withId(R.id.list)), withText(SITEMAP_NAME))).perform(ViewActions.click());
         commandQueue.clear();
         onView(withId(R.id.btn_up)).perform(ViewActions.click());
         onView(withId(R.id.btn_cancel)).perform(ViewActions.click());

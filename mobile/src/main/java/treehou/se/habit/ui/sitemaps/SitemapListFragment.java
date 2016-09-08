@@ -201,6 +201,7 @@ public class SitemapListFragment extends RxFragment {
                         sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
                     } else {
                         boolean autoloadLast = settings.getAutoloadSitemapRx().get();
+                        Log.d(TAG, "");
                         for (OHSitemap sitemap : sitemaps) {
                             sitemapAdapter.add(server, sitemap);
                             if (autoloadLast && sitemap.getName().equals(showSitemap)) {

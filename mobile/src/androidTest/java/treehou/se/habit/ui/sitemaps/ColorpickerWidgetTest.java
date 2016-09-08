@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static org.hamcrest.Matchers.allOf;
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Func1;
@@ -28,7 +30,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
@@ -102,7 +103,7 @@ public class ColorpickerWidgetTest {
     @Test
     public void testDisplaySitemaps() {
         NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(withText(SITEMAP_NAME), isDescendantOfA(withId(R.id.list)))).perform(ViewActions.click());
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_increment)).check(matches(isDisplayed()));
         onView(withId(R.id.btn_decrement)).check(matches(isDisplayed()));
@@ -112,7 +113,7 @@ public class ColorpickerWidgetTest {
     public void testOn() throws InterruptedException {
         NavigationUtil.navigateToSitemap();
 
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(withText(SITEMAP_NAME),isDescendantOfA(withId(R.id.list)))).perform(ViewActions.click());
         commandQueue.clear();
         onView(withId(R.id.btn_increment)).perform(ViewActions.click());
         Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
@@ -125,7 +126,7 @@ public class ColorpickerWidgetTest {
     public void testOff() throws InterruptedException {
         NavigationUtil.navigateToSitemap();
 
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(withText(SITEMAP_NAME), isDescendantOfA(withId(R.id.list)))).perform(ViewActions.click());
         commandQueue.clear();
         onView(withId(R.id.btn_decrement)).perform(ViewActions.click());
         Assert.assertTrue("Command queue should have one command", commandQueue.size() == 1);
@@ -138,7 +139,7 @@ public class ColorpickerWidgetTest {
     public void testFlow() throws InterruptedException {
         NavigationUtil.navigateToSitemap();
 
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(withText(SITEMAP_NAME), isDescendantOfA(withId(R.id.list)))).perform(ViewActions.click());
         commandQueue.clear();
         onView(withId(R.id.btn_increment)).perform(ViewActions.click());
         onView(withId(R.id.btn_decrement)).perform(ViewActions.click());

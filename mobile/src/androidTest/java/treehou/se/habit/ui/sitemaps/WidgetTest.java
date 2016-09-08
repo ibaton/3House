@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.allOf;
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Func1;
@@ -28,6 +29,7 @@ import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
+import treehou.se.habit.R;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.data.TestConnectionFactory;
 import treehou.se.habit.data.TestServerLoaderFactory;
@@ -38,7 +40,9 @@ import treehou.se.habit.util.ConnectionFactory;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -89,7 +93,7 @@ public class WidgetTest {
     @Test
     public void testDisplaySitemaps() {
         NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(withText(SITEMAP_NAME), isDescendantOfA(withId(R.id.list)))).perform(ViewActions.click());
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
     }
 

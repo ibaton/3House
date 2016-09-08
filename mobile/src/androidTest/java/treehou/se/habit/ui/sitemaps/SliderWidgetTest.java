@@ -47,9 +47,11 @@ import treehou.se.habit.util.ConnectionFactory;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -139,7 +141,7 @@ public class SliderWidgetTest {
     @Test
     public void testDisplaySitemaps() {
         NavigationUtil.navigateToSitemap();
-        onView(withText(SITEMAP_NAME)).perform(ViewActions.click());
+        onView(allOf(isDescendantOfA(withId(R.id.list)), withText(SITEMAP_NAME))).perform(ViewActions.click());
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
         onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(0)));
         linkedPageBehaviorSubject.onNext(linkedPageState2);
