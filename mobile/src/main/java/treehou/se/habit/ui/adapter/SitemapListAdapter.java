@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.adapter;
 
-import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,8 +24,6 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
     public static final int STATE_LOADING = 1;
     public static final int STATE_ERROR = 2;
 
-    protected LayoutInflater inflater;
-    protected Context context;
     private Map<OHServer, SitemapItem> items = new HashMap<>();
     private SitemapSelectedListener sitemapSelectedListener = new DummySitemapSelectListener();
 
@@ -102,26 +99,21 @@ public class SitemapListAdapter extends RecyclerView.Adapter<SitemapListAdapter.
         }
     }
 
-    public SitemapListAdapter(Context context) {
-        if (context == null) {
-            throw new IllegalArgumentException("Context cannot be null");
-        }
-        this.context = context;
-        this.inflater = LayoutInflater.from(context);
+    public SitemapListAdapter() {
     }
 
     @Override
-    public SitemapBaseHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
+    public SitemapBaseHolder onCreateViewHolder(ViewGroup parent, int type) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (STATE_SUCCESS == type) {
-            View itemView = inflater.inflate(R.layout.item_sitemap, null);
+            View itemView = inflater.inflate(R.layout.item_sitemap, parent, false);
             return new SitemapHolder(itemView);
         } else if (STATE_LOADING == type) {
-            View itemView = inflater.inflate(R.layout.item_sitemap_load, null);
+            View itemView = inflater.inflate(R.layout.item_sitemap_load, parent, false);
             return new SitemapLoadHolder(itemView);
         } else {
-            View serverLoadFail = inflater.inflate(R.layout.item_sitemap_failed, null);
+            View serverLoadFail = inflater.inflate(R.layout.item_sitemap_failed, parent, false);
             return new SitemapErrorHolder(serverLoadFail);
         }
     }

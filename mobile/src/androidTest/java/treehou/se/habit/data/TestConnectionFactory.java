@@ -4,10 +4,12 @@ import android.content.Context;
 
 import java.util.List;
 
+import retrofit2.Call;
 import rx.Observable;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
+import se.treehou.ng.ohcommunicator.connector.models.OHLink;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
@@ -37,6 +39,26 @@ public class TestConnectionFactory extends ConnectionFactory {
         @Override
         public void requestInboxItems(OHCallback<List<OHInboxItem>> ohCallback) {
 
+        }
+
+        @Override
+        public void requestLinks(OHCallback<List<OHLink>> ohCallback) {
+
+        }
+
+        @Override
+        public Observable<List<OHLink>> requestLinksRx() {
+            return null;
+        }
+
+        @Override
+        public Call<Void> createLink(OHLink ohLink) {
+            return null;
+        }
+
+        @Override
+        public Call<Void> deleteLink(OHLink ohLink) {
+            return null;
         }
 
         @Override

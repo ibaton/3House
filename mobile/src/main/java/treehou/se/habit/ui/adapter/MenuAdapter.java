@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import treehou.se.habit.R;
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder>{
 
     private List<MenuItem> items = new ArrayList<>();
-    private Context context;
     private OnItemSelectListener listener = new DummyListener();
 
     public class MenuHolder extends RecyclerView.ViewHolder {
@@ -30,15 +28,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuHolder>{
         }
     }
 
-    public MenuAdapter(Context context) {
-        this.context = context;
+    public MenuAdapter() {
+
     }
 
     @Override
-    public MenuHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+    public MenuHolder onCreateViewHolder(ViewGroup parent, int position) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.item_menu, null);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View itemView = inflater.inflate(R.layout.item_menu, parent, false);
 
         return new MenuHolder(itemView);
     }

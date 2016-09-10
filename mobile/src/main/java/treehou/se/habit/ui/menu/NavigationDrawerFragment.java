@@ -34,7 +34,6 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -80,8 +79,7 @@ public class NavigationDrawerFragment extends RxFragment {
 
     @Inject SharedPreferences sharedPreferences;
     @Inject Settings settings;
-    @Inject
-    ServerLoaderFactory serverLoaderFactory;
+    @Inject ServerLoaderFactory serverLoaderFactory;
 
     public NavigationDrawerFragment() {
     }
@@ -105,7 +103,7 @@ public class NavigationDrawerFragment extends RxFragment {
         items.add(new DrawerItem(getActivity().getString(R.string.servers), R.drawable.menu_servers, NavigationItems.ITEM_SERVER));
         items.add(new DrawerItem(getActivity().getString(R.string.settings), R.drawable.menu_settings, NavigationItems.ITEM_SETTINGS));
 
-        menuAdapter = new DrawerAdapter(getContext());
+        menuAdapter = new DrawerAdapter();
         menuAdapter.setItemClickListener(item -> selectItem(item.getValue()));
         menuAdapter.setSitemapsClickListener(this::selectSitemap);
         menuAdapter.add(items);
@@ -362,7 +360,6 @@ public class NavigationDrawerFragment extends RxFragment {
 
         private List<DrawerItem> items = new ArrayList<>();
         private List<OHSitemap> sitemaps = new ArrayList<>();
-        private Context context;
         private OnItemClickListener itemClickListener;
         private OnSitemapClickListener sitemapItemClickListener;
 
@@ -407,8 +404,7 @@ public class NavigationDrawerFragment extends RxFragment {
             }
         }
 
-        public DrawerAdapter(Context context) {
-            this.context = context;
+        public DrawerAdapter() {
         }
 
         public void setItemClickListener(OnItemClickListener itemClickListener) {
@@ -502,15 +498,15 @@ public class NavigationDrawerFragment extends RxFragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            LayoutInflater inflater = LayoutInflater.from(context);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
             RecyclerView.ViewHolder drawerItemHolder;
             if(VIEW_TYPE_SITEMAP == viewType){
-                View itemView = inflater.inflate(R.layout.item_sitemap_small, null);
+                View itemView = inflater.inflate(R.layout.item_sitemap_small, parent, false);
                 drawerItemHolder = new SitemapItemHolder(itemView);
             }
             else {
-                View itemView = inflater.inflate(R.layout.item_drawer, null);
+                View itemView = inflater.inflate(R.layout.item_drawer, parent, false);
                 drawerItemHolder = new DrawerItemHolder(itemView);
             }
 

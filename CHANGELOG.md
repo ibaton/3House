@@ -3,6 +3,7 @@
 ### Enhancements
 Updated realm dependency.
 Keep state of page after configuration change.
+Added view showing item links.
 
 ### Development
 Fixed espresso tests.

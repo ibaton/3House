@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import treehou.se.habit.R;
 public class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>{
 
     private static final String TAG = SitemapAdapter.class.getSimpleName();
-    private Context context;
     private Map<OHServer, SitemapItem> items = new HashMap<>();
     private OnSitemapSelectListener selectorListener;
 
@@ -87,14 +85,14 @@ public class SitemapAdapter extends RecyclerView.Adapter<SitemapAdapter.SitemapB
         }
     }
 
-    public SitemapAdapter(Context context) {
-        this.context = context;
+    public SitemapAdapter() {
+
     }
 
     @Override
-    public SitemapBaseHolder onCreateViewHolder(ViewGroup viewGroup, int type) {
+    public SitemapBaseHolder onCreateViewHolder(ViewGroup parent, int type) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if(SitemapItem.STATE_SUCCESS == type){
             View itemView = inflater.inflate(R.layout.item_sitemap, null);
             return new SitemapHolder(itemView);

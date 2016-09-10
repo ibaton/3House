@@ -35,7 +35,7 @@ public class ActionSelectFragment extends Fragment implements SitemapAdapter.OnS
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tasker_init, container, false);
 
-        MenuAdapter menuAdapter = new MenuAdapter(getActivity());
+        MenuAdapter menuAdapter = new MenuAdapter();
         menuAdapter.addItem(new MenuItem(getActivity().getString(R.string.items), MENU_ITEMS, R.drawable.ic_icon_action_item));
         menuAdapter.addItem(new MenuItem(getActivity().getString(R.string.open_sitemap), MENU_SITEMAP, R.drawable.ic_icon_sitemap));
 

@@ -16,7 +16,6 @@ import treehou.se.habit.ui.bindings.BindingsFragment;
 
 public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingHolder> {
 
-    private BindingsFragment bindingsFragment;
     private List<OHBinding> bindings = new ArrayList<>();
     private ItemClickListener itemClickListener;
 
@@ -35,15 +34,14 @@ public class BindingAdapter extends RecyclerView.Adapter<BindingAdapter.BindingH
         }
     }
 
-    public BindingAdapter(BindingsFragment bindingsFragment) {
-        this.bindingsFragment = bindingsFragment;
+    public BindingAdapter() {
     }
 
     @Override
     public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        LayoutInflater inflater = LayoutInflater.from(bindingsFragment.getActivity());
-        View itemView = inflater.inflate(R.layout.item_binding, null);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View itemView = inflater.inflate(R.layout.item_binding, parent, false);
 
         return new BindingHolder(itemView);
     }

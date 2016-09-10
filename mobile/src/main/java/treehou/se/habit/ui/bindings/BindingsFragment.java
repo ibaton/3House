@@ -113,7 +113,7 @@ public class BindingsFragment extends Fragment {
             actionBar.setTitle(R.string.bindings);
         }
 
-        bindingAdapter = new BindingAdapter(this);
+        bindingAdapter = new BindingAdapter();
         bindingAdapter.setItemClickListener(binding -> openBinding(binding));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);

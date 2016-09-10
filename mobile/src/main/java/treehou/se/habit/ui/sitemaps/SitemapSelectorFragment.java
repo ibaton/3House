@@ -48,7 +48,7 @@ public class SitemapSelectorFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSitemapAdapter = new SitemapAdapter(getActivity());
+        mSitemapAdapter = new SitemapAdapter();
         mSitemapAdapter.setSelectorListener(sitemapSelectListener);
     }
 

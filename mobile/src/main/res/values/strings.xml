@@ -128,4 +128,6 @@
     <string name="treehouse">3house</string>
     <string name="habdroid">habdroid</string>
     <string name="show_sitemaps_in_menu">Show sitemaps in menu</string>
+    <string name="no_links_found">No links found</string>
+    <string name="links">Links</string>
 </resources>

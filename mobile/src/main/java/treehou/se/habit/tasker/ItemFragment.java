@@ -44,7 +44,7 @@ public class ItemFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_item, container, false);
 
-        MenuAdapter menuAdapter = new MenuAdapter(getActivity());
+        MenuAdapter menuAdapter = new MenuAdapter();
         menuAdapter.addItem(new MenuItem(getString(R.string.command), MENU_ITEM_COMMAND, R.drawable.ic_icon_sitemap));
         menuAdapter.addItem(new MenuItem(getString(R.string.label_switch), MENU_ITEM_SWITCH, R.drawable.ic_icon_sitemap));
         menuAdapter.addItem(new MenuItem(getString(R.string.inc_dec), MENU_ITEM_INC_DEC, R.drawable.ic_icon_sitemap));

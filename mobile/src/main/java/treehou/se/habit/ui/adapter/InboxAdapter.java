@@ -77,17 +77,17 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     }
 
     @Override
-    public InboxHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public InboxHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         InboxHolder inboxHolder = null;
         switch (viewType) {
             case ItemType.item:
-                View itemView = inflater.inflate(R.layout.item_inbox, null);
+                View itemView = inflater.inflate(R.layout.item_inbox, parent, false);
                 inboxHolder = new InboxHolder(itemView);
                 break;
             case ItemType.item_ignored:
-                itemView = inflater.inflate(R.layout.item_inbox_ignored, null);
+                itemView = inflater.inflate(R.layout.item_inbox_ignored, parent, false);
                 inboxHolder = new IgnoreInboxHolder(itemView);
                 break;
         }

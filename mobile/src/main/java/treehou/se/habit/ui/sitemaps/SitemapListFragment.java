@@ -109,7 +109,7 @@ public class SitemapListFragment extends RxFragment {
         listView.setLayoutManager(gridLayoutManager);
         listView.setItemAnimator(new DefaultItemAnimator());
 
-        sitemapAdapter = new SitemapListAdapter(getContext());
+        sitemapAdapter = new SitemapListAdapter();
         sitemapAdapter.setSitemapSelectedListener(new SitemapListAdapter.SitemapSelectedListener() {
 
             @Override

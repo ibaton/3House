@@ -15,7 +15,6 @@ import treehou.se.habit.core.db.model.ServerDB;
 public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHolder> {
 
     private RealmResults<ServerDB> realmResults;
-    private Context context;
     private ItemListener itemListener = new DummyItemListener();
 
     public class ServerHolder extends RecyclerView.ViewHolder {
@@ -27,19 +26,15 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHo
         }
     }
 
-    public ServersAdapter(Context context, final RealmResults<ServerDB> realmResults) {
-        if (context == null) {
-            throw new IllegalArgumentException("Context cannot be null");
-        }
-        this.context = context;
+    public ServersAdapter(final RealmResults<ServerDB> realmResults) {
         this.realmResults = realmResults;
     }
 
     @Override
-    public ServerHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+    public ServerHolder onCreateViewHolder(ViewGroup parent, int position) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.item_server, null);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View itemView = inflater.inflate(R.layout.item_server, parent, false);
 
         return new ServerHolder(itemView);
     }

@@ -137,7 +137,7 @@ public class ServersFragment extends RxFragment {
                     Log.d(TAG, "Loaded " + servers1.size() + " servers");
                     ServersFragment.this.servers = servers1;
                     updateEmptyView(servers1.size());
-                    serversAdapter = new ServersAdapter(getContext(), servers1);
+                    serversAdapter = new ServersAdapter(servers1);
                     serversAdapter.setItemListener(serverListener);
                     lstServer.setAdapter(serversAdapter);
                 });

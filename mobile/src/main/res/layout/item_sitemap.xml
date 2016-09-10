@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/item_spacing"
     android:paddingRight="@dimen/item_spacing"
     android:paddingTop="@dimen/item_spacing_vertical">

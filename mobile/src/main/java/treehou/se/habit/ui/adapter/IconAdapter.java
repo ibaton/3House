@@ -41,7 +41,7 @@ public class IconAdapter extends RecyclerView.Adapter<IconAdapter.IconHolder> {
 
     @Override
     public IconAdapter.IconHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_image, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false);
         return new IconHolder(view);
     }
 

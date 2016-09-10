@@ -19,24 +19,21 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemHolder>{
     private static final String TAG = "ImageItemAdapter";
 
     private List<ImageItem> items = new ArrayList<>();
-    private Context context;
     private @LayoutRes int layoutItem;
 
     private OnItemClickListener itemClickListener;
 
-    public ImageItemAdapter(Context context) {
-        this(context, R.layout.item_menu_image);
+    public ImageItemAdapter() {
+        this(R.layout.item_menu_image);
     }
 
-    public ImageItemAdapter(Context context, @LayoutRes int layout) {
-        this.context = context;
+    public ImageItemAdapter(@LayoutRes int layout) {
         this.layoutItem = layout;
     }
 
     @Override
     public ImageItemHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View itemView = inflater.inflate(layoutItem, viewGroup, false);
         return new ImageItemHolder(itemView);
     }
