@@ -2,12 +2,12 @@ package treehou.se.habit.connector;
 
 import android.util.Log;
 
-import com.squareup.okhttp.OkHttpClient;
-
 import java.net.*;
 import javax.net.ssl.*;
 import java.security.*;
 import java.security.cert.*;
+
+import okhttp3.OkHttpClient;
 
 public class TrustModifier {
 
@@ -84,12 +84,12 @@ public class TrustModifier {
         }
     }
 
-    public static synchronized OkHttpClient createAcceptAllClient() {
-        OkHttpClient client = new OkHttpClient();
+    public static synchronized OkHttpClient.Builder createAcceptAllClient() {
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
         Log.d(TAG, "onBitmapLoaded getClient ");
         try {
-            client.setHostnameVerifier(new TrustModifier.NullHostNameVerifier());
-            client.setSslSocketFactory(TrustModifier.createFactory());
+            client.hostnameVerifier(new TrustModifier.NullHostNameVerifier());
+            client.sslSocketFactory(TrustModifier.createFactory());
         } catch (KeyManagementException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {

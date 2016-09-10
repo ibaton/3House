@@ -7,11 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.LruCache;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
@@ -19,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.realm.Realm;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -97,10 +97,10 @@ public class Communicator {
             return requestLoaders.get(server);
         }
 
-        OkHttpClient httpClient = TrustModifier.createAcceptAllClient();
+        OkHttpClient.Builder httpClient = TrustModifier.createAcceptAllClient();
         httpClient.interceptors().add(chain -> {
 
-            com.squareup.okhttp.Request.Builder newRequest = chain.request().newBuilder();
+            Request.Builder newRequest = chain.request().newBuilder();
             if (server.requiresAuth()) {
                 newRequest.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
             }
@@ -109,7 +109,7 @@ public class Communicator {
         });
 
         final Picasso picasso = new Picasso.Builder(context)
-                .downloader(new OkHttpDownloader(httpClient))
+                .downloader(new OkHttp3Downloader(httpClient.build()))
                 .memoryCache(new LruCache(context))
                 .build();
 

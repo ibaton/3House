@@ -117,13 +117,6 @@ public class PageFragment extends RxFragment {
         View view = inflater.inflate(R.layout.fragment_widget, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        updatePage(page);
-
-        if(!initialized && server != null) {
-            requestPageUpdate();
-        }
-        initialized = true;
-
         return view;
     }
 
@@ -166,6 +159,13 @@ public class PageFragment extends RxFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if(!initialized && server != null) {
+            requestPageUpdate();
+        }
+        initialized = true;
+
+        updatePage(page);
 
         // Start listening for server updates
         if (supportsLongPolling()) {
