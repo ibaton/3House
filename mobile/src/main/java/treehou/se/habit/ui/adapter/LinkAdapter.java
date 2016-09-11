@@ -34,6 +34,7 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkHolder> {
         public void update(OHLink link){
             lblChannel.setText(link.getChannelUID());
             lblItem.setText(link.getItemName());
+            itemView.setOnClickListener(view -> itemListener.onItemClickListener(link));
         }
     }
 
@@ -96,14 +97,14 @@ public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkHolder> {
         notifyDataSetChanged();
     }
 
-    interface ItemListener {
+    public interface ItemListener {
 
         void onItemClickListener(OHLink item);
 
         boolean onItemLongClickListener(OHLink item);
     }
 
-    public class DummyItemListener implements ItemListener {
+    private class DummyItemListener implements ItemListener {
 
         @Override
         public void onItemClickListener(OHLink item) {

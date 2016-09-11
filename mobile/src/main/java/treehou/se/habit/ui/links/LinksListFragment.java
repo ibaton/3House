@@ -1,20 +1,19 @@
 package treehou.se.habit.ui.links;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxFragment;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -22,23 +21,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHLink;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.ui.adapter.LinkAdapter;
-import treehou.se.habit.ui.adapter.SitemapListAdapter;
 import treehou.se.habit.util.ConnectionFactory;
-import treehou.se.habit.util.Settings;
 
 public class LinksListFragment extends RxFragment {
 
@@ -96,9 +92,51 @@ public class LinksListFragment extends RxFragment {
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         adapter = new LinkAdapter();
+        adapter.setItemListener(new LinkAdapter.ItemListener() {
+            @Override
+            public void onItemClickListener(OHLink item) {
+                openRemoveLinkDialog(item);
+            }
+
+            @Override
+            public boolean onItemLongClickListener(OHLink item) {
+                return false;
+            }
+        });
         listView.setAdapter(adapter);
 
         return view;
+    }
+
+    /**
+     * Ask user if link should be removed.
+     * @param link the link to remove.
+     */
+    private void openRemoveLinkDialog(OHLink link){
+        new AlertDialog.Builder(getContext())
+                .setMessage(R.string.remove_link)
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> removeLink(link))
+                .setNegativeButton(android.R.string.cancel, null)
+                .create()
+                .show();
+    }
+
+    /**
+     * Remove link.
+     * @param link the link to remove
+     */
+    private void removeLink(OHLink link){
+        adapter.removeItem(link);
+
+        connectionFactory.createServerHandler(server.toGeneric(), getContext())
+                .deleteLinkRx(link)
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(responseBodyResponse -> {
+                    adapter.addItem(link);
+                    Toast.makeText(getContext(), R.string.failed_delete_link, Toast.LENGTH_SHORT).show();
+                });
     }
 
     /**

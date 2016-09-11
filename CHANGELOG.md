@@ -1,3 +1,8 @@
+## 5.2.0
+
+### Enhancements
+Added links page.
+
 ## 5.1.2
 
 ### Enhancements
