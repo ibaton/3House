@@ -1,7 +1,11 @@
 ## 5.2.0
 
 ### Enhancements
-Added links page.
+* Added links page.
+
+### Bug Fixes
+* Set icons as invisible instead of gone on loading. 
+
 
 ## 5.1.2
 
