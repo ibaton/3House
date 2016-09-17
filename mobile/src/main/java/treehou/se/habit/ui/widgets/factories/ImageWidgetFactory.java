@@ -61,7 +61,7 @@ public class ImageWidgetFactory implements IWidgetFactory {
                 Log.d(TAG, "Image url " + widget.getUrl());
                 URL imageUrl = new URL(widget.getUrl());
                 Communicator communicator = Communicator.instance(context);
-                communicator.loadImage(server, imageUrl, imgImage);
+                communicator.loadImage(server, imageUrl, imgImage, false);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

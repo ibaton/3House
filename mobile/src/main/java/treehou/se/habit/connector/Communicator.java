@@ -124,9 +124,9 @@ public class Communicator {
      * @param server the server credentials.
      * @param imageUrl the url of image.
      * @param imageView the view to put bitmap in.
-     * @param useCache set if cache should be used.
+     * @param viewGoneOnFail true to set view to gone if fail.
      */
-    public void loadImage(final OHServer server, final URL imageUrl, final ImageView imageView, boolean useCache){
+    public void loadImage(final OHServer server, final URL imageUrl, final ImageView imageView, boolean viewGoneOnFail){
 
         Log.d(TAG, "onBitmapLoaded image start " + imageUrl.toString());
         final Callback callback = new Callback() {
@@ -146,7 +146,7 @@ public class Communicator {
 
             @Override
             public void onError() {
-                imageView.setVisibility(View.GONE);
+                imageView.setVisibility(viewGoneOnFail ? View.GONE : View.INVISIBLE);
                 Log.d(TAG, "onBitmapLoaded image load failed " + imageUrl);
             }
         };
@@ -156,16 +156,5 @@ public class Communicator {
             .noFade()
             .placeholder(imageView.getDrawable())
             .into(imageView, callback); // problem when saving null image
-    }
-
-    /**
-     * Load image and put result in image view
-     *
-     * @param server the server credentials.
-     * @param imageUrl the url of image.
-     * @param imageView the view to put bitmap in.
-     */
-    public void loadImage(final OHServer server, final URL imageUrl, final ImageView imageView){
-        loadImage(server, imageUrl, imageView, true);
     }
 }

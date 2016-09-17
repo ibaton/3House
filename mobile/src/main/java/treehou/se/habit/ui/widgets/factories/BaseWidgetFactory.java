@@ -253,7 +253,7 @@ public class BaseWidgetFactory {
                     Log.d(TAG, "widget.getIconPath " + widget.getIconPath() + " : " + page.getBaseUrl());
                     URL imageUrl = new URL(page.getBaseUrl() + widget.getIconPath());
                     Communicator communicator = Communicator.instance(context);
-                    communicator.loadImage(server, imageUrl, imgIcon);
+                    communicator.loadImage(server, imageUrl, imgIcon, false);
                     Log.d(TAG, "Loading image url " + imageUrl);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
