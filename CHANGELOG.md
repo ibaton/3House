@@ -4,7 +4,8 @@
 * Added links page.
 
 ### Bug Fixes
-* Set icons as invisible instead of gone on loading. 
+* Set icons as invisible instead of gone on loading.
+* Fix problem with long polling.
 
 
 ## 5.1.2

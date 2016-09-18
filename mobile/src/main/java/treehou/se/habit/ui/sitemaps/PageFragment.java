@@ -22,6 +22,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -125,9 +127,11 @@ public class PageFragment extends RxFragment {
      */
     private void requestPageUpdate(){
         final IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getActivity());
+
         serverHandler.requestPageRx(page)
                 .compose(this.bindToLifecycle())
-                .compose(RxUtil.newToMainSchedulers())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ohLinkedPage -> {
                     Log.d(TAG, "Received update " + ohLinkedPage.getWidgets().size() + " widgets from  " + page.getLink());
                     updatePage(ohLinkedPage);
