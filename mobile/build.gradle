@@ -10,8 +10,8 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 58
-        versionName "5.1.2"
+        versionCode 59
+        versionName "5.2.0"
         // Enabling multidex support.
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
