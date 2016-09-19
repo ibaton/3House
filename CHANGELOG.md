@@ -1,3 +1,10 @@
+## 5.2.1
+
+### Bug Fixes
+* Fix problem where max 1 server was shown.
+* Fixed duplication problem for sitemaps in drawer menu.
+
+
 ## 5.2.0
 
 ### Enhancements

@@ -128,9 +128,7 @@ public class NavigationDrawerFragment extends RxFragment {
                 .subscribe(serverSitemaps -> {
                     List<OHSitemap> sitemaps = serverSitemaps.second;
 
-                    boolean autoloadLast = settings.getAutoloadSitemapRx().get();
                     this.sitemaps.addAll(sitemaps);
-
                     menuAdapter.addSitemaps(sitemaps);
                 });
     }
@@ -431,16 +429,15 @@ public class NavigationDrawerFragment extends RxFragment {
          */
         public void addSitemaps(List<OHSitemap> sitemaps){
             this.sitemaps.addAll(sitemaps);
-            notifyItemRangeInserted(findPosition(NavigationItems.ITEM_SITEMAPS), sitemaps.size());
+            notifyDataSetChanged();
         }
 
         /**
          * Remove all sitemaps added to menu.
          */
         public void clearSitemaps(){
-            int sitemapSize = sitemaps.size();
-            notifyItemRangeRemoved(findPosition(NavigationItems.ITEM_SITEMAPS), sitemapSize);
             sitemaps.clear();
+            notifyDataSetChanged();
         }
 
         /**

@@ -9,7 +9,7 @@ public class DBHelper {
      * @param realm
      * @return
      */
-    public static long getUniqueId(Realm realm, Class realmClass) {
+    public synchronized static long getUniqueId(Realm realm, Class realmClass) {
         long id = 1;
         Number num = realm.where(realmClass).max("id");
         if (num != null) id = num.longValue() + 1;

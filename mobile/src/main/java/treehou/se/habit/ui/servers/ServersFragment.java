@@ -83,6 +83,10 @@ public class ServersFragment extends RxFragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstServer.setLayoutManager(gridLayoutManager);
         lstServer.setItemAnimator(new DefaultItemAnimator());
+        serversAdapter = new ServersAdapter();
+        serversAdapter.setItemListener(serverListener);
+        lstServer.setAdapter(serversAdapter);
+
         setupActionbar();
 
         return rootView;
@@ -137,9 +141,7 @@ public class ServersFragment extends RxFragment {
                     Log.d(TAG, "Loaded " + servers1.size() + " servers");
                     ServersFragment.this.servers = servers1;
                     updateEmptyView(servers1.size());
-                    serversAdapter = new ServersAdapter(servers1);
-                    serversAdapter.setItemListener(serverListener);
-                    lstServer.setAdapter(serversAdapter);
+                    serversAdapter.setItems(servers1);
                 });
 
         if(!settings.getServerSetupAsked()){

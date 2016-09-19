@@ -1,13 +1,11 @@
 package treehou.se.habit.ui.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -26,9 +24,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHo
         }
     }
 
-    public ServersAdapter(final RealmResults<ServerDB> realmResults) {
-        this.realmResults = realmResults;
-    }
+    public ServersAdapter() {}
 
     @Override
     public ServerHolder onCreateViewHolder(ViewGroup parent, int position) {
@@ -48,9 +44,14 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ServerHo
         serverHolder.itemView.setOnLongClickListener(v -> itemListener.onItemLongClickListener(serverHolder));
     }
 
+    public void setItems(final RealmResults<ServerDB> realmResults){
+        this.realmResults = realmResults;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return realmResults.size();
+        return realmResults == null ? 0 : realmResults.size();
     }
 
     public ServerDB getItem(int position) {
