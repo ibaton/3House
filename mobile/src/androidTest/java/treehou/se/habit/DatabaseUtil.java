@@ -15,6 +15,7 @@ public class DatabaseUtil {
         RealmConfiguration configuration = new RealmConfiguration.Builder(context)
                 .modules(new OHRealmModule())
                 .name("treehou-test.realm")
+                .inMemory()
                 .schemaVersion(1)
                 .build();
         Realm.setDefaultConfiguration(configuration);

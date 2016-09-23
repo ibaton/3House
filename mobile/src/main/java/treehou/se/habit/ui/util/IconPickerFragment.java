@@ -53,7 +53,7 @@ public class IconPickerFragment extends Fragment {
 
         if(getArguments() != null){
             List<IIcon> icons = Util.CAT_ICONS.get(getArguments().getSerializable(ARG_CATEGORY));
-            adapter = new IconAdapter(getActivity(), icons);
+            adapter = new IconAdapter(icons);
         }
         lstIcons.setAdapter(adapter);
 
@@ -63,7 +63,6 @@ public class IconPickerFragment extends Fragment {
 
     private class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private Context context;
         private List<IIcon> icons = new ArrayList<>();
 
         class IconHolder extends RecyclerView.ViewHolder {
@@ -77,8 +76,7 @@ public class IconPickerFragment extends Fragment {
             }
         }
 
-        public IconAdapter(Context context, List<IIcon> icons) {
-            this.context = context;
+        public IconAdapter(List<IIcon> icons) {
             this.icons = icons;
         }
 
@@ -89,8 +87,8 @@ public class IconPickerFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_icon, null);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View itemView = inflater.inflate(R.layout.item_icon, parent, false);
 
             return new IconHolder(itemView);
         }
@@ -101,18 +99,15 @@ public class IconPickerFragment extends Fragment {
             final IIcon item = icons.get(position);
             IconHolder catHolder = (IconHolder) holder;
 
-            IconicsDrawable drawable = new IconicsDrawable(getActivity(), item).color(Color.BLACK).sizeDp(50);
+            IconicsDrawable drawable = new IconicsDrawable(getActivity(), item).color(Color.BLACK).sizeDp(40);
 
             catHolder.imgIcon.setImageDrawable(drawable);
-            catHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.putExtra(RESULT_ICON, item.getName());
+            catHolder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.putExtra(RESULT_ICON, item.getName());
 
-                    getActivity().setResult(Activity.RESULT_OK, intent);
-                    getActivity().finish();
-                }
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                getActivity().finish();
             });
         }
 

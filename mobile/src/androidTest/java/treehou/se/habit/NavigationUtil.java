@@ -24,4 +24,9 @@ public class NavigationUtil {
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.lbl_name), withText(R.string.sitemaps))).perform(ViewActions.click());
     }
+
+    public static void navigateToController(){
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(allOf(withId(R.id.lbl_name), withText(R.string.controllers))).perform(ViewActions.click());
+    }
 }

@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="3dp">
 
     <android.support.v7.widget.CardView
@@ -30,6 +30,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_icon_server"
                 android:layout_gravity="center_vertical" />
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

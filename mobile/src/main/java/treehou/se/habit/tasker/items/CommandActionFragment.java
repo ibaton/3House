@@ -63,7 +63,7 @@ public class CommandActionFragment extends Fragment {
 
         sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
 
-        itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, filteredItems);
+        itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, filteredItems);
         sprItems.post(() -> sprItems.setAdapter(itemAdapter));
         RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
         filteredItems.clear();

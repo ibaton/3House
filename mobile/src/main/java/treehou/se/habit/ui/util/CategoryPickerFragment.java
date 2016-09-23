@@ -50,7 +50,7 @@ public class CategoryPickerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_icon_picker, null);
+        View rootView = inflater.inflate(R.layout.fragment_icon_picker, container, false);
         lstIcons = (RecyclerView) rootView.findViewById(R.id.lst_categories);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         lstIcons.setLayoutManager(gridLayoutManager);
@@ -61,10 +61,11 @@ public class CategoryPickerFragment extends Fragment {
         categoryList.add(new CategoryPicker(null, getString(R.string.empty), Util.IconCategory.EMPTY));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_play, getString(R.string.media), Util.IconCategory.MEDIA));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
+        categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_power, getString(R.string.command), Util.IconCategory.COMMANDS));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_arrow_up, getString(R.string.arrows), Util.IconCategory.ARROWS));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_view_module, getString(R.string.all), Util.IconCategory.ALL));
-        adapter = new CategoryAdapter(getActivity(), categoryList);
+        adapter = new CategoryAdapter(categoryList);
         lstIcons.setAdapter(adapter);
 
         this.container = container;
@@ -109,9 +110,11 @@ public class CategoryPickerFragment extends Fragment {
         }
     }
 
+    /**
+     * Adapter showing category of icons.
+     */
     private class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private Context context;
         private List<CategoryPicker> categories = new ArrayList<>();
 
         class CategoryHolder extends RecyclerView.ViewHolder {
@@ -127,8 +130,7 @@ public class CategoryPickerFragment extends Fragment {
             }
         }
 
-        public CategoryAdapter(Context context, List<CategoryPicker> categories) {
-            this.context = context;
+        public CategoryAdapter(List<CategoryPicker> categories) {
             this.categories = categories;
         }
 
@@ -139,8 +141,8 @@ public class CategoryPickerFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View itemView = inflater.inflate(R.layout.item_category, null);
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View itemView = inflater.inflate(R.layout.item_category, parent, false);
 
             return new CategoryHolder(itemView);
         }
@@ -153,30 +155,22 @@ public class CategoryPickerFragment extends Fragment {
 
             catHolder.lblCategory.setText(item.getCategory());
             if(item.getId() != Util.IconCategory.EMPTY) {
-                IconicsDrawable drawable = new IconicsDrawable(getActivity(), item.getIcon()).color(Color.BLACK).sizeDp(50);
+                IconicsDrawable drawable = new IconicsDrawable(getActivity(), item.getIcon()).color(Color.BLACK).sizeDp(60);
                 catHolder.imgIcon.setImageDrawable(drawable);
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(container.getId(), IconPickerFragment.newInstance(item.getId()))
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                });
+                holder.itemView.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(container.getId(), IconPickerFragment.newInstance(item.getId()))
+                        .addToBackStack(null)
+                        .commit());
             }
             else {
                 catHolder.imgIcon.setImageDrawable(null);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.putExtra(IconPickerFragment.RESULT_ICON, "");
+                holder.itemView.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.putExtra(IconPickerFragment.RESULT_ICON, "");
 
-                        getActivity().setResult(Activity.RESULT_OK, intent);
-                        getActivity().finish();
-                    }
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                    getActivity().finish();
                 });
             }
         }

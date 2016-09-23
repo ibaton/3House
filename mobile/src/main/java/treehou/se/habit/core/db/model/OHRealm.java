@@ -28,7 +28,7 @@ public class OHRealm {
         return new RealmConfiguration.Builder(context)
                 .modules(new OHRealmModule())
                 .migration(migration)
-                .name("treehou.realm")
+                .name("TreehouTest.realm")
                 .schemaVersion(2)
                 .build();
     }
