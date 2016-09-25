@@ -384,6 +384,7 @@ public class NavigationDrawerFragment extends RxFragment {
                 lblName.setText(entry.getName());
                 if(entry.getResource() != 0) {
                     imgIcon.setImageResource(entry.getResource());
+                    imgIcon.setColorFilter(lblName.getCurrentTextColor());
                 }
             }
         }

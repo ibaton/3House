@@ -37,7 +37,10 @@ public class DummyWidgetFactory {
         float imageSizePercentage = Util.toPercentage(settings.getIconSize());
         realm.close();
 
-        View itemView = inflater.inflate(R.layout.item_widget_base, null);
+        View holderView = inflater.inflate(R.layout.widget_container, null);
+        LinearLayout holder = (LinearLayout) holderView.findViewById(R.id.lou_widget_frame_holder);
+
+        View itemView = inflater.inflate(R.layout.item_widget_base, holder, false);
         View baseDataHolder = itemView.findViewById(R.id.lou_base_data_holder);
         TextView lblName = (TextView) itemView.findViewById(R.id.lbl_widget_name);
 
@@ -60,8 +63,6 @@ public class DummyWidgetFactory {
         setBackgroundColor(imgIcon, bitmap, backgroundType);
         iconHolder.setVisibility(View.VISIBLE);
 
-        View holderView = inflater.inflate(R.layout.widget_container, null);
-        LinearLayout holder = (LinearLayout) holderView.findViewById(R.id.lou_widget_frame_holder);
         holder.addView(itemView);
 
         return holderView;

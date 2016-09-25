@@ -2,11 +2,12 @@ package treehou.se.habit.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import android.support.annotation.IntDef;
+import android.support.annotation.StyleRes;
+import android.util.SparseIntArray;
 
 import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import javax.inject.Inject;
 
@@ -25,7 +26,12 @@ public class Settings {
     private static final String PREF_AUTOLOAD_SITEMAP = "pref_autoload_sitemap";
     private static final String PREF_SHOW_SITEMAPS_IN_MENU = "pref_show_sitemap_in_menu";
 
-    private static final int DEFAULT_THEME = R.style.AppTheme_Base;
+    @IntDef({Themes.THEME_DEFAULT, Themes.THEME_HABDROID_LIGHT, Themes.THEME_HABDROID_DARK})
+    public @interface Themes {
+        static final int THEME_DEFAULT = 1;
+        static final int THEME_HABDROID_LIGHT = 2;
+        static final int THEME_HABDROID_DARK = 3;
+    }
 
     @Inject SharedPreferences preferences;
     RxSharedPreferences rxPreferences;
@@ -33,10 +39,17 @@ public class Settings {
     private Preference<Integer> prefTheme;
     private Preference<Boolean> prefSitemapInMenu;
 
+    private static final SparseIntArray THEME_MAP = new SparseIntArray();
+    static {
+        THEME_MAP.put(Themes.THEME_DEFAULT, R.style.AppTheme_Base);
+        THEME_MAP.put(Themes.THEME_HABDROID_LIGHT, R.style.AppTheme_Base_habdroid_Light);
+        THEME_MAP.put(Themes.THEME_HABDROID_DARK, R.style.AppTheme_Base_habdroid_Dark);
+    }
+
     public Settings(Context context) {
         preferences = context.getSharedPreferences(PREF_MANAGER, Context.MODE_PRIVATE);
         rxPreferences = RxSharedPreferences.create(preferences);
-        prefTheme = rxPreferences.getInteger(PREF_THEME, DEFAULT_THEME);
+        prefTheme = rxPreferences.getInteger(PREF_THEME, Themes.THEME_DEFAULT);
         prefSitemapInMenu = rxPreferences.getBoolean(PREF_SHOW_SITEMAPS_IN_MENU, true);
     }
 
@@ -67,8 +80,25 @@ public class Settings {
      * Get theme of application
      * @return application theme.
      */
-    public int getTheme(){
+    public  int getTheme(){
         return prefTheme.get();
+    }
+
+    /**
+     * Get theme of application
+     * @return application theme.
+     */
+    @SuppressWarnings("ResourceType")
+    public @StyleRes int getThemeResourse(){
+        return getThemeResourse(prefTheme.get());
+    }
+
+    /**
+     * Get theme of application
+     * @return application theme.
+     */
+    public @StyleRes int getThemeResourse(@Themes int theme){
+         return THEME_MAP.get(theme, R.style.AppTheme_Base);
     }
 
     /**
@@ -77,6 +107,14 @@ public class Settings {
      */
     public Observable<Integer> getThemeRx(){
         return prefTheme.asObservable().distinctUntilChanged();
+    }
+
+    /**
+     * Get theme of application
+     * @return application theme.
+     */
+    public Observable<Integer> getThemeResourceRx(){
+        return prefTheme.asObservable().distinctUntilChanged().map(theme -> THEME_MAP.get(theme, R.style.AppTheme_Base));
     }
 
     /**

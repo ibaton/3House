@@ -15,7 +15,7 @@
         <item name="android:lines">1</item>
     </style>
 
-    <style name="MenuItemTextSmaller" parent="TextAppearance.AppCompat.Large">
+    <style name="MenuItemTextSmaller" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">20sp</item>
         <item name="android:lines">1</item>
     </style>
@@ -71,15 +71,28 @@
     <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
     </style>
 
-    <style name="drawer_item_text">
+    <style name="drawer_item_text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:textColor">@color/drawer_text</item>
         <item name="android:layout_gravity">left|center_vertical</item>
     </style>
 
     <style name="inbox_item_button" parent="Widget.AppCompat.ImageButton">
         <item name="android:padding">10dp</item>
+    </style>
+    
+    <style name="item_card" parent="CardView">
+        <item name="cardElevation">@dimen/item_elevation</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardBackgroundColor">?android:windowBackground</item>
+    </style>
+
+    <style name="actionbar_primary">
+        <item name="android:background">?colorPrimary</item>
+    </style>
+
+    <style name="actionbar_dark">
+        <item name="android:background">?colorPrimaryDark</item>
     </style>
 </resources>

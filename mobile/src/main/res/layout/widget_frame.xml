@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,9 +11,7 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardElevation="@dimen/item_elevation"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardBackgroundColor="@color/item_background">
+        style="@style/item_card">
 
     <LinearLayout
         android:orientation="vertical"
@@ -42,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:divider="@drawable/item_divider"
+            android:divider="?attr/itemDivider"
             android:showDividers="beginning|middle"
             android:id="@+id/lou_widget_frame_holder"/>
     </LinearLayout>

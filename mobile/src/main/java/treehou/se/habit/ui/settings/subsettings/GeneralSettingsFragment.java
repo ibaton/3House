@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.util.Settings;
 
 public class GeneralSettingsFragment extends RxFragment {
+
+    private static final String TAG = GeneralSettingsFragment.class.getSimpleName();
 
     @Inject Settings settings;
 
@@ -85,8 +88,9 @@ public class GeneralSettingsFragment extends RxFragment {
 
         Spinner spinnerThemes = (Spinner) rootView.findViewById(R.id.spr_themes);
         ThemeItem[] themeSpinner = new ThemeItem[] {
-                new ThemeItem(R.style.AppTheme_Base, getString(R.string.treehouse)),
-                new ThemeItem(R.style.AppTheme_Base_habdroid_Light, getString(R.string.habdroid))
+                new ThemeItem(Settings.Themes.THEME_DEFAULT, getString(R.string.treehouse)),
+                new ThemeItem(Settings.Themes.THEME_HABDROID_LIGHT, getString(R.string.habdroid)),
+                new ThemeItem(Settings.Themes.THEME_HABDROID_DARK, getString(R.string.dark))
         };
         ArrayAdapter<ThemeItem> themeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, themeSpinner);
         spinnerThemes.setAdapter(themeAdapter);
@@ -109,15 +113,14 @@ public class GeneralSettingsFragment extends RxFragment {
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
                 .subscribe(integer -> {
-                    for(int i=0; i<=themeSpinner.length; i++){
+                    for(int i=0; i < themeSpinner.length; i++){
                         if(themeSpinner[i].theme == settings.getTheme()){
                             spinnerThemes.setOnItemSelectedListener(null);
                             spinnerThemes.setSelection(i);
-                            spinnerThemes.setOnItemSelectedListener(themeListener);
-
                             break;
                         }
                     }
+                    spinnerThemes.setOnItemSelectedListener(themeListener);
                 });
 
         // Inflate the layout for this fragment

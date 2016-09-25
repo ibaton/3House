@@ -18,9 +18,11 @@ import treehou.se.habit.ui.widgets.factories.IWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ImageWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SelectionWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SetpointWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.TextWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.VideoWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.WebWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.switches.SwitchWidgetFactory;
 
 public class WidgetFactory {
 

@@ -102,7 +102,7 @@ public class SitemapListFragment extends RxFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sitemaplist, container, false);
+        View view = inflater.inflate(R.layout.fragment_sitemaplist_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         setupActionBar();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);

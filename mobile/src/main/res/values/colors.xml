@@ -16,9 +16,13 @@
 
     <!--<color name="background">#ff515151</color>-->
     <color name="background">#ffdcdcdc</color>
+    <color name="background_dark">#ff222222</color>
 
     <color name="item_background">#ffffffff</color>
     <color name="item_background_border">#8c8c8c</color>
+    
+    <color name="colorBackgroundAccent">#8c8c8c</color>
+    <color name="colorBackgroundAccentDark">#ff444444</color>
 
     <color name="button_background">#ffffffff</color>
     <color name="button_background_active">#ffaaaaaa</color>

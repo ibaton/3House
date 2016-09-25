@@ -5,9 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
+import javax.inject.Inject;
+
 import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
+import treehou.se.habit.util.Settings;
 
 public class ColorpickerActivity extends AppCompatActivity {
 
@@ -15,8 +19,12 @@ public class ColorpickerActivity extends AppCompatActivity {
     public static final String EXTRA_WIDGET = "EXTRA_SITEMAP";
     public static final String EXTRA_COLOR  = "EXTRA_COLOR";
 
+    @Inject Settings settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((HabitApplication) getApplication()).component().inject(this);
+        setTheme(settings.getThemeResourse());
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_colorpicker);

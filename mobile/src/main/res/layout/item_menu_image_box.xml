@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,15 +8,11 @@
     android:paddingTop="@dimen/item_spacing_vertical">
 
     <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardElevation="@dimen/item_elevation"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardBackgroundColor="@color/item_background">
+        style="@style/item_card">
 
         <LinearLayout
             android:orientation="vertical"

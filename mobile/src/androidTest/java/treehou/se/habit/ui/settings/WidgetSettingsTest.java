@@ -1,5 +1,7 @@
 package treehou.se.habit.ui.settings;
 
+import android.app.Activity;
+import android.os.Looper;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
@@ -11,12 +13,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.realm.Realm;
 import treehou.se.habit.DaggerActivityTestRule;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.data.TestAndroidModule;
+import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.module.DaggerApplicationComponent;
+import treehou.se.habit.util.Settings;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -29,7 +39,12 @@ import static treehou.se.habit.ViewActions.SliderActions.setProgress;
 public class WidgetSettingsTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> activityRule = new DaggerActivityTestRule<MainActivity>(MainActivity.class) {
+        @Override
+        public ApplicationComponent setupComponent(HabitApplication application, Activity activity) {
+            return createComponent(application);
+        }
+    };
 
     @Before
     public void moveToWidget(){
@@ -79,5 +94,12 @@ public class WidgetSettingsTest {
     @Test
     public void testCompressSlider() {
         onView(withId(R.id.swt_compressed_slider)).perform(scrollTo(), ViewActions.click());
+    }
+
+    private ApplicationComponent createComponent(HabitApplication application){
+        ApplicationComponent component = DaggerApplicationComponent.builder()
+                .androidModule(new TestAndroidModule(application){}).build();
+
+        return component;
     }
 }

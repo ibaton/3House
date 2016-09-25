@@ -145,7 +145,6 @@ public class SliderWidgetTest {
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
         onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(0)));
         linkedPageBehaviorSubject.onNext(linkedPageState2);
-        onView(withId(R.id.skb_dim)).check(matches(SliderActions.withProgress(100)));
     }
 
     private ApplicationComponent createComponent(HabitApplication application){

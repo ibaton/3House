@@ -14,9 +14,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardElevation="@dimen/item_elevation"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardBackgroundColor="@color/item_background">
+        style="@style/item_card">
 
         <LinearLayout
             android:orientation="horizontal"

@@ -132,4 +132,5 @@
     <string name="links">Links</string>
     <string name="remove_link">Remove link?</string>
     <string name="failed_delete_link">Failed to delete link.</string>
+    <string name="dark">dark</string>
 </resources>
