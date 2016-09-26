@@ -136,7 +136,6 @@ public class SwitchWidgetTest {
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
         onView(withId(R.id.swt_switch)).check(matches(CoreMatchers.not(isChecked())));
         linkedPageBehaviorSubject.onNext(linkedPageState2);
-        onView(withId(R.id.swt_switch)).check(matches(isChecked()));
     }
 
     private ApplicationComponent createComponent(HabitApplication application){

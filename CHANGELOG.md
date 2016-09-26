@@ -1,3 +1,9 @@
+## 5.2.3
+
+### Bug Fixes
+* Fix problems with vector images on v 16 version.
+
+
 ## 5.2.1
 
 ### Bug Fixes

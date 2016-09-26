@@ -10,8 +10,8 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 60
-        versionName "5.2.2"
+        versionCode 61
+        versionName "5.2.3"
         // Enabling multidex support.
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -98,8 +98,8 @@ dependencies {
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
     compile 'com.google.firebase:firebase-core:9.6.0'
     compile 'com.google.firebase:firebase-crash:9.6.0'
-    compile 'com.google.dagger:dagger:2.6'
-    apt 'com.google.dagger:dagger-compiler:2.6'
+    compile 'com.google.dagger:dagger:2.7'
+    apt 'com.google.dagger:dagger-compiler:2.7'
     provided 'javax.annotation:jsr250-api:1.0'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
