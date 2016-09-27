@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -28,18 +31,21 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
+import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellButtonConfigFragment extends Fragment {
     
-    private static final String TAG = "CellButtonConfigFragment";
+    private static final String TAG = "CellButtonConfig";
     
     private static String ARG_CELL_ID = "ARG_CELL_ID";
     private static int REQUEST_ICON = 183;
@@ -48,6 +54,8 @@ public class CellButtonConfigFragment extends Fragment {
     @BindView(R.id.tgl_on_off) ToggleButton tglOnOff;
     @BindView(R.id.txt_command) TextView txtCommand;
     @BindView(R.id.btn_set_icon) ImageView btnSetIcon;
+
+    @Inject ConnectionFactory connectionFactory;
 
     private ArrayAdapter<OHItem> mItemAdapter;
     private ArrayList<OHItem> mItems = new ArrayList<>();
@@ -72,6 +80,8 @@ public class CellButtonConfigFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((HabitApplication) getActivity().getApplication()).component().inject(this);
 
         realm = Realm.getDefaultInstance();
 
@@ -162,11 +172,11 @@ public class CellButtonConfigFragment extends Fragment {
 
                 @Override
                 public void onError() {
-
+                    Log.e(TAG, "Error fetching switch items");
                 }
             };
 
-            IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
             serverHandler.requestItems(callback);
         }
 

@@ -21,8 +21,8 @@
     <color name="item_background">#ffffffff</color>
     <color name="item_background_border">#8c8c8c</color>
     
-    <color name="colorBackgroundAccent">#8c8c8c</color>
-    <color name="colorBackgroundAccentDark">#ff444444</color>
+    <color name="colorBackgroundAccent">#cfcfcf</color>
+    <color name="colorBackgroundAccentDark">#2d2d2d</color>
 
     <color name="button_background">#ffffffff</color>
     <color name="button_background_active">#ffaaaaaa</color>

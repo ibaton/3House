@@ -67,7 +67,7 @@ public class RxUtil {
                     sitemapDB.setName(sitemap.getName());
 
                     realm.beginTransaction();
-                    sitemapDB = realm.copyToRealm(sitemapDB);
+                    sitemapDB = realm.copyToRealmOrUpdate(sitemapDB);
                     realm.commitTransaction();
                 }
 
@@ -78,7 +78,7 @@ public class RxUtil {
                     sitemapSettingsDB.setId(DBHelper.getUniqueId(realm, SitemapSettingsDB.class));
 
                     realm.beginTransaction();
-                    sitemapSettingsDB = realm.copyToRealm(sitemapSettingsDB);
+                    sitemapSettingsDB = realm.copyToRealmOrUpdate(sitemapSettingsDB);
                     sitemapDB.setSettingsDB(sitemapSettingsDB);
                     realm.commitTransaction();
                 }

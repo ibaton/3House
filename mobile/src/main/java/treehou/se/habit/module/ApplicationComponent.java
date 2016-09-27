@@ -9,6 +9,7 @@ import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
 import treehou.se.habit.ui.control.SliderActivity;
+import treehou.se.habit.ui.control.config.CellButtonConfigFragment;
 import treehou.se.habit.ui.links.LinksListFragment;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.servers.ServersFragment;
@@ -30,6 +31,7 @@ public interface ApplicationComponent {
     void inject(SitemapListFragment fragment);
     void inject(SitemapSelectFragment fragment);
     void inject(SitemapFragment fragment);
+    void inject(CellButtonConfigFragment fragment);
     void inject(GeneralSettingsFragment fragment);
     void inject(ServersFragment fragment);
     void inject(NavigationDrawerFragment fragment);

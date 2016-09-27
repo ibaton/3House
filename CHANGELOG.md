@@ -1,3 +1,9 @@
+## 5.2.4
+
+### Bug Fixes
+* Fix database reset bug.
+
+
 ## 5.2.3
 
 ### Bug Fixes

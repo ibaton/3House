@@ -6,5 +6,5 @@
     <size android:height="1dp"/>
     <padding android:right="10dp"
         android:left="10dp"/>
-    <solid android:color="@color/colorBackgroundAccentDark"/>
+    <solid android:color="@color/colorBackgroundAccent"/>
 </shape>

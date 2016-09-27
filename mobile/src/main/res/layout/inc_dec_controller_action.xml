@@ -18,7 +18,7 @@
             android:layout_marginBottom="@dimen/item_margin"
             card_view:cardElevation="@dimen/item_elevation"
             card_view:cardUseCompatPadding="true"
-            card_view:cardBackgroundColor="?android:itemBackground">
+            style="@style/item_card">
 
 
             <LinearLayout
