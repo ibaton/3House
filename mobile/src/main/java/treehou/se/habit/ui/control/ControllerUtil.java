@@ -117,11 +117,10 @@ public class ControllerUtil {
      */
     public static void showNotifications(Context context) {
         Realm realm = Realm.getDefaultInstance();
+        NotificationManagerCompat.from(context).cancelAll();
         for(ControllerDB controller : realm.where(ControllerDB.class).findAll()) {
             if (controller.isShowNotification()) {
                 ControllerUtil.showNotification(context, controller);
-            } else {
-                ControllerUtil.hideNotification(context, controller);
             }
         }
         realm.close();
