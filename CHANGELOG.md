@@ -1,3 +1,9 @@
+## 5.2.5
+
+### Bug Fixes
+* Eventual cancellation of notifications.
+ 
+
 ## 5.2.4
 
 ### Bug Fixes
