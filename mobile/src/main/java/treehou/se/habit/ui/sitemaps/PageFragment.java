@@ -199,7 +199,6 @@ public class PageFragment extends RxFragment {
      * @param page
      */
     private synchronized void updatePage(final OHLinkedPage page){
-        Log.d(TAG, "Updating page " + page.getTitle() + " widgets " + widgets.size() + " : " + page.getWidgets().size());
         this.page = page;
 
         final List<OHWidget> pageWidgets = page.getWidgets();
