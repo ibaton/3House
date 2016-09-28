@@ -2,6 +2,7 @@
 
 ### Bug Fixes
 * Eventual cancellation of notifications.
+* Fix nullpointer exception when updating page with no title.
  
 
 ## 5.2.4
