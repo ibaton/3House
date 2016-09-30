@@ -157,7 +157,11 @@ public class PageFragment extends RxFragment {
         return serverHandler.requestPageUpdatesRx(server, page)
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())
-                .subscribe(this::updatePage);
+                .subscribe(this::updatePage, throwable -> {
+                    Log.e(TAG, "Error when requesting page ", throwable);
+                    Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                });
     }
 
     @Override

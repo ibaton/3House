@@ -121,6 +121,11 @@ public class SitemapFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        if(sitemap == null){
+            popStack();
+            return;
+        }
+
         if(!hasPage()) {
             final IServerHandler serverHandler = connectionFactory.createServerHandler(sitemap.getServer(), getActivity());
             serverHandler.requestPageRx(sitemap.getHomepage())
