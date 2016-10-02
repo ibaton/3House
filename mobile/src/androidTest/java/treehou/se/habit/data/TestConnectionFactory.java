@@ -90,12 +90,7 @@ public class TestConnectionFactory extends ConnectionFactory {
         }
 
         @Override
-        public Connector.ServerHandler.PageRequestTask requestPageUpdates(OHServer ohServer, OHLinkedPage ohLinkedPage, OHCallback<OHLinkedPage> ohCallback) {
-            return null;
-        }
-
-        @Override
-        public Observable<OHLinkedPage> requestPageUpdatesRx(OHServer ohServer, OHLinkedPage ohLinkedPage) {
+        public Observable<OHLinkedPage> requestPageUpdatesRx(OHLinkedPage ohLinkedPage) {
             return null;
         }
 

@@ -26,7 +26,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
@@ -47,12 +46,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class SwitchWidgetTest {
+public class ErrorWidgetTest {
 
     static final String SERVER_NAME = "Test Server";
     static final String SITEMAP_NAME = "Test Sitemap";
@@ -130,12 +130,13 @@ public class SwitchWidgetTest {
     };
 
     @Test
-    public void testDisplaySitemaps() {
+    public void testHandleSitemapError() {
         NavigationUtil.navigateToSitemap();
         onView(allOf(isDescendantOfA(withId(R.id.list)), withText(SITEMAP_NAME))).perform(ViewActions.click());
         onView(withText(WIDGET_LABEL)).check(matches(isDisplayed()));
         onView(withId(R.id.swt_switch)).check(matches(CoreMatchers.not(isChecked())));
-        linkedPageBehaviorSubject.onNext(linkedPageState2);
+        linkedPageBehaviorSubject.onError(new Exception());
+        onView(allOf(withParent(withId(R.id.toolbar)), withText(R.string.sitemaps))).check(matches(isDisplayed()));
     }
 
     private ApplicationComponent createComponent(HabitApplication application){

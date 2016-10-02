@@ -5,6 +5,9 @@
 * Fix nullpointer exception when updating page with no title.
  
 
+## 5.2.6
+* Updated long poller handling.
+
 ## 5.2.4
 
 ### Bug Fixes

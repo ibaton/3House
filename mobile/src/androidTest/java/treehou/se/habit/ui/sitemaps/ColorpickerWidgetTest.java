@@ -214,7 +214,7 @@ public class ColorpickerWidgetTest {
                                     }
 
                                     @Override
-                                    public Observable<OHLinkedPage> requestPageUpdatesRx(OHServer ohServer, OHLinkedPage ohLinkedPage) {
+                                    public Observable<OHLinkedPage> requestPageUpdatesRx(OHLinkedPage ohLinkedPage) {
                                         return linkedPageBehaviorSubject.asObservable();
                                     }
 

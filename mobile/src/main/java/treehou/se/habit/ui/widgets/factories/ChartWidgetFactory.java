@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import se.treehou.ng.ohcommunicator.connector.ConnectorUtil;
+import se.treehou.ng.ohcommunicator.util.ConnectorUtil;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;

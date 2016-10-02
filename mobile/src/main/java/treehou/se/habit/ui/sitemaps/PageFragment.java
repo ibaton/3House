@@ -24,7 +24,7 @@ import io.realm.Realm;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
@@ -154,7 +154,7 @@ public class PageFragment extends RxFragment {
         OHServer server = serverLoaderFactory.loadServer(realm, serverId);
         realm.close();
         final IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
-        return serverHandler.requestPageUpdatesRx(server, page)
+        return serverHandler.requestPageUpdatesRx(page)
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())
                 .subscribe(this::updatePage, throwable -> {

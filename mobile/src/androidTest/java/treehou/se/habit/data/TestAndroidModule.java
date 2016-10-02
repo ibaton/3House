@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 import dagger.Provides;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import se.treehou.ng.ohcommunicator.connector.GsonHelper;
+import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.OHRealmModule;
 import treehou.se.habit.core.db.model.ServerDB;

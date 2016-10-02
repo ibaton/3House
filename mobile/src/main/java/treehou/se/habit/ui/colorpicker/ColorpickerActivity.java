@@ -7,8 +7,8 @@ import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
-import se.treehou.ng.ohcommunicator.connector.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.util.Settings;
