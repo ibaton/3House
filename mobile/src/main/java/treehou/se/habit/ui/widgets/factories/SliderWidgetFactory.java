@@ -86,6 +86,7 @@ public class SliderWidgetFactory implements IWidgetFactory {
                 }
             }catch (Exception e){
                 Log.e(TAG, "Failed to update progress", e);
+                skbDim.setProgress(0);
             }
 
             skbDim.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

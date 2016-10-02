@@ -205,29 +205,13 @@ public class PageFragment extends RxFragment {
      * @param page
      */
     private synchronized void updatePage(final OHLinkedPage page){
-        if(page == null || page.getWidgets() == null){
-            return;
-        }
+        if(page == null || page.getWidgets() == null) return;
+
         this.page = page;
-
         final List<OHWidget> pageWidgets = page.getWidgets();
-        boolean invalidate = pageWidgets.size() != widgets.size();
-        if(!invalidate){
-            for(int i=0; i < widgets.size(); i++) {
-                OHWidget currentWidget = widgets.get(i);
-                OHWidget newWidget = pageWidgets.get(i);
+        boolean invalidate = !canBeUpdated(widgets, pageWidgets);
 
-                // TODO check if widget needs updating
-                //if(currentWidget.needUpdate(newWidget)){
-                    Log.d(TAG, "Widget " + currentWidget.getType() + " " + currentWidget.getLabel() + " needs update");
-                    invalidate = true;
-                    break;
-                //}
-            }
-        }
-
-        final boolean invalidateWidgets = invalidate;
-        if(invalidateWidgets) {
+        if(invalidate) {
             invalidateWidgets(pageWidgets);
         } else {
             updateWidgets(pageWidgets);
@@ -235,10 +219,57 @@ public class PageFragment extends RxFragment {
     }
 
     /**
+     * Check if item can be updgraded without replacing widget.
+     * @param widget1 first widget to check.
+     * @param widget2 second widget to check.
+     * @return true if widget can be updated, else false.
+     */
+    public boolean canBeUpdated(OHWidget widget1, OHWidget widget2){
+        if(!widget1.getType().equals(widget2.getType())){
+            return false;
+        }
+
+        if(widget1.getItem() == null && widget2.getItem() == null){
+            return true;
+        }
+
+        if(widget1.getItem() != null && widget2.getItem() != null){
+            return widget1.getItem().getType().equals(widget2.getItem().getType());
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if item can be updgraded without replacing widget.
+     * @param widgetSet1 first widget set to check.
+     * @param widgetSet2 second widget set to check.
+     * @return true if widget can be updated, else false.
+     */
+    public boolean canBeUpdated(List<OHWidget> widgetSet1, List<OHWidget> widgetSet2){
+        boolean invalidate = widgetSet1.size() != widgetSet2.size();
+        if(!invalidate){
+            for(int i=0; i < widgetSet1.size(); i++) {
+                OHWidget currentWidget = widgetSet1.get(i);
+                OHWidget newWidget = widgetSet2.get(i);
+
+                // TODO check if widget needs updating
+                if(!canBeUpdated(currentWidget, newWidget)){
+                    Log.d(TAG, "Widget " + currentWidget.getType() + " " + currentWidget.getLabel() + " needs update");
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Invalidate all widgets in page.
      * @param pageWidgets the widgets to update.
      */
     private void invalidateWidgets(List<OHWidget> pageWidgets){
+        Log.d(TAG, "Invalidate widgets");
         widgetHolders.clear();
         louFragments.removeAllViews();
 
