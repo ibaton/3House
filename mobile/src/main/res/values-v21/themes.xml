@@ -39,6 +39,9 @@
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/colorPrimaryLighter</item>
 
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
+        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
+
         <item name="android:windowBackground">@color/background_dark</item>
 
         <item name="android:windowContentTransitions">true</item>

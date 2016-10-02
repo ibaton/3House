@@ -24,6 +24,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="android:textColorPrimary">@color/text_primary_dark</item>
+        <item name="android:textColorSecondary">@color/text_secondary_dark</item>
+
         <item name="windowActionModeOverlay">false</item>
 
         <item name="android:windowBackground">@color/background_dark</item>

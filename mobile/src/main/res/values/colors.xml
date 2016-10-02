@@ -39,6 +39,9 @@
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#727272</color>
 
+    <color name="text_primary_dark">#f2f2f2</color>
+    <color name="text_secondary_dark">#bebebe</color>
+
     <color name="text_dark">#ff222222</color>
 
     <color name="frame_header">#ff686868</color>
