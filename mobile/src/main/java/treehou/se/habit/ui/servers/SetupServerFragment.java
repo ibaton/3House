@@ -2,12 +2,17 @@ package treehou.se.habit.ui.servers;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,16 +22,18 @@ import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 
-public class SetupServerFragment extends Fragment {
+public class SetupServerFragment extends RxFragment {
 
     private static final String ARG_SERVER = "ARG_SERVER";
     public static final String ARG_BUTTON_TEXT_ID = "ARG_BUTTON_TEXT_ID";
 
     private static final String EXTRA_SERVER_ID = "EXTRA_SERVER_ID";
 
-    @BindView(R.id.txt_server_name) EditText txtName;
-    @BindView(R.id.txt_server_local) EditText txtLocalUrl;
-    @BindView(R.id.txt_server_remote) EditText txtRemoteUrl;
+    @BindView(R.id.server_name_text) EditText txtName;
+    @BindView(R.id.server_local_text) EditText localUrlText;
+    @BindView(R.id.error_local_url) TextView errorLocalUrlText;
+    @BindView(R.id.txt_server_remote) EditText remoteUrlText;
+    @BindView(R.id.error_remote_url) TextView errorRemoteUrlText;
     @BindView(R.id.txt_username) EditText txtUsername;
     @BindView(R.id.txt_password) EditText txtPassword;
     @BindView(R.id.btn_back) Button btnBack;
@@ -90,12 +97,24 @@ public class SetupServerFragment extends Fragment {
         ServerDB server = realm.where(ServerDB.class).equalTo("id", serverId).findFirst();
         if(server != null) {
             txtName.setText(server.getName());
-            txtLocalUrl.setText(server.getLocalUrl());
-            txtRemoteUrl.setText(server.getRemoteUrl());
+            localUrlText.setText(server.getLocalUrl());
+            remoteUrlText.setText(server.getRemoteUrl());
             txtUsername.setText(server.getUsername());
             txtPassword.setText(server.getPassword());
         }
         realm.close();
+
+        RxTextView.textChanges(remoteUrlText)
+                .compose(bindToLifecycle())
+                .subscribe(text -> {
+                    errorRemoteUrlText.setVisibility(text.length() <= 0 || Patterns.WEB_URL.matcher(text).matches() ? View.GONE : View.VISIBLE);
+                });
+
+        RxTextView.textChanges(localUrlText)
+                .compose(bindToLifecycle())
+                .subscribe(text -> {
+                    errorLocalUrlText.setVisibility(text.length() <= 0 || Patterns.WEB_URL.matcher(text).matches() ? View.GONE : View.VISIBLE);
+                });
     }
 
     private String toUrl(String text){
@@ -118,8 +137,8 @@ public class SetupServerFragment extends Fragment {
                 server.setId(serverId);
             }
             server.setName(txtName.getText().toString());
-            server.setLocalUrl(toUrl(txtLocalUrl.getText().toString()));
-            server.setRemoteUrl(toUrl(txtRemoteUrl.getText().toString()));
+            server.setLocalUrl(toUrl(localUrlText.getText().toString()));
+            server.setRemoteUrl(toUrl(remoteUrlText.getText().toString()));
             server.setUsername(txtUsername.getText().toString());
             server.setPassword(txtPassword.getText().toString());
             realm1.copyToRealmOrUpdate(server);

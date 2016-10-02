@@ -95,4 +95,9 @@
     <style name="actionbar_dark">
         <item name="android:background">?colorPrimaryDark</item>
     </style>
+
+    <style name="warning_text" parent="TextAppearance.AppCompat.Small">
+        <item name="android:background">@color/grey</item>
+        <item name="android:padding">@dimen/item_spacing</item>
+    </style>
 </resources>

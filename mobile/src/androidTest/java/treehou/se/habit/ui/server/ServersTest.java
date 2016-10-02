@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 
 import java.util.Random;
 
-import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
@@ -44,7 +43,7 @@ public class ServersTest {
 
     private void createServer(String testServerName){
         onView(anyOf(allOf(withId(R.id.fab_add), isDisplayed()), allOf(withText(R.string.new_server), isDisplayed()))).perform(click());
-        onView(withId(R.id.txt_server_name)).perform(ViewActions.typeText(testServerName));
+        onView(withId(R.id.server_name_text)).perform(ViewActions.typeText(testServerName));
         closeSoftKeyboard();
         pressBack();
     }
@@ -53,7 +52,7 @@ public class ServersTest {
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))));
         onView(withId(R.id.list)).perform(actionOnItem(hasDescendant(withText(testServerName)), longClick()));
         onView(withText(R.string.ok)).perform(click());
-        onView(withId(R.id.txt_server_name)).check(doesNotExist());
+        onView(withId(R.id.server_name_text)).check(doesNotExist());
     }
 
     @Test
@@ -72,8 +71,8 @@ public class ServersTest {
 
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
         onView(withText("Edit")).perform(click());
-        onView(withId(R.id.txt_server_name)).perform(ViewActions.clearText());
-        onView(withId(R.id.txt_server_name)).perform(ViewActions.typeText(testServerName));
+        onView(withId(R.id.server_name_text)).perform(ViewActions.clearText());
+        onView(withId(R.id.server_name_text)).perform(ViewActions.typeText(testServerName));
         closeSoftKeyboard();
         pressBack();
         pressBack();

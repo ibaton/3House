@@ -133,4 +133,5 @@
     <string name="remove_link">Remove link?</string>
     <string name="failed_delete_link">Failed to delete link.</string>
     <string name="dark">dark</string>
+    <string name="invalid_url">Invalid Url</string>
 </resources>

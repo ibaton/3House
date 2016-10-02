@@ -43,4 +43,6 @@
     <color name="transparent_dark">#77000000</color>
 
     <color name="load">#cacac5</color>
+
+    <color name="grey">#c6c6c6</color>
 </resources>
