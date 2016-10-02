@@ -25,7 +25,8 @@
         <item name="android:itemBackground">@color/background</item>
 
         <item name="itemDivider">@drawable/item_divider</item>
-
+        <item name="card_style">@style/item_card</item>
+        <item name="menu_item_style">@style/menu_item_icon</item>
         <item name="actionbar_style">@style/actionbar_primary</item>
     </style>
 
@@ -51,7 +52,8 @@
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
 
         <item name="itemDivider">@drawable/item_divider_dark</item>
-
+        <item name="card_style">@style/item_card_dark</item>
+        <item name="menu_item_style">@style/menu_item_icon_dark</item>
         <item name="android:itemBackground">@color/background_dark</item>
 
         <item name="actionbar_style">@style/actionbar_dark</item>

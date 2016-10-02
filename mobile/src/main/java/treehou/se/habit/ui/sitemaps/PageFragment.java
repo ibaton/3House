@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
@@ -158,7 +159,8 @@ public class PageFragment extends RxFragment {
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())
                 .subscribe(this::updatePage, throwable -> {
-                    Log.e(TAG, "Error when requesting page ", throwable);
+                    FirebaseCrash.report(throwable);
+                    Log.e(TAG, "Error when requesting page", throwable);
                     Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
                     getActivity().getSupportFragmentManager().popBackStack();
                 });
@@ -203,6 +205,9 @@ public class PageFragment extends RxFragment {
      * @param page
      */
     private synchronized void updatePage(final OHLinkedPage page){
+        if(page == null || page.getWidgets() == null){
+            return;
+        }
         this.page = page;
 
         final List<OHWidget> pageWidgets = page.getWidgets();

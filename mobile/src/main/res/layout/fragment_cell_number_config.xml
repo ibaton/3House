@@ -13,7 +13,7 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/item_card">
+            style="?attr/card_style">
 
             <LinearLayout
                 android:orientation="vertical"

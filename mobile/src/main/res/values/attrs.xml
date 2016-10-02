@@ -2,4 +2,6 @@
 <resources>
     <attr name="itemDivider" format="reference" />
     <attr name="actionbar_style" format="reference" />
+    <attr name="card_style" format="reference" />
+    <attr name="menu_item_style" format="reference" />
 </resources>

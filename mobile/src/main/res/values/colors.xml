@@ -18,6 +18,9 @@
     <color name="background">#ffdcdcdc</color>
     <color name="background_dark">#ff222222</color>
 
+    <color name="background_card">#f4f4f4</color>
+    <color name="background_card_dark">#454545</color>
+
     <color name="item_background">#ffffffff</color>
     <color name="item_background_border">#8c8c8c</color>
     
@@ -45,4 +48,10 @@
     <color name="load">#cacac5</color>
 
     <color name="grey">#c6c6c6</color>
+
+    <color name="blue">#3eb2e1</color>
+    <color name="red">#e1463e</color>
+    <color name="dark_blue">#1b6786</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

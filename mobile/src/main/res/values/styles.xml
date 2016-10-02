@@ -85,7 +85,22 @@
         <item name="cardElevation">@dimen/item_elevation</item>
         <item name="cardUseCompatPadding">true</item>
         <item name="cardCornerRadius">0dp</item>
-        <item name="cardBackgroundColor">?android:windowBackground</item>
+        <item name="cardBackgroundColor">@color/background_card</item>
+    </style>
+
+    <style name="item_card_dark" parent="CardView">
+        <item name="cardElevation">@dimen/item_elevation</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardBackgroundColor">@color/background_card_dark</item>
+    </style>
+
+    <style name="menu_item_icon">
+        <item name="android:tint">@color/black</item>
+    </style>
+
+    <style name="menu_item_icon_dark">
+        <item name="android:tint">@color/white</item>
     </style>
 
     <style name="actionbar_primary">
@@ -97,6 +112,11 @@
     </style>
 
     <style name="warning_text" parent="TextAppearance.AppCompat.Small">
+        <item name="android:background">@color/grey</item>
+        <item name="android:padding">@dimen/item_spacing</item>
+    </style>
+
+    <style name="menu_icon">
         <item name="android:background">@color/grey</item>
         <item name="android:padding">@dimen/item_spacing</item>
     </style>

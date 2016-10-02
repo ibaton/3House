@@ -12,7 +12,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/item_card">
+        style="?attr/card_style">
 
         <LinearLayout
             android:orientation="vertical"
@@ -24,7 +24,8 @@
             <ImageView
                 android:layout_width="@dimen/menu_item_image_size_small"
                 android:layout_height="@dimen/menu_item_image_size_small"
-                android:id="@+id/img_item" />
+                android:id="@+id/img_item"
+                style="?attr/menu_item_style"/>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -1,13 +1,18 @@
+## 5.2.6
+
+### Enhancements
+* Updated dark theme. Making card views more visible.
+
+### Bug Fixes
+* Updated long poller handling.
+
+
 ## 5.2.5
 
 ### Bug Fixes
 * Eventual cancellation of notifications.
-* Fix nullpointer exception when updating page with no title.
+* Fix null pointer exception when updating page with no title.
  
-
-## 5.2.6
-* Updated long poller handling.
-
 ## 5.2.4
 
 ### Bug Fixes

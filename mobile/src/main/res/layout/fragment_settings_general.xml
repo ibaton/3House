@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/item_margin"
-            style="@style/item_card">
+            style="?attr/card_style">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -44,7 +44,7 @@
             android:id="@+id/card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/item_card">
+            style="?attr/card_style">
 
         <LinearLayout
             android:orientation="vertical"

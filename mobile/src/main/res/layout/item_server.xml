@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/item_card">
+        style="?attr/card_style">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -24,7 +25,10 @@
                 android:layout_height="@dimen/menu_item_image_size"
                 android:layout_marginRight="@dimen/short_space"
                 android:id="@+id/imageView3"
-                android:src="@drawable/ic_icon_server" />
+                android:background="@color/dark_blue"
+                android:padding="10dp"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/server_icon"  />
 
             <LinearLayout
                 android:orientation="vertical"
