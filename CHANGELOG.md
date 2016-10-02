@@ -2,6 +2,7 @@
 
 ### Enhancements
 * Updated dark theme. Making card views more visible.
+* Use label as display name in sitemap list.
 
 ### Bug Fixes
 * Updated long poller handling.
