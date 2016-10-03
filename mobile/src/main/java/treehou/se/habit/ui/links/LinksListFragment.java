@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.links;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -13,30 +12,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHLink;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.LinkAdapter;
 import treehou.se.habit.util.ConnectionFactory;
 
-public class LinksListFragment extends RxFragment {
+public class LinksListFragment extends BaseFragment {
 
     private static final String TAG = LinksListFragment.class.getSimpleName();
 

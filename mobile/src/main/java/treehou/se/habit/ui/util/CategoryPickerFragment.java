@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import treehou.se.habit.R;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Util;
 
 /**
  * Fragment for picking categories of icons.
  */
-public class CategoryPickerFragment extends Fragment {
+public class CategoryPickerFragment extends BaseFragment {
 
     private RecyclerView lstIcons;
     private CategoryAdapter adapter;

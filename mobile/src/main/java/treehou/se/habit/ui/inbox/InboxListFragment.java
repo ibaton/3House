@@ -16,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,10 +31,11 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.InboxAdapter;
 import treehou.se.habit.util.RxUtil;
 
-public class InboxListFragment extends RxFragment {
+public class InboxListFragment extends BaseFragment {
 
     private static final String TAG = "InboxListFragment";
 

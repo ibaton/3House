@@ -27,12 +27,13 @@ import io.realm.RealmResults;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Constants;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.ui.widgets.DummyWidgetFactory;
 
-public class WidgetSettingsFragment extends RxFragment {
+public class WidgetSettingsFragment extends BaseFragment {
 
     private static final String TAG = "WidgetSettingsFragment";
 

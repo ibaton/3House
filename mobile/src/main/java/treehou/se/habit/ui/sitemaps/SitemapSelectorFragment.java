@@ -22,9 +22,10 @@ import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.SitemapAdapter;
 
-public class SitemapSelectorFragment extends Fragment {
+public class SitemapSelectorFragment extends BaseFragment {
 
     private static final String TAG = "SitemapSelectorFragment";
 

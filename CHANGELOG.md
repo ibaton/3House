@@ -1,3 +1,9 @@
+## 5.2.7
+
+### Enhancements
+* Show actionbar items as white in dark themes. 
+
+
 ## 5.2.6
 
 ### Enhancements

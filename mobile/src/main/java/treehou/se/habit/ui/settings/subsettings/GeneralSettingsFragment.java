@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.Spinner;
 import com.f2prateek.rx.preferences.Preference;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.trello.rxlifecycle.RxLifecycle;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import javax.inject.Inject;
 
@@ -25,9 +23,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Settings;
 
-public class GeneralSettingsFragment extends RxFragment {
+public class GeneralSettingsFragment extends BaseFragment {
 
     private static final String TAG = GeneralSettingsFragment.class.getSimpleName();
 

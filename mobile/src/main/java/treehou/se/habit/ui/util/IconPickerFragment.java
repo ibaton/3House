@@ -21,9 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import treehou.se.habit.R;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Util;
 
-public class IconPickerFragment extends Fragment {
+public class IconPickerFragment extends BaseFragment {
 
     public static final String ARG_CATEGORY = "ARG_CATEGORY";
     public static final String RESULT_ICON = "RESULT_ICON";

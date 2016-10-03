@@ -1,8 +1,7 @@
 package treehou.se.habit.ui.control;
 
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,17 +10,13 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
-import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -29,6 +24,7 @@ import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 
@@ -75,7 +71,7 @@ public class SliderActivity extends AppCompatActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class SliderFragment extends RxFragment {
+    public static class SliderFragment extends BaseFragment {
 
         private SliderCellDB numberCell;
         private Realm realm;

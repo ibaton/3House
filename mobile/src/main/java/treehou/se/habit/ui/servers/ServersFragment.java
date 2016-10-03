@@ -1,7 +1,6 @@
 package treehou.se.habit.ui.servers;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -17,28 +16,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.functions.Action1;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.ApplicationComponent;
-import treehou.se.habit.ui.inbox.InboxListFragment;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.ServersAdapter;
-import treehou.se.habit.ui.bindings.BindingsFragment;
 import treehou.se.habit.util.Settings;
 
-public class ServersFragment extends RxFragment {
+public class ServersFragment extends BaseFragment {
 
     private static final String TAG = "ServersFragment";
 

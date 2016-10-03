@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,20 +24,21 @@ import io.realm.Realm;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
 
-public class PageFragment extends RxFragment {
+public class PageFragment extends BaseFragment {
 
     private static final String TAG = "PageFragment";
 

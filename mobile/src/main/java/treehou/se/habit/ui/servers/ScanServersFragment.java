@@ -2,7 +2,6 @@ package treehou.se.habit.ui.servers;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.trello.rxlifecycle.RxLifecycle;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,9 +30,10 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.RxUtil;
 
-public class ScanServersFragment extends RxFragment {
+public class ScanServersFragment extends BaseFragment {
 
     private static final String TAG = "ScanServersFragment";
 

@@ -2,14 +2,14 @@ package treehou.se.habit.ui.menu;
 
 
 import android.content.Context;
-import android.support.annotation.IntDef;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.f2prateek.rx.preferences.Preference;
 import com.trello.rxlifecycle.RxLifecycle;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +38,10 @@ import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Settings;
 
-public class NavigationDrawerFragment extends RxFragment {
+public class NavigationDrawerFragment extends BaseFragment {
 
     public static final String TAG = "NavigationDrawerFragment";
 

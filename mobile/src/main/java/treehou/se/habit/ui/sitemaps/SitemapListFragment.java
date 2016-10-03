@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.trello.rxlifecycle.RxLifecycle;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.List;
 
@@ -31,12 +30,12 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
-
 import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
 import treehou.se.habit.util.Settings;
 
-public class SitemapListFragment extends RxFragment {
+public class SitemapListFragment extends BaseFragment {
 
     private static final String TAG = "SitemapSelectFragment";
 

@@ -7,11 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.Switch;
 
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,11 +19,11 @@ import io.realm.RealmResults;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.SitemapDB;
+import treehou.se.habit.ui.BaseFragment;
 
-public class SitemapSettingsFragment extends RxFragment {
+public class SitemapSettingsFragment extends BaseFragment {
 
     private static final String TAG = "SitemapSelectFragment";
 

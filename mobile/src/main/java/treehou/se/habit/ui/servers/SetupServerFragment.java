@@ -6,13 +6,11 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.widget.RxTextView;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,8 +19,9 @@ import butterknife.Unbinder;
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.ui.BaseFragment;
 
-public class SetupServerFragment extends RxFragment {
+public class SetupServerFragment extends BaseFragment {
 
     private static final String ARG_SERVER = "ARG_SERVER";
     public static final String ARG_BUTTON_TEXT_ID = "ARG_BUTTON_TEXT_ID";
