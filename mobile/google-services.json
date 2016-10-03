@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "823255055512",
+    "firebase_url": "https://houseapp-da725.firebaseio.com",
+    "project_id": "houseapp-da725",
+    "storage_bucket": "houseapp-da725.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823255055512:android:3d70be29177777f7",
+        "android_client_info": {
+          "package_name": "treehou.se.habit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823255055512-b4plucmgv9rfln7b1bch9emtlj9f1l37.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "treehou.se.habit",
+            "certificate_hash": "5642C7F5F6385C9E0E83805C01AF10129F879D7C"
+          }
+        },
+        {
+          "client_id": "823255055512-lst69gpan7t8pvskeauh402vcf7je1ch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "treehou.se.habit",
+            "certificate_hash": "809F64664076EECA6CF6B6FA44C659627AF36516"
+          }
+        },
+        {
+          "client_id": "823255055512-r9ctfjgb30v23ake2a28v10smf3pfai9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrxaC5j5euHs3clZIn0y8JaMUzakMQJ6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823255055512-r9ctfjgb30v23ake2a28v10smf3pfai9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
