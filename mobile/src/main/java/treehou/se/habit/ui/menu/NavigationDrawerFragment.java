@@ -399,7 +399,7 @@ public class NavigationDrawerFragment extends BaseFragment {
             }
 
             public void update(OHSitemap entry){
-                lblName.setText(entry.getName());
+                lblName.setText(entry.getDisplayName());
             }
         }
 
