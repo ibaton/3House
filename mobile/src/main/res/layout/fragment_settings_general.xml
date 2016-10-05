@@ -24,7 +24,6 @@
                 android:layout_height="fill_parent"
                 android:padding="@dimen/default_item_padding">
 
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -35,6 +34,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/spr_themes" />
+
+                <CheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fullscreen"
+                    android:id="@+id/cbx_show_fullscreen" />
 
             </LinearLayout>
 

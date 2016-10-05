@@ -1,3 +1,9 @@
+## 5.3.0
+
+### Enhancements
+* Added fullscreen mode.
+
+
 ## 5.2.7
 
 ### Enhancements

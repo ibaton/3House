@@ -32,7 +32,7 @@ import treehou.se.habit.util.Settings;
 import static treehou.se.habit.ui.menu.NavigationDrawerFragment.NavigationItems;
 
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private static final String TAG = "MainActivity";
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getApplicationComponent().inject(this);
+        ((HabitApplication) getApplication()).component().inject(this);
         setTheme(settings.getThemeResourse());
         super.onCreate(savedInstanceState);
 
@@ -94,10 +94,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-    }
-
-    protected ApplicationComponent getApplicationComponent() {
-        return ((HabitApplication) getApplication()).component();
     }
 
     @Override
@@ -171,7 +167,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Clear fragments on backstack
+     * Clear fragments on backstack.
      */
     private void clearFragments(){
         FragmentManager fragmentManager = getSupportFragmentManager();

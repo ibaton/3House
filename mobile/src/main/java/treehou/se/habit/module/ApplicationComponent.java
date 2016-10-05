@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import treehou.se.habit.BaseActivity;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
@@ -25,6 +26,7 @@ import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 @Component(modules = AndroidModule.class)
 public interface ApplicationComponent {
     void inject(HabitApplication application);
+    void inject(BaseActivity activity);
     void inject(ColorpickerActivity activity);
     void inject(IconPickerActivity activity);
     void inject(MainActivity activity);

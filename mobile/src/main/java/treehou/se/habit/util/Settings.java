@@ -25,12 +25,13 @@ public class Settings {
     private static final String PREF_SERVER_SETUP_QUESTION = "pref_server_setup_question";
     private static final String PREF_AUTOLOAD_SITEMAP = "pref_autoload_sitemap";
     private static final String PREF_SHOW_SITEMAPS_IN_MENU = "pref_show_sitemap_in_menu";
+    private static final String PREF_SHOW_IN_FULLSCREEN = "pref_show_in_fullscreen";
 
     @IntDef({Themes.THEME_DEFAULT, Themes.THEME_HABDROID_LIGHT, Themes.THEME_HABDROID_DARK})
     public @interface Themes {
-        static final int THEME_DEFAULT = 1;
-        static final int THEME_HABDROID_LIGHT = 2;
-        static final int THEME_HABDROID_DARK = 3;
+        int THEME_DEFAULT = 1;
+        int THEME_HABDROID_LIGHT = 2;
+        int THEME_HABDROID_DARK = 3;
     }
 
     @Inject SharedPreferences preferences;
@@ -38,6 +39,7 @@ public class Settings {
 
     private Preference<Integer> prefTheme;
     private Preference<Boolean> prefSitemapInMenu;
+    private Preference<Boolean> prefFullscreen;
 
     private static final SparseIntArray THEME_MAP = new SparseIntArray();
     static {
@@ -51,6 +53,7 @@ public class Settings {
         rxPreferences = RxSharedPreferences.create(preferences);
         prefTheme = rxPreferences.getInteger(PREF_THEME, Themes.THEME_DEFAULT);
         prefSitemapInMenu = rxPreferences.getBoolean(PREF_SHOW_SITEMAPS_IN_MENU, true);
+        prefFullscreen = rxPreferences.getBoolean(PREF_SHOW_IN_FULLSCREEN, false);
     }
 
     public static Settings instance(Context context){
@@ -80,7 +83,7 @@ public class Settings {
      * Get theme of application
      * @return application theme.
      */
-    public  int getTheme(){
+    public int getTheme(){
         return prefTheme.get();
     }
 
@@ -106,7 +109,15 @@ public class Settings {
      * @return application theme.
      */
     public Observable<Integer> getThemeRx(){
-        return prefTheme.asObservable().distinctUntilChanged();
+        return prefTheme.asObservable();
+    }
+
+    /**
+     * Get theme of application
+     * @return application theme.
+     */
+    public Preference<Integer> getThemePref(){
+        return prefTheme;
     }
 
     /**
@@ -115,6 +126,15 @@ public class Settings {
      */
     public Observable<Integer> getThemeResourceRx(){
         return prefTheme.asObservable().distinctUntilChanged().map(theme -> THEME_MAP.get(theme, R.style.AppTheme_Base));
+    }
+
+    /**
+     * Get observable emitting items indicating if screen should be fullscreen.
+     *
+     * @return observable emitting true if fullscreen should be used, else false.
+     */
+    public Preference<Boolean> getFullscreenRx(){
+        return prefFullscreen;
     }
 
     /**

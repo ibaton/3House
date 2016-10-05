@@ -19,6 +19,7 @@ import com.trello.rxlifecycle.RxLifecycle;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -60,6 +61,7 @@ public class GeneralSettingsFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_settings_general, container, false);
         CheckBox cbxAutoLoadSitemap = (CheckBox) rootView.findViewById(R.id.cbx_open_last_sitemap);
         CheckBox cbxShowSitemapInMenu = (CheckBox) rootView.findViewById(R.id.cbx_show_sitemap_menu);
+        CheckBox cbxFullscreen = (CheckBox) rootView.findViewById(R.id.cbx_show_fullscreen);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(R.string.settings_general);
@@ -84,6 +86,16 @@ public class GeneralSettingsFragment extends BaseFragment {
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .skip(1)
                 .subscribe(settingsShowSitemapInMenuRx.asAction());
+
+        Preference<Boolean> fullscreenRx = settings.getFullscreenRx();
+        fullscreenRx.asObservable()
+                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(RxCompoundButton.checked(cbxFullscreen));
+        RxCompoundButton.checkedChanges(cbxFullscreen)
+                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .skip(1)
+                .subscribe(fullscreenRx.asAction());
 
         Spinner spinnerThemes = (Spinner) rootView.findViewById(R.id.spr_themes);
         ThemeItem[] themeSpinner = new ThemeItem[] {
