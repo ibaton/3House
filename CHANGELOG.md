@@ -3,6 +3,9 @@
 ### Enhancements
 * Added fullscreen mode.
 
+### Bug Fixes
+* Fix crash with dark theme pre lollipop device 
+
 
 ## 5.2.7
 

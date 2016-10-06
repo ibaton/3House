@@ -79,9 +79,6 @@
 
         <item name="colorControlActivated">#FF5722</item>
         <item name="colorControlHighlight">#ff8660</item>
-
-        <item name="android:windowBackground">?android:colorPrimaryDark</item>
-
     </style>
 
 </resources>

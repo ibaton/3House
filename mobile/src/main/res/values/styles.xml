@@ -108,7 +108,7 @@
     </style>
 
     <style name="actionbar_dark">
-        <item name="android:background">?colorPrimaryDark</item>
+        <item name="android:background">?attr/colorPrimaryDark</item>
     </style>
 
     <style name="warning_text" parent="TextAppearance.AppCompat.Small">
