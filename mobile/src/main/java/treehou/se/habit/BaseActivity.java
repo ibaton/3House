@@ -11,6 +11,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import javax.inject.Inject;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import treehou.se.habit.util.Settings;
 
@@ -23,11 +24,24 @@ public class BaseActivity extends RxAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         ((HabitApplication) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupFullscreenHandler();
+    }
+
+    /**
+     * Set up full screen handler.
+     * Will automatically switch to fullscreen when set in settings
+     */
+    public void setupFullscreenHandler(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             settings.getFullscreenRx().asObservable()
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(fullscreen -> {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             showFullscreen(fullscreen);
@@ -43,9 +57,7 @@ public class BaseActivity extends RxAppCompatActivity {
      * @param fullscreen true to set into fullscreen, else false.
      */
     private void showFullscreen(boolean fullscreen){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return;
-        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
 
         if(fullscreen){
             showFullscreen();
