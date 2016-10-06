@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.settings.subsettings;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -96,6 +97,7 @@ public class GeneralSettingsFragment extends BaseFragment {
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .skip(1)
                 .subscribe(fullscreenRx.asAction());
+        cbxFullscreen.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? View.VISIBLE : View.GONE);
 
         Spinner spinnerThemes = (Spinner) rootView.findViewById(R.id.spr_themes);
         ThemeItem[] themeSpinner = new ThemeItem[] {
