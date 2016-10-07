@@ -2,8 +2,6 @@ package treehou.se.habit.ui.control;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +12,12 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import treehou.se.habit.BaseActivity;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -28,7 +26,7 @@ import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 
-public class SliderActivity extends AppCompatActivity {
+public class SliderActivity extends BaseActivity {
     public static final String TAG = "SliderActivity";
 
     public static final String ACTION_NUMBER = "active";
@@ -53,7 +51,6 @@ public class SliderActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         finish();
     }
 
@@ -74,7 +71,6 @@ public class SliderActivity extends AppCompatActivity {
     public static class SliderFragment extends BaseFragment {
 
         private SliderCellDB numberCell;
-        private Realm realm;
         private SeekBar sbrNumber;
         private TextView itemName;
 
@@ -114,8 +110,12 @@ public class SliderActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
 
             ((HabitApplication) getActivity().getApplication()).component().inject(this);
-
-            realm = Realm.getDefaultInstance();
+            if (getArguments() != null) {
+                long id = getArguments().getLong(ARG_CELL);
+                logger.d(TAG, "Loading cell " + id);
+                CellDB cell = CellDB.load(realm, id);
+                numberCell = SliderCellDB.getCell(realm, cell);
+            }
         }
 
         @Override
@@ -123,18 +123,13 @@ public class SliderActivity extends AppCompatActivity {
             try {
                 View rootView = inflater.inflate(R.layout.fragment_slider, null, false);
 
-                if (getArguments() != null) {
-                    long id = getArguments().getLong(ARG_CELL);
-                    CellDB cell = CellDB.load(realm, id);
-                    numberCell = SliderCellDB.getCell(realm, cell);
-                }
-
                 itemName = (TextView) rootView.findViewById(R.id.item_name);
                 sbrNumber = (SeekBar) rootView.findViewById(R.id.sbrNumber);
                 sbrNumber.setMax(numberCell.getMax());
                 sbrNumber.setOnSeekBarChangeListener(sliderListener);
                 return rootView;
             }catch (Exception e){
+                logger.e(TAG, "Slider adapter inflater fail", e);
                 return inflater.inflate(R.layout.item_widget_null, null, false);
             }
         }
@@ -165,17 +160,11 @@ public class SliderActivity extends AppCompatActivity {
                                 sbrNumber.setOnSeekBarChangeListener(sliderListener);
                             }
                         } catch (Exception e) {
-                            Log.e(TAG, "Failed to update progress", e);
+                            logger.e(TAG, "Failed to update progress", e);
                         }
                     }, e -> {
-                        Log.e(TAG, "Error getting slider data", e);
+                        logger.e(TAG, "Error getting slider data", e);
                     });
-        }
-
-        @Override
-        public void onDestroy() {
-            super.onDestroy();
-            realm.close();
         }
     }
 }

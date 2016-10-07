@@ -20,7 +20,6 @@ import com.trello.rxlifecycle.RxLifecycle;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -88,7 +87,7 @@ public class GeneralSettingsFragment extends BaseFragment {
                 .skip(1)
                 .subscribe(settingsShowSitemapInMenuRx.asAction());
 
-        Preference<Boolean> fullscreenRx = settings.getFullscreenRx();
+        Preference<Boolean> fullscreenRx = settings.getFullscreenPref();
         fullscreenRx.asObservable()
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))
                 .observeOn(AndroidSchedulers.mainThread())

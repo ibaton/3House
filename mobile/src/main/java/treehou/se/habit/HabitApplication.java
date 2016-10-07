@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.github.anrwatchdog.ANRWatchDog;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import javax.inject.Inject;
@@ -29,8 +31,10 @@ public class HabitApplication extends Application {
     public void onCreate() {
         if(component == null) component = createComponent();
         component().inject(this);
-        setTheme(settings.getTheme());
+        setTheme(settings.getThemeResourse());
         super.onCreate();
+
+        new ANRWatchDog().start();
 
         JodaTimeAndroid.init(this);
         ohRealm.setup(this);

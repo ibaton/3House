@@ -9,6 +9,8 @@ import android.util.SparseIntArray;
 import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import rx.Observable;
@@ -133,7 +135,8 @@ public class Settings {
      *
      * @return observable emitting true if fullscreen should be used, else false.
      */
-    public Preference<Boolean> getFullscreenRx(){
+    @NotNull
+    public Preference<Boolean> getFullscreenPref(){
         return prefFullscreen;
     }
 

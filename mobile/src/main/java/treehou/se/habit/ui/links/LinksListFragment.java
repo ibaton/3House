@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHLink;
 import treehou.se.habit.HabitApplication;
@@ -33,7 +34,6 @@ public class LinksListFragment extends BaseFragment {
     private static final String TAG = LinksListFragment.class.getSimpleName();
 
     private static final String ARG_SERVER = "ARG_SERVER";
-
 
     @Inject ConnectionFactory connectionFactory;
 
@@ -128,6 +128,8 @@ public class LinksListFragment extends BaseFragment {
                 .subscribe(responseBodyResponse -> {
                     adapter.addItem(link);
                     Toast.makeText(getContext(), R.string.failed_delete_link, Toast.LENGTH_SHORT).show();
+                }, throwable -> {
+                    logger.e(TAG, "removeLink Failed", throwable);
                 });
     }
 
@@ -180,6 +182,11 @@ public class LinksListFragment extends BaseFragment {
                     clearList();
                     emptyView.setVisibility(View.GONE);
                     adapter.addAll(ohLinks);
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        logger.w(TAG, "Failed to load link items", throwable);
+                    }
                 });
     }
 }

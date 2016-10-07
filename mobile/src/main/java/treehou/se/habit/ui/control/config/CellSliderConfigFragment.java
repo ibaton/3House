@@ -32,10 +32,11 @@ import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
-public class CellSliderConfigFragment extends Fragment {
+public class CellSliderConfigFragment extends BaseFragment {
 
     private static final String TAG = "CellSliderConfigFragment";
     
@@ -52,7 +53,6 @@ public class CellSliderConfigFragment extends Fragment {
     private SliderCellDB numberCell;
     private Cell cell;
     private OHItem item;
-    private Realm realm;
     private Unbinder unbinder;
 
     public static CellSliderConfigFragment newInstance(CellDB cell) {
@@ -70,8 +70,6 @@ public class CellSliderConfigFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        realm = Realm.getDefaultInstance();
 
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
@@ -217,13 +215,6 @@ public class CellSliderConfigFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        realm.close();
     }
 
     @Override

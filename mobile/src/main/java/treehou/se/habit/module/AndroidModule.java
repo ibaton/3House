@@ -20,6 +20,8 @@ import treehou.se.habit.ui.widgets.factories.switches.SwitchWidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.DatabaseServerLoaderFactory;
 import treehou.se.habit.util.Settings;
+import treehou.se.habit.util.logging.FirebaseLogger;
+import treehou.se.habit.util.logging.Logger;
 
 @Module
 public class AndroidModule {
@@ -61,6 +63,11 @@ public class AndroidModule {
     @Provides
     public ServerLoaderFactory provideServerLoaderFactory(DatabaseServerLoaderFactory databaseServerLoaderFactory){
         return databaseServerLoaderFactory;
+    }
+
+    @Provides
+    public Logger provideLogger(){
+        return new FirebaseLogger();
     }
 
     @Provides

@@ -127,7 +127,9 @@ public class ScanServersFragment extends BaseFragment {
             }
 
             @Override
-            public void onError() {}
+            public void onError() {
+                logger.e(TAG, "Server discovery failed");
+            }
         };
         scanner.registerRx().compose(RxUtil.newToMainSchedulers())
                 .compose(RxLifecycle.bindFragment(this.lifecycle()))

@@ -11,6 +11,7 @@ import android.util.Log;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
+import treehou.se.habit.BaseActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.ui.adapter.SitemapAdapter;
@@ -19,7 +20,7 @@ import treehou.se.habit.ui.sitemaps.SitemapSelectorFragment;
 /**
  * The configuration screen for the {@link SitemapWidget SitemapWidget} AppWidget.
  */
-public class SitemapWidgetConfigureActivity extends AppCompatActivity implements SitemapAdapter.OnSitemapSelectListener {
+public class SitemapWidgetConfigureActivity extends BaseActivity implements SitemapAdapter.OnSitemapSelectListener {
 
     private static final String TAG = "SitemapWidgetConfigure";
     private static final String VOLLEY_TAG_SITEMAPS = "SitemapListFragmentSitemaps2";

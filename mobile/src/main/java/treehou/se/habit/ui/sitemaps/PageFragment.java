@@ -23,6 +23,7 @@ import butterknife.Unbinder;
 import io.realm.Realm;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -37,6 +38,7 @@ import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
+import treehou.se.habit.util.logging.Logger;
 
 public class PageFragment extends BaseFragment {
 
@@ -53,6 +55,7 @@ public class PageFragment extends BaseFragment {
     @Inject ConnectionFactory connectionFactory;
     @Inject ServerLoaderFactory serverLoaderFactory;
     @Inject WidgetFactory widgetFactory;
+    @Inject Logger log;
 
     private ServerDB server;
     private OHLinkedPage page;
@@ -63,6 +66,15 @@ public class PageFragment extends BaseFragment {
     private Unbinder unbinder;
 
     private boolean initialized = false;
+
+    private Action1<Throwable> dataLoadError = new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+            log.e(TAG, "Error when requesting page ", throwable);
+            Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
+    };
 
     /**
      * Creates a new instane of the page.
@@ -92,8 +104,6 @@ public class PageFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         ((HabitApplication) getActivity().getApplication()).component().inject(this);
-
-        Realm realm = Realm.getDefaultInstance();
 
         Bundle args = getArguments();
         Gson gson = GsonHelper.createGsonBuilder();
@@ -134,13 +144,9 @@ public class PageFragment extends BaseFragment {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ohLinkedPage -> {
-                    Log.d(TAG, "Received update " + ohLinkedPage.getWidgets().size() + " widgets from  " + page.getLink());
+                    log.d(TAG, "Received update " + ohLinkedPage.getWidgets().size() + " widgets from  " + page.getLink());
                     updatePage(ohLinkedPage);
-                }, throwable -> {
-                    Log.e(TAG, "Error when requesting page ", throwable);
-                    Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                });
+                }, dataLoadError);
     }
 
     /**
@@ -151,37 +157,31 @@ public class PageFragment extends BaseFragment {
     private Subscription createLongPoller() {
         final long serverId = server.getId();
 
-        Realm realm = Realm.getDefaultInstance();
         OHServer server = serverLoaderFactory.loadServer(realm, serverId);
-        realm.close();
         final IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
         return serverHandler.requestPageUpdatesRx(page)
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())
-                .subscribe(this::updatePage, throwable -> {
-                    FirebaseCrash.report(throwable);
-                    Log.e(TAG, "Error when requesting page", throwable);
-                    Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                });
+                .subscribe(this::updatePage, dataLoadError);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        updatePage(page, true);
         if(!initialized && server != null) {
             requestPageUpdate();
         }
         initialized = true;
-
-        updatePage(page);
 
         // Start listening for server updates
         if (supportsLongPolling()) {
             createLongPoller();
         }
     }
+
+
 
     /**
      * Check if android device supports long polling.
@@ -202,20 +202,31 @@ public class PageFragment extends BaseFragment {
      *
      * Recreate all widgets needed.
      *
-     * @param page
+     * @param page the page to show.
+     * @param force true to invalidate all widgets, false to do if needed.
      */
-    private synchronized void updatePage(final OHLinkedPage page){
+    private synchronized void updatePage(final OHLinkedPage page, boolean force){
         if(page == null || page.getWidgets() == null) return;
 
         this.page = page;
         final List<OHWidget> pageWidgets = page.getWidgets();
-        boolean invalidate = !canBeUpdated(widgets, pageWidgets);
+        boolean invalidate = !canBeUpdated(widgets, pageWidgets) || force;
 
         if(invalidate) {
             invalidateWidgets(pageWidgets);
         } else {
             updateWidgets(pageWidgets);
         }
+    }
+
+    /**
+     * Update page.
+     * Invalidate widgets if possible.
+     *
+     * @param page
+     */
+    private synchronized void updatePage(final OHLinkedPage page){
+        updatePage(page, false);
     }
 
     /**
@@ -255,7 +266,7 @@ public class PageFragment extends BaseFragment {
 
                 // TODO check if widget needs updating
                 if(!canBeUpdated(currentWidget, newWidget)){
-                    Log.d(TAG, "Widget " + currentWidget.getType() + " " + currentWidget.getLabel() + " needs update");
+                    log.d(TAG, "Widget " + currentWidget.getType() + " " + currentWidget.getLabel() + " needs update");
                     return false;
                 }
             }
@@ -269,7 +280,7 @@ public class PageFragment extends BaseFragment {
      * @param pageWidgets the widgets to update.
      */
     private void invalidateWidgets(List<OHWidget> pageWidgets){
-        Log.d(TAG, "Invalidate widgets");
+        log.d(TAG, "Invalidate widgets");
         widgetHolders.clear();
         louFragments.removeAllViews();
 
@@ -279,7 +290,7 @@ public class PageFragment extends BaseFragment {
                 widgetHolders.add(result);
                 louFragments.addView(result.getView());
             } catch (Exception e) {
-                Log.w(TAG, "Create widget failed", e);
+                log.w(TAG, "Create widget failed", e);
             }
         }
         widgets.clear();
@@ -296,12 +307,12 @@ public class PageFragment extends BaseFragment {
             try {
                 WidgetFactory.IWidgetHolder holder = widgetHolders.get(i);
 
-                Log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
+                log.d(TAG, "updating widget " + holder.getClass().getSimpleName());
                 OHWidget newWidget = pageWidgets.get(i);
 
                 holder.update(newWidget);
             } catch (Exception e) {
-                Log.w(TAG, "Updating widget failed", e);
+                log.w(TAG, "Updating widget failed", e);
             }
         }
     }

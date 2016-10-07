@@ -2,6 +2,7 @@ package treehou.se.habit.ui.sitemaps;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -35,11 +36,13 @@ import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.homescreen.VoiceService;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
+import treehou.se.habit.util.logging.Logger;
 
-public class SitemapFragment extends Fragment {
+public class SitemapFragment extends BaseFragment {
 
     private static final String TAG = "SitemapFragment";
     private static final String ARG_SITEMAP = "ARG_SITEMAP";
@@ -47,8 +50,8 @@ public class SitemapFragment extends Fragment {
 
     @Inject Gson gson;
     @Inject ConnectionFactory connectionFactory;
+    @Inject Logger log;
 
-    private Realm realm;
     private ServerDB server;
     private OHSitemap sitemap;
 
@@ -93,7 +96,6 @@ public class SitemapFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         getComponent().inject(this);
-        realm = Realm.getDefaultInstance();
         long serverId = getArguments().getLong(ARG_SERVER);
         server = ServerDB.load(realm, serverId);
         String jSitemap = getArguments().getString(ARG_SITEMAP);
@@ -112,7 +114,8 @@ public class SitemapFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sitemap, container, false);
-        setHasOptionsMenu(true);
+
+        setHasOptionsMenu(isVoiceCommandSupported(server));
 
         return rootView;
     }
@@ -131,10 +134,10 @@ public class SitemapFragment extends Fragment {
             serverHandler.requestPageRx(sitemap.getHomepage())
                     .compose(RxUtil.newToMainSchedulers())
                     .subscribe(linkedPage -> {
-                        Log.d(TAG, "Received page " + linkedPage);
+                        log.d(TAG, "Received page " + linkedPage);
                         addPage(linkedPage);
                     }, e -> {
-                        Log.d(TAG, "Received page failed", e);
+                        log.w(TAG, "Received page failed", e);
                     });
         }
         EventBus.getDefault().register(this);
@@ -205,22 +208,36 @@ public class SitemapFragment extends Fragment {
      * @param server server to send command to.
      */
     public void openVoiceCommand(ServerDB server){
+        if(isVoiceCommandSupported(server)) {
+            startActivity(createVoiceCommandIntent(server));
+        }
+    }
+
+    /**
+     * Creates an intent use to input voice command.
+     * @return intent used to fire voice command
+     */
+    private Intent createVoiceCommandIntent(ServerDB server){
         Intent callbackIntent = VoiceService.createVoiceCommand(getActivity(), server);
-
         PendingIntent openhabPendingIntent = PendingIntent.getService(getActivity(), 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         // Specify the calling package to identify your application
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, VoiceService.class.getPackage().getName());
         // Display an hint to the user about what he should say.
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.voice_command_title));
-
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
         intent.putExtra(RecognizerIntent.EXTRA_RESULTS_PENDINGINTENT, openhabPendingIntent);
+        return intent;
+    }
 
-        startActivity(intent);
+    /**
+     * Check if cvoice command is supported by device.
+     * @return true if supported, else false
+     */
+    private boolean isVoiceCommandSupported(ServerDB server){
+        PackageManager packageManager = getContext().getPackageManager();
+        return packageManager.resolveActivity(createVoiceCommandIntent(server), 0) != null;
     }
 
     /**
@@ -246,11 +263,5 @@ public class SitemapFragment extends Fragment {
     @Subscribe
     public void onEvent(OHLinkedPage event){
         addPage(event);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
     }
 }

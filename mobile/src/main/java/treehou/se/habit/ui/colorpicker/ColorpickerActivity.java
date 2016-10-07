@@ -9,11 +9,12 @@ import javax.inject.Inject;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.util.GsonHelper;
+import treehou.se.habit.BaseActivity;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.util.Settings;
 
-public class ColorpickerActivity extends AppCompatActivity {
+public class ColorpickerActivity extends BaseActivity {
 
     public static final String EXTRA_SERVER = "EXTRA_SERVER";
     public static final String EXTRA_WIDGET = "EXTRA_SITEMAP";

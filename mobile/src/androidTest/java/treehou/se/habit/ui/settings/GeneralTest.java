@@ -17,7 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
@@ -37,7 +36,7 @@ public class GeneralTest {
     @Before
     public void setup(){
         Settings.instance(activityRule.getActivity()).getAutoloadSitemapRx().set(false);
-        Settings.instance(activityRule.getActivity()).getFullscreenRx().set(false);
+        Settings.instance(activityRule.getActivity()).getFullscreenPref().set(false);
     }
 
     /**

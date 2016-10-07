@@ -62,7 +62,6 @@ public class CategoryPickerFragment extends BaseFragment {
         categoryList.add(new CategoryPicker(null, getString(R.string.empty), Util.IconCategory.EMPTY));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_play, getString(R.string.media), Util.IconCategory.MEDIA));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
-        categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_alarm, getString(R.string.sensor), Util.IconCategory.SENSORS));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_power, getString(R.string.command), Util.IconCategory.COMMANDS));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_arrow_up, getString(R.string.arrows), Util.IconCategory.ARROWS));
         categoryList.add(new CategoryPicker(CommunityMaterial.Icon.cmd_view_module, getString(R.string.all), Util.IconCategory.ALL));

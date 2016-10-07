@@ -81,6 +81,7 @@
             android:clickable="false"
             android:selectable="false"
             android:background="@null"
+            style="?attr/menu_item_style"
             app:srcCompat="@drawable/next_page_icon"/>
     </LinearLayout>
 </FrameLayout>

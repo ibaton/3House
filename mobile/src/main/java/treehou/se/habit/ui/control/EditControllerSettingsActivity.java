@@ -12,11 +12,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import io.realm.Realm;
+import treehou.se.habit.BaseActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
 
-public class EditControllerSettingsActivity extends AppCompatActivity implements ColorDialog.ColorDialogCallback {
+public class EditControllerSettingsActivity extends BaseActivity implements ColorDialog.ColorDialogCallback {
 
     public static final String ARG_ID = "ARG_ID";
 
@@ -27,14 +28,10 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
 
     private ControllerDB controller;
 
-    private Realm realm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_controller_settings);
-
-        realm = Realm.getDefaultInstance();
 
         if (getIntent().getExtras() != null) {
             long id = getIntent().getExtras().getLong(ARG_ID);
@@ -91,13 +88,6 @@ public class EditControllerSettingsActivity extends AppCompatActivity implements
         realm.commitTransaction();
 
         finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        realm.close();
     }
 
     @Override

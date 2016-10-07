@@ -1,5 +1,11 @@
 ## 5.3.0
 
+### Bug Fixes
+* Fix problem when moving back in sitemap.
+
+
+## 5.3.0
+
 ### Enhancements
 * Added fullscreen mode.
 

@@ -188,7 +188,7 @@ public class SitemapSelectFragment extends BaseFragment {
                         sitemapAdapter.add(server, sitemap);
                     }
                 }, throwable -> {
-                    Log.e(TAG, "Request sitemap failed", throwable);
+                    logger.e(TAG, "Request sitemap failed", throwable);
                 });
     }
 }

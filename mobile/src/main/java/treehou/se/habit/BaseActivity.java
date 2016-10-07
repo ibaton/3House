@@ -11,19 +11,26 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import javax.inject.Inject;
 
+import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import treehou.se.habit.util.Settings;
+import treehou.se.habit.util.logging.Logger;
 
 public class BaseActivity extends RxAppCompatActivity {
 
 
-    @Inject Settings settings;
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
+    protected @Inject Settings settings;
+    protected @Inject Logger logger;
+    protected Realm realm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         ((HabitApplication) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -32,13 +39,19 @@ public class BaseActivity extends RxAppCompatActivity {
         setupFullscreenHandler();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
     /**
      * Set up full screen handler.
      * Will automatically switch to fullscreen when set in settings
      */
     public void setupFullscreenHandler(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            settings.getFullscreenRx().asObservable()
+            settings.getFullscreenPref().asObservable()
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -46,8 +59,15 @@ public class BaseActivity extends RxAppCompatActivity {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                             showFullscreen(fullscreen);
                         }
+                    }, throwable -> {
+                        logger.e(TAG, "Failed to set fullscreen mode", throwable);
                     });
         }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        showFullscreen(settings.getFullscreenPref().get());
     }
 
     /**
@@ -72,13 +92,12 @@ public class BaseActivity extends RxAppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showFullscreen() {
         View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     /**

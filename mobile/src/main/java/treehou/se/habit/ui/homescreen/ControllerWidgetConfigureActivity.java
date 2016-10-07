@@ -19,13 +19,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import treehou.se.habit.BaseActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 /**
  * The configuration screen for the {@link ControllerWidget ControllerWidget} AppWidget.
  */
-public class ControllerWidgetConfigureActivity extends AppCompatActivity {
+public class ControllerWidgetConfigureActivity extends BaseActivity {
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private static final String PREFS_NAME = "treehou.se.habit.ui.homescreen.ControllerWidget";
@@ -35,7 +36,6 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     @BindView(R.id.spr_controller) Spinner sprControllers;
     @BindView(R.id.cbx_show_title) CheckBox cbxShowTitle;
 
-    private Realm realm;
     private Unbinder unbinder;
 
     public ControllerWidgetConfigureActivity() {
@@ -49,7 +49,6 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
         setContentView(R.layout.controller_widget_configure);
 
         unbinder = ButterKnife.bind(this);
-        realm = Realm.getDefaultInstance();
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
@@ -80,7 +79,6 @@ public class ControllerWidgetConfigureActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-        realm.close();
     }
 
     class ControllerItem{

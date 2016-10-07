@@ -8,6 +8,7 @@ import dagger.Component;
 import treehou.se.habit.BaseActivity;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.MainActivity;
+import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
 import treehou.se.habit.ui.control.SliderActivity;
 import treehou.se.habit.ui.control.config.CellButtonConfigFragment;
@@ -27,6 +28,7 @@ import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 public interface ApplicationComponent {
     void inject(HabitApplication application);
     void inject(BaseActivity activity);
+    void inject(BaseFragment fragment);
     void inject(ColorpickerActivity activity);
     void inject(IconPickerActivity activity);
     void inject(MainActivity activity);
@@ -40,6 +42,7 @@ public interface ApplicationComponent {
     void inject(Fragment fragment);
     void inject(PageFragment fragment);
     void inject(RollerShutterWidgetHolder holder);
+    void inject(SliderActivity activity);
     void inject(SliderActivity.SliderFragment fragment);
     void inject(LinksListFragment fragment);
 }

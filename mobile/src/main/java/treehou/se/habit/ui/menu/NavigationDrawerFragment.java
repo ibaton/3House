@@ -33,6 +33,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -130,6 +131,8 @@ public class NavigationDrawerFragment extends BaseFragment {
 
                     this.sitemaps.addAll(sitemaps);
                     menuAdapter.addSitemaps(sitemaps);
+                }, throwable -> {
+                    logger.e(TAG, "Failed to load sitemaps from server", throwable);
                 });
     }
 
@@ -167,6 +170,8 @@ public class NavigationDrawerFragment extends BaseFragment {
                         sitemaps.clear();
                         menuAdapter.clearSitemaps();
                     }
+                }, throwable -> {
+                    logger.e(TAG, "Failed to load settings show sitemap in menu", throwable);
                 });
     }
 

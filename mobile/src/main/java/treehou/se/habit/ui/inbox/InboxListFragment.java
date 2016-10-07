@@ -266,6 +266,7 @@ public class InboxListFragment extends BaseFragment {
                     setItems(ohInboxItems, showIgnored);
                 }, throwable -> {
                     showErrorView(true);
+                    logger.w(TAG, "Failed to load inbox items", throwable);
                 });
     }
 

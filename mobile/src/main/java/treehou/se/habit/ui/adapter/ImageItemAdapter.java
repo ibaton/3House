@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.adapter;
 
-import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
