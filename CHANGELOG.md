@@ -1,4 +1,4 @@
-## 5.3.0
+## 5.3.1
 
 ### Bug Fixes
 * Fix problem when moving back in sitemap.
