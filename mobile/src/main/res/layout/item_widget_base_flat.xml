@@ -49,7 +49,6 @@
                     android:layout_height="wrap_content"
                     style="@style/WidgetText"
                     android:text=""
-                    android:autoLink="web|email|phone"
                     android:id="@+id/lbl_widget_name" />
 
             </LinearLayout>

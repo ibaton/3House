@@ -5,6 +5,7 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/colorValueItem</item>
         <item name="android:fontFamily">"sans-serif"</item>
+        <item name="android:autoLink">none</item>
     </style>
 
     <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -14,6 +15,7 @@
     <style name="WidgetText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">"sans-serif"</item>
+        <item name="android:autoLink">none</item>
     </style>
 
     <style name="drawer_item_text" parent="TextAppearance.AppCompat.Medium">
