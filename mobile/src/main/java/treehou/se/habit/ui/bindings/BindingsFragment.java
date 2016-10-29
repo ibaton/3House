@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.reflect.TypeToken;
+import com.trello.rxlifecycle.components.support.RxFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding;
 import se.treehou.ng.ohcommunicator.services.Connector;
@@ -32,7 +36,7 @@ import treehou.se.habit.connector.models.Binding;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.BindingAdapter;
 
-public class BindingsFragment extends Fragment {
+public class BindingsFragment extends RxFragment {
 
     private static final String TAG = BindingsFragment.class.getSimpleName();
 
@@ -50,21 +54,6 @@ public class BindingsFragment extends Fragment {
 
     private Realm realm;
     private Unbinder unbinder;
-
-    private OHCallback<List<OHBinding>> bindingListener = new OHCallback<List<OHBinding>>(){
-
-        @Override
-        public void onUpdate(OHResponse<List<OHBinding>> response) {
-            Log.d(TAG, "onUpdate " + response.body());
-            bindings = response.body();
-            bindingAdapter.setBindings(bindings);
-        }
-
-        @Override
-        public void onError() {
-            Log.d(TAG, "onError");
-        }
-    };
 
     public static BindingsFragment newInstance(long serverId) {
         BindingsFragment fragment = new BindingsFragment();
@@ -143,7 +132,14 @@ public class BindingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
-        serverHandler.requestBindings(bindingListener);
+        serverHandler.requestBindingsRx()
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(bindings -> {
+                    Log.d(TAG, "onUpdate " + bindings);
+                    bindingAdapter.setBindings(bindings);
+                });
     }
 
     @Override

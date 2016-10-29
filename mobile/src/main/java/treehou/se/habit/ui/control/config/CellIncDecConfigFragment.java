@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
@@ -36,7 +40,7 @@ import treehou.se.habit.util.Constants;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
-public class CellIncDecConfigFragment extends Fragment {
+public class CellIncDecConfigFragment extends RxFragment {
 
     private static final String TAG = "CellIncDecConfigFragment";
 
@@ -49,8 +53,8 @@ public class CellIncDecConfigFragment extends Fragment {
     @BindView(R.id.txtValue) EditText txtValue;
     @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
 
-    private ArrayAdapter<OHItem> mItemAdapter;
-    private ArrayList<OHItem> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> itemAdapter;
+    private ArrayList<OHItem> items = new ArrayList<>();
 
     private IncDecCellDB incDecCell;
     private Cell cell;
@@ -112,7 +116,7 @@ public class CellIncDecConfigFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 realm.beginTransaction();
-                OHItem item = mItems.get(position);
+                OHItem item = items.get(position);
                 if(item != null) {
                     ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
                     incDecCell.setItem(itemDB);
@@ -123,38 +127,32 @@ public class CellIncDecConfigFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-        mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-        sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
+        itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
+        sprItems.post(() -> sprItems.setAdapter(itemAdapter));
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
-        mItems.clear();
+        items.clear();
 
         if(item != null){
-            mItems.add(item);
-            mItemAdapter.add(item);
-            mItemAdapter.notifyDataSetChanged();
+            items.add(item);
+            itemAdapter.add(item);
+            itemAdapter.notifyDataSetChanged();
         }
 
         if(incDecCell.getItem() != null) {
-            //mItems.add(incDecCell.getItem());
+            //items.add(incDecCell.getItem());
         }
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
-                @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
-                    mItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            };
-
             IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
-            serverHandler.requestItems(callback);
+            serverHandler.requestItemsRx()
+                    .map(this::filterItems)
+                    .compose(bindToLifecycle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(newItems -> {
+                        this.items.addAll(items);
+                        itemAdapter.notifyDataSetChanged();
+                    });
         }
 
         updateIconImage();

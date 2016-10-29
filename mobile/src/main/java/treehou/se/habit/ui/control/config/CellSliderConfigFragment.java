@@ -3,7 +3,6 @@ package treehou.se.habit.ui.control.config;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
@@ -49,7 +49,7 @@ public class CellSliderConfigFragment extends BaseFragment {
     @BindView(R.id.lou_range) View louRange;
 
     private ArrayAdapter<OHItem> mItemAdapter ;
-    private ArrayList<OHItem> mItems = new ArrayList<>();
+    private ArrayList<OHItem> items = new ArrayList<>();
     private SliderCellDB numberCell;
     private Cell cell;
     private OHItem item;
@@ -103,7 +103,7 @@ public class CellSliderConfigFragment extends BaseFragment {
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OHItem item = mItems.get(position);
+                OHItem item = items.get(position);
                 if (item != null) {
                     realm.beginTransaction();
                     ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
@@ -122,34 +122,29 @@ public class CellSliderConfigFragment extends BaseFragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
+        mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
-        mItems.clear();
+        items.clear();
 
         if(item != null){
-            mItems.add(item);
+            items.add(item);
             mItemAdapter.add(item);
             mItemAdapter.notifyDataSetChanged();
         }
 
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
-                @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
-                    mItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            };
             IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
-            serverHandler.requestItems(callback);
+            serverHandler.requestItemsRx()
+                    .map(this::filterItems)
+                    .compose(bindToLifecycle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(items -> {
+                        this.items.addAll(items);
+                        mItemAdapter.notifyDataSetChanged();
+                    });
         }
 
         updateIconImage();

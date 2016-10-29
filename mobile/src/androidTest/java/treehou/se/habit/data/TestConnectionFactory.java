@@ -30,23 +30,8 @@ public class TestConnectionFactory extends ConnectionFactory {
     public static class TestServerHandler implements IServerHandler{
 
         @Override
-        public void requestBindings(OHCallback<List<OHBinding>> ohCallback) {
-
-        }
-
-        @Override
         public Observable<List<OHBinding>> requestBindingsRx() {
             return null;
-        }
-
-        @Override
-        public void requestInboxItems(OHCallback<List<OHInboxItem>> ohCallback) {
-
-        }
-
-        @Override
-        public void requestLinks(OHCallback<List<OHLink>> ohCallback) {
-
         }
 
         @Override
@@ -85,28 +70,13 @@ public class TestConnectionFactory extends ConnectionFactory {
         }
 
         @Override
-        public void requestItem(String s, OHCallback<OHItem> ohCallback) {
-
-        }
-
-        @Override
         public Observable<OHLinkedPage> requestPageUpdatesRx(OHLinkedPage ohLinkedPage) {
             return null;
         }
 
         @Override
-        public void requestItems(OHCallback<List<OHItem>> ohCallback) {
-
-        }
-
-        @Override
         public Observable<List<OHItem>> requestItemsRx() {
             return null;
-        }
-
-        @Override
-        public void requestPage(OHLinkedPage ohLinkedPage, OHCallback<OHLinkedPage> ohCallback) {
-
         }
 
         @Override
@@ -141,11 +111,6 @@ public class TestConnectionFactory extends ConnectionFactory {
 
         @Override
         public void sendCommand(String s, String s1) {
-
-        }
-
-        @Override
-        public void requestSitemaps(OHCallback<List<OHSitemap>> ohCallback) {
 
         }
 

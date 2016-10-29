@@ -15,6 +15,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.Connector;
@@ -105,26 +108,24 @@ public class SitemapSelectorFragment extends BaseFragment {
     private void requestSitemap(final OHServer server){
         mSitemapAdapter.setServerState(server, SitemapAdapter.SitemapItem.STATE_LOADING);
         IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
-        serverHandler.requestSitemaps(new OHCallback<List<OHSitemap>>() {
-            @Override
-            public void onUpdate(OHResponse<List<OHSitemap>> items) {
-                List<OHSitemap> sitemaps = items.body();
-                for (OHSitemap sitemap : sitemaps) {
-                    sitemap.setServer(server);
-                    if (!mSitemapAdapter.contains(sitemap)) {
-                        mSitemapAdapter.add(sitemap);
-                    } else if (OHSitemap.isLocal(sitemap)) {
-                        mSitemapAdapter.remove(sitemap);
-                        mSitemapAdapter.add(sitemap);
-                    }
-                }
-                mSitemapAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onError() {
-                mSitemapAdapter.setServerState(server, SitemapAdapter.SitemapItem.STATE_ERROR);
-            }
-        });
+        serverHandler.requestSitemapRx()
+                .compose(bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(sitemaps -> {
+                    for (OHSitemap sitemap : sitemaps) {
+                        sitemap.setServer(server);
+                        if (!mSitemapAdapter.contains(sitemap)) {
+                            mSitemapAdapter.add(sitemap);
+                        } else if (OHSitemap.isLocal(sitemap)) {
+                            mSitemapAdapter.remove(sitemap);
+                            mSitemapAdapter.add(sitemap);
+                        }
+                    }
+                    mSitemapAdapter.notifyDataSetChanged();
+                }, throwable -> {
+                    mSitemapAdapter.setServerState(server, SitemapAdapter.SitemapItem.STATE_ERROR);
+                });
     }
 }

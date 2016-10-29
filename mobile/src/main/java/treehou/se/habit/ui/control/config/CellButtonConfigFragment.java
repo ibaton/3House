@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
@@ -43,7 +48,7 @@ import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
-public class CellButtonConfigFragment extends Fragment {
+public class CellButtonConfigFragment extends RxFragment {
     
     private static final String TAG = "CellButtonConfig";
     
@@ -162,22 +167,17 @@ public class CellButtonConfigFragment extends Fragment {
         }
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
-                @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
-                    mItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onError() {
-                    Log.e(TAG, "Error fetching switch items");
-                }
-            };
-
             IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
-            serverHandler.requestItems(callback);
+            serverHandler.requestItemsRx()
+                    .compose(bindToLifecycle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(items -> {
+                        mItems.addAll(items);
+                        mItemAdapter.notifyDataSetChanged();
+                    }, throwable -> {
+                        Log.e(TAG, "Error fetching switch items");
+                    });
         }
 
         tglOnOff.setChecked(

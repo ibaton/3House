@@ -2,7 +2,6 @@ package treehou.se.habit.ui.control.config.cells;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,21 +10,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ColorCellDB;
 import treehou.se.habit.ui.adapter.IconAdapter;
 
-public class CellColorConfigFragment extends Fragment {
+public class CellColorConfigFragment extends RxFragment {
 
     private static final String TAG = "CellColorConfigFragment";
 
@@ -36,8 +37,8 @@ public class CellColorConfigFragment extends Fragment {
     private ColorCellDB colorCell;
     private Spinner sprItems;
 
-    private ArrayAdapter<OHItem> mItemAdapter ;
-    private ArrayList<OHItem> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> itemAdapter;
+    private ArrayList<OHItem> items = new ArrayList<>();
 
     public static CellColorConfigFragment newInstance(CellDB cell) {
         CellColorConfigFragment fragment = new CellColorConfigFragment();
@@ -55,7 +56,7 @@ public class CellColorConfigFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
+        itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
 
         /*if (getArguments() != null) {
             int id = getArguments().getInt(ARG_CELL_ID);
@@ -101,31 +102,26 @@ public class CellColorConfigFragment extends Fragment {
         rootView.getBackground().setColorFilter(cell.getColor(), PorterDuff.Mode.MULTIPLY);
 
         sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
-        sprItems.setAdapter(mItemAdapter);
+        sprItems.setAdapter(itemAdapter);
 
         List<OHServer> servers = null; // TODO OHServer.loadAll();
-        mItems.clear();
+        items.clear();
         for(final OHServer server : servers) {
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
-                @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
-                    mItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-
-                    int position = mItems.indexOf(colorCell.getItem());
-                    if(position != -1){
-                        sprItems.setSelection(position);
-                    }
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            };
             IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
-            serverHandler.requestItems(callback);
+            serverHandler.requestItemsRx()
+                    .map(this::filterItems)
+                    .compose(bindToLifecycle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(items -> {
+                        this.items.addAll(items);
+                        itemAdapter.notifyDataSetChanged();
+
+                        int position = this.items.indexOf(colorCell.getItem());
+                        if(position != -1){
+                            sprItems.setSelection(position);
+                        }
+                    });
         }
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

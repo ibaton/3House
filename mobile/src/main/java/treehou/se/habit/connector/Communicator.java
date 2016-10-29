@@ -19,6 +19,7 @@ import java.util.Map;
 import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
@@ -28,6 +29,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import se.treehou.ng.ohcommunicator.util.ConnectorUtil;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
+import treehou.se.habit.util.logging.FirebaseLogger;
 
 public class Communicator {
 
@@ -57,38 +59,32 @@ public class Communicator {
     public void incDec(final OHServer server, final String itemName, final int value, final int min, final int max){
 
         final IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-        OHCallback<OHItem> callback = new OHCallback<OHItem>() {
-            @Override
-            public void onUpdate(OHResponse<OHItem> newItem) {
-                Log.d(TAG, "Item state " + newItem.body().getState() + " " + newItem.body().getType());
-                String state = newItem.body().getState();
-                if (treehou.se.habit.util.Constants.SUPPORT_INC_DEC.contains(newItem.body().getType())) {
-                    if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
-                        if (value > 0) {
-                            serverHandler.sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
-                        }
-                    } else if (Constants.COMMAND_ON.equals(state)) {
-                        if (value < 0) {
-                            serverHandler.sendCommand(newItem.body().getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
-                        }
-                    } else {
-                        try {
-                            int itemVal = scrubNumberValue(Integer.parseInt(newItem.body().getState()) + value, min, max);
-                            Log.e(TAG, "Sending sendCommand " + itemVal + " value " + value);
-                            serverHandler.sendCommand(newItem.body().getName(), String.valueOf(itemVal));
-                        } catch (NumberFormatException e) {
-                            Log.e(TAG, "Could not parse state " + newItem.body().getState(), e);
+        serverHandler.requestItemRx(itemName)
+                .doOnNext(newItem -> Log.d(TAG, "Item state " + newItem.getState() + " " + newItem.getType()))
+                .subscribe(newItem -> {
+                    String state = newItem.getState();
+                    if (treehou.se.habit.util.Constants.SUPPORT_INC_DEC.contains(newItem.getType())) {
+                        if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
+                            if (value > 0) {
+                                serverHandler.sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
+                            }
+                        } else if (Constants.COMMAND_ON.equals(state)) {
+                            if (value < 0) {
+                                serverHandler.sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
+                            }
+                        } else {
+                            try {
+                                int itemVal = scrubNumberValue(Integer.parseInt(newItem.getState()) + value, min, max);
+                                Log.e(TAG, "Sending sendCommand " + itemVal + " value " + value);
+                                serverHandler.sendCommand(newItem.getName(), String.valueOf(itemVal));
+                            } catch (NumberFormatException e) {
+                                Log.e(TAG, "Could not parse state " + newItem.getState(), e);
+                            }
                         }
                     }
-                }
-            }
-
-            @Override
-            public void onError() {
-                Log.d(TAG, "incDec onError");
-            }
-        };
-        serverHandler.requestItem(itemName, callback);
+                }, throwable -> {
+                    Log.d(TAG, "incDec onError");
+                });
     }
 
     public Picasso buildPicasso(Context context, final OHServer server){

@@ -13,11 +13,15 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -29,7 +33,7 @@ import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
 
-public class SwitchActionFragment extends Fragment {
+public class SwitchActionFragment extends RxFragment {
 
     private Spinner sprItems;
     private ToggleButton tglOnOff;
@@ -70,22 +74,16 @@ public class SwitchActionFragment extends Fragment {
         filteredItems.clear();
 
         for(final ServerDB server : servers) {
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
-                @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
-                    filteredItems.addAll(items);
-                    itemAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            };
-
             IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
-            serverHandler.requestItems(callback);
+            serverHandler.requestItemsRx()
+                    .map(this::filterItems)
+                    .compose(bindToLifecycle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(items -> {
+                        filteredItems.addAll(items);
+                        itemAdapter.notifyDataSetChanged();
+                    });
         }
 
         tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);

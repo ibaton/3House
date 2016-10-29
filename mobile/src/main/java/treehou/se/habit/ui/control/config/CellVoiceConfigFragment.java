@@ -3,8 +3,6 @@ package treehou.se.habit.ui.control.config;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
+import com.trello.rxlifecycle.components.support.RxFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +20,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.db.model.ItemDB;
@@ -35,7 +35,7 @@ import treehou.se.habit.core.db.model.controller.VoiceCellDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
-public class CellVoiceConfigFragment extends Fragment {
+public class CellVoiceConfigFragment extends RxFragment {
 
     private static final String TAG = "CellVoiceConfigFragment";
 
@@ -50,8 +50,8 @@ public class CellVoiceConfigFragment extends Fragment {
 
     private OHItem item;
 
-    private ArrayAdapter<OHItem> mItemAdapter;
-    private ArrayList<OHItem> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> itemAdapter;
+    private ArrayList<OHItem> items = new ArrayList<>();
 
     private Realm realm;
     private Unbinder unbinder;
@@ -73,7 +73,7 @@ public class CellVoiceConfigFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         realm = Realm.getDefaultInstance();
-        mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
+        itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
             cell = new Cell(CellDB.load(realm, id));
@@ -102,35 +102,29 @@ public class CellVoiceConfigFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        sprItems.setAdapter(mItemAdapter);
+        sprItems.setAdapter(itemAdapter);
 
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
-        mItems.clear();
+        items.clear();
 
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
-            OHCallback<List<OHItem>> callback = new OHCallback<List<OHItem>>() {
-
-                @Override
-                public void onUpdate(OHResponse<List<OHItem>> response) {
-                    List<OHItem> items = filterItems(response.body());
-                    mItems.addAll(items);
-                    mItemAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onError() {
-                    Log.d("Get Items", "Failure");
-                }
-            };
             IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
-            serverHandler.requestItems(callback);
+            serverHandler.requestItemsRx()
+                    .map(this::filterItems)
+                    .compose(bindToLifecycle())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(items -> {
+                        this.items.addAll(items);
+                        itemAdapter.notifyDataSetChanged();
+                    });
         }
 
         sprItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OHItem item = mItems.get(position);
+                OHItem item = items.get(position);
                 if(item != null) {
                     realm.beginTransaction();
                     ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
@@ -145,9 +139,9 @@ public class CellVoiceConfigFragment extends Fragment {
         });
 
         if(item != null){
-            mItems.add(item);
-            mItemAdapter.add(item);
-            mItemAdapter.notifyDataSetChanged();
+            items.add(item);
+            itemAdapter.add(item);
+            itemAdapter.notifyDataSetChanged();
         }
 
         updateIconImage();
