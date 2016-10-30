@@ -12,7 +12,7 @@ public class DatabaseUtil {
 
     public static void init(Context context) {
 
-        RealmConfiguration configuration = new RealmConfiguration.Builder(context)
+        RealmConfiguration configuration = new RealmConfiguration.Builder()
                 .modules(new OHRealmModule())
                 .name("treehou-test.realm")
                 .inMemory()

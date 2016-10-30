@@ -21,11 +21,12 @@ public class OHRealm {
     }
 
     public void setup(Context context) {
-        Realm.setDefaultConfiguration(configuration(context));
+        Realm.init(context);
+        Realm.setDefaultConfiguration(configuration());
     }
 
-    public RealmConfiguration configuration(Context context) {
-        return new RealmConfiguration.Builder(context)
+    public RealmConfiguration configuration() {
+        return new RealmConfiguration.Builder()
                 .modules(new OHRealmModule())
                 .migration(migration)
                 .name("treehou.realm")

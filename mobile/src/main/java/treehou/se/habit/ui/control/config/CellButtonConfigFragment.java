@@ -3,7 +3,6 @@ package treehou.se.habit.ui.control.config;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,14 +27,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
@@ -43,7 +38,6 @@ import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
-import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
@@ -62,8 +56,8 @@ public class CellButtonConfigFragment extends RxFragment {
 
     @Inject ConnectionFactory connectionFactory;
 
-    private ArrayAdapter<OHItem> mItemAdapter;
-    private ArrayList<OHItem> mItems = new ArrayList<>();
+    private ArrayAdapter<OHItem> itemAdapter;
+    private ArrayList<OHItem> items = new ArrayList<>();
     private OHItem item;
     private ButtonCellDB buttonCell;
     private CellDB cell;
@@ -120,7 +114,7 @@ public class CellButtonConfigFragment extends RxFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 realm.beginTransaction();
-                OHItem item = mItems.get(position);
+                OHItem item = items.get(position);
                 if(item != null) {
                     ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
                     buttonCell.setItem(itemDB);
@@ -151,19 +145,19 @@ public class CellButtonConfigFragment extends RxFragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-        mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mItems);
-        sprItems.setAdapter(mItemAdapter);
+        itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
+        sprItems.setAdapter(itemAdapter);
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
-        mItems.clear();
+        items.clear();
 
         if(item != null){
-            mItems.add(item);
-            mItemAdapter.add(item);
-            mItemAdapter.notifyDataSetChanged();
+            items.add(item);
+            itemAdapter.add(item);
+            itemAdapter.notifyDataSetChanged();
         }
 
         if(buttonCell.getItem() != null) {
-            mItems.add(buttonCell.getItem().toGeneric());
+            items.add(buttonCell.getItem().toGeneric());
         }
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
@@ -173,8 +167,8 @@ public class CellButtonConfigFragment extends RxFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(items -> {
-                        mItems.addAll(items);
-                        mItemAdapter.notifyDataSetChanged();
+                        this.items.addAll(items);
+                        itemAdapter.notifyDataSetChanged();
                     }, throwable -> {
                         Log.e(TAG, "Error fetching switch items");
                     });

@@ -71,7 +71,7 @@ public class TestAndroidModule extends AndroidModule {
 
         @Override
         public void setup(Context context) {
-            Realm.setDefaultConfiguration(configuration(context));
+            Realm.setDefaultConfiguration(configuration());
             int size = Realm.getDefaultInstance().where(ServerDB.class).findAll().size();
             if(size <= 0) {
                 ServerDB server = new ServerDB();
@@ -80,8 +80,8 @@ public class TestAndroidModule extends AndroidModule {
         }
 
         @Override
-        public RealmConfiguration configuration(Context context) {
-            return new RealmConfiguration.Builder(context)
+        public RealmConfiguration configuration() {
+            return new RealmConfiguration.Builder()
                     .modules(new OHRealmModule())
                     .name("treehou-test-2.realm")
                     .schemaVersion(1)

@@ -108,11 +108,9 @@ public class WidgetSettingsDB extends RealmObject {
         WidgetSettingsDB widgetSettingsDB;
         if(result.size() <= 0){
             realm.beginTransaction();
-            widgetSettingsDB = realm.createObject(WidgetSettingsDB.class);
-            widgetSettingsDB.setId(WidgetSettingsDB.getUniqueId());
+            widgetSettingsDB = realm.createObject(WidgetSettingsDB.class, WidgetSettingsDB.getUniqueId());
             widgetSettingsDB.setTextSize(DEFAULT_TEXT_SIZE);
             widgetSettingsDB.setIconSize(DEFAULT_ICON_SIZE);
-
             realm.commitTransaction();
         }
         result = realm.where(WidgetSettingsDB.class).findAll();
