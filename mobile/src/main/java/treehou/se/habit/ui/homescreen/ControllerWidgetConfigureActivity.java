@@ -5,11 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.AdapterViewSelectionEvent;
+import com.jakewharton.rxbinding.widget.RxAdapter;
+import com.jakewharton.rxbinding.widget.RxAdapterView;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.realm.Realm;
+import rx.functions.Func1;
 import treehou.se.habit.BaseActivity;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
@@ -35,6 +42,7 @@ public class ControllerWidgetConfigureActivity extends BaseActivity {
 
     @BindView(R.id.spr_controller) Spinner sprControllers;
     @BindView(R.id.cbx_show_title) CheckBox cbxShowTitle;
+    @BindView(R.id.add_button) Button addButton;
 
     private Unbinder unbinder;
 
@@ -57,9 +65,13 @@ public class ControllerWidgetConfigureActivity extends BaseActivity {
         List<ControllerDB> controllers = realm.where(ControllerDB.class).findAll();
         List<ControllerItem> controllerItems = new ArrayList<>();
         for(ControllerDB controllerDB : controllers) controllerItems.add(new ControllerItem(controllerDB));
+        
+        ArrayAdapter<ControllerItem> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, controllerItems);
+        sprControllers.setAdapter(adapter);
 
-        ArrayAdapter<ControllerItem> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, controllerItems);
-        sprControllers.setAdapter(mAdapter);
+        RxAdapterView.itemSelections(sprControllers)
+                .map(index -> index != AdapterView.INVALID_POSITION)
+                .subscribe(RxView.enabled(addButton));
 
         // Find the widget id from the intent.
         Intent intent = getIntent();

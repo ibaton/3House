@@ -40,5 +40,6 @@
         android:padding="30dp"
         android:text="@string/add_widget"
         android:id="@+id/add_button"
+        android:enabled="false"
         android:layout_weight="1" />
 </LinearLayout>
