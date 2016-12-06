@@ -29,7 +29,7 @@ public class RxUtil {
     private RxUtil() {}
 
     public static <T> Observable.Transformer<T, T> newToMainSchedulers() {
-        return observable -> observable.subscribeOn(Schedulers.newThread())
+        return observable -> observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

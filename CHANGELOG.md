@@ -1,3 +1,8 @@
+## 5.3.3
+
+### Enhancements 
+* Set action bar title to page title, when navigating sitemap. 
+
 ## 5.3.2
 
 ### Bug Fixes

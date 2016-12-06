@@ -27,6 +27,8 @@ import org.greenrobot.eventbus.Subscribe;
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
