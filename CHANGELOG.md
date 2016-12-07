@@ -3,6 +3,9 @@
 ### Enhancements 
 * Set action bar title to page title, when navigating sitemap. 
 
+### Bug Fixes
+* Show rolleshutter for server version 1.8.x
+
 ## 5.3.2
 
 ### Bug Fixes

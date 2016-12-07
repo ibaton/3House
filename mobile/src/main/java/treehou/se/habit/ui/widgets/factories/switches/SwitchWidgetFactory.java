@@ -7,6 +7,7 @@ import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.util.OpenhabUtil;
 import treehou.se.habit.ui.widgets.factories.IWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.NullWidgetFactory;
 import treehou.se.habit.ui.widgets.WidgetFactory;
@@ -31,7 +32,7 @@ public class SwitchWidgetFactory implements IWidgetFactory {
                 return new NullWidgetFactory().build(context, factory, server, page, widget, parent);
             }
 
-            if(item.getType().equals(OHItem.TYPE_ROLLERSHUTTER)){
+            if(OpenhabUtil.isRollerShutter(item.getType())){
                 return RollerShutterWidgetHolder.create(context, factory, connectionFactory, server, page, widget, parent);
             }else{
                 return SwitchWidgetHolder.create(context, factory, connectionFactory, server, page, widget, parent);
