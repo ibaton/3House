@@ -1,3 +1,9 @@
+## 5.3.4
+
+### Bug Fixes
+* Update page title when moving back in title.
+
+
 ## 5.3.3
 
 ### Enhancements 

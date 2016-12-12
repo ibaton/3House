@@ -125,7 +125,6 @@ public class PageFragment extends BaseFragment {
                 initialized = true;
             }
         }
-        setupActionbar();
     }
 
     /**
@@ -133,7 +132,15 @@ public class PageFragment extends BaseFragment {
      */
     private void setupActionbar(){
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) actionBar.setTitle(page.getTitle());
+        String title = page.getTitle();
+        if(title == null) title = "";
+        title = removeValueFromTitle(title);
+
+        if(actionBar != null) actionBar.setTitle(title);
+    }
+
+    private String removeValueFromTitle(String title){
+        return title.replaceAll("\\[.+?\\]","");
     }
 
     @Override
@@ -190,6 +197,7 @@ public class PageFragment extends BaseFragment {
         if (supportsLongPolling()) {
             createLongPoller();
         }
+        setupActionbar();
     }
 
 
