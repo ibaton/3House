@@ -4,8 +4,6 @@ package treehou.se.habit.tasker.items;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +17,21 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class CommandActionFragment extends RxFragment {
 
@@ -42,6 +40,8 @@ public class CommandActionFragment extends RxFragment {
 
     private ArrayAdapter<OHItem> itemAdapter;
     private List<OHItem> filteredItems = new ArrayList<>();
+
+    @Inject ConnectionFactory connectionFactory;
 
     private Realm realm;
 
@@ -59,6 +59,7 @@ public class CommandActionFragment extends RxFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.getApplicationComponent(this).inject(this);
         realm = Realm.getDefaultInstance();
     }
 
@@ -76,7 +77,7 @@ public class CommandActionFragment extends RxFragment {
         filteredItems.clear();
 
         for(final ServerDB server : servers) {
-            IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getActivity());
             serverHandler.requestItemsRx()
                     .map(this::filterItems)
                     .compose(bindToLifecycle())

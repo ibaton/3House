@@ -66,7 +66,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        // If this activity was started with an intent without an app widget ID, finish with an error.
+        // If this view was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
         }
@@ -76,7 +76,7 @@ public class VoiceControlWidgetConfigureActivity extends Activity {
         public void onClick(View v) {
             final Context context = VoiceControlWidgetConfigureActivity.this;
 
-            // It is the responsibility of the configuration activity to update the app widget
+            // It is the responsibility of the configuration view to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
             //TODO check that server is selected

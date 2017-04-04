@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.connector.Constants;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class VoiceActionService extends IntentService {
 
@@ -17,9 +21,12 @@ public class VoiceActionService extends IntentService {
 
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
 
+    @Inject ConnectionFactory connectionFactory;
+
     public VoiceActionService() {
         super("VoiceActionService");
 
+        ((HabitApplication) getApplication()).component().inject(this);
         Log.d(TAG, "Constructor");
     }
 
@@ -38,7 +45,7 @@ public class VoiceActionService extends IntentService {
             }*/
 
             if(server != null) {
-                IServerHandler serverHandler = new Connector.ServerHandler(server, this);
+                IServerHandler serverHandler = connectionFactory.createServerHandler(server, this);
                 serverHandler.sendCommand(Constants.ITEM_VOICE_COMMAND, command);
             }
         }

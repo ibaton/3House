@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Random;
 
-import treehou.se.habit.MainActivity;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 

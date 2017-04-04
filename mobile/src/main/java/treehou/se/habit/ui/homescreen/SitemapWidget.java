@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import treehou.se.habit.MainActivity;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.R;
 
 /**

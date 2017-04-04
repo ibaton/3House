@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import treehou.se.habit.MainActivity;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.tasker.boundle.OpenSitemapBoundleManager;
 
 public class OpenSitemapReciever implements IFireReciever {

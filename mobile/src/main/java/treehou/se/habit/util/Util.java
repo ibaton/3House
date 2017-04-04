@@ -1,8 +1,11 @@
 package treehou.se.habit.util;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.graphics.Palette;
@@ -28,8 +31,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.ui.adapter.IconAdapter;
 
 public class Util {
@@ -130,6 +135,18 @@ public class Util {
         IIcon icon = CELL_ICON_MAP.get(value);
 
         return icon;
+    }
+
+    public static ApplicationComponent getApplicationComponent(Service service) {
+        return ((HabitApplication) service.getApplication()).component();
+    }
+
+    public static ApplicationComponent getApplicationComponent(Activity activity) {
+        return ((HabitApplication) activity.getApplication()).component();
+    }
+
+    public static ApplicationComponent getApplicationComponent(Fragment fragment) {
+        return ((HabitApplication) fragment.getActivity().getApplication()).component();
     }
 
     /**

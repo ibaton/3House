@@ -1,42 +1,25 @@
 package treehou.se.habit.ui.controllers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.util.Pair;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import io.realm.Realm;
-import rx.Observable;
-import rx.functions.Func1;
-import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
-import treehou.se.habit.MainActivity;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 import treehou.se.habit.data.TestAndroidModule;
-import treehou.se.habit.data.TestConnectionFactory;
-import treehou.se.habit.data.TestServerLoaderFactory;
 import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.DaggerApplicationComponent;
-import treehou.se.habit.module.ServerLoaderFactory;
-import treehou.se.habit.util.ConnectionFactory;
 
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;

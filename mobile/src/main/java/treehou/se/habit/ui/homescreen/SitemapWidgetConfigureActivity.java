@@ -62,7 +62,7 @@ public class SitemapWidgetConfigureActivity extends BaseActivity implements Site
     public void onSitemapSelect(OHSitemap sitemap) {
         saveSitemapIdPref(SitemapWidgetConfigureActivity.this, mAppWidgetId, sitemap);
 
-        // It is the responsibility of the configuration activity to update the app widget
+        // It is the responsibility of the configuration view to update the app widget
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(SitemapWidgetConfigureActivity.this);
         SitemapWidget.updateAppWidget(SitemapWidgetConfigureActivity.this, appWidgetManager, mAppWidgetId);
 

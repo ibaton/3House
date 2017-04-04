@@ -22,6 +22,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -33,7 +35,9 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.InboxAdapter;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
+import treehou.se.habit.util.Util;
 
 public class InboxListFragment extends BaseFragment {
 
@@ -43,6 +47,8 @@ public class InboxListFragment extends BaseFragment {
 
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.error_view) View empty;
+
+    @Inject ConnectionFactory connectionFactory;
 
     private Realm relam;
 
@@ -81,6 +87,7 @@ public class InboxListFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Util.getApplicationComponent(this).inject(this);
         relam = Realm.getDefaultInstance();
         server = ServerDB.load(relam, getArguments().getLong(ARG_SERVER));
     }
@@ -133,7 +140,7 @@ public class InboxListFragment extends BaseFragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(listView);
 
-        adapter = new InboxAdapter(getContext(), server);
+        adapter = new InboxAdapter(getContext(), server, connectionFactory);
         listView.setAdapter(adapter);
     }
 
@@ -224,7 +231,7 @@ public class InboxListFragment extends BaseFragment {
      */
     private void ignoreInboxItem(final OHInboxItem item){
         item.setFlag(OHInboxItem.FLAG_IGNORED);
-        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getContext());
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getContext());
         serverHandler.ignoreInboxItem(item);
 
         final View rootView = getView();
@@ -247,7 +254,7 @@ public class InboxListFragment extends BaseFragment {
      */
     private void unignoreInboxItem(final OHInboxItem item) {
         item.setFlag("");
-        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getContext());
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getContext());
         serverHandler.unignoreInboxItem(item);
         setItems(items, showIgnored);
     }
@@ -257,7 +264,7 @@ public class InboxListFragment extends BaseFragment {
         super.onResume();
 
         showErrorView(false);
-        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getContext());
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getContext());
         serverHandler.requestInboxItemsRx()
                 .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())

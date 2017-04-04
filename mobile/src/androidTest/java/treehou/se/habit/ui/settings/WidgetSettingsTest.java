@@ -1,7 +1,6 @@
 package treehou.se.habit.ui.settings;
 
 import android.app.Activity;
-import android.os.Looper;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
@@ -13,17 +12,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import io.realm.Realm;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
-import treehou.se.habit.MainActivity;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
-import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.DaggerApplicationComponent;
-import treehou.se.habit.util.Settings;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

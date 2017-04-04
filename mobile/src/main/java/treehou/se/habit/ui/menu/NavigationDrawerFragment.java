@@ -124,7 +124,7 @@ public class NavigationDrawerFragment extends BaseFragment {
         Realm.getDefaultInstance().asObservable().compose(serverLoaderFactory.loadServersRx())
                 .compose(serverLoaderFactory.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .compose(serverLoaderFactory.filterDisplaySitemaps())
                 .subscribe(serverSitemaps -> {
                     List<OHSitemap> sitemaps = serverSitemaps.second;
@@ -182,14 +182,14 @@ public class NavigationDrawerFragment extends BaseFragment {
     /**
      * Users of this fragment must call this method to set up the navigation drawer interactions.
      *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
+     * @param fragmentId   The android:id of this fragment in its view's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
     public void setUp(int fragmentId, DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
-        // set a custom shadow that overlays the main content when the drawer opens
+        // set a custom shadow that overlays the treehou.se.habit.main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
 

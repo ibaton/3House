@@ -177,7 +177,7 @@ public class SitemapSelectFragment extends BaseFragment {
                 .distinct()
                 .compose(serverLoader.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(bindToLifecycle())
                 .subscribe(serverSitemaps -> {
                     emptyView.setVisibility(View.GONE);
 

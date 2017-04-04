@@ -56,9 +56,9 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
             public void onClick(View v) {
                 ItemDB item = buttonCell.getItem();
                 if (item != null) {
-                    OHServer server = item.getServer().toGeneric();
+                    /*OHServer server = item.getServer().toGeneric();
                     IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                    serverHandler.sendCommand(item.getName(), buttonCell.getCommand());
+                    serverHandler.sendCommand(item.getName(), buttonCell.getCommand()) TODO fix ;*/
                 }
             }
         });

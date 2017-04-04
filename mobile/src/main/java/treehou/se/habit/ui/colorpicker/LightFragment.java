@@ -14,6 +14,8 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -26,6 +28,7 @@ import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class LightFragment extends Fragment {
 
@@ -37,6 +40,8 @@ public class LightFragment extends Fragment {
 
     @BindView(R.id.lbl_name) TextView lblName;
     @BindView(R.id.pcr_color_h) ColorPicker pcrColor;
+
+    @Inject ConnectionFactory connectionFactory;
 
     private Realm realm;
 
@@ -126,7 +131,7 @@ public class LightFragment extends Fragment {
 
                 @Override
                 public void run() {
-                    IServerHandler serverHandler = new Connector.ServerHandler(server, getActivity());
+                    IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
 
                     hsv[1] *= 100;
                     hsv[2] *= 100;

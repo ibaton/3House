@@ -2,6 +2,7 @@ package treehou.se.habit.util;
 
 import android.content.Context;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.module.ServerLoaderFactory;
 
 public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
+
+    private static final String TAG = DatabaseServerLoaderFactory.class.getSimpleName();
 
     private OHRealm realm;
     private ConnectionFactory connectionFactory;
@@ -53,6 +56,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
             public Observable<List<OHSitemap>> call(OHServer server) {
                 IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
                 return serverHandler.requestSitemapRx().subscribeOn(Schedulers.io())
+                        .doOnError(e -> Log.e(TAG, "Failed to load sitemap", e))
                         .onErrorReturn(throwable -> new ArrayList<>());
             }
         }, (server, sitemaps) -> {

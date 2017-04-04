@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.Context;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -12,6 +14,8 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.ItemDB;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -33,6 +37,8 @@ public class CommandService extends IntentService {
     private static final String ARG_MAX     = "ARG_MAX";
     private static final String ARG_MIN     = "ARG_MIN";
     private static final String ARG_VALUE   = "ARG_VALUE";
+
+    @Inject ConnectionFactory connectionFactory;
 
     public static void startActionCommand(Context context, String command, OHItem item) {
         Intent intent = new Intent(context, CommandService.class);
@@ -65,6 +71,11 @@ public class CommandService extends IntentService {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        Util.getApplicationComponent(this).inject(this);
+    }
+
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "onHandleIntent");
         Realm realm = Realm.getDefaultInstance();
@@ -92,7 +103,7 @@ public class CommandService extends IntentService {
     private void handleActionCommand(String command, OHItem item) {
 
         OHServer server = item.getServer();
-        IServerHandler serverHandler = new Connector.ServerHandler(server, this);
+        IServerHandler serverHandler = connectionFactory.createServerHandler (server, this);
         serverHandler.sendCommand(item.getName(), command);
     }
 }

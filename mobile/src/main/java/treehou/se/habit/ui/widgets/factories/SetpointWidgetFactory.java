@@ -115,8 +115,8 @@ public class SetpointWidgetFactory implements IWidgetFactory {
                         lblValue.setText(widget.getItem().getFormatedValue());
                     }
 
-                    IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                    serverHandler.sendCommand(widget.getItem().getName(), String.valueOf(value));
+                    /*IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+                    serverHandler.sendCommand(widget.getItem().getName(), String.valueOf(value)); TODO fix*/
                 } catch (Exception e) {}
             }
         }

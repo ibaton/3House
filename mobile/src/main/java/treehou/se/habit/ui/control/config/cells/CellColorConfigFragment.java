@@ -15,6 +15,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
@@ -25,12 +27,16 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ColorCellDB;
 import treehou.se.habit.ui.adapter.IconAdapter;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class CellColorConfigFragment extends RxFragment {
 
     private static final String TAG = "CellColorConfigFragment";
 
     private static String ARG_CELL_ID = "ARG_CELL_ID";
+
+    @Inject ConnectionFactory connectionFactory;
 
     private CellDB cell;
 
@@ -56,6 +62,7 @@ public class CellColorConfigFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Util.getApplicationComponent(this).inject(this);
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
 
         /*if (getArguments() != null) {
@@ -107,7 +114,7 @@ public class CellColorConfigFragment extends RxFragment {
         List<OHServer> servers = null; // TODO OHServer.loadAll();
         items.clear();
         for(final OHServer server : servers) {
-            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server, getContext());
             serverHandler.requestItemsRx()
                     .map(this::filterItems)
                     .compose(bindToLifecycle())
