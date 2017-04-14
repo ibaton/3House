@@ -8,10 +8,14 @@ import android.util.Log;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class VoiceService extends IntentService {
 
@@ -24,6 +28,8 @@ public class VoiceService extends IntentService {
 
     private static final int NULL_SERVER = -1;
 
+    @Inject ConnectionFactory connectionFactory;
+
     public static Intent createVoiceCommand(Context context, ServerDB server) {
         Intent intent = new Intent(context, VoiceService.class);
         intent.setAction(ACTION_COMMAND);
@@ -33,6 +39,12 @@ public class VoiceService extends IntentService {
 
     public VoiceService() {
         super("VoiceService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Util.getApplicationComponent(this).inject(this);
     }
 
     @Override
@@ -53,7 +65,7 @@ public class VoiceService extends IntentService {
             Log.d(TAG, "Received " + results.size() + " voice results.");
 
             String command = results.get(0);
-            IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), this);
+            IServerHandler serverHandler = connectionFactory.createServerHandler (server.toGeneric(), this);
             serverHandler.sendCommand(VOICE_ITEM, command);
         }
         realm.close();

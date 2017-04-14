@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.util.List;
 
+import javax.net.ssl.X509TrustManager;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -23,8 +25,12 @@ import treehou.se.habit.util.ConnectionFactory;
 
 public class TestConnectionFactory extends ConnectionFactory {
 
+    public TestConnectionFactory(Context context) {
+        super(context);
+    }
+
     public IServerHandler createServerHandler(OHServer server, Context context){
-        return new Connector.ServerHandler(server, context);
+        return new Connector.ServerHandler(server, context, null, null, null);
     }
 
     public static class TestServerHandler implements IServerHandler{

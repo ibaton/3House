@@ -18,6 +18,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,6 +34,8 @@ import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class SwitchActionFragment extends RxFragment {
 
@@ -40,6 +44,8 @@ public class SwitchActionFragment extends RxFragment {
 
     private ArrayAdapter<OHItem> itemAdapter;
     private List<OHItem> filteredItems = new ArrayList<>();
+
+    @Inject ConnectionFactory connectionFactory;
 
     private Realm realm;
 
@@ -57,6 +63,7 @@ public class SwitchActionFragment extends RxFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.getApplicationComponent(this).inject(this);
         realm = Realm.getDefaultInstance();
     }
 
@@ -74,7 +81,7 @@ public class SwitchActionFragment extends RxFragment {
         filteredItems.clear();
 
         for(final ServerDB server : servers) {
-            IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getActivity());
             serverHandler.requestItemsRx()
                     .map(this::filterItems)
                     .compose(bindToLifecycle())

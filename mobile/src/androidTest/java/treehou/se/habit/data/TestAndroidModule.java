@@ -50,14 +50,14 @@ public class TestAndroidModule extends AndroidModule {
 
     @Provides
     public ConnectionFactory provideConnectionFactory(){
-        return new ConnectionFactory();
+        return new ConnectionFactory(application);
     }
 
     @Override
-    public OHRealm provideRealm() {
+    public OHRealm provideOHRealm() {
         return new TestOHRealm(application);
     }
-
+    
     @Provides
     public ServerLoaderFactory provideServerLoaderFactory(ConnectionFactory connectionFactory){
         return new TestServerLoaderFactory(connectionFactory);

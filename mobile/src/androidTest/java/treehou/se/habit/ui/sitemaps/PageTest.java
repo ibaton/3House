@@ -20,19 +20,16 @@ import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
-import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
-import treehou.se.habit.MainActivity;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
-import treehou.se.habit.connector.Constants;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.data.TestConnectionFactory;
 import treehou.se.habit.data.TestServerLoaderFactory;
@@ -153,7 +150,7 @@ public class PageTest {
 
                     @Override
                     public ConnectionFactory provideConnectionFactory() {
-                        return new TestConnectionFactory(){
+                        return new TestConnectionFactory(application){
                             @Override
                             public IServerHandler createServerHandler(OHServer server, Context context) {
                                 return new TestServerHandler(){

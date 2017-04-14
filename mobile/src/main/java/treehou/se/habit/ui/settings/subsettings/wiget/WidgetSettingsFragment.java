@@ -1,9 +1,8 @@
-package treehou.se.habit.ui.settings.subsettings;
+package treehou.se.habit.ui.settings.subsettings.wiget;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,21 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Constants;

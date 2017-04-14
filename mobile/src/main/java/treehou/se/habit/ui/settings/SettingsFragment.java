@@ -18,17 +18,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import treehou.se.habit.R;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
-import treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment;
-import treehou.se.habit.ui.settings.subsettings.WidgetSettingsFragment;
+import treehou.se.habit.ui.settings.subsettings.general.GeneralSettingsFragment;
+import treehou.se.habit.ui.settings.subsettings.wiget.WidgetSettingsFragment;
 import treehou.se.habit.util.IntentHelper;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presenter> implements SettingsContract.View {
 
     private Unbinder unbinder;
 
@@ -47,10 +51,14 @@ public class SettingsFragment extends Fragment {
         int ITEM_TRANSLATE = 5;
     }
 
+    private ActionBar actionBar;
+
     /**
      * The fragment's ListView/GridView.
      */
     @BindView(android.R.id.list) AbsListView mListView;
+
+    @Inject SettingsContract.Presenter presenter;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -86,10 +94,35 @@ public class SettingsFragment extends Fragment {
     }
 
     @Override
+    public void showWidgetSettings() {
+        Fragment fragment = WidgetSettingsFragment.newInstance();
+        openPage(fragment);
+    }
+
+    @Override
+    public void showGeneralSettings() {
+        Fragment fragment = GeneralSettingsFragment.newInstance();
+        openPage(fragment);
+    }
+
+    @Override
+    public void showLicense() {
+        actionBar.setTitle(R.string.open_source_libraries);
+        Fragment fragment = new LibsBuilder().supportFragment();
+        openPage(fragment);
+    }
+
+    @Override
+    public void showTranslatePage() {
+        openTranslationSite();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         unbinder = ButterKnife.bind(this, view);
 
         // Set the adapter
@@ -97,7 +130,7 @@ public class SettingsFragment extends Fragment {
 
         mListView.setOnItemClickListener(optionsSelectListener);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if(actionBar != null) actionBar.setTitle(R.string.settings);
 
         return view;
@@ -112,31 +145,42 @@ public class SettingsFragment extends Fragment {
     AdapterView.OnItemClickListener optionsSelectListener = (parent, view, position, id) -> {
         ImageItem item = (ImageItem) parent.getItemAtPosition(position);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        Fragment fragment = null;
         switch (item.getId()) {
             case SettingsItems.ITEM_WIDGETS:
-                fragment = WidgetSettingsFragment.newInstance();
+                presenter.openWidgetSettings();
                 break;
             case SettingsItems.ITEM_GENERAL:
-                fragment = GeneralSettingsFragment.newInstance();
+                presenter.openGeneralSettings();
                 break;
             case SettingsItems.ITEM_LICENSES :
-                fragment = new LibsBuilder().supportFragment();
-                if(actionBar != null) actionBar.setTitle(R.string.open_source_libraries);
+                presenter.openLicense();
                 break;
             case SettingsItems.ITEM_TRANSLATE :
-                openTranslationSite();
-                return;
+                presenter.openTranslatePage();
+                break;
         }
+    };
 
+    private void openPage(Fragment fragment){
         if(fragment != null){
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.page_container, fragment)
                     .addToBackStack(null)
                     .commit();
         }
-    };
+    }
+
+    @Override
+    public SettingsContract.Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((SettingsComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(SettingsFragment.class))
+                .fragmentModule(new SettingsModule(this))
+                .build().injectMembers(this);
+    }
 
     /**
      * Opens translation site for project.

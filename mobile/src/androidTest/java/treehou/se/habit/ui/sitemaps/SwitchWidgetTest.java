@@ -26,10 +26,9 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.connector.models.OHStateDescription;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.util.OpenhabConstants;
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
-import treehou.se.habit.MainActivity;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
@@ -184,7 +183,7 @@ public class SwitchWidgetTest {
 
                     @Override
                     public ConnectionFactory provideConnectionFactory() {
-                        return new TestConnectionFactory(){
+                        return new TestConnectionFactory(application){
                             @Override
                             public IServerHandler createServerHandler(OHServer server, Context context) {
                                 return new TestServerHandler(){

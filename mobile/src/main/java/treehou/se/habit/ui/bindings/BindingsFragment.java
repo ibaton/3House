@@ -18,6 +18,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -35,6 +37,8 @@ import treehou.se.habit.R;
 import treehou.se.habit.connector.models.Binding;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.ui.adapter.BindingAdapter;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class BindingsFragment extends RxFragment {
 
@@ -45,6 +49,8 @@ public class BindingsFragment extends RxFragment {
     private static final String STATE_BINDINGS = "STATE_BINDINGS";
 
     @BindView(R.id.lst_bindings) RecyclerView lstBinding;
+
+    @Inject ConnectionFactory connectionFactory;
 
     private BindingAdapter bindingAdapter;
     private ServerDB server;
@@ -70,6 +76,7 @@ public class BindingsFragment extends RxFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        Util.getApplicationComponent(this).inject(this);
         realm = Realm.getDefaultInstance();
 
         if(getArguments() != null){
@@ -131,7 +138,7 @@ public class BindingsFragment extends RxFragment {
     @Override
     public void onResume() {
         super.onResume();
-        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), getActivity());
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getActivity());
         serverHandler.requestBindingsRx()
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())

@@ -1,4 +1,4 @@
-package treehou.se.habit;
+package treehou.se.habit.main;
 
 import android.os.Bundle;
 
@@ -10,42 +10,41 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-
 import javax.inject.Inject;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.mvp.BaseDaggerActivity;
+import treehou.se.habit.R;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
+import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
-import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.servers.ServersFragment;
 import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.SitemapListFragment;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Settings;
 
 import static treehou.se.habit.ui.menu.NavigationDrawerFragment.NavigationItems;
 
 
-public class MainActivity extends BaseActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class MainActivity extends BaseDaggerActivity<MainContract.Presenter>
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainContract.View {
 
     private static final String TAG = "MainActivity";
 
-    private Realm realm;
-
     @Inject Settings settings;
+    @Inject MainPresenter mainPresenter;
+    @Inject ConnectionFactory connectionFactory;
+    @Inject ServerLoaderFactory serverLoaderFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ((HabitApplication) getApplication()).component().inject(this);
-        setTheme(settings.getThemeResourse());
         super.onCreate(savedInstanceState);
+        setTheme(settings.getThemeResourse());
 
         setContentView(R.layout.activity_main);
-        realm = Realm.getDefaultInstance();
         ControllerUtil.showNotifications(this);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -57,47 +56,19 @@ public class MainActivity extends BaseActivity
         // Set up the drawer.
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        setupFragments(savedInstanceState);
-
         ControllerUtil.showNotifications(this);
     }
 
-    /**
-     * Setup the saved instance state.
-     * @param savedInstanceState saved instance state
-     */
-    private void setupFragments(Bundle savedInstanceState){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if(fragmentManager.findFragmentById(R.id.page_container) == null) {
-
-            // Load server setup server fragment if no server found
-            RealmResults<ServerDB> serverDBs = realm.where(ServerDB.class).findAll();
-
-            if(serverDBs.size() <= 0) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.page_container, ServersFragment.newInstance())
-                        .commit();
-            }else {
-                // Load default sitemap if any
-                String defaultSitemap = settings.getDefaultSitemap();
-                if(savedInstanceState == null && defaultSitemap != null) {
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.page_container, SitemapListFragment.newInstance(defaultSitemap))
-                            .commit();
-                }else {
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.page_container, SitemapListFragment.newInstance())
-                            .commit();
-                }
-            }
-        }
+    @Override
+    public MainContract.Presenter getPresenter() {
+        return mainPresenter;
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        realm.close();
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((MainActivityComponent.Builder) hasActivitySubcomponentBuilders.getActivityComponentBuilder(MainActivity.class))
+                .activityModule(new MainActivityModule(this))
+                .build().injectMembers(this);
     }
 
     @Override
@@ -110,30 +81,28 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onSitemapItemSelected(OHSitemap sitemap) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.page_container, SitemapListFragment.newInstance(sitemap.getName()))
-                .commit();
+        mainPresenter.showSitemap(sitemap);
     }
 
     @Override
     public void onNavigationDrawerItemSelected(@NavigationDrawerFragment.NavigationItems int value) {
-        Fragment fragment = null;
         switch (value) {
             case NavigationItems.ITEM_SITEMAPS:
-                fragment = SitemapListFragment.newInstance();
+                mainPresenter.showSitemaps();
                 break;
             case NavigationItems.ITEM_CONTROLLERS:
-                fragment = ControllsFragment.newInstance();
+                mainPresenter.showControllers();
                 break;
             case NavigationItems.ITEM_SERVER:
-                fragment = ServersFragment.newInstance();
+                mainPresenter.showServers();
                 break;
             case NavigationItems.ITEM_SETTINGS:
-                fragment = SettingsFragment.newInstance();
+                mainPresenter.showSettings();
                 break;
         }
+    }
 
+    public void openFragment(Fragment fragment){
         clearFragments();
         if(fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -141,6 +110,42 @@ public class MainActivity extends BaseActivity
                     .replace(R.id.page_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void openSitemaps() {
+        SitemapListFragment fragment = SitemapListFragment.newInstance();
+        openFragment(fragment);
+    }
+
+    @Override
+    public void openSitemaps(String defaultSitemap) {
+        SitemapListFragment fragment = SitemapListFragment.newInstance(defaultSitemap);
+        openFragment(fragment);
+    }
+
+    @Override
+    public void openSitemap(OHSitemap sitemap) {
+        SitemapListFragment fragment = SitemapListFragment.newInstance(sitemap.getName());
+        openFragment(fragment);
+    }
+
+    @Override
+    public void openControllers() {
+        ControllsFragment fragment = ControllsFragment.newInstance();
+        openFragment(fragment);
+    }
+
+    @Override
+    public void openServers() {
+        ServersFragment fragment = ServersFragment.newInstance();
+        openFragment(fragment);
+    }
+
+    @Override
+    public void openSettings() {
+        SettingsFragment fragment = SettingsFragment.newInstance();
+        openFragment(fragment);
     }
 
     @Override
@@ -161,6 +166,11 @@ public class MainActivity extends BaseActivity
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean hasOpenPage() {
+        return getSupportFragmentManager().findFragmentById(R.id.page_container) != null;
     }
 
     /**

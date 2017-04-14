@@ -132,7 +132,7 @@ public class ScanServersFragment extends BaseFragment {
             }
         };
         scanner.registerRx().compose(RxUtil.newToMainSchedulers())
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .subscribe(server -> {
             serversAdapter.addItem(server);
         });

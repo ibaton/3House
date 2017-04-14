@@ -34,9 +34,12 @@ public class SliderActivity extends BaseActivity {
 
     public static final String SLIDER_TAG = "sliderDialog";
 
+    @Inject ConnectionFactory connectionFactory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Util.getApplicationComponent(this).inject(this);
         setContentView(R.layout.activity_slider);
         ButterKnife.bind(this);
         long id = getIntent().getExtras().getLong(ARG_CELL);
@@ -139,7 +142,7 @@ public class SliderActivity extends BaseActivity {
             super.onResume();
 
             OHServer server = numberCell.getItem().getServer().toGeneric();
-            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server, getContext());
             serverHandler.requestItemRx(numberCell.getItem().getName())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())

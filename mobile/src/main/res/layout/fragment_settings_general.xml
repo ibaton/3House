@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/scrollView6"
-    tools:context="treehou.se.habit.ui.settings.subsettings.GeneralSettingsFragment">
+    tools:context="treehou.se.habit.ui.settings.subsettings.general.GeneralSettingsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

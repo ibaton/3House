@@ -248,8 +248,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         lblSettingsContainer.setBackgroundColor(pallete[0]);
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {
-            activity.getWindow().setStatusBarColor(pallete[0]);
-            activity.getWindow().setNavigationBarColor(pallete[0]);
+            view.getWindow().setStatusBarColor(pallete[0]);
+            view.getWindow().setNavigationBarColor(pallete[0]);
             if(actionBar != null) {
                 actionBar.setBackgroundDrawable(new ColorDrawable(pallete[0]));
             }

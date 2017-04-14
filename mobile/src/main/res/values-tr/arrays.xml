@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="cell_types">
-    <!-- main color of your theme -->
+    <!-- treehou.se.habit.main color of your theme -->
         <item>Boş</item>
-    <!-- main color of your theme -->
+    <!-- treehou.se.habit.main color of your theme -->
         <item>Anahtar</item>
-    <!-- main color of your theme -->
+    <!-- treehou.se.habit.main color of your theme -->
         <item>Notlar</item>
-    <!-- main color of your theme -->
+    <!-- treehou.se.habit.main color of your theme -->
         <item>Artış/Azalış</item>
-    <!-- main color of your theme -->
+    <!-- treehou.se.habit.main color of your theme -->
         <item>Ses</item>
     </string-array>
     <string-array name="controll_manager">

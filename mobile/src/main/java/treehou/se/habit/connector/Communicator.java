@@ -16,20 +16,18 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.X509TrustManager;
+
+import de.duenndns.ssl.MemorizingTrustManager;
 import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import rx.functions.Action1;
-import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import se.treehou.ng.ohcommunicator.util.ConnectorUtil;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
 import treehou.se.habit.util.Util;
-import treehou.se.habit.util.logging.FirebaseLogger;
 
 public class Communicator {
 
@@ -40,6 +38,7 @@ public class Communicator {
     private static Communicator mInstance;
     private Context context;
     private Map<OHServer, Picasso> requestLoaders = new HashMap<>();
+    private X509TrustManager trustManager = null;
 
     public static synchronized Communicator instance(Context context){
         if (mInstance == null) {
@@ -50,6 +49,7 @@ public class Communicator {
 
     private Communicator(Context context){
         this.context = context;
+        trustManager = new MemorizingTrustManager(context);
     }
 
     private int scrubNumberValue(int number, final int min, final int max){
@@ -58,7 +58,7 @@ public class Communicator {
 
     public void incDec(final OHServer server, final String itemName, final int value, final int min, final int max){
 
-        final IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+        final IServerHandler serverHandler = new Connector.ServerHandler(server, context, null, null, null);
         serverHandler.requestItemRx(itemName)
                 .doOnNext(newItem -> Log.d(TAG, "Item state " + newItem.getState() + " " + newItem.getType()))
                 .subscribe(newItem -> {

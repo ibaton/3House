@@ -16,6 +16,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -32,6 +34,7 @@ import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.VoiceCellDB;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
 
@@ -44,6 +47,8 @@ public class CellVoiceConfigFragment extends RxFragment {
 
     @BindView(R.id.spr_items) Spinner sprItems;
     @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
+
+    @Inject ConnectionFactory connectionFactory;
 
     private VoiceCellDB voiceCell;
     private Cell cell;
@@ -71,6 +76,8 @@ public class CellVoiceConfigFragment extends RxFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Util.getApplicationComponent(this).inject(this);
 
         realm = Realm.getDefaultInstance();
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
@@ -109,7 +116,7 @@ public class CellVoiceConfigFragment extends RxFragment {
 
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
-            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server, getContext());
             serverHandler.requestItemsRx()
                     .map(this::filterItems)
                     .compose(bindToLifecycle())

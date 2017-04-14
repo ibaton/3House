@@ -23,6 +23,7 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder> {
 
@@ -42,6 +43,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
     private Context context;
 
     private ServerDB server;
+    private ConnectionFactory connectionFactory;
     private ItemListener itemListener = new DummyItemListener();
 
     public class InboxHolder extends RecyclerView.ViewHolder {
@@ -62,9 +64,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
         }
     }
 
-    public InboxAdapter(Context context, ServerDB server) {
+    public InboxAdapter(Context context, ServerDB server, ConnectionFactory connectionFactory) {
         this.context = context;
         this.server = server;
+        this.connectionFactory = connectionFactory;
     }
 
     @Override
@@ -114,7 +117,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.InboxHolder>
             louProperties.addView(louProperty);
         }
 
-        IServerHandler serverHandler = new Connector.ServerHandler(server.toGeneric(), context);
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), context);
         serverHolder.itemView.setOnClickListener(v -> new AlertDialog.Builder(context)
                 .setTitle(context.getString(R.string.approve_item))
                 .setMessage(context.getString(R.string.approve_this_item))

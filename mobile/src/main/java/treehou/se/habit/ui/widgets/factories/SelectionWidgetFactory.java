@@ -92,8 +92,8 @@ public class SelectionWidgetFactory implements IWidgetFactory {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if(position != lastPosition) {
                                 OHMapping mapping = mappings.get(position);
-                                final IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                                serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
+                                /*final IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+                                serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand()); TODO fix*/
                                 lastPosition = position;
                             }
                         }

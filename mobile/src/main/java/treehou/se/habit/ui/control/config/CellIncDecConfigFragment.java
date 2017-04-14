@@ -18,6 +18,8 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -36,6 +38,7 @@ import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.IncDecCellDB;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Constants;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.util.IconPickerActivity;
@@ -52,6 +55,8 @@ public class CellIncDecConfigFragment extends RxFragment {
     @BindView(R.id.txtMin) EditText txtMin;
     @BindView(R.id.txtValue) EditText txtValue;
     @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
+
+    @Inject ConnectionFactory connectionFactory;
 
     private ArrayAdapter<OHItem> itemAdapter;
     private ArrayList<OHItem> items = new ArrayList<>();
@@ -78,6 +83,7 @@ public class CellIncDecConfigFragment extends RxFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Util.getApplicationComponent(this).inject(this);
         realm = Realm.getDefaultInstance();
 
         if (getArguments() != null) {
@@ -143,7 +149,7 @@ public class CellIncDecConfigFragment extends RxFragment {
         }
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
-            IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server, getContext());
             serverHandler.requestItemsRx()
                     .map(this::filterItems)
                     .compose(bindToLifecycle())

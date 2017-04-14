@@ -65,9 +65,9 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
                     return;
                 }
 
-                OHServer server = sliderCell.getItem().getServer().toGeneric();
+                /*OHServer server = sliderCell.getItem().getServer().toGeneric();
                 IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                serverHandler.sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress());
+                serverHandler.sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress()); TODO fix*/
             }
         });
         realm.close();
@@ -99,11 +99,11 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
     }
 
     /**
-     * Create a intent that can launch a slider activity.
+     * Create a intent that can launch a slider view.
      *
-     * @param context get context launching activity
+     * @param context get context launching view
      * @param cellID the cell id
-     * @return intent that can launch activity.
+     * @return intent that can launch view.
      */
     private Intent createSliderIntent(Context context, long cellID){
         Intent intent = new Intent(context.getApplicationContext(), SliderActivity.class);

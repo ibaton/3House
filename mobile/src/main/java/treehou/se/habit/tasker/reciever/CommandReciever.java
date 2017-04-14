@@ -44,7 +44,6 @@ public class CommandReciever implements IFireReciever {
         return true;
     }
 
-
     @Override
     public boolean fire(Context context, Bundle bundle) {
 
@@ -55,9 +54,9 @@ public class CommandReciever implements IFireReciever {
             Realm realm = Realm.getDefaultInstance();
             ItemDB item = ItemDB.load(realm, itemId);
             if(item != null){
-                IServerHandler serverHandler = new Connector.ServerHandler(item.getServer().toGeneric(), context);
+                /*IServerHandler serverHandler = new Connector.ServerHandler(item.getServer().toGeneric(), context);
                 serverHandler.sendCommand(item.getName(), command);
-                Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());
+                Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName()); TODO fix */
             }else {
                 Log.d(TAG, "Item no longer exists");
             }

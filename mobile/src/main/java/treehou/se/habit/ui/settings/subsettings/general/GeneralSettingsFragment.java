@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.settings.subsettings;
+package treehou.se.habit.ui.settings.subsettings.general;
 
 
 import android.os.Build;
@@ -24,13 +24,16 @@ import rx.android.schedulers.AndroidSchedulers;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Settings;
 
-public class GeneralSettingsFragment extends BaseFragment {
+public class GeneralSettingsFragment extends BaseDaggerFragment<GeneralSettingsContract.Presenter> implements GeneralSettingsContract.View {
 
     private static final String TAG = GeneralSettingsFragment.class.getSimpleName();
 
+    @Inject GeneralSettingsContract.Presenter presenter;
     @Inject Settings settings;
 
     public static GeneralSettingsFragment newInstance() {
@@ -45,14 +48,15 @@ public class GeneralSettingsFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        getApplicationComponent().inject(this);
+    public GeneralSettingsContract.Presenter getPresenter() {
+        return presenter;
     }
 
-    protected ApplicationComponent getApplicationComponent() {
-        return ((HabitApplication) getContext().getApplicationContext()).component();
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((GeneralSettingsComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(GeneralSettingsFragment.class))
+                .fragmentModule(new GeneralSettingsModule(this))
+                .build().injectMembers(this);
     }
 
     @Override
@@ -63,37 +67,39 @@ public class GeneralSettingsFragment extends BaseFragment {
         CheckBox cbxShowSitemapInMenu = (CheckBox) rootView.findViewById(R.id.cbx_show_sitemap_menu);
         CheckBox cbxFullscreen = (CheckBox) rootView.findViewById(R.id.cbx_show_fullscreen);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
         if(actionBar != null) {
             actionBar.setTitle(R.string.settings_general);
         }
 
         Preference<Boolean> settingsAutoloadSitemapRx = settings.getAutoloadSitemapRx();
         settingsAutoloadSitemapRx.asObservable()
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(RxCompoundButton.checked(cbxAutoLoadSitemap));
         RxCompoundButton.checkedChanges(cbxAutoLoadSitemap)
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .skip(1)
                 .subscribe(settingsAutoloadSitemapRx.asAction());
 
         Preference<Boolean> settingsShowSitemapInMenuRx = settings.getShowSitemapsInMenuRx();
         settingsShowSitemapInMenuRx.asObservable()
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(RxCompoundButton.checked(cbxShowSitemapInMenu));
+
         RxCompoundButton.checkedChanges(cbxShowSitemapInMenu)
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .skip(1)
                 .subscribe(settingsShowSitemapInMenuRx.asAction());
 
         Preference<Boolean> fullscreenRx = settings.getFullscreenPref();
         fullscreenRx.asObservable()
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(RxCompoundButton.checked(cbxFullscreen));
         RxCompoundButton.checkedChanges(cbxFullscreen)
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
+                .compose(RxLifecycle.bind(this.lifecycle()))
                 .skip(1)
                 .subscribe(fullscreenRx.asAction());
         cbxFullscreen.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? View.VISIBLE : View.GONE);

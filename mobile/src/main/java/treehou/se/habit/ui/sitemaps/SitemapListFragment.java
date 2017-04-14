@@ -2,6 +2,7 @@ package treehou.se.habit.ui.sitemaps;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.trello.rxlifecycle.RxLifecycle;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,36 +21,30 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.realm.Realm;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
-import treehou.se.habit.module.ServerLoaderFactory;
-import treehou.se.habit.ui.BaseFragment;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
+import treehou.se.habit.sitemaps.SitemapListComponent;
+import treehou.se.habit.sitemaps.SitemapListContract;
+import treehou.se.habit.sitemaps.SitemapListModule;
+import treehou.se.habit.sitemaps.SitemapListPresenter;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
-import treehou.se.habit.util.Settings;
 
-public class SitemapListFragment extends BaseFragment {
+public class SitemapListFragment extends BaseDaggerFragment<SitemapListContract.Presenter> implements SitemapListContract.View {
 
     private static final String TAG = "SitemapSelectFragment";
 
-    private static final String ARG_SHOW_SITEMAP = "showSitemap";
+    public static final String ARG_SHOW_SITEMAP = "showSitemap";
 
-    @Inject Settings settings;
-    @Inject ServerLoaderFactory serverLoaderFactory;
+    @Inject SitemapListContract.Presenter presenter;
 
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
 
     private SitemapListAdapter sitemapAdapter;
-    private String showSitemap = "";
-    private Realm realm;
     private Unbinder unbinder;
-    private BehaviorSubject<OHServer> serverBehaviorSubject = BehaviorSubject.create();
 
     /**
      * Create fragment where user can select sitemap.
@@ -87,22 +80,11 @@ public class SitemapListFragment extends BaseFragment {
     public SitemapListFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        ((HabitApplication) getActivity().getApplication()).component().inject(this);
-
-        realm = Realm.getDefaultInstance();
-
-        if(savedInstanceState != null) showSitemap = "";
-        else showSitemap = getArguments().getString(ARG_SHOW_SITEMAP);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sitemaplist_list, container, false);
         unbinder = ButterKnife.bind(this, view);
+
         setupActionBar();
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         listView.setLayoutManager(gridLayoutManager);
@@ -113,13 +95,13 @@ public class SitemapListFragment extends BaseFragment {
 
             @Override
             public void onSelected(OHServer server, OHSitemap sitemap) {
-                settings.setDefaultSitemap(sitemap);
-                openSitemap(server, sitemap);
+                presenter.openSitemap(server, sitemap);
             }
 
             @Override
             public void onErrorSelected(OHServer server) {
-                serverBehaviorSubject.onNext(server);
+                Log.d(TAG, "Reloading server: " + server.getDisplayName());
+                presenter.reloadSitemaps(server);
             }
         });
         listView.setAdapter(sitemapAdapter);
@@ -133,7 +115,8 @@ public class SitemapListFragment extends BaseFragment {
      * @param server the server of default sitemap.
      * @param sitemap the name of sitemap to show.
      */
-    private void openSitemap(OHServer server, OHSitemap sitemap){
+    @Override
+    public void showSitemap(OHServer server, OHSitemap sitemap) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.page_container, SitemapFragment.newInstance(server, sitemap))
@@ -149,21 +132,18 @@ public class SitemapListFragment extends BaseFragment {
         if(actionBar != null) actionBar.setTitle(R.string.sitemaps);
     }
 
+    @Override
+    public void hideEmptyView(){
+        emptyView.setVisibility(View.GONE);
+    }
+
     /**
      * Clears list of sitemaps.
      */
-    private void clearList() {
+    @Override
+    public void clearList() {
         emptyView.setVisibility(View.VISIBLE);
         sitemapAdapter.clear();
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        clearList();
-        loadSitemapsFromServers();
     }
 
     @Override
@@ -173,43 +153,28 @@ public class SitemapListFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
+    public void showServerError(OHServer server) {
+        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
     }
 
-    /**
-     * Load servers from database and request their sitemaps.
-     */
-    private void loadSitemapsFromServers(){
-        Observable.merge(Realm.getDefaultInstance().asObservable().compose(serverLoaderFactory.loadServersRx()),
-                serverBehaviorSubject.asObservable())
-                .doOnNext(server -> {
-                    emptyView.setVisibility(View.GONE);
-                })
-                .compose(serverLoaderFactory.serverToSitemap(getActivity()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxLifecycle.bindFragment(this.lifecycle()))
-                .compose(serverLoaderFactory.filterDisplaySitemaps())
-                .subscribe(serverSitemaps -> {
-                    OHServer server = serverSitemaps.first;
-                    List<OHSitemap> sitemaps = serverSitemaps.second;
+    @Override
+    public void populateSitemaps(Pair<OHServer, List<OHSitemap>> serverSitemaps){
+        OHServer server = serverSitemaps.first;
+        List<OHSitemap> sitemaps = serverSitemaps.second;
 
-                    if(sitemaps.size() <= 0){
-                        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
-                    } else {
-                        boolean autoloadLast = settings.getAutoloadSitemapRx().get();
-                        Log.d(TAG, "");
-                        for (OHSitemap sitemap : sitemaps) {
-                            sitemapAdapter.add(server, sitemap);
-                            if (autoloadLast && sitemap.getName().equals(showSitemap)) {
-                                showSitemap = null; // Prevents sitemap from being accessed again.
-                                openSitemap(server, sitemap);
-                            }
-                        }
-                    }
-                }, throwable -> {
-                    Log.e(TAG, "Request sitemap failed", throwable);
-                });
+        for (OHSitemap sitemap : sitemaps) {
+            sitemapAdapter.add(server, sitemap);
+        }
+    }
+
+    @Override
+    public SitemapListContract.Presenter getPresenter() {
+        return presenter;
+    }
+
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((SitemapListComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(SitemapListFragment.class))
+                .fragmentModule(new SitemapListModule(this, getArguments()))
+                .build().injectMembers(this);
     }
 }

@@ -2,6 +2,7 @@ package treehou.se.habit.util;
 
 import android.content.Context;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

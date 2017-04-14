@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.core.db.model.OHRealm;
@@ -31,7 +32,7 @@ public class AndroidModule {
         this.application = application;
     }
 
-    @Provides @Singleton @ForApplication Context provideApplicationContext() {
+    @Provides @Singleton Context provideApplicationContext() {
         return application;
     }
 
@@ -41,8 +42,13 @@ public class AndroidModule {
     }
 
     @Provides
-    public OHRealm provideRealm() {
+    public OHRealm provideOHRealm() {
         return new OHRealm(application);
+    }
+
+    @Provides
+    public Realm provideRealm(OHRealm realm) {
+        return realm.realm();
     }
 
     @Provides
@@ -56,8 +62,8 @@ public class AndroidModule {
     }
 
     @Provides
-    public ConnectionFactory provideConnectionFactory(){
-        return new ConnectionFactory();
+    public ConnectionFactory provideConnectionFactory(Context context){
+        return new ConnectionFactory(context);
     }
 
     @Provides

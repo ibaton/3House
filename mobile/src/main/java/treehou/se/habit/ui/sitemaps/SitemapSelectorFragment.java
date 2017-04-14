@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -27,12 +29,16 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.SitemapAdapter;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class SitemapSelectorFragment extends BaseFragment {
 
     private static final String TAG = "SitemapSelectorFragment";
 
     @BindView(R.id.list) RecyclerView mListView;
+
+    @Inject ConnectionFactory connectionFactory;
 
     private SitemapAdapter mSitemapAdapter;
     private Unbinder unbinder;
@@ -51,6 +57,8 @@ public class SitemapSelectorFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Util.getApplicationComponent(this).inject(this);
 
         mSitemapAdapter = new SitemapAdapter();
         mSitemapAdapter.setSelectorListener(sitemapSelectListener);
@@ -107,7 +115,7 @@ public class SitemapSelectorFragment extends BaseFragment {
      */
     private void requestSitemap(final OHServer server){
         mSitemapAdapter.setServerState(server, SitemapAdapter.SitemapItem.STATE_LOADING);
-        IServerHandler serverHandler = new Connector.ServerHandler(server, getContext());
+        IServerHandler serverHandler = connectionFactory.createServerHandler(server, getContext());
 
         serverHandler.requestSitemapRx()
                 .compose(bindToLifecycle())
