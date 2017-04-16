@@ -80,13 +80,13 @@ public class TextWidgetFactory implements IWidgetFactory {
                         }
                         builder.setView(inputView);
 
-                        /*IServerHandler serverHandler = new Connector.ServerHandler(server, context);
+                        /*IServerHandler serverHandler = new Connector.ServerHandler(server, context);*/
                         builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
                             String text = input.getText().toString();
-                            serverHandler.sendCommand(widget.getItem().getName(), text);
+                            //serverHandler.sendCommand(widget.getItem().getName(), text);
                         });
                         builder.setNegativeButton(context.getString(R.string.cancel), (dialog, which) -> dialog.cancel());
-                        builder.show(); TODO fix*/
+                        builder.show();
 
                         return false;
                     }
