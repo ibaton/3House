@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +14,21 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import treehou.se.habit.ui.BaseFragment;
-import treehou.se.habit.util.Constants;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.widgets.DummyWidgetFactory;
+import treehou.se.habit.util.Constants;
 
-public class WidgetSettingsFragment extends BaseFragment {
+public class WidgetSettingsFragment extends BaseDaggerFragment<WidgetSettingsContract.Presenter> implements WidgetSettingsContract.View {
 
     private static final String TAG = "WidgetSettingsFragment";
 
@@ -35,18 +37,20 @@ public class WidgetSettingsFragment extends BaseFragment {
     private OHWidget displayWidget;
 
     @BindView(R.id.widget_holder) FrameLayout widgetHolder;
-    @BindView(R.id.img_widget_icon1) ImageView img1;
-    @BindView(R.id.img_widget_icon2) ImageView img2;
-    @BindView(R.id.img_widget_icon3) ImageView img3;
-    @BindView(R.id.img_widget_icon4) ImageView img4;
-    @BindView(R.id.img_widget_icon5) ImageView img5;
-    @BindView(R.id.img_widget_icon6) ImageView img6;
+    @BindView(R.id.img_widget_icon1) ImageView backgroundColorMuted;
+    @BindView(R.id.img_widget_icon2) ImageView backgroundColorLightMuted;
+    @BindView(R.id.img_widget_icon3) ImageView backgroundColorDark;
+    @BindView(R.id.img_widget_icon4) ImageView backgroundColorVibrant;
+    @BindView(R.id.img_widget_icon5) ImageView backgroundColorLightVibrant;
+    @BindView(R.id.img_widget_icon6) ImageView backgroundColorDarkVibrant;
     @BindView(R.id.cbx_enable_image_background) CheckBox cbxEnableImageBackground;
     @BindView(R.id.lou_icon_backgrounds) View louIconBackground;
-    @BindView(R.id.bar_image_size) SeekBar barImageSize;
+    @BindView(R.id.bar_image_size) SeekBar widgetImageSize;
     @BindView(R.id.bar_text_size) SeekBar barTextSize;
     @BindView(R.id.swt_compressed_button) Switch swtCompressButton;
     @BindView(R.id.swt_compressed_slider) Switch swtCompressSlider;
+
+    @Inject WidgetSettingsContract.Presenter presenter;
 
     private Realm realm;
     private Unbinder unbinder;
@@ -90,10 +94,7 @@ public class WidgetSettingsFragment extends BaseFragment {
         barTextSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                realm.beginTransaction();
-                settings.setTextSize(Constants.MIN_TEXT_ADDON+progress);
-                realm.commitTransaction();
-                redrawWidget();
+                presenter.setWidgetTextSize(Constants.MIN_TEXT_ADDON+progress);
             }
 
             @Override
@@ -105,37 +106,15 @@ public class WidgetSettingsFragment extends BaseFragment {
             }
         });
 
-        DummyWidgetFactory factory = new DummyWidgetFactory(getActivity());
-        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_item_settings_widget);
+        setupBackroundColorSelector();
 
-        factory.setBackgroundColor(img1,bitmap, WidgetSettingsDB.MUTED_COLOR);
-        img1.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.MUTED_COLOR));
+        widgetImageSize.setProgress(settings.getIconSize()-BASE_IMAGE_SIZE);
 
-        factory.setBackgroundColor(img2,bitmap, WidgetSettingsDB.LIGHT_MUTED_COLOR);
-        img2.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_MUTED_COLOR));
-
-        factory.setBackgroundColor(img3,bitmap, WidgetSettingsDB.DARK_MUTED_COLOR);
-        img3.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_MUTED_COLOR));
-
-        factory.setBackgroundColor(img4,bitmap, WidgetSettingsDB.VIBRANT_COLOR);
-        img4.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.VIBRANT_COLOR));
-
-        factory.setBackgroundColor(img5,bitmap, WidgetSettingsDB.LIGHT_VIBRANT_COLOR);
-        img5.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_VIBRANT_COLOR));
-
-        factory.setBackgroundColor(img6,bitmap, WidgetSettingsDB.DARK_VIBRANT_COLOR);
-        img6.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_VIBRANT_COLOR));
-
-        barImageSize.setProgress(settings.getIconSize()-BASE_IMAGE_SIZE);
-
-        barImageSize.setProgress(settings.getIconSize()-Constants.MIN_TEXT_ADDON);
-        barImageSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        widgetImageSize.setProgress(settings.getIconSize()-Constants.MIN_TEXT_ADDON);
+        widgetImageSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                realm.beginTransaction();
-                settings.setIconSize(BASE_IMAGE_SIZE + progress);
-                realm.commitTransaction();
-                redrawWidget();
+                presenter.setWidgetImageSize(BASE_IMAGE_SIZE + progress);
             }
 
             @Override
@@ -149,16 +128,37 @@ public class WidgetSettingsFragment extends BaseFragment {
             }
         });
 
-        // TODO Add image showing change
-
         swtCompressButton.setChecked(settings.isCompressedSingleButton());
-        swtCompressButton.setOnCheckedChangeListener((buttonView, isChecked) -> setCompressedButtonChanged(isChecked));
+        swtCompressButton.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.setCompressedWidgetButton(isChecked));
 
         swtCompressSlider.setChecked(settings.isCompressedSlider());
-        swtCompressSlider.setOnCheckedChangeListener((buttonView, isChecked) -> setCompressedSliderChanged(isChecked));
+        swtCompressSlider.setOnCheckedChangeListener((buttonView, isChecked) -> presenter.setCompressedWidgetSlider(isChecked));
 
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+    private void setupBackroundColorSelector() {
+        DummyWidgetFactory factory = new DummyWidgetFactory(getActivity());
+        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.ic_item_settings_widget);
+
+        factory.setBackgroundColor(backgroundColorMuted, bitmap, WidgetSettingsDB.MUTED_COLOR);
+        backgroundColorMuted.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.MUTED_COLOR));
+
+        factory.setBackgroundColor(backgroundColorLightMuted, bitmap, WidgetSettingsDB.LIGHT_MUTED_COLOR);
+        backgroundColorLightMuted.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_MUTED_COLOR));
+
+        factory.setBackgroundColor(backgroundColorDark, bitmap, WidgetSettingsDB.DARK_MUTED_COLOR);
+        backgroundColorDark.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_MUTED_COLOR));
+
+        factory.setBackgroundColor(backgroundColorVibrant, bitmap, WidgetSettingsDB.VIBRANT_COLOR);
+        backgroundColorVibrant.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.VIBRANT_COLOR));
+
+        factory.setBackgroundColor(backgroundColorLightVibrant, bitmap, WidgetSettingsDB.LIGHT_VIBRANT_COLOR);
+        backgroundColorLightVibrant.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.LIGHT_VIBRANT_COLOR));
+
+        factory.setBackgroundColor(backgroundColorDarkVibrant, bitmap, WidgetSettingsDB.DARK_VIBRANT_COLOR);
+        backgroundColorDarkVibrant.setOnClickListener(new BackgroundSelectListener(WidgetSettingsDB.DARK_VIBRANT_COLOR));
     }
 
     @Override
@@ -171,7 +171,7 @@ public class WidgetSettingsFragment extends BaseFragment {
                 .subscribe(useBackground -> {
                     cbxEnableImageBackground.setOnCheckedChangeListener(null);
                     cbxEnableImageBackground.setChecked(useBackground);
-                    cbxEnableImageBackground.setOnCheckedChangeListener((compoundButton, checked) -> updateBackground(checked ?  WidgetSettingsDB.MUTED_COLOR : WidgetSettingsDB.NO_COLOR));
+                    cbxEnableImageBackground.setOnCheckedChangeListener((compoundButton, checked) -> setWidgetBackground(checked ?  WidgetSettingsDB.MUTED_COLOR : WidgetSettingsDB.NO_COLOR));
 
                     louIconBackground.setVisibility(useBackground ? View.VISIBLE : View.GONE);
                 });
@@ -190,18 +190,14 @@ public class WidgetSettingsFragment extends BaseFragment {
         realm.close();
     }
 
-    private void setCompressedButtonChanged(boolean isChecked){
-        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-        realm.beginTransaction();
-        settings.setCompressedSingleButton(isChecked);
-        realm.commitTransaction();
+    @Override
+    public void setCompressedWidgetButton(boolean isChecked) {
+        redrawWidget();
     }
 
-    private void setCompressedSliderChanged(boolean isChecked){
-        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-        realm.beginTransaction();
-        settings.setCompressedSlider(isChecked);
-        realm.commitTransaction();
+    @Override
+    public void setCompressedWidgetSlider(boolean isChecked) {
+        redrawWidget();
     }
 
     private void redrawWidget(){
@@ -209,17 +205,34 @@ public class WidgetSettingsFragment extends BaseFragment {
         View widget = factory.createWidget(displayWidget);
 
         widgetHolder.removeAllViews();
-        Log.d(TAG, "Settings widget " + widget);
         widgetHolder.addView(widget);
     }
 
-    private void updateBackground(int backgroundType){
-        WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-        realm.beginTransaction();
-        settings.setImageBackground(backgroundType);
-        realm.commitTransaction();
-
+    @Override
+    public void setWidgetBackground(int backgroundType){
         redrawWidget();
+    }
+
+    @Override
+    public void setWidgetTextSize(int size) {
+        redrawWidget();
+    }
+
+    @Override
+    public void setWidgetImageSize(int size) {
+        redrawWidget();
+    }
+
+    @Override
+    public WidgetSettingsContract.Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((WidgetSettingsComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(WidgetSettingsFragment.class))
+                .fragmentModule(new WidgetSettingsModule(this))
+                .build().injectMembers(this);
     }
 
     private class BackgroundSelectListener implements View.OnClickListener{
@@ -232,7 +245,7 @@ public class WidgetSettingsFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
-            updateBackground(backgroundType);
+            presenter.setWidgetBackground(backgroundType);
         }
     }
 }

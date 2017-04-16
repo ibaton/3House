@@ -3,7 +3,6 @@ package treehou.se.habit.ui.settings.subsettings.general;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -14,19 +13,17 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-import com.f2prateek.rx.preferences.Preference;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
-import com.trello.rxlifecycle.RxLifecycle;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.android.schedulers.AndroidSchedulers;
-import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
-import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.mvp.BaseDaggerFragment;
-import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Settings;
 
 public class GeneralSettingsFragment extends BaseDaggerFragment<GeneralSettingsContract.Presenter> implements GeneralSettingsContract.View {
@@ -35,6 +32,13 @@ public class GeneralSettingsFragment extends BaseDaggerFragment<GeneralSettingsC
 
     @Inject GeneralSettingsContract.Presenter presenter;
     @Inject Settings settings;
+    @Inject ThemeItem[] themes;
+
+    @BindView(R.id.cbx_open_last_sitemap) CheckBox cbxAutoLoadSitemap;
+    @BindView(R.id.cbx_show_sitemap_menu) CheckBox cbxShowSitemapInMenu;
+    @BindView(R.id.cbx_show_fullscreen) CheckBox cbxFullscreen;
+
+    private Unbinder unbinder;
 
     public static GeneralSettingsFragment newInstance() {
         GeneralSettingsFragment fragment = new GeneralSettingsFragment();
@@ -63,63 +67,24 @@ public class GeneralSettingsFragment extends BaseDaggerFragment<GeneralSettingsC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_settings_general, container, false);
-        CheckBox cbxAutoLoadSitemap = (CheckBox) rootView.findViewById(R.id.cbx_open_last_sitemap);
-        CheckBox cbxShowSitemapInMenu = (CheckBox) rootView.findViewById(R.id.cbx_show_sitemap_menu);
-        CheckBox cbxFullscreen = (CheckBox) rootView.findViewById(R.id.cbx_show_fullscreen);
+        unbinder = ButterKnife.bind(this, rootView);
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
         if(actionBar != null) {
             actionBar.setTitle(R.string.settings_general);
         }
 
-        Preference<Boolean> settingsAutoloadSitemapRx = settings.getAutoloadSitemapRx();
-        settingsAutoloadSitemapRx.asObservable()
-                .compose(RxLifecycle.bind(this.lifecycle()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxCompoundButton.checked(cbxAutoLoadSitemap));
-        RxCompoundButton.checkedChanges(cbxAutoLoadSitemap)
-                .compose(RxLifecycle.bind(this.lifecycle()))
-                .skip(1)
-                .subscribe(settingsAutoloadSitemapRx.asAction());
-
-        Preference<Boolean> settingsShowSitemapInMenuRx = settings.getShowSitemapsInMenuRx();
-        settingsShowSitemapInMenuRx.asObservable()
-                .compose(RxLifecycle.bind(this.lifecycle()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxCompoundButton.checked(cbxShowSitemapInMenu));
-
-        RxCompoundButton.checkedChanges(cbxShowSitemapInMenu)
-                .compose(RxLifecycle.bind(this.lifecycle()))
-                .skip(1)
-                .subscribe(settingsShowSitemapInMenuRx.asAction());
-
-        Preference<Boolean> fullscreenRx = settings.getFullscreenPref();
-        fullscreenRx.asObservable()
-                .compose(RxLifecycle.bind(this.lifecycle()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxCompoundButton.checked(cbxFullscreen));
-        RxCompoundButton.checkedChanges(cbxFullscreen)
-                .compose(RxLifecycle.bind(this.lifecycle()))
-                .skip(1)
-                .subscribe(fullscreenRx.asAction());
         cbxFullscreen.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ? View.VISIBLE : View.GONE);
 
         Spinner spinnerThemes = (Spinner) rootView.findViewById(R.id.spr_themes);
-        ThemeItem[] themeSpinner = new ThemeItem[] {
-                new ThemeItem(Settings.Themes.THEME_DEFAULT, getString(R.string.treehouse)),
-                new ThemeItem(Settings.Themes.THEME_HABDROID_LIGHT, getString(R.string.habdroid)),
-                new ThemeItem(Settings.Themes.THEME_HABDROID_DARK, getString(R.string.dark))
-        };
-        ArrayAdapter<ThemeItem> themeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, themeSpinner);
+
+        ArrayAdapter<ThemeItem> themeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, themes);
         spinnerThemes.setAdapter(themeAdapter);
 
         AdapterView.OnItemSelectedListener themeListener = new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                    if(settings.getTheme() != themeSpinner[position].theme){
-                        settings.setTheme(themeSpinner[position].theme);
-                        getActivity().recreate();
-                    }
+                    presenter.themeSelected(themes[position].theme);
                 }
 
                 @Override
@@ -131,8 +96,8 @@ public class GeneralSettingsFragment extends BaseDaggerFragment<GeneralSettingsC
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
                 .subscribe(integer -> {
-                    for(int i=0; i < themeSpinner.length; i++){
-                        if(themeSpinner[i].theme == settings.getTheme()){
+                    for(int i=0; i < themes.length; i++){
+                        if(themes[i].theme == settings.getTheme()){
                             spinnerThemes.setOnItemSelectedListener(null);
                             spinnerThemes.setSelection(i);
                             break;
@@ -141,23 +106,50 @@ public class GeneralSettingsFragment extends BaseDaggerFragment<GeneralSettingsC
                     spinnerThemes.setOnItemSelectedListener(themeListener);
                 });
 
+        RxCompoundButton.checkedChanges(cbxShowSitemapInMenu)
+                .compose(bindToLifecycle())
+                .skip(1)
+                .subscribe(show -> presenter.setShowSitemapsInMenu(show));
+
+        RxCompoundButton.checkedChanges(cbxAutoLoadSitemap)
+                .compose(bindToLifecycle())
+                .skip(1)
+                .subscribe(show -> presenter.setAutoLoadSitemap(show));
+
+        RxCompoundButton.checkedChanges(cbxFullscreen)
+                .compose(bindToLifecycle())
+                .skip(1)
+                .subscribe(show -> presenter.setFullscreen(show));
+
         // Inflate the layout for this fragment
         return rootView;
     }
 
-    private class ThemeItem {
-
-        public final int theme;
-        public final String name;
-
-        public ThemeItem(int theme, String name) {
-            this.theme = theme;
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
+
+    @Override
+    public void updateTheme(){
+        getActivity().recreate();
+    }
+
+    @Override
+    public void showAutoLoadSitemap(boolean show) {
+        cbxAutoLoadSitemap.setChecked(show);
+    }
+
+    @Override
+    public void showSitemapsInMenu(Boolean show) {
+
+        cbxShowSitemapInMenu.setChecked(show);
+    }
+
+    @Override
+    public void setFullscreen(boolean fullscreen) {
+        cbxFullscreen.setChecked(fullscreen);
+    }
+
 }

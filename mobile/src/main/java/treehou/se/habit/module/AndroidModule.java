@@ -13,7 +13,9 @@ import dagger.Provides;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.ui.settings.subsettings.general.ThemeItem;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
@@ -106,5 +108,16 @@ public class AndroidModule {
     public SwitchWidgetFactory provideSwitchWidgetFactory(ConnectionFactory connectionFactory){
         SwitchWidgetFactory factory = new SwitchWidgetFactory(connectionFactory);
         return factory;
+    }
+
+    @Provides
+    @Singleton
+    public ThemeItem[] provideThemes(Context context) {
+        ThemeItem[] themes = new ThemeItem[] {
+            new ThemeItem(Settings.Themes.THEME_DEFAULT, context.getString(R.string.treehouse)),
+                    new ThemeItem(Settings.Themes.THEME_HABDROID_LIGHT, context.getString(R.string.habdroid)),
+                    new ThemeItem(Settings.Themes.THEME_HABDROID_DARK, context.getString(R.string.dark))
+        };
+        return themes;
     }
 }
