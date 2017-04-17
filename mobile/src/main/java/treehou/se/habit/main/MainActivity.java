@@ -21,8 +21,8 @@ import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.servers.ServersFragment;
-import treehou.se.habit.ui.sitemaps.SitemapFragment;
-import treehou.se.habit.ui.sitemaps.SitemapListFragment;
+import treehou.se.habit.ui.sitemaps.sitemap.SitemapFragment;
+import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Settings;
 
@@ -160,7 +160,7 @@ public class MainActivity extends BaseDaggerActivity<MainContract.Presenter>
         Fragment fragment = fragmentManager.findFragmentById(R.id.page_container);
         if(fragment instanceof SitemapFragment){
             SitemapFragment sitemapFragment = (SitemapFragment) fragment;
-            boolean result = sitemapFragment.popStack();
+            boolean result = sitemapFragment.removeAllPages();
             if(result) {
                 return;
             }

@@ -1,13 +1,11 @@
-package treehou.se.habit.ui.sitemaps;
+package treehou.se.habit.ui.sitemaps.sitemap;
 
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,43 +17,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import javax.inject.Inject;
 
 import io.realm.Realm;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import treehou.se.habit.HabitApplication;
+import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.module.ApplicationComponent;
-import treehou.se.habit.ui.BaseFragment;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.homescreen.VoiceService;
-import treehou.se.habit.util.ConnectionFactory;
-import treehou.se.habit.util.RxUtil;
-import treehou.se.habit.util.logging.Logger;
+import treehou.se.habit.ui.sitemaps.PageFragment;
+import treehou.se.habit.ui.sitemaps.sitemap.SitemapContract.Presenter;
 
-public class SitemapFragment extends BaseFragment {
+public class SitemapFragment extends BaseDaggerFragment<Presenter> implements SitemapContract.View{
 
     private static final String TAG = "SitemapFragment";
-    private static final String ARG_SITEMAP = "ARG_SITEMAP";
-    private static final String ARG_SERVER = "ARG_SERVER";
 
-    @Inject Gson gson;
-    @Inject ConnectionFactory connectionFactory;
-    @Inject Logger log;
-
-    private ServerDB server;
-    private OHSitemap sitemap;
+    @Inject Presenter presenter;
+    @Inject ServerDB server;
+    @Inject OHSitemap sitemap;
 
     /**
      * Creates a new instance of fragment showing sitemap.
@@ -84,25 +67,14 @@ public class SitemapFragment extends BaseFragment {
         SitemapFragment fragment = new SitemapFragment();
 
         Bundle args = new Bundle();
-        args.putString(ARG_SITEMAP, GsonHelper.createGsonBuilder().toJson(sitemap));
-        args.putLong(ARG_SERVER, serverDB.getId());
+        args.putString(Presenter.ARG_SITEMAP, GsonHelper.createGsonBuilder().toJson(sitemap));
+        args.putLong(Presenter.ARG_SERVER, serverDB.getId());
         fragment.setArguments(args);
 
         return fragment;
     }
 
     public SitemapFragment() {}
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        getComponent().inject(this);
-        long serverId = getArguments().getLong(ARG_SERVER);
-        server = ServerDB.load(realm, serverId);
-        String jSitemap = getArguments().getString(ARG_SITEMAP);
-        sitemap = gson.fromJson(jSitemap, OHSitemap.class);
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -122,39 +94,6 @@ public class SitemapFragment extends BaseFragment {
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if(sitemap == null){
-            popStack();
-            return;
-        }
-
-        if(!hasPage()) {
-            final IServerHandler serverHandler = connectionFactory.createServerHandler(sitemap.getServer(), getActivity());
-            serverHandler.requestPageRx(sitemap.getHomepage())
-                    .compose(RxUtil.newToMainSchedulers())
-                    .subscribe(linkedPage -> {
-                        log.d(TAG, "Received page " + linkedPage);
-                        addPage(linkedPage);
-                    }, e -> {
-                        log.w(TAG, "Received page failed", e);
-                    });
-        }
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onPause() {
-        EventBus.getDefault().unregister(this);
-        super.onPause();
-    }
-
-    protected ApplicationComponent getComponent() {
-        return ((HabitApplication) getActivity().getApplication()).component();
-    }
-
     /**
      * Setup actionbar using
      */
@@ -167,7 +106,8 @@ public class SitemapFragment extends BaseFragment {
      * Check if a page is loaded.
      * @return true if page loaded, else false.
      */
-    private boolean hasPage(){
+    @Override
+    public boolean hasPage(){
         return getChildFragmentManager().getBackStackEntryCount() > 0;
     }
 
@@ -176,15 +116,16 @@ public class SitemapFragment extends BaseFragment {
      *
      * @param page the page to add to pager
      */
-    public void addPage(OHLinkedPage page) {
+    @Override
+    public void showPage(OHLinkedPage page) {
         FragmentManager fragmentManager = getChildFragmentManager();
         if(fragmentManager == null) return;
 
         Log.d(TAG, "Add page " + page.getLink());
         getChildFragmentManager().beginTransaction()
-            .replace(R.id.pgr_sitemap, PageFragment.newInstance(server, page))
-            .addToBackStack(null)
-            .commit();
+                .replace(R.id.pgr_sitemap, PageFragment.newInstance(server, page))
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -246,7 +187,8 @@ public class SitemapFragment extends BaseFragment {
      * Pop backstack
      * @return true if handled by fragment, else false.
      */
-    public boolean popStack(){
+    @Override
+    public boolean removeAllPages(){
         FragmentManager fragmentManager = getChildFragmentManager();
         int backStackEntryCount = fragmentManager.getBackStackEntryCount();
         if(backStackEntryCount > 0){
@@ -257,13 +199,15 @@ public class SitemapFragment extends BaseFragment {
         return backStackEntryCount >= 1;
     }
 
-    /**
-     * User requested to move to new page.
-     *
-     * @param event
-     */
-    @Subscribe
-    public void onEvent(OHLinkedPage event){
-        addPage(event);
+    @Override
+    public Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((SitemapComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(SitemapFragment.class))
+                .fragmentModule(new SitemapModule(this, getArguments()))
+                .build().injectMembers(this);
     }
 }

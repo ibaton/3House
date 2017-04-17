@@ -1,4 +1,4 @@
-package treehou.se.habit.sitemaps;
+package treehou.se.habit.ui.sitemaps.sitemaplist;
 
 
 import android.support.v4.util.Pair;

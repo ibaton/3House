@@ -26,7 +26,6 @@ import treehou.se.habit.ui.servers.ServerMenuFragment;
 import treehou.se.habit.ui.servers.ServersFragment;
 import treehou.se.habit.ui.servers.sitemaps.SitemapSelectFragment;
 import treehou.se.habit.ui.sitemaps.PageFragment;
-import treehou.se.habit.ui.sitemaps.SitemapFragment;
 import treehou.se.habit.ui.util.IconPickerActivity;
 import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 
@@ -42,7 +41,6 @@ public interface ApplicationComponent {
     void inject(ColorpickerActivity activity);
     void inject(IconPickerActivity activity);
     void inject(SitemapSelectFragment fragment);
-    void inject(SitemapFragment fragment);
     void inject(CellButtonConfigFragment fragment);
     void inject(ServersFragment fragment);
     void inject(NavigationDrawerFragment fragment);

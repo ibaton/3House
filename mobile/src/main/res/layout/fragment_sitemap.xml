@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.sitemaps.SitemapFragment">
+    tools:context=".ui.sitemaps.sitemap.SitemapFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

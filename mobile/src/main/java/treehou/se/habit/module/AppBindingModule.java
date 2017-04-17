@@ -8,14 +8,16 @@ import dagger.android.support.FragmentKey;
 import dagger.multibindings.IntoMap;
 import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.main.MainActivityComponent;
-import treehou.se.habit.sitemaps.SitemapListComponent;
+import treehou.se.habit.ui.sitemaps.sitemap.SitemapComponent;
+import treehou.se.habit.ui.sitemaps.sitemap.SitemapFragment;
+import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListComponent;
 import treehou.se.habit.ui.settings.SettingsComponent;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.settings.subsettings.general.GeneralSettingsComponent;
 import treehou.se.habit.ui.settings.subsettings.general.GeneralSettingsFragment;
 import treehou.se.habit.ui.settings.subsettings.wiget.WidgetSettingsComponent;
 import treehou.se.habit.ui.settings.subsettings.wiget.WidgetSettingsFragment;
-import treehou.se.habit.ui.sitemaps.SitemapListFragment;
+import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
 
 @Module(
 subcomponents = {
@@ -23,6 +25,7 @@ subcomponents = {
         SettingsComponent.class,
         GeneralSettingsComponent.class,
         WidgetSettingsComponent.class,
+        SitemapComponent.class,
         SitemapListComponent.class
 })
 public abstract class AppBindingModule {
@@ -36,6 +39,11 @@ public abstract class AppBindingModule {
     @IntoMap
     @FragmentKey(SitemapListFragment.class)
     public abstract FragmentComponentBuilder sitemapListComponentBuilder(SitemapListComponent.Builder impl);
+
+    @Binds
+    @IntoMap
+    @FragmentKey(SitemapFragment.class)
+    public abstract FragmentComponentBuilder sitemapComponentBuilder(SitemapComponent.Builder impl);
 
     @Binds
     @IntoMap
