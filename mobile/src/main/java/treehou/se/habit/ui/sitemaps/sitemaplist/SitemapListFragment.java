@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.sitemaps;
+package treehou.se.habit.ui.sitemaps.sitemaplist;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -26,11 +26,8 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.mvp.BaseDaggerFragment;
-import treehou.se.habit.sitemaps.SitemapListComponent;
-import treehou.se.habit.sitemaps.SitemapListContract;
-import treehou.se.habit.sitemaps.SitemapListModule;
-import treehou.se.habit.sitemaps.SitemapListPresenter;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
+import treehou.se.habit.ui.sitemaps.sitemap.SitemapFragment;
 
 public class SitemapListFragment extends BaseDaggerFragment<SitemapListContract.Presenter> implements SitemapListContract.View {
 

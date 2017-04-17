@@ -1,4 +1,4 @@
-package treehou.se.habit.sitemaps;
+package treehou.se.habit.ui.sitemaps.sitemaplist;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,7 +19,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.module.RxPresenter;
 import treehou.se.habit.module.ServerLoaderFactory;
-import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 import treehou.se.habit.util.Settings;
 
 public class SitemapListPresenter extends RxPresenter implements SitemapListContract.Presenter {

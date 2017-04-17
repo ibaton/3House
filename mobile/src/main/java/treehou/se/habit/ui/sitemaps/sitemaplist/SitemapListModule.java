@@ -1,4 +1,4 @@
-package treehou.se.habit.sitemaps;
+package treehou.se.habit.ui.sitemaps.sitemaplist;
 
 
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import treehou.se.habit.module.ViewModule;
-import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 
 @Module
 public class SitemapListModule extends ViewModule<SitemapListFragment> {

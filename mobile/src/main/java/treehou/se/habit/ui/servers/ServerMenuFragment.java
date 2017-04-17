@@ -7,12 +7,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -30,7 +28,6 @@ import treehou.se.habit.ui.bindings.BindingsFragment;
 import treehou.se.habit.ui.inbox.InboxListFragment;
 import treehou.se.habit.ui.links.LinksListFragment;
 import treehou.se.habit.ui.servers.sitemaps.SitemapSelectFragment;
-import treehou.se.habit.ui.sitemaps.SitemapListFragment;
 
 public class ServerMenuFragment extends Fragment {
 
