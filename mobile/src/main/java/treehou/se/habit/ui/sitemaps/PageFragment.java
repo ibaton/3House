@@ -4,14 +4,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.realm.Realm;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -35,14 +32,15 @@ import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.module.ServerLoaderFactory;
-import treehou.se.habit.ui.BaseFragment;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.logging.Logger;
 
-public class PageFragment extends BaseFragment {
+public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> implements PageContract.View {
 
     private static final String TAG = "PageFragment";
 
@@ -58,6 +56,7 @@ public class PageFragment extends BaseFragment {
     @Inject ServerLoaderFactory serverLoaderFactory;
     @Inject WidgetFactory widgetFactory;
     @Inject Logger log;
+    @Inject PageContract.Presenter presenter;
 
     private ServerDB server;
     private OHLinkedPage page;
@@ -105,8 +104,6 @@ public class PageFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((HabitApplication) getActivity().getApplication()).component().inject(this);
-
         Bundle args = getArguments();
         Gson gson = GsonHelper.createGsonBuilder();
 
@@ -125,6 +122,18 @@ public class PageFragment extends BaseFragment {
                 initialized = true;
             }
         }
+    }
+
+    @Override
+    public PageContract.Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((PageComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(PageFragment.class))
+                .fragmentModule(new PageModule(this, getArguments()))
+                .build().injectMembers(this);
     }
 
     /**

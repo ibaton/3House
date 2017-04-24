@@ -52,7 +52,6 @@ public interface ApplicationComponent {
     void inject(ServerMenuFragment fragment);
     void inject(CellIncDecConfigFragment fragment);
     void inject(LightFragment fragment);
-    void inject(PageFragment fragment);
     void inject(RollerShutterWidgetHolder holder);
     void inject(SliderActivity activity);
     void inject(SliderActivity.SliderFragment fragment);
