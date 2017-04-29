@@ -23,9 +23,6 @@ import treehou.se.habit.ui.homescreen.VoiceService;
 import treehou.se.habit.ui.links.LinksListFragment;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.servers.ServerMenuFragment;
-import treehou.se.habit.ui.servers.ServersFragment;
-import treehou.se.habit.ui.servers.sitemaps.SitemapSelectFragment;
-import treehou.se.habit.ui.sitemaps.PageFragment;
 import treehou.se.habit.ui.util.IconPickerActivity;
 import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 
@@ -40,9 +37,7 @@ public interface ApplicationComponent {
     void inject(BaseFragment fragment);
     void inject(ColorpickerActivity activity);
     void inject(IconPickerActivity activity);
-    void inject(SitemapSelectFragment fragment);
     void inject(CellButtonConfigFragment fragment);
-    void inject(ServersFragment fragment);
     void inject(NavigationDrawerFragment fragment);
     void inject(IncDecActionFragment fragment);
     void inject(CellVoiceConfigFragment fragment);

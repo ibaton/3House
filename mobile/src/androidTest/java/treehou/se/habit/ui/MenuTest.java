@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 
 import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.R;
-import treehou.se.habit.ui.servers.ServersFragment;
+import treehou.se.habit.ui.servers.serverlist.ServersFragment;
 import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
 import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;

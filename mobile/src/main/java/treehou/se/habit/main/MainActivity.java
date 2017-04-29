@@ -20,7 +20,7 @@ import treehou.se.habit.ui.control.ControllerUtil;
 import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
-import treehou.se.habit.ui.servers.ServersFragment;
+import treehou.se.habit.ui.servers.serverlist.ServersFragment;
 import treehou.se.habit.ui.sitemaps.sitemap.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
 import treehou.se.habit.util.ConnectionFactory;
