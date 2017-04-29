@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.servers.sitemaps;
+package treehou.se.habit.ui.servers.sitemaps.sitemapsettings;
 
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -11,6 +11,8 @@ import android.widget.Switch;
 
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -21,15 +23,24 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.SitemapDB;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.BaseFragment;
+import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectComponent;
+import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectContract;
+import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectFragment;
+import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectModule;
 
-public class SitemapSettingsFragment extends BaseFragment {
+public class SitemapSettingsFragment extends BaseDaggerFragment<SitemapSettingsContract.Presenter> implements SitemapSettingsContract.View {
 
     private static final String TAG = "SitemapSelectFragment";
 
     private static final String ARG_SITEMAP = "ARG_SITEMAP";
 
     @BindView(R.id.show_in_sitemap) Switch cbxShowSitemaps;
+
+    @Inject SitemapSettingsContract.Presenter presenter;
+
     private Realm realm;
     private Unbinder unbinder;
     private long sitemapId = -1;
@@ -60,6 +71,18 @@ public class SitemapSettingsFragment extends BaseFragment {
 
         realm = Realm.getDefaultInstance();
         sitemapId = getArguments().getLong(ARG_SITEMAP);
+    }
+
+    @Override
+    public SitemapSettingsContract.Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((SitemapSettingsComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(SitemapSettingsFragment.class))
+                .fragmentModule(new SitemapSettingsModule(this))
+                .build().injectMembers(this);
     }
 
     @Override

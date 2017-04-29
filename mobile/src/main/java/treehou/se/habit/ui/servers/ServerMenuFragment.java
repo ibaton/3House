@@ -27,7 +27,7 @@ import treehou.se.habit.ui.adapter.ImageItemAdapter;
 import treehou.se.habit.ui.bindings.BindingsFragment;
 import treehou.se.habit.ui.inbox.InboxListFragment;
 import treehou.se.habit.ui.links.LinksListFragment;
-import treehou.se.habit.ui.servers.sitemaps.SitemapSelectFragment;
+import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectFragment;
 
 public class ServerMenuFragment extends Fragment {
 

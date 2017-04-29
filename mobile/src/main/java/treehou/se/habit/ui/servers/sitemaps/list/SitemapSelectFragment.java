@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.servers.sitemaps;
+package treehou.se.habit.ui.servers.sitemaps.list;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -7,13 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.RxLifecycle;
 
 import java.util.List;
 
@@ -28,16 +25,17 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.module.ServerLoaderFactory;
-import treehou.se.habit.ui.BaseFragment;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
+import treehou.se.habit.ui.servers.sitemaps.sitemapsettings.SitemapSettingsFragment;
 import treehou.se.habit.util.Settings;
 
-public class SitemapSelectFragment extends BaseFragment {
+public class SitemapSelectFragment extends BaseDaggerFragment<SitemapSelectContract.Presenter> implements SitemapSelectContract.View {
 
     private static final String TAG = "SitemapSelectFragment";
 
@@ -45,6 +43,7 @@ public class SitemapSelectFragment extends BaseFragment {
 
     @Inject Settings settings;
     @Inject ServerLoaderFactory serverLoader;
+    @Inject SitemapSelectContract.Presenter presenter;
 
     @BindView(R.id.list) RecyclerView listView;
     @BindView(R.id.empty) TextView emptyView;
@@ -76,10 +75,20 @@ public class SitemapSelectFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((HabitApplication) getActivity().getApplication()).component().inject(this);
-
         realm = Realm.getDefaultInstance();
         serverId = getArguments().getLong(ARG_SHOW_SERVER);
+    }
+
+    @Override
+    public SitemapSelectContract.Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((SitemapSelectComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(SitemapSelectFragment.class))
+                .fragmentModule(new SitemapSelectModule(this))
+                .build().injectMembers(this);
     }
 
     @Override

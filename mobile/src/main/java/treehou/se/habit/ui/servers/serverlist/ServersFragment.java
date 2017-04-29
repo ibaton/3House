@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.servers;
+package treehou.se.habit.ui.servers.serverlist;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -28,11 +28,16 @@ import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.adapter.ServersAdapter;
+import treehou.se.habit.ui.servers.ScanServersFragment;
+import treehou.se.habit.ui.servers.ServerMenuFragment;
+import treehou.se.habit.ui.servers.SetupServerFragment;
 import treehou.se.habit.util.Settings;
 
-public class ServersFragment extends BaseFragment {
+public class ServersFragment extends BaseDaggerFragment<ServersContract.Presenter> implements ServersContract.View{
 
     private static final String TAG = "ServersFragment";
 
@@ -42,6 +47,7 @@ public class ServersFragment extends BaseFragment {
     @BindView(R.id.fab_add) FloatingActionButton fabAdd;
 
     @Inject Settings settings;
+    @Inject ServersContract.Presenter presenter;
 
     private ServersAdapter serversAdapter;
     private RealmResults<ServerDB> servers;
@@ -62,8 +68,19 @@ public class ServersFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getApplicationComponent().inject(this);
         realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    public ServersContract.Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((ServersComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(ServersFragment.class))
+                .fragmentModule(new ServersModule(this))
+                .build().injectMembers(this);
     }
 
     @Override

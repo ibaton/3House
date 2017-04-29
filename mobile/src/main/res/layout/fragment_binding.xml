@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.servers.ServersFragment">
+    tools:context=".ui.servers.serverlist.ServersFragment">
 
     <ScrollView
         android:layout_width="match_parent"
