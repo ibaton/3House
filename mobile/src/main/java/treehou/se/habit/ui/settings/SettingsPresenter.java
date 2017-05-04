@@ -10,6 +10,11 @@ public class SettingsPresenter extends RxPresenter implements SettingsContract.P
 
     private SettingsContract.View view;
 
+    @Inject
+    public SettingsPresenter(SettingsContract.View view) {
+        this.view = view;
+    }
+
     @Override
     public void openWidgetSettings() {
         view.showWidgetSettings();
@@ -28,11 +33,6 @@ public class SettingsPresenter extends RxPresenter implements SettingsContract.P
     @Override
     public void openTranslatePage() {
         view.showTranslatePage();
-    }
-
-    @Inject
-    public SettingsPresenter(SettingsContract.View view) {
-        this.view = view;
     }
 
     @Override

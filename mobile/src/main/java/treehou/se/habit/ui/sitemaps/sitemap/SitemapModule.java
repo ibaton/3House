@@ -27,13 +27,13 @@ public class SitemapModule extends ViewModule<SitemapFragment> {
     }
 
     @Provides
-    public SitemapContract.View provideView() {
-        return view;
+    public Presenter providePresenter(SitemapPresenter presenter) {
+        return presenter;
     }
 
     @Provides
-    public Presenter providePresenter(SitemapPresenter presenter) {
-        return presenter;
+    public SitemapContract.View provideView() {
+        return view;
     }
 
     @Provides
