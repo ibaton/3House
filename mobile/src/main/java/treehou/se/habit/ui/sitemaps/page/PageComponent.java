@@ -1,12 +1,10 @@
-package treehou.se.habit.ui.sitemaps;
+package treehou.se.habit.ui.sitemaps.page;
 
 
 import dagger.Subcomponent;
 import treehou.se.habit.module.ActivityScope;
 import treehou.se.habit.module.FragmentComponent;
 import treehou.se.habit.module.FragmentComponentBuilder;
-import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
-import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListModule;
 
 @ActivityScope
 @Subcomponent(

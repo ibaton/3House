@@ -1,14 +1,8 @@
-package treehou.se.habit.ui.sitemaps;
+package treehou.se.habit.ui.sitemaps.page;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -16,10 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import io.realm.Realm;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -29,93 +22,62 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import se.treehou.ng.ohcommunicator.util.GsonHelper;
-import treehou.se.habit.HabitApplication;
-import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.module.RxPresenter;
 import treehou.se.habit.module.ServerLoaderFactory;
-import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.logging.Logger;
 
-public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> implements PageContract.View {
+public class PagePresenter extends RxPresenter implements PageContract.Presenter {
 
-    private static final String TAG = "PageFragment";
+    private static final String TAG = PagePresenter.class.getSimpleName();
 
-    // Arguments
-    private static final String ARG_PAGE    = "ARG_PAGE";
-    private static final String ARG_SERVER  = "ARG_SERVER";
+    private PageContract.View view;
+    private Context context;
 
-    private static final String STATE_PAGE = "STATE_PAGE";
+    private ConnectionFactory connectionFactory;
+    private ServerLoaderFactory serverLoaderFactory;
+    private WidgetFactory widgetFactory;
+    private Logger log;
 
-    @BindView(R.id.lou_widgets) LinearLayout louFragments;
-
-    @Inject ConnectionFactory connectionFactory;
-    @Inject ServerLoaderFactory serverLoaderFactory;
-    @Inject WidgetFactory widgetFactory;
-    @Inject Logger log;
-    @Inject PageContract.Presenter presenter;
+    private List<OHWidget> widgets = new ArrayList<>();
+    private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
+    private boolean initialized = false;
+    private Realm realm;
 
     private ServerDB server;
     private OHLinkedPage page;
 
-    private List<OHWidget> widgets = new ArrayList<>();
-    private List<WidgetFactory.IWidgetHolder> widgetHolders = new ArrayList<>();
+    private Bundle args;
 
-    private Unbinder unbinder;
-
-    private boolean initialized = false;
-
-    private Action1<Throwable> dataLoadError = new Action1<Throwable>() {
-        @Override
-        public void call(Throwable throwable) {
-            log.e(TAG, "Error when requesting page ", throwable);
-            Toast.makeText(getActivity(), R.string.lost_server_connection, Toast.LENGTH_LONG).show();
-            getActivity().getSupportFragmentManager().popBackStack();
-        }
-    };
-
-    /**
-     * Creates a new instane of the page.
-     *
-     * @param server the server to connect to
-     * @param page the page to visualise
-     *
-     * @return Fragment visualazing a page
-     */
-    public static PageFragment newInstance(ServerDB server, OHLinkedPage page) {
-        Gson gson = GsonHelper.createGsonBuilder();
-
-        Bundle args = new Bundle();
-        args.putString(ARG_PAGE, gson.toJson(page));
-        args.putLong(ARG_SERVER, server.getId());
-
-        PageFragment fragment = new PageFragment();
-        fragment.setArguments(args);
-
-        return fragment;
+    @Inject
+    public PagePresenter(PageContract.View view, Context context, @Named("arguments") Bundle args, Logger log, WidgetFactory widgetFactory, ServerLoaderFactory serverLoaderFactory, ConnectionFactory connectionFactory, Realm realm) {
+        this.view = view;
+        this.context = context;
+        this.log = log;
+        this.widgetFactory = widgetFactory;
+        this.serverLoaderFactory = serverLoaderFactory;
+        this.connectionFactory = connectionFactory;
+        this.realm = realm;
+        this.args = args;
     }
 
-    public PageFragment() {}
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void load(Bundle savedData) {
 
-        Bundle args = getArguments();
         Gson gson = GsonHelper.createGsonBuilder();
 
-        long serverId = args.getLong(ARG_SERVER);
-        String jPage = args.getString(ARG_PAGE);
+        long serverId = args.getLong(PageContract.ARG_SERVER);
+        String jPage = args.getString(PageContract.ARG_PAGE);
 
         server = ServerDB.load(realm, serverId);
         page = gson.fromJson(jPage, OHLinkedPage.class);
 
         initialized = false;
-        if(savedInstanceState != null && savedInstanceState.containsKey(STATE_PAGE)) {
-            jPage = savedInstanceState.getString(STATE_PAGE);
+        if(savedData != null && savedData.containsKey(PageContract.STATE_PAGE)) {
+            jPage = savedData.getString(PageContract.STATE_PAGE);
             OHLinkedPage savedPage = gson.fromJson(jPage, OHLinkedPage.class);
             if(savedPage.getId().equals(page.getId())) {
                 page = savedPage;
@@ -124,47 +86,58 @@ public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> imp
         }
     }
 
+
     @Override
-    public PageContract.Presenter getPresenter() {
-        return presenter;
+    public void subscribe() {
+        updatePage(page, true);
+        if(!initialized && server != null) {
+            requestPageUpdate();
+        }
+        initialized = true;
+
+        // Start listening for server updates
+        if (supportsLongPolling()) {
+            createLongPoller();
+        }
     }
 
     @Override
-    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
-        ((PageComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(PageFragment.class))
-                .fragmentModule(new PageModule(this, getArguments()))
-                .build().injectMembers(this);
+    public void unsubscribe() {
+
     }
+
+    @Override
+    public void unload() {
+    }
+
+    @Override
+    public void save(Bundle savedData) {
+        savedData.putSerializable(PageContract.STATE_PAGE, GsonHelper.createGsonBuilder().toJson(page));
+    }
+
+
+    private Action1<Throwable> dataLoadError = new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+            log.e(TAG, "Error when requesting page ", throwable);
+            view.showLostServerConnectionMessage();
+            view.closeView();
+        }
+    };
 
     /**
-     * Setup actionbar using
+     * Check if android device supports long polling.
+     * @return true if long polling is supported, else false.
      */
-    private void setupActionbar(){
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        String title = page.getTitle();
-        if(title == null) title = "";
-        title = removeValueFromTitle(title);
-
-        if(actionBar != null) actionBar.setTitle(title);
-    }
-
-    private String removeValueFromTitle(String title){
-        return title.replaceAll("\\[.+?\\]","");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_widget, container, false);
-        unbinder = ButterKnife.bind(this, view);
-
-        return view;
+    private boolean supportsLongPolling(){
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && server != null;
     }
 
     /**
      * Request page from server.
      */
     private void requestPageUpdate(){
-        final IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getActivity());
+        final IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), context);
 
         serverHandler.requestPageRx(page)
                 .compose(this.bindToLifecycle())
@@ -185,45 +158,13 @@ public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> imp
         final long serverId = server.getId();
 
         OHServer server = serverLoaderFactory.loadServer(realm, serverId);
-        final IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
+        final IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
         return serverHandler.requestPageUpdatesRx(page)
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())
                 .subscribe(this::updatePage, dataLoadError);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        updatePage(page, true);
-        if(!initialized && server != null) {
-            requestPageUpdate();
-        }
-        initialized = true;
-
-        // Start listening for server updates
-        if (supportsLongPolling()) {
-            createLongPoller();
-        }
-        setupActionbar();
-    }
-
-
-
-    /**
-     * Check if android device supports long polling.
-     * @return true if long polling is supported, else false.
-     */
-    private boolean supportsLongPolling(){
-        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && server != null;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     /**
      * Update page.
@@ -245,6 +186,8 @@ public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> imp
         } else {
             updateWidgets(pageWidgets);
         }
+
+        view.updatePage(page);
     }
 
     /**
@@ -310,17 +253,17 @@ public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> imp
     private void invalidateWidgets(List<OHWidget> pageWidgets){
         log.d(TAG, "Invalidate widgets");
         widgetHolders.clear();
-        louFragments.removeAllViews();
 
         for (OHWidget widget : pageWidgets) {
             try {
-                WidgetFactory.IWidgetHolder result = widgetFactory.createWidget(getContext(), server.toGeneric(), page, widget, null);
-                widgetHolders.add(result);
-                louFragments.addView(result.getView());
+                WidgetFactory.IWidgetHolder widgetView = widgetFactory.createWidget(context, server.toGeneric(), page, widget, null);
+                widgetHolders.add(widgetView);
             } catch (Exception e) {
                 log.w(TAG, "Create widget failed", e);
             }
         }
+        view.setWidgets(widgetHolders);
+
         widgets.clear();
         widgets.addAll(pageWidgets);
     }
@@ -343,11 +286,5 @@ public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> imp
                 log.w(TAG, "Updating widget failed", e);
             }
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(STATE_PAGE, GsonHelper.createGsonBuilder().toJson(page));
-        super.onSaveInstanceState(outState);
     }
 }

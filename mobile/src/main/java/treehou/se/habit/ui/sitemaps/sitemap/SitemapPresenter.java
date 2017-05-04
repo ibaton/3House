@@ -13,6 +13,10 @@ import org.greenrobot.eventbus.Subscribe;
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -46,13 +50,12 @@ public class SitemapPresenter extends RxPresenter implements SitemapContract.Pre
     @Override
     public void showPage(OHLinkedPage page) {
         Log.d(TAG, "Received page " + page);
-        view.showPage(page);
+        view.showPage(server, page);
     }
 
     @Override
     public void subscribe() {
         super.subscribe();
-
 
         if(sitemap == null){
             view.removeAllPages();
@@ -62,10 +65,9 @@ public class SitemapPresenter extends RxPresenter implements SitemapContract.Pre
         if(!view.hasPage()) {
             final IServerHandler serverHandler = connectionFactory.createServerHandler(sitemap.getServer(), context);
             serverHandler.requestPageRx(sitemap.getHomepage())
-                    .compose(RxUtil.newToMainSchedulers())
-                    .subscribe(linkedPage -> {
-                        showPage(linkedPage);
-                    }, e -> log.w(TAG, "Received page failed", e));
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::showPage, e -> log.w(TAG, "Received page failed", e));
         }
 
         EventBus.getDefault().register(this);

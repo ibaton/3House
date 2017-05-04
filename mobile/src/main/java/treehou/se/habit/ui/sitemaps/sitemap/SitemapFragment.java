@@ -29,7 +29,7 @@ import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.homescreen.VoiceService;
-import treehou.se.habit.ui.sitemaps.PageFragment;
+import treehou.se.habit.ui.sitemaps.page.PageFragment;
 import treehou.se.habit.ui.sitemaps.sitemap.SitemapContract.Presenter;
 
 public class SitemapFragment extends BaseDaggerFragment<Presenter> implements SitemapContract.View{
@@ -117,7 +117,8 @@ public class SitemapFragment extends BaseDaggerFragment<Presenter> implements Si
      * @param page the page to add to pager
      */
     @Override
-    public void showPage(OHLinkedPage page) {
+    public void showPage(ServerDB server, OHLinkedPage page) {
+        Log.d(TAG, "Add page " + page.getLink());
         FragmentManager fragmentManager = getChildFragmentManager();
         if(fragmentManager == null) return;
 
