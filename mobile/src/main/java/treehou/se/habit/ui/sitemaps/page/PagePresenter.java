@@ -36,6 +36,7 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
 
     private PageContract.View view;
     private Context context;
+    private PageFragment fragment;
 
     private ConnectionFactory connectionFactory;
     private ServerLoaderFactory serverLoaderFactory;
@@ -53,9 +54,10 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
     private Bundle args;
 
     @Inject
-    public PagePresenter(PageContract.View view, Context context, @Named("arguments") Bundle args, Logger log, WidgetFactory widgetFactory, ServerLoaderFactory serverLoaderFactory, ConnectionFactory connectionFactory, Realm realm) {
+    public PagePresenter(PageContract.View view, PageFragment fragment, Context context, @Named("arguments") Bundle args, Logger log, WidgetFactory widgetFactory, ServerLoaderFactory serverLoaderFactory, ConnectionFactory connectionFactory, Realm realm) {
         this.view = view;
         this.context = context;
+        this.fragment = fragment;
         this.log = log;
         this.widgetFactory = widgetFactory;
         this.serverLoaderFactory = serverLoaderFactory;
@@ -256,7 +258,7 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
 
         for (OHWidget widget : pageWidgets) {
             try {
-                WidgetFactory.IWidgetHolder widgetView = widgetFactory.createWidget(context, server.toGeneric(), page, widget, null);
+                WidgetFactory.IWidgetHolder widgetView = widgetFactory.createWidget(fragment.getContext(), server.toGeneric(), page, widget, null);
                 widgetHolders.add(widgetView);
             } catch (Exception e) {
                 log.w(TAG, "Create widget failed", e);

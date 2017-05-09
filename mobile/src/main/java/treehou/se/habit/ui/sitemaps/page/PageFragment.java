@@ -103,7 +103,10 @@ public class PageFragment extends BaseDaggerFragment<PageContract.Presenter> imp
      * Setup actionbar using
      */
     private void setupActionbar(OHLinkedPage page){
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ActionBar actionBar = null;
+        if(isAdded()) {
+            actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        }
         String title = page.getTitle();
         if(title == null) title = "";
         title = removeValueFromTitle(title);
