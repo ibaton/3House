@@ -82,11 +82,10 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
             if (widget.getItem().getState().equals(mapping.getCommand())) {
                 rbtMap.setChecked(true);
             }
-            rbtMap.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
-                    serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
-                }
+
+            rbtMap.setOnClickListener(v -> {
+                IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
+                serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
             });
             rgpMapping.addView(rbtMap);
         }
