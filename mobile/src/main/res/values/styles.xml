@@ -36,7 +36,7 @@
 
     <style name="MenuItemSubText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">16sp</item>
-        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="WidgetHeading" parent="TextAppearance.AppCompat.Large">

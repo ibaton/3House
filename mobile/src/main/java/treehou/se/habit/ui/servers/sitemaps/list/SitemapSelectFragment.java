@@ -120,6 +120,10 @@ public class SitemapSelectFragment extends BaseDaggerFragment<SitemapSelectContr
             public void onErrorSelected(OHServer server) {
                 serverBehaviorSubject.onNext(server);
             }
+
+            @Override
+            public void onCertificateErrorSelected(OHServer server) {
+            }
         });
         listView.setAdapter(sitemapAdapter);
 

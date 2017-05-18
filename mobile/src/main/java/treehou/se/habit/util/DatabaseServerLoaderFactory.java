@@ -82,7 +82,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
                     sitemaps.add(sitemap);
                 }
             }
-            return new ServerSitemapsResponse(serverSitemapsResponse.getServer(), sitemaps);
+            return new ServerSitemapsResponse(serverSitemapsResponse.getServer(), sitemaps, serverSitemapsResponse.getError());
         });
     }
 

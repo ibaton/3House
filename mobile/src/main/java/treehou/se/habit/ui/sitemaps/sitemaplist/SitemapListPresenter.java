@@ -56,7 +56,6 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
     public void subscribe() {
         super.subscribe();
         view.clearList();
-        Log.d("Yolo", realm.getPath());
         loadSitemapsFromServers();
     }
 
@@ -69,7 +68,6 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
      * Load servers from database and request their sitemaps.
      */
     private void loadSitemapsFromServers(){
-        Log.d("Yolo", realm.getPath());
         Observable.merge(
                 realm.asObservable()
                         .compose(serverLoaderFactory.loadServersRx()),

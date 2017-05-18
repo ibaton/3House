@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +27,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.adapter.SitemapListAdapter;
+import treehou.se.habit.ui.adapter.SitemapListAdapter.ServerState;
 import treehou.se.habit.ui.sitemaps.sitemap.SitemapFragment;
 
 public class SitemapListFragment extends BaseDaggerFragment<SitemapListContract.Presenter> implements SitemapListContract.View {
@@ -99,6 +101,11 @@ public class SitemapListFragment extends BaseDaggerFragment<SitemapListContract.
                 Log.d(TAG, "Reloading server: " + server.getDisplayName());
                 presenter.reloadSitemaps(server);
             }
+
+            @Override
+            public void onCertificateErrorSelected(OHServer server) {
+
+            }
         });
         listView.setAdapter(sitemapAdapter);
 
@@ -150,7 +157,11 @@ public class SitemapListFragment extends BaseDaggerFragment<SitemapListContract.
 
     @Override
     public void showServerError(OHServer server, Throwable error) {
-        sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
+        if(error != null && error instanceof SSLPeerUnverifiedException) {
+            sitemapAdapter.setServerState(server, ServerState.STATE_CERTIFICATE_ERROR);
+        } else {
+            sitemapAdapter.setServerState(server, ServerState.STATE_ERROR);
+        }
     }
 
     @Override

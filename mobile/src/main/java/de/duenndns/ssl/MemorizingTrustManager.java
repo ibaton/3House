@@ -84,7 +84,6 @@ public class MemorizingTrustManager implements X509TrustManager {
 	final static String DECISION_INTENT_CERT   = DECISION_INTENT + ".cert";
 	final static String DECISION_INTENT_HOST   = DECISION_INTENT + ".host";
 	final static String DECISION_INTENT_MESSAGE   = DECISION_INTENT + ".message";
-	final static String DECISION_INTENT_CHOICE = DECISION_INTENT + ".decisionChoice";
 
 	final static String DECISION_TITLE_ID      = DECISION_INTENT + ".titleId";
 	private final static int NOTIFICATION_ID = 100509;
@@ -642,7 +641,7 @@ public class MemorizingTrustManager implements X509TrustManager {
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	void startActivityNotification(Intent intent, int decisionId, String certName) {
+	void startActivityNotification(Intent intent, String certName) {
 		Notification notification;
 		final PendingIntent call = PendingIntent.getActivity(master, 0, intent,
 				0);
@@ -685,29 +684,32 @@ public class MemorizingTrustManager implements X509TrustManager {
 		return (foregroundAct != null) ? foregroundAct : master;
 	}
 
-	int interact(X509Certificate cert, final String hostname, final String message, final int titleId) {
+	void interact(X509Certificate cert, final String hostname, final String message, final int titleId) {
 		/* prepare the MTMDecision blocker object */
+
+		masterHandler.post(() -> {
+            Intent ni = createIntent(cert, hostname, message, titleId);
+			startActivityNotification(ni, message);
+        });
+	}
+
+	public Intent createIntent(X509Certificate cert, final String hostname, final String message, final int titleId){
 		MTMDecision choice = new MTMDecision();
 		final int myId = createDecisionId(choice);
 
-		masterHandler.post(() -> {
-            Intent ni = new Intent(master, MemorizingActivity.class);
-            ni.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ni.setData(Uri.parse(MemorizingTrustManager.class.getName() + "/" + myId));
-            ni.putExtra(DECISION_INTENT_ID, myId);
-            ni.putExtra(DECISION_INTENT_HOST, hostname);
-            ni.putExtra(DECISION_INTENT_MESSAGE, message);
-			try {
-				ni.putExtra(DECISION_INTENT_CERT, cert.getEncoded());
-			} catch (CertificateEncodingException e) {
-				e.printStackTrace();
-			}
-			ni.putExtra(DECISION_TITLE_ID, titleId);
-
-			startActivityNotification(ni, myId, message);
-        });
-
-		return choice.state;
+		Intent ni = new Intent(master, MemorizingActivity.class);
+		ni.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		ni.setData(Uri.parse(MemorizingTrustManager.class.getName() + "/" + myId));
+		ni.putExtra(DECISION_INTENT_ID, myId);
+		ni.putExtra(DECISION_INTENT_HOST, hostname);
+		ni.putExtra(DECISION_INTENT_MESSAGE, message);
+		try {
+			ni.putExtra(DECISION_INTENT_CERT, cert.getEncoded());
+		} catch (CertificateEncodingException e) {
+			e.printStackTrace();
+		}
+		ni.putExtra(DECISION_TITLE_ID, titleId);
+		return ni;
 	}
 
 	void launchCertInstaller(X509Certificate cert, String hostname) {
