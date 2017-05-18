@@ -2,15 +2,11 @@ package treehou.se.habit.core.db.model;
 
 import android.content.Context;
 
-import javax.inject.Inject;
-
-import io.realm.DynamicRealm;
 import io.realm.FieldAttribute;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
-import io.realm.annotations.PrimaryKey;
 
 public class OHRealm {
 
@@ -38,20 +34,17 @@ public class OHRealm {
         return Realm.getDefaultInstance();
     }
 
-    RealmMigration migration = new RealmMigration() {
-        @Override
-        public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+    RealmMigration migration = (realm, oldVersion, newVersion) -> {
 
-            RealmSchema schema = realm.getSchema();
-            switch ((int) oldVersion) {
-                case 1:
-                    schema.create("SitemapSettingsDB")
-                            .addField("id", long.class, FieldAttribute.PRIMARY_KEY)
-                            .addField("display", boolean.class);
+        RealmSchema schema = realm.getSchema();
+        switch ((int) oldVersion) {
+            case 1:
+                schema.create("SitemapSettingsDB")
+                        .addField("id", long.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("display", boolean.class);
 
-                    schema.get("SitemapDB")
-                            .addRealmObjectField("settingsDB", schema.get("SitemapSettingsDB"));
-            }
+                schema.get("SitemapDB")
+                        .addRealmObjectField("settingsDB", schema.get("SitemapSettingsDB"));
         }
     };
 }

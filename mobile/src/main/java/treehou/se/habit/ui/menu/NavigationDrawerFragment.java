@@ -33,7 +33,6 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -124,10 +123,10 @@ public class NavigationDrawerFragment extends BaseFragment {
         Realm.getDefaultInstance().asObservable().compose(serverLoaderFactory.loadServersRx())
                 .compose(serverLoaderFactory.serverToSitemap(getActivity()))
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxLifecycle.bind(this.lifecycle()))
+                .compose(RxLifecycle.bind(lifecycle()))
                 .compose(serverLoaderFactory.filterDisplaySitemaps())
                 .subscribe(serverSitemaps -> {
-                    List<OHSitemap> sitemaps = serverSitemaps.second;
+                    List<OHSitemap> sitemaps = serverSitemaps.getSitemaps();
 
                     this.sitemaps.addAll(sitemaps);
                     menuAdapter.addSitemaps(sitemaps);

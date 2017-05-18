@@ -190,8 +190,8 @@ public class SitemapSelectFragment extends BaseDaggerFragment<SitemapSelectContr
                 .subscribe(serverSitemaps -> {
                     emptyView.setVisibility(View.GONE);
 
-                    OHServer server = serverSitemaps.first;
-                    List<OHSitemap> sitemaps = serverSitemaps.second;
+                    OHServer server = serverSitemaps.getServer();
+                    List<OHSitemap> sitemaps = serverSitemaps.getSitemaps();
 
                     for (OHSitemap sitemap : sitemaps) {
                         sitemapAdapter.add(server, sitemap);

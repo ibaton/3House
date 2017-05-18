@@ -1,29 +1,20 @@
 package treehou.se.habit.util;
 
-import android.content.Context;
-import android.support.v4.util.Pair;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.Unbinder;
 import io.realm.Realm;
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.observers.Subscribers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
-import se.treehou.ng.ohcommunicator.services.Connector;
-import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.core.db.DBHelper;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.core.db.model.SitemapSettingsDB;
+import treehou.se.habit.module.ServerLoaderFactory;
 
 public class RxUtil {
 
@@ -38,12 +29,12 @@ public class RxUtil {
      * Save sitemap to database
      * @return action that saves sitemap.
      */
-    public static Action1<Pair<OHServer, List<OHSitemap>>> saveSitemap(){
-        return serverDBListPair -> {
+    public static Action1<ServerLoaderFactory.ServerSitemapsResponse> saveSitemap(){
+        return sitemapResponse -> {
             Realm realm = Realm.getDefaultInstance();
-            for(OHSitemap sitemap : serverDBListPair.second){
+            for(OHSitemap sitemap : sitemapResponse.getSitemaps()){
 
-                OHServer server = serverDBListPair.first;
+                OHServer server = sitemapResponse.getServer();
                 ServerDB serverDB = realm.where(ServerDB.class)
                         .equalTo("name", server.getName())
                         .equalTo("localurl", server.getLocalUrl())
@@ -51,7 +42,7 @@ public class RxUtil {
                         .findFirst();
 
                 SitemapDB sitemapDB = realm.where(SitemapDB.class)
-                        .equalTo("server.name", serverDBListPair.first.getName())
+                        .equalTo("server.name", sitemapResponse.getServer().getName())
                         .equalTo("name", sitemap.getName())
                         .findFirst();
 

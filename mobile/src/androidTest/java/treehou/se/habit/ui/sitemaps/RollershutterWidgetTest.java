@@ -190,7 +190,7 @@ public class RollershutterWidgetTest {
                             }
 
                             @Override
-                            public Observable.Transformer<OHServer, Pair<OHServer, List<OHSitemap>>> serverToSitemap(Context context) {
+                            public Observable.Transformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context) {
 
                                 OHSitemap sitemap = new OHSitemap();
                                 sitemap.setName(SITEMAP_NAME);
@@ -199,14 +199,11 @@ public class RollershutterWidgetTest {
                                 List<OHSitemap> sitemapList = new ArrayList<>();
                                 sitemapList.add(sitemap);
 
-                                return observable -> observable.flatMap(new Func1<OHServer, Observable<List<OHSitemap>>>() {
-                                    @Override
-                                    public Observable<List<OHSitemap>> call(OHServer server) {
-                                        return Observable.just(sitemapList);
-                                    }
+                                return observable -> observable.flatMap((Func1<OHServer, Observable<List<OHSitemap>>>) server -> {
+                                    return Observable.just(sitemapList);
                                 }, (server, sitemaps) -> {
                                     sitemap.setServer(server);
-                                    return new Pair<>(server, sitemaps);
+                                    return new ServerSitemapsResponse(server, sitemaps);
                                 });
                             }
                         };

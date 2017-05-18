@@ -17,7 +17,7 @@ import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.ui.settings.subsettings.general.ThemeItem;
 import treehou.se.habit.ui.widgets.WidgetFactory;
-import treehou.se.habit.ui.widgets.factories.ColorpickerWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.colorpicker.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.switches.SwitchWidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
@@ -64,6 +64,7 @@ public class AndroidModule {
     }
 
     @Provides
+    @Singleton
     public ConnectionFactory provideConnectionFactory(Context context){
         return new ConnectionFactory(context);
     }

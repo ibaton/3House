@@ -2,6 +2,7 @@ package treehou.se.habit.module;
 
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
@@ -36,27 +37,30 @@ public class RxPresenter implements BasePresenter {
     }
 
     @Override
+    @CallSuper
     public void load(Bundle savedData) {
         lifecycleSubject.onNext(PresenterEvent.LOAD);
     }
 
     @Override
+    @CallSuper
     public void subscribe() {
         lifecycleSubject.onNext(PresenterEvent.SUBSCRIBE);
     }
 
     @Override
+    @CallSuper
     public void unsubscribe() {
         lifecycleSubject.onNext(PresenterEvent.UNSUBSCRIBE);
     }
 
     @Override
+    @CallSuper
     public void unload() {
         lifecycleSubject.onNext(PresenterEvent.UNLOAD);
     }
 
     @Override
     public void save(Bundle savedData) {
-
     }
 }

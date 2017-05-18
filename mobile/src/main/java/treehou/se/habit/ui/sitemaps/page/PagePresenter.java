@@ -68,7 +68,7 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
 
     @Override
     public void load(Bundle savedData) {
-
+        super.load(savedData);
         Gson gson = GsonHelper.createGsonBuilder();
 
         long serverId = args.getLong(PageContract.ARG_SERVER);
@@ -78,10 +78,10 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
         page = gson.fromJson(jPage, OHLinkedPage.class);
 
         initialized = false;
-        if(savedData != null && savedData.containsKey(PageContract.STATE_PAGE)) {
+        if (savedData != null && savedData.containsKey(PageContract.STATE_PAGE)) {
             jPage = savedData.getString(PageContract.STATE_PAGE);
             OHLinkedPage savedPage = gson.fromJson(jPage, OHLinkedPage.class);
-            if(savedPage.getId().equals(page.getId())) {
+            if (savedPage.getId().equals(page.getId())) {
                 page = savedPage;
                 initialized = true;
             }
@@ -91,8 +91,9 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
 
     @Override
     public void subscribe() {
+        super.subscribe();
         updatePage(page, true);
-        if(!initialized && server != null) {
+        if (!initialized && server != null) {
             requestPageUpdate();
         }
         initialized = true;
@@ -104,16 +105,8 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
     }
 
     @Override
-    public void unsubscribe() {
-
-    }
-
-    @Override
-    public void unload() {
-    }
-
-    @Override
     public void save(Bundle savedData) {
+        super.save(savedData);
         savedData.putSerializable(PageContract.STATE_PAGE, GsonHelper.createGsonBuilder().toJson(page));
     }
 

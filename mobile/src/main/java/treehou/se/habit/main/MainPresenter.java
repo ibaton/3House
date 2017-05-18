@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import javax.inject.Inject;
 
+import de.duenndns.ssl.MemorizingTrustManager;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;

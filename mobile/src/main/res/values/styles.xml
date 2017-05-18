@@ -73,7 +73,7 @@
     <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
     </style>
 
-    <style name="drawer_item_text" parent="TextAppearance.AppCompat.Medium">
+    <style name="drawer_item_text" parent="TextAppearance.AppCompat.Large">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">left|center_vertical</item>

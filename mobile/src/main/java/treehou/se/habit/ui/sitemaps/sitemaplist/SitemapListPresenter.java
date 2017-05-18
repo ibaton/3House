@@ -2,7 +2,6 @@ package treehou.se.habit.ui.sitemaps.sitemaplist;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.util.Log;
 
 import java.util.List;
@@ -47,28 +46,19 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
 
     @Override
     public void load(Bundle savedData) {
-        if(savedData != null) showSitemap = "";
+        super.load(savedData);
+        if (savedData != null) showSitemap = "";
         else showSitemap = arguments.getString(SitemapListFragment.ARG_SHOW_SITEMAP);
     }
 
 
     @Override
     public void subscribe() {
+        super.subscribe();
         view.clearList();
+        Log.d("Yolo", realm.getPath());
         loadSitemapsFromServers();
     }
-
-    @Override
-    public void unsubscribe() {
-
-    }
-
-    @Override
-    public void unload() {
-    }
-
-    @Override
-    public void save(Bundle savedData) {}
 
     @Override
     public void reloadSitemaps(OHServer server) {
@@ -79,6 +69,7 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
      * Load servers from database and request their sitemaps.
      */
     private void loadSitemapsFromServers(){
+        Log.d("Yolo", realm.getPath());
         Observable.merge(
                 realm.asObservable()
                         .compose(serverLoaderFactory.loadServersRx()),
@@ -90,19 +81,19 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
                 .compose(bindToLifecycle())
                 .compose(serverLoaderFactory.filterDisplaySitemaps())
                 .subscribe(
-                        serverSitemaps -> populateSitemap(serverSitemaps),
+                        this::populateSitemap,
                         throwable -> Log.e(TAG, "Request sitemap failed", throwable)
                 );
     }
 
-    private void populateSitemap(Pair<OHServer, List<OHSitemap>> serverSitemaps){
-        OHServer server = serverSitemaps.first;
-        List<OHSitemap> sitemaps = serverSitemaps.second;
+    private void populateSitemap(ServerLoaderFactory.ServerSitemapsResponse serverSitemaps){
+        OHServer server = serverSitemaps.getServer();
+        List<OHSitemap> sitemaps = serverSitemaps.getSitemaps();
 
-        if(sitemaps.size() <= 0){
-            view.showServerError(server);
+        if(serverSitemaps.hasError()){
+            view.showServerError(server, serverSitemaps.getError());
         } else {
-            view.populateSitemaps(serverSitemaps);
+            view.populateSitemaps(server, sitemaps);
             boolean autoloadLast = settings.getAutoloadSitemapRx().get();
             for (OHSitemap sitemap : sitemaps) {
                 if (autoloadLast && sitemap.getName().equals(showSitemap)) {

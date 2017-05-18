@@ -16,9 +16,6 @@ import se.treehou.ng.ohcommunicator.services.IServerHandler;
 
 public class ConnectionFactory {
 
-    static String KEYSTORE_DIR = "private";
-    static String KEYSTORE_FILE = "ssl___________keys6.bks";
-
     private MemorizingTrustManager mtm;
     private SSLContext sc;
 
@@ -33,7 +30,6 @@ public class ConnectionFactory {
     private void setupTrustManager(Context context){
 
         try {
-            MemorizingTrustManager.setKeyStoreFile(KEYSTORE_DIR, KEYSTORE_FILE);
             sc = SSLContext.getInstance("TLS");
             mtm = new MemorizingTrustManager(context.getApplicationContext());
             sc.init(null, new X509TrustManager[] { mtm }, new java.security.SecureRandom());

@@ -34,23 +34,4 @@ public class SettingsPresenter extends RxPresenter implements SettingsContract.P
     public void openTranslatePage() {
         view.showTranslatePage();
     }
-
-    @Override
-    public void load(Bundle savedData) {
-    }
-
-    @Override
-    public void subscribe() {
-    }
-
-    @Override
-    public void unsubscribe() {
-    }
-
-    @Override
-    public void unload() {
-    }
-
-    @Override
-    public void save(Bundle savedData) {}
 }

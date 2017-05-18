@@ -49,6 +49,8 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         ohRealm.setup(this);
     }
 
+
+
     protected ApplicationComponent createComponent(){
         Log.d(TAG, "Creating app component");
         return DaggerApplicationComponent.builder()

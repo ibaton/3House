@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 import javax.inject.Inject;
+
+import de.duenndns.ssl.MemorizingTrustManager;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.mvp.BaseDaggerActivity;
 import treehou.se.habit.R;

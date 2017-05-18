@@ -11,7 +11,7 @@ import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.ui.widgets.factories.ChartWidgetFactory;
-import treehou.se.habit.ui.widgets.factories.Frame.FrameWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.frame.FrameWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.GroupWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.IWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.ImageWidgetFactory;

@@ -1,8 +1,5 @@
 package treehou.se.habit.ui.sitemaps.sitemaplist;
 
-
-import android.support.v4.util.Pair;
-
 import java.util.List;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -16,8 +13,8 @@ public interface SitemapListContract {
         void showSitemap(OHServer server, OHSitemap sitemap);
         void clearList();
         void hideEmptyView();
-        void showServerError(OHServer server);
-        void populateSitemaps(Pair<OHServer, List<OHSitemap>> serverSitemaps);
+        void showServerError(OHServer server, Throwable error);
+        void populateSitemaps(OHServer server, List<OHSitemap> sitemaps);
     }
 
     interface Presenter extends BasePresenter {

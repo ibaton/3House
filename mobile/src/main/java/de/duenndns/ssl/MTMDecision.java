@@ -23,6 +23,8 @@
  */
 package de.duenndns.ssl;
 
+import java.security.cert.X509Certificate;
+
 class MTMDecision {
 	public final static int DECISION_INVALID	= 0;
 	public final static int DECISION_ABORT		= 1;
@@ -30,4 +32,5 @@ class MTMDecision {
 	public final static int DECISION_ALWAYS	= 3;
 
 	int state = DECISION_INVALID;
+	X509Certificate cert;
 }

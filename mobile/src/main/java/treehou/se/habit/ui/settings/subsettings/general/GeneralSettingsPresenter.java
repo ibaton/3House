@@ -24,12 +24,10 @@ public class GeneralSettingsPresenter extends RxPresenter implements GeneralSett
         this.view = view;
     }
 
-    @Override
-    public void load(Bundle savedData) {
-    }
 
     @Override
     public void subscribe() {
+        super.subscribe();
 
         Preference<Boolean> settingsAutoloadSitemapRx = settings.getAutoloadSitemapRx();
         settingsAutoloadSitemapRx.asObservable()
@@ -82,15 +80,4 @@ public class GeneralSettingsPresenter extends RxPresenter implements GeneralSett
             fullscreenPrefRx.set(fullscreen);
         }
     }
-
-    @Override
-    public void unsubscribe() {
-    }
-
-    @Override
-    public void unload() {
-    }
-
-    @Override
-    public void save(Bundle savedData) {}
 }

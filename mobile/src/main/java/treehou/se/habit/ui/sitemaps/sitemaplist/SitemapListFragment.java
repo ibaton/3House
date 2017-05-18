@@ -2,7 +2,6 @@ package treehou.se.habit.ui.sitemaps.sitemaplist;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -150,15 +149,12 @@ public class SitemapListFragment extends BaseDaggerFragment<SitemapListContract.
     }
 
     @Override
-    public void showServerError(OHServer server) {
+    public void showServerError(OHServer server, Throwable error) {
         sitemapAdapter.setServerState(server, SitemapListAdapter.STATE_ERROR);
     }
 
     @Override
-    public void populateSitemaps(Pair<OHServer, List<OHSitemap>> serverSitemaps){
-        OHServer server = serverSitemaps.first;
-        List<OHSitemap> sitemaps = serverSitemaps.second;
-
+    public void populateSitemaps(OHServer server, List<OHSitemap> sitemaps){
         for (OHSitemap sitemap : sitemaps) {
             sitemapAdapter.add(server, sitemap);
         }

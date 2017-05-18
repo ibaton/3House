@@ -2,20 +2,14 @@ package treehou.se.habit.ui.sitemaps.sitemap;
 
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
-
-import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
@@ -23,7 +17,6 @@ import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.RxPresenter;
 import treehou.se.habit.util.ConnectionFactory;
-import treehou.se.habit.util.RxUtil;
 import treehou.se.habit.util.logging.Logger;
 
 public class SitemapPresenter extends RxPresenter implements SitemapContract.Presenter {

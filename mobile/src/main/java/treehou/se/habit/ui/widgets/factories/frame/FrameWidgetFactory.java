@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.widgets.factories.Frame;
+package treehou.se.habit.ui.widgets.factories.frame;
 
 import android.content.Context;
 

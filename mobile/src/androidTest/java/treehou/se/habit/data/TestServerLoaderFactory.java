@@ -1,21 +1,17 @@
 package treehou.se.habit.data;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import io.realm.Realm;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import treehou.se.habit.HabitApplication;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
@@ -41,7 +37,7 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
     }
 
     @Override
-    public Observable.Transformer<Pair<OHServer, List<OHSitemap>>, Pair<OHServer, List<OHSitemap>>> filterDisplaySitemaps() {
+    public Observable.Transformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps() {
         return observable -> observable;
     }
 
@@ -50,20 +46,19 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
      * @param context the used to fetch sitemaps.
      * @return
      */
-    public Observable.Transformer<OHServer, Pair<OHServer, List<OHSitemap>>> serverToSitemap(Context context) {
-        return observable -> observable.flatMap(new Func1<OHServer, Observable<List<OHSitemap>>>() {
-            @Override
-            public Observable<List<OHSitemap>> call(OHServer server) {
-                IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
-                return serverHandler.requestSitemapRx().subscribeOn(Schedulers.io())
-                        .onErrorReturn(throwable -> new ArrayList<>());
-            }
-        }, (server, sitemaps) -> {
-            for (OHSitemap sitemap : sitemaps) {
+    public Observable.Transformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context) {
+        return observable -> observable.flatMap(server -> {
+            IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
+            return serverHandler.requestSitemapRx()
+                    .map(ohSitemaps -> new ServerSitemapsResponse(server, ohSitemaps))
+                    .subscribeOn(Schedulers.io())
+                    .onErrorReturn(error -> new ServerSitemapsResponse(server, new ArrayList<>(), error));
+        }, (server, response) -> {
+            for (OHSitemap sitemap : response.getSitemaps()) {
                 sitemap.setServer(server);
             }
-            return new Pair<>(server, sitemaps);
+            return response;
         })
-                .doOnNext(RxUtil.saveSitemap());
+        .doOnNext(RxUtil.saveSitemap());
     }
 }
