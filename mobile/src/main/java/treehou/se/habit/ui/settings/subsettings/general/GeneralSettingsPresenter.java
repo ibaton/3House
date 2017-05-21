@@ -1,15 +1,10 @@
 package treehou.se.habit.ui.settings.subsettings.general;
 
-import android.os.Bundle;
-
 import com.f2prateek.rx.preferences.Preference;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
-import com.trello.rxlifecycle.RxLifecycle;
 
 import javax.inject.Inject;
 
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import treehou.se.habit.module.RxPresenter;
 import treehou.se.habit.util.Settings;
 

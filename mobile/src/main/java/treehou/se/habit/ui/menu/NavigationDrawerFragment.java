@@ -20,24 +20,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.f2prateek.rx.preferences.Preference;
-import com.trello.rxlifecycle.RxLifecycle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import io.realm.Realm;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.module.ServerLoaderFactory.ServerSitemapsResponse;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.util.Settings;
 
@@ -74,7 +76,7 @@ public class NavigationDrawerFragment extends BaseFragment {
     private boolean mUserLearnedDrawer;
 
     private List<DrawerItem> items = new ArrayList<>();
-    private List<OHSitemap> sitemaps = new ArrayList<>();
+    private Map<OHServer, List<OHSitemap>> sitemaps = new HashMap<>();
     private DrawerAdapter menuAdapter;
 
     @Inject SharedPreferences sharedPreferences;
@@ -113,28 +115,6 @@ public class NavigationDrawerFragment extends BaseFragment {
         return ((HabitApplication) getActivity().getApplication()).component();
     }
 
-    /**
-     * Load servers from database and request their sitemaps.
-     */
-    private void loadSitemapsFromServers(){
-        sitemaps.clear();
-        menuAdapter.clearSitemaps();
-
-        Realm.getDefaultInstance().asObservable().compose(serverLoaderFactory.loadServersRx())
-                .compose(serverLoaderFactory.serverToSitemap(getActivity()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(RxLifecycle.bind(lifecycle()))
-                .compose(serverLoaderFactory.filterDisplaySitemaps())
-                .subscribe(serverSitemaps -> {
-                    List<OHSitemap> sitemaps = serverSitemaps.getSitemaps();
-
-                    this.sitemaps.addAll(sitemaps);
-                    menuAdapter.addSitemaps(sitemaps);
-                }, throwable -> {
-                    logger.e(TAG, "Failed to load sitemaps from server", throwable);
-                });
-    }
-
     @Override
     public void onActivityCreated (Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -155,22 +135,42 @@ public class NavigationDrawerFragment extends BaseFragment {
         return mDrawerListView;
     }
 
+    private Observable<ServerSitemapsResponse> sitemapsObservable() {
+        return Realm.getDefaultInstance().asObservable()
+                .compose(serverLoaderFactory.loadServersRx())
+                .compose(serverLoaderFactory.serverToSitemap(getActivity()))
+                .compose(serverLoaderFactory.filterDisplaySitemaps());
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        setupSitemapLoader();
+    }
 
+    private void setupSitemapLoader(){
         Preference<Boolean> settingsShowSitemapInMenuRx = settings.getShowSitemapsInMenuRx();
         settingsShowSitemapInMenuRx.asObservable()
-                .compose(bindToLifecycle())
-                .subscribe(showSitemaps -> {
-                    if(showSitemaps){
-                        loadSitemapsFromServers();
-                    }else {
-                        sitemaps.clear();
-                        menuAdapter.clearSitemaps();
+                .switchMap(showSitemaps -> {
+                    if(showSitemaps) {
+                        return sitemapsObservable();
+                    } else {
+                        return Observable.just(null);
                     }
-                }, throwable -> {
-                    logger.e(TAG, "Failed to load settings show sitemap in menu", throwable);
+                })
+                .compose(bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(serverSitemaps -> {
+                    if (serverSitemaps != null) {
+                        sitemaps.put(serverSitemaps.getServer(), serverSitemaps.getSitemaps());
+                    } else {
+                        sitemaps.clear();
+                    }
+
+                    menuAdapter.clearSitemaps();
+                    for (List<OHSitemap> serverEntry : this.sitemaps.values()) {
+                        menuAdapter.addSitemaps(serverEntry);
+                    }
                 });
     }
 
@@ -313,263 +313,4 @@ public class NavigationDrawerFragment extends BaseFragment {
         void onSitemapItemSelected(OHSitemap sitemap);
     }
 
-    public static class DrawerItem{
-
-        private String name;
-        private int resource;
-        @NavigationItems int value;
-
-        public DrawerItem(String name, int resource, int value) {
-            this.name = name;
-            this.value = value;
-            this.resource = resource;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public @NavigationItems int getValue() {
-            return value;
-        }
-
-        public void setValue(@NavigationItems int value) {
-            this.value = value;
-        }
-
-        public int getResource() {
-            return resource;
-        }
-
-        public void setResource(int resource) {
-            this.resource = resource;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
-    static class DrawerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private static final int VIEW_TYPE_ITEM = 1;
-        private static final int VIEW_TYPE_SITEMAP = 2;
-
-        private List<DrawerItem> items = new ArrayList<>();
-        private List<OHSitemap> sitemaps = new ArrayList<>();
-        private OnItemClickListener itemClickListener;
-        private OnSitemapClickListener sitemapItemClickListener;
-
-        interface  OnItemClickListener{
-            void onClickItem(DrawerItem item);
-        }
-
-        interface OnSitemapClickListener {
-            void onClickItem(OHSitemap item);
-        }
-
-        static class DrawerItemHolder extends RecyclerView.ViewHolder {
-
-            private ImageView imgIcon;
-            private TextView lblName;
-
-            public DrawerItemHolder(View itemView) {
-                super(itemView);
-                imgIcon = (ImageView) itemView.findViewById(R.id.img_icon);
-                lblName = (TextView) itemView.findViewById(R.id.lbl_name);
-            }
-
-            public void update(DrawerItem entry){
-                lblName.setText(entry.getName());
-                if(entry.getResource() != 0) {
-                    imgIcon.setImageResource(entry.getResource());
-                    imgIcon.setColorFilter(lblName.getCurrentTextColor());
-                }
-            }
-        }
-
-        static class SitemapItemHolder extends RecyclerView.ViewHolder {
-
-            private TextView lblName;
-
-            public SitemapItemHolder(View itemView) {
-                super(itemView);
-                lblName = (TextView) itemView.findViewById(R.id.lbl_sitemap);
-            }
-
-            public void update(OHSitemap entry){
-                lblName.setText(entry.getDisplayName());
-            }
-        }
-
-        public DrawerAdapter() {
-        }
-
-        public void setItemClickListener(OnItemClickListener itemClickListener) {
-            this.itemClickListener = itemClickListener;
-        }
-
-        public void setSitemapsClickListener(OnSitemapClickListener itemClickListener) {
-            sitemapItemClickListener = itemClickListener;
-        }
-
-        /**
-         * Add menu items to add.
-         * @param drawerItems the items to add.
-         */
-        public void add(List<DrawerItem> drawerItems){
-            items.addAll(drawerItems);
-            notifyItemRangeInserted(0, drawerItems.size());
-        }
-
-        /**
-         * Add sitemaps that should be shown in menu.
-         *
-         * @param sitemaps the sitemaps that should be shown in menu.
-         */
-        public void addSitemaps(List<OHSitemap> sitemaps){
-            this.sitemaps.addAll(sitemaps);
-            notifyDataSetChanged();
-        }
-
-        /**
-         * Remove all sitemaps added to menu.
-         */
-        public void clearSitemaps(){
-            sitemaps.clear();
-            notifyDataSetChanged();
-        }
-
-        /**
-         * Get sitemap from position.
-         * @param position the menu position to get sitemap for.
-         * @return sitemap at position.
-         */
-        private OHSitemap getSitemap(int position){
-            return sitemaps.get(position-(findPosition(NavigationItems.ITEM_SITEMAPS)+1));
-        }
-
-        /**
-         * Get sitemap from position.
-         * @param position the menu position to get sitemap for.
-         * @return sitemap at position.
-         */
-        private DrawerItem getMenuItem(int position){
-            int mainItemPosition = 0;
-            for(int i=0; i<getItemCount(); i++){
-                int itemViewType = getItemViewType(i);
-
-                if(VIEW_TYPE_ITEM == itemViewType){
-                    DrawerItem item = items.get(mainItemPosition);
-                    if(position == i) {
-                        return item;
-                    }
-                    mainItemPosition++;
-                }
-            }
-            return null;
-        }
-
-        /**
-         * Get menu item position.
-         *
-         * @param navigationItem the navigation item to search for.
-         * @return navigation item position.
-         */
-        private int findPosition(@NavigationItems int navigationItem){
-            int mainItemPosition = 0;
-            for(int i=0; i<getItemCount(); i++){
-                int itemViewType = getItemViewType(i);
-
-                if(VIEW_TYPE_ITEM == itemViewType){
-                    DrawerItem item = items.get(mainItemPosition);
-                    if(item.getValue() == navigationItem){
-                        return i;
-                    }
-                    mainItemPosition++;
-                }
-            }
-            return -1;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
-            RecyclerView.ViewHolder drawerItemHolder;
-            if(VIEW_TYPE_SITEMAP == viewType){
-                View itemView = inflater.inflate(R.layout.item_sitemap_small, parent, false);
-                drawerItemHolder = new SitemapItemHolder(itemView);
-            }
-            else {
-                View itemView = inflater.inflate(R.layout.item_drawer, parent, false);
-                drawerItemHolder = new DrawerItemHolder(itemView);
-            }
-
-            return drawerItemHolder;
-        }
-
-
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            int itemType = getItemViewType(position);
-
-            if(VIEW_TYPE_SITEMAP == itemType){
-                OHSitemap sitemap = getSitemap(position);
-                SitemapItemHolder sitemapItemHolder = (SitemapItemHolder) holder;
-                sitemapItemHolder.update(sitemap);
-                sitemapItemHolder.itemView.setOnClickListener(view -> {
-                    if (sitemapItemClickListener != null) {
-                        sitemapItemClickListener.onClickItem(sitemap);
-                    }
-                });
-            }
-            else {
-                DrawerItem drawerItem = getMenuItem(position);
-                DrawerItemHolder drawerItemHolder = (DrawerItemHolder) holder;
-                drawerItemHolder.update(drawerItem);
-                drawerItemHolder.itemView.setOnClickListener(view -> {
-                    if (itemClickListener != null) {
-                        itemClickListener.onClickItem(drawerItem);
-                    }
-                });
-            }
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-
-            int menuPosition = 0;
-            for(int i=0; i<=position; i++){
-                DrawerItem menuItem = items.get(menuPosition);
-                if(i == position){
-                    return VIEW_TYPE_ITEM;
-                }
-
-                if(menuItem.getValue() == NavigationItems.ITEM_SITEMAPS){
-                    for(int sitemapPosition=0; sitemapPosition<sitemaps.size(); sitemapPosition++){
-                        i++;
-                        if(i == position){
-                            return VIEW_TYPE_SITEMAP;
-                        }
-                    }
-                }
-                menuPosition++;
-            }
-
-            return -1;
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size() + sitemaps.size();
-        }
-    }
 }

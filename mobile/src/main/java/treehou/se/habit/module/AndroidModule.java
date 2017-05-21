@@ -54,11 +54,13 @@ public class AndroidModule {
     }
 
     @Provides
+    @Singleton
     public Gson provideGson() {
         return GsonHelper.createGsonBuilder();
     }
 
     @Provides
+    @Singleton
     public Settings provideSettingsManager(){
         return Settings.instance(application);
     }

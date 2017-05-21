@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:paddingTop="25dp"
-    android:paddingBottom="25dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
     android:background="?attr/selectableItemBackground">
 
     <ImageView

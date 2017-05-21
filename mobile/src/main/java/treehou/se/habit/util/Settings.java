@@ -42,6 +42,7 @@ public class Settings {
     private Preference<Integer> prefTheme;
     private Preference<Boolean> prefSitemapInMenu;
     private Preference<Boolean> prefFullscreen;
+    private Preference<Boolean> prefAutoloadSitemap;
 
     private static final SparseIntArray THEME_MAP = new SparseIntArray();
     static {
@@ -56,6 +57,7 @@ public class Settings {
         prefTheme = rxPreferences.getInteger(PREF_THEME, Themes.THEME_DEFAULT);
         prefSitemapInMenu = rxPreferences.getBoolean(PREF_SHOW_SITEMAPS_IN_MENU, true);
         prefFullscreen = rxPreferences.getBoolean(PREF_SHOW_IN_FULLSCREEN, false);
+        prefAutoloadSitemap = rxPreferences.getBoolean(PREF_AUTOLOAD_SITEMAP, true);
     }
 
     public static Settings instance(Context context){
@@ -185,7 +187,7 @@ public class Settings {
      * @return get preference as rx pref.
      */
     public Preference<Boolean> getAutoloadSitemapRx() {
-        return rxPreferences.getBoolean(PREF_AUTOLOAD_SITEMAP, true);
+        return prefAutoloadSitemap;
     }
 
     /**
