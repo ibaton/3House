@@ -52,8 +52,6 @@ public class WidgetSettingsTest {
     public void testImageClearBackgroundColor() {
         onView(withId(R.id.lou_icon_backgrounds)).check(matches(isDisplayed()));
         onView(withId(R.id.cbx_enable_image_background)).perform(scrollTo(), ViewActions.click());
-        onView(withId(R.id.lou_icon_backgrounds)).check(matches(CoreMatchers.not(isDisplayed())));
-        onView(withId(R.id.cbx_enable_image_background)).perform(scrollTo(), ViewActions.click());
     }
 
     @Test

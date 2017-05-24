@@ -186,8 +186,12 @@ public class Settings {
      * Check if sitemap should be autoloaded when sitemap list starts up.
      * @return get preference as rx pref.
      */
-    public Preference<Boolean> getAutoloadSitemapRx() {
-        return prefAutoloadSitemap;
+    public Observable<Boolean> getAutoloadSitemapRx() {
+        return prefAutoloadSitemap.asObservable();
+    }
+
+    public void setAutoloadSitemapRx(boolean autoloadSitemap) {
+        prefAutoloadSitemap.set(autoloadSitemap);
     }
 
     /**

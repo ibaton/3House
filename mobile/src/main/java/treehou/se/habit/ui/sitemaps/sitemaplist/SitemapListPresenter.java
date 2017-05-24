@@ -92,7 +92,7 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
             view.showServerError(server, serverSitemaps.getError());
         } else {
             view.populateSitemaps(server, sitemaps);
-            boolean autoloadLast = settings.getAutoloadSitemapRx().get();
+            boolean autoloadLast = settings.getAutoloadSitemapRx().toBlocking().first();
             for (OHSitemap sitemap : sitemaps) {
                 if (autoloadLast && sitemap.getName().equals(showSitemap)) {
                     showSitemap = null; // Prevents sitemap from being accessed again.

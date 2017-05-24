@@ -37,8 +37,10 @@ public abstract class DaggerActivityTestRule<T extends Activity> extends Activit
         DatabaseUtil.init(application);
 
         ApplicationComponent component = setupComponent(application, getActivity());
-        application.setTestComponent(component);
+        application.setComponent(component);
     }
+
+
 
     public abstract ApplicationComponent setupComponent(HabitApplication application, Activity activity);
 }

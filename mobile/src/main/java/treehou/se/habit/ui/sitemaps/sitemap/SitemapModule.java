@@ -6,8 +6,6 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;

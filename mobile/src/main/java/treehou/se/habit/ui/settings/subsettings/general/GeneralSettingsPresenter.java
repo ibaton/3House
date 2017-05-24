@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences.Preference;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import treehou.se.habit.module.RxPresenter;
 import treehou.se.habit.util.Settings;
@@ -24,7 +25,7 @@ public class GeneralSettingsPresenter extends RxPresenter implements GeneralSett
     public void subscribe() {
         super.subscribe();
 
-        Preference<Boolean> settingsAutoloadSitemapRx = settings.getAutoloadSitemapRx();
+        Observable<Boolean> settingsAutoloadSitemapRx = settings.getAutoloadSitemapRx();
         settingsAutoloadSitemapRx.asObservable()
                 .compose(bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -62,9 +63,9 @@ public class GeneralSettingsPresenter extends RxPresenter implements GeneralSett
 
     @Override
     public void setAutoLoadSitemap(boolean show) {
-        Preference<Boolean> autoloadSitemapRx = settings.getAutoloadSitemapRx();
-        if(show != autoloadSitemapRx.get()) {
-            autoloadSitemapRx.set(show);
+        Observable<Boolean> autoloadSitemapRx = settings.getAutoloadSitemapRx();
+        if(show != autoloadSitemapRx.toBlocking().first()) {
+            settings.setAutoloadSitemapRx(show);
         }
     }
 

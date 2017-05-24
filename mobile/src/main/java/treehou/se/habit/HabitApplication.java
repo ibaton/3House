@@ -62,8 +62,9 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         return ((HasActivitySubcomponentBuilders) context.getApplicationContext());
     }
 
-    public void setTestComponent(ApplicationComponent appComponent) {
+    public void setComponent(ApplicationComponent appComponent) {
         component = appComponent;
+        component.inject(this);
     }
 
     public ApplicationComponent component() {

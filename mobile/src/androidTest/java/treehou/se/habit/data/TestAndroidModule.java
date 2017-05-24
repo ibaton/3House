@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import javax.inject.Singleton;
 
+import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -20,6 +21,7 @@ import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Settings;
 
+@Module
 public class TestAndroidModule extends AndroidModule {
 
     public TestAndroidModule(Context application) {
@@ -33,31 +35,6 @@ public class TestAndroidModule extends AndroidModule {
         return application;
     }
 
-    @Provides @Singleton
-    public android.content.SharedPreferences provideSharedPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(application);
-    }
-
-    @Provides
-    public Gson provideGson() {
-        return GsonHelper.createGsonBuilder();
-    }
-
-    @Provides
-    public Settings provideSettingsManager(){
-        return Settings.instance(application);
-    }
-
-    @Provides
-    public ConnectionFactory provideConnectionFactory(){
-        return new ConnectionFactory(application);
-    }
-
-    @Override
-    public OHRealm provideOHRealm() {
-        return new TestOHRealm(application);
-    }
-    
     @Provides
     public ServerLoaderFactory provideServerLoaderFactory(ConnectionFactory connectionFactory){
         return new TestServerLoaderFactory(connectionFactory);
