@@ -146,7 +146,7 @@ public class Util {
     }
 
     public static ApplicationComponent getApplicationComponent(Fragment fragment) {
-        return ((HabitApplication) fragment.getActivity().getApplication()).component();
+        return ((HabitApplication) fragment.getContext().getApplicationContext()).component();
     }
 
     /**

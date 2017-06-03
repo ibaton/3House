@@ -3,6 +3,7 @@ package treehou.se.habit.data;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -39,6 +40,21 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
     @Override
     public Observable.Transformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps() {
         return observable -> observable;
+    }
+
+    @Override
+    public Observable.Transformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context) {
+        return null; // TODO
+    }
+
+    @Override
+    public Observable.Transformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList() {
+        return null; // TODO
+    }
+
+    @Override
+    public Observable.Transformer<Realm, List<OHServer>> loadAllServersRx() {
+        return null; // TODO
     }
 
     /**

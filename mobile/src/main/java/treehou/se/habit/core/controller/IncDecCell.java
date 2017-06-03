@@ -22,14 +22,6 @@ public class IncDecCell {
         this.incDecCellDB = controllerDB;
     }
 
-    public long getId() {
-        return incDecCellDB.getId();
-    }
-
-    public void setId(long id) {
-        incDecCellDB.setId(id);
-    }
-
     public OHItem getItem() {
         return null; // new OHItem(incDecCellDB.getItem());
     }
@@ -44,14 +36,6 @@ public class IncDecCell {
 
     public void setIcon(String icon) {
         getDB().setIcon(icon);
-    }
-
-    public Cell getCell() {
-        return new Cell(incDecCellDB.getCell());
-    }
-
-    public void setCell(Cell cell) {
-        getDB().setCell(cell.getDB());
     }
 
     public int getType() {

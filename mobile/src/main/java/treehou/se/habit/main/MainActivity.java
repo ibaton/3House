@@ -40,6 +40,7 @@ public class MainActivity extends BaseDaggerActivity<MainContract.Presenter>
     @Inject MainPresenter mainPresenter;
     @Inject ConnectionFactory connectionFactory;
     @Inject ServerLoaderFactory serverLoaderFactory;
+    @Inject ControllerUtil controllerUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,6 @@ public class MainActivity extends BaseDaggerActivity<MainContract.Presenter>
         setTheme(settings.getThemeResourse());
 
         setContentView(R.layout.activity_main);
-        ControllerUtil.showNotifications(this);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
@@ -57,8 +57,6 @@ public class MainActivity extends BaseDaggerActivity<MainContract.Presenter>
 
         // Set up the drawer.
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        ControllerUtil.showNotifications(this);
     }
 
     @Override

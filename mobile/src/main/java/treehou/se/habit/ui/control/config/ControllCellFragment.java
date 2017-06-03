@@ -112,10 +112,6 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
 
             int cellType = getResources().getIntArray(R.array.cell_types_values)[position];
 
-            realm.beginTransaction();
-            cell.setType(cellType);
-            realm.commitTransaction();
-
             Log.d(TAG, "item selected " + cellType + " " + position);
 
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

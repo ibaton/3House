@@ -3,10 +3,14 @@ package treehou.se.habit.ui.homescreen;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -16,6 +20,8 @@ import treehou.se.habit.ui.control.ControllerUtil;
  * App Widget Configuration implemented in {@link ControllerWidgetConfigureActivity ControllerWidgetConfigureActivity}
  */
 public class ControllerWidget extends AppWidgetProvider {
+
+    @Inject ControllerUtil controllerUtil;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -34,15 +40,20 @@ public class ControllerWidget extends AppWidgetProvider {
     }
 
     @Override
-    public void onEnabled(Context context) {
+    public void onReceive(Context context, Intent intent) {
+        ((HabitApplication)context.getApplicationContext()).component().inject(this);
+        super.onReceive(context, intent);
+    }
 
+    @Override
+    public void onEnabled(Context context) {
     }
 
     @Override
     public void onDisabled(Context context) {
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
         Realm realm = Realm.getDefaultInstance();
@@ -67,7 +78,7 @@ public class ControllerWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.lbl_title, controller.getName());
         views.setViewVisibility(R.id.lbl_title, showTitle ? View.VISIBLE:View.GONE);
 
-        ControllerUtil.drawRemoteController(context, views, controller);
+        controllerUtil.drawRemoteController(views, controller);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

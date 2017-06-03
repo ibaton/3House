@@ -102,12 +102,9 @@ public class ControllsFragment extends BaseFragment {
                                         mAdapter.removeItem(controllerHolder.getAdapterPosition());
 
                                         final long id = controller.getId();
-                                        realm.executeTransactionAsync(new Realm.Transaction() {
-                                            @Override
-                                            public void execute(Realm realm) {
-                                                ControllerDB controller = ControllerDB.load(realm, id);
-                                                controller.deleteFromRealm();
-                                            }
+                                        realm.executeTransactionAsync(realm -> {
+                                            ControllerDB controller1 = ControllerDB.load(realm, id);
+                                            controller1.deleteFromRealm();
                                         });
                                         break;
                                 }

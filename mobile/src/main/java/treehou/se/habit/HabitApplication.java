@@ -22,6 +22,7 @@ import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.DaggerApplicationComponent;
 import treehou.se.habit.module.FragmentComponentBuilder;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.ui.control.ControllerHandler;
 import treehou.se.habit.util.Settings;
 
 public class HabitApplication extends Application implements HasActivitySubcomponentBuilders{
@@ -34,22 +35,18 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     @Inject Map<Class<? extends Fragment>, FragmentComponentBuilder> fragmentComponentBuilders;
     @Inject OHRealm ohRealm;
     @Inject Settings settings;
+    @Inject ControllerHandler controllHandler;
 
     @Override
     public void onCreate() {
         if(component == null) component = createComponent();
         component().inject(this);
-
         setTheme(settings.getThemeResourse());
         super.onCreate();
-
         new ANRWatchDog().start();
-
         JodaTimeAndroid.init(this);
-        ohRealm.setup(this);
+        controllHandler.init();
     }
-
-
 
     protected ApplicationComponent createComponent(){
         Log.d(TAG, "Creating app component");
@@ -88,6 +85,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         try {
             MultiDex.install(this);
         } catch (RuntimeException multiDexException) {
+
             multiDexException.printStackTrace();
         }
     }

@@ -36,7 +36,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        final VoiceCellDB voiceCell = VoiceCellDB.getCell(realm, cell);
+        final VoiceCellDB voiceCell = cell.getCellVoice();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -75,7 +75,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
         Realm realm = Realm.getDefaultInstance();
-        final VoiceCellDB voiceCell = VoiceCellDB.getCell(realm, cell);
+        final VoiceCellDB voiceCell = cell.getCellVoice();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 

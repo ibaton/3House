@@ -35,7 +35,7 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        SliderCellDB numberCell = SliderCellDB.getCell(realm, cell);
+        SliderCellDB numberCell = cell.getCellSlider();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 

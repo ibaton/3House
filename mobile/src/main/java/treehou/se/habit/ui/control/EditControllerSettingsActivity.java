@@ -11,8 +11,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import treehou.se.habit.BaseActivity;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
@@ -26,10 +29,13 @@ public class EditControllerSettingsActivity extends BaseActivity implements Colo
 
     private CheckBox cbxAsNotification;
 
+    @Inject ControllerUtil controllerUtil;
+
     private ControllerDB controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((HabitApplication)getApplicationContext()).component().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_controller_settings);
 
@@ -56,12 +62,6 @@ public class EditControllerSettingsActivity extends BaseActivity implements Colo
             realm.beginTransaction();
             controller.setShowNotification(isChecked);
             realm.commitTransaction();
-
-            if(controller.isShowNotification()) {
-                ControllerUtil.showNotification(EditControllerSettingsActivity.this, controller);
-            }else {
-                ControllerUtil.hideNotification(EditControllerSettingsActivity.this, controller);
-            }
         });
 
         updateColorPalette(controller.getColor());

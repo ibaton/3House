@@ -13,22 +13,22 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.AdapterViewSelectionEvent;
-import com.jakewharton.rxbinding.widget.RxAdapter;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import rx.functions.Func1;
 import treehou.se.habit.BaseActivity;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
+import treehou.se.habit.ui.control.ControllerUtil;
 
 /**
  * The configuration screen for the {@link ControllerWidget ControllerWidget} AppWidget.
@@ -44,6 +44,8 @@ public class ControllerWidgetConfigureActivity extends BaseActivity {
     @BindView(R.id.cbx_show_title) CheckBox cbxShowTitle;
     @BindView(R.id.add_button) Button addButton;
 
+    @Inject ControllerUtil controllerUtil;
+
     private Unbinder unbinder;
 
     public ControllerWidgetConfigureActivity() {
@@ -52,6 +54,7 @@ public class ControllerWidgetConfigureActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle icicle) {
+        ((HabitApplication)getApplicationContext()).component().inject(this);
         super.onCreate(icicle);
 
         setContentView(R.layout.controller_widget_configure);
@@ -126,7 +129,7 @@ public class ControllerWidgetConfigureActivity extends BaseActivity {
 
         // It is the responsibility of the configuration view to update the app widget
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ControllerWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+        controllerUtil.updateWidget(mAppWidgetId);
 
         // Make sure we pass back the original appWidgetId
         Intent resultValue = new Intent();

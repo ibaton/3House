@@ -24,12 +24,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -55,8 +51,8 @@ public class CellSliderConfigFragment extends BaseFragment {
 
     private ArrayAdapter<OHItem> mItemAdapter ;
     private ArrayList<OHItem> items = new ArrayList<>();
-    private SliderCellDB numberCell;
-    private Cell cell;
+    private SliderCellDB sliderCell;
+    private CellDB cell;
     private OHItem item;
     private Unbinder unbinder;
 
@@ -80,19 +76,20 @@ public class CellSliderConfigFragment extends BaseFragment {
 
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
-            cell = new Cell(CellDB.load(realm, id));
-            numberCell = SliderCellDB.getCell(realm, cell.getDB());
+            cell = CellDB.load(realm, id);
+            sliderCell = cell.getCellSlider();
 
-            if(numberCell == null){
+            if(sliderCell == null){
                 realm.beginTransaction();
-                numberCell = new SliderCellDB();
-                numberCell.setId(SliderCellDB.getUniqueId(realm));
-                numberCell = realm.copyToRealm(numberCell);
-                numberCell.setCell(cell.getDB());
+                sliderCell = new SliderCellDB();
+                sliderCell = realm.copyToRealm(sliderCell);
                 realm.commitTransaction();
+
+                cell.setCellSlider(sliderCell);
+                CellDB.save(realm, cell);
             }
 
-            ItemDB itemDB = numberCell.getItem();
+            ItemDB itemDB = sliderCell.getItem();
             if(itemDB != null){
                 item = itemDB.toGeneric();
             }
@@ -120,7 +117,7 @@ public class CellSliderConfigFragment extends BaseFragment {
                         louRange.setVisibility(View.GONE);
                     }
 
-                    numberCell.setItem(itemDB);
+                    sliderCell.setItem(itemDB);
                     realm.commitTransaction();
                 }
             }
@@ -160,8 +157,8 @@ public class CellSliderConfigFragment extends BaseFragment {
             startActivityForResult(intent, REQUEST_ICON);
         });
 
-        if(numberCell != null){
-            txtMax.setText(""+numberCell.getMax());
+        if(sliderCell != null){
+            txtMax.setText(""+ sliderCell.getMax());
         }else{
             txtMax.setText(""+100);
         }
@@ -170,7 +167,7 @@ public class CellSliderConfigFragment extends BaseFragment {
     }
 
     private void updateIconImage(){
-        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), numberCell.getIcon()));
+        btnSetIcon.setImageDrawable(Util.getIconDrawable(getActivity(), sliderCell.getIcon()));
     }
 
     private List<OHItem> filterItems(List<OHItem> items){
@@ -197,18 +194,18 @@ public class CellSliderConfigFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
 
-        if(numberCell.getItem() == null){
+        if(sliderCell.getItem() == null){
             return;
         }
 
         realm.beginTransaction();
-        if(numberCell.getItem().getType().equals(OHItem.TYPE_NUMBER)
-                || numberCell.getItem().getType().equals(OHItem.TYPE_GROUP)){
-            numberCell.setMin(0);
-            numberCell.setMax(Integer.parseInt(txtMax.getText().toString()));
+        if(sliderCell.getItem().getType().equals(OHItem.TYPE_NUMBER)
+                || sliderCell.getItem().getType().equals(OHItem.TYPE_GROUP)){
+            sliderCell.setMin(0);
+            sliderCell.setMax(Integer.parseInt(txtMax.getText().toString()));
         }else{
-            numberCell.setMin(0);
-            numberCell.setMax(100);
+            sliderCell.setMin(0);
+            sliderCell.setMax(100);
         }
         realm.commitTransaction();
     }
@@ -227,7 +224,7 @@ public class CellSliderConfigFragment extends BaseFragment {
 
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
             realm.beginTransaction();
-            numberCell.setIcon(iconName.equals("") ? null : iconName);
+            sliderCell.setIcon(iconName.equals("") ? null : iconName);
             realm.commitTransaction();
             updateIconImage();
         }

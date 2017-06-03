@@ -31,7 +31,7 @@ public class VoiceConfigCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        VoiceCellDB voiceCell = VoiceCellDB.getCell(realm, cell);
+        VoiceCellDB voiceCell = cell.getCellVoice();
         realm.close();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);

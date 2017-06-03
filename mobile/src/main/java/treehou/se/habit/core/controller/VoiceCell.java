@@ -22,14 +22,6 @@ public class VoiceCell {
         this.voiceCellDB = voiceCellDB;
     }
 
-    public long getId() {
-        return getDB().getId();
-    }
-
-    public void setId(long id) {
-        getDB().setId(id);
-    }
-
     public OHItem getItem() {
         //return getDB().getItem();
         return null;
@@ -45,14 +37,6 @@ public class VoiceCell {
 
     public void setIcon(String icon) {
         getDB().setIcon(icon);
-    }
-
-    public Cell getCell() {
-        return new Cell(getDB().getCell());
-    }
-
-    public void setCell(Cell cell) {
-        getDB().setCell(cell.getDB());
     }
 
     public void save(){

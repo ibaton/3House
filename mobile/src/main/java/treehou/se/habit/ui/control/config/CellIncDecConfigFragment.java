@@ -62,7 +62,7 @@ public class CellIncDecConfigFragment extends RxFragment {
     private ArrayList<OHItem> items = new ArrayList<>();
 
     private IncDecCellDB incDecCell;
-    private Cell cell;
+    private CellDB cell;
     private OHItem item;
     private Realm realm;
     private Unbinder unbinder;
@@ -88,16 +88,17 @@ public class CellIncDecConfigFragment extends RxFragment {
 
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
-            cell = new Cell(CellDB.load(realm, id));
-            incDecCell = IncDecCellDB.getCell(realm, cell.getDB());
+            cell = CellDB.load(realm, id);
+            incDecCell = cell.getCellIncDec();
 
             if (incDecCell == null) {
                 realm.beginTransaction();
                 incDecCell = new IncDecCellDB();
-                incDecCell.setId(IncDecCellDB.getUniqueId(realm));
                 incDecCell = realm.copyToRealm(incDecCell);
-                incDecCell.setCell(cell.getDB());
                 realm.commitTransaction();
+
+                cell.setCellIncDec(incDecCell);
+                CellDB.save(realm, cell);
             }
 
             ItemDB itemDB = incDecCell.getItem();

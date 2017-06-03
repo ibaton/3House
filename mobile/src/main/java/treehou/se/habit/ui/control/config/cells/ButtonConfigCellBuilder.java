@@ -33,7 +33,7 @@ public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        final ButtonCellDB buttonCell = ButtonCellDB.getCell(realm, cell);
+        final ButtonCellDB buttonCell = cell.getCellButton();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 

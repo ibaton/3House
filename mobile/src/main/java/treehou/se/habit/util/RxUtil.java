@@ -2,7 +2,11 @@ package treehou.se.habit.util;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -89,25 +93,5 @@ public class RxUtil {
                 .flatMap(Observable::from)
                 .map(ServerDB::toGeneric)
                 .distinct();
-    }
-
-    /**
-     * Creates a sitemap settings object for sitemap if not already exists
-     * @return sitemap with settings set.
-     */
-    public static Observable.Transformer<SitemapDB, SitemapDB> createSettingsIfEmpty() {
-        return observable -> observable.map(new Func1<SitemapDB, SitemapDB>() {
-            @Override
-            public SitemapDB call(SitemapDB sitemapDB) {
-                if (sitemapDB.getSettingsDB() == null) {
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.beginTransaction();
-                    SitemapSettingsDB sitemapSettingsDB = realm.createObject(SitemapSettingsDB.class);
-                    sitemapDB.setSettingsDB(sitemapSettingsDB);
-                    realm.commitTransaction();
-                }
-                return sitemapDB;
-            }
-        });
     }
 }

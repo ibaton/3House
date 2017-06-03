@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -23,6 +26,7 @@ import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.control.CommandService;
 import treehou.se.habit.ui.util.ViewHelper;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -33,6 +37,12 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
     @BindView(R.id.img_icon_button) ImageButton imgIcon;
 
+    private ConnectionFactory connectionFactory;
+
+    public ButtonCellBuilder(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     public View build(final Context context, ControllerDB controller, final CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_button, null);
@@ -40,7 +50,7 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
         Log.d(TAG, "Build: Button");
         Realm realm = Realm.getDefaultInstance();
-        final ButtonCellDB buttonCell = ButtonCellDB.getCell(realm, cell);
+        final ButtonCellDB buttonCell = cell.getCellButton();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
@@ -51,15 +61,12 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
 
         imgIcon.setImageDrawable(Util.getIconDrawable(context, buttonCell.getIcon()));
 
-        imgIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ItemDB item = buttonCell.getItem();
-                if (item != null) {
-                    /*OHServer server = item.getServer().toGeneric();
-                    IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                    serverHandler.sendCommand(item.getName(), buttonCell.getCommand()) TODO fix ;*/
-                }
+        imgIcon.setOnClickListener(v -> {
+            ItemDB item = buttonCell.getItem();
+            if (item != null) {
+                OHServer server = item.getServer().toGeneric();
+                IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
+                serverHandler.sendCommand(item.getName(), buttonCell.getCommand());
             }
         });
         realm.close();
@@ -73,7 +80,7 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
 
         Realm realm = Realm.getDefaultInstance();
-        final ButtonCellDB buttonCell = ButtonCellDB.getCell(realm, cell);
+        final ButtonCellDB buttonCell = cell.getCellButton();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 

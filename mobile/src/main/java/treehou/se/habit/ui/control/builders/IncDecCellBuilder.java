@@ -39,7 +39,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        final IncDecCellDB buttonCell = IncDecCellDB.getCell(realm, cell);
+        final IncDecCellDB buttonCell = cell.getCellIncDec();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
         imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
@@ -63,7 +63,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
         Realm realm = Realm.getDefaultInstance();
-        final IncDecCellDB buttonCell = IncDecCellDB.getCell(realm, cell);
+        final IncDecCellDB buttonCell = cell.getCellIncDec();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 

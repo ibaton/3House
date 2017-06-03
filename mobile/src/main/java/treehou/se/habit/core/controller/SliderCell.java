@@ -27,14 +27,6 @@ public class SliderCell {
         this.sliderCellDB = sliderCellDB;
     }
 
-    public long getId() {
-        return sliderCellDB.getId();
-    }
-
-    public void setId(long id) {
-        sliderCellDB.setId(id);
-    }
-
     public OHItem getItem() {
         return null; //new OHItem(sliderCellDB.getItem());
     }
@@ -49,14 +41,6 @@ public class SliderCell {
 
     public void setIcon(String icon) {
         sliderCellDB.setIcon(icon);
-    }
-
-    public Cell getCell() {
-        return new Cell(sliderCellDB.getCell());
-    }
-
-    public void setCell(Cell cell) {
-        sliderCellDB.setCell(cell.getDB());
     }
 
     public int getType() {

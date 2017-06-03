@@ -12,16 +12,14 @@ import android.widget.LinearLayout;
 
 import com.mattyork.colours.Colour;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.CellRowDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
-import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
-import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
-import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
-import treehou.se.habit.ui.control.builders.SliderCellBuilder;
-import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
 import treehou.se.habit.util.Util;
 
 public class ControlFragment extends Fragment {
@@ -32,7 +30,7 @@ public class ControlFragment extends Fragment {
     private LinearLayout louController;
 
     private ControllerDB controller;
-    private CellFactory<Integer> cellFactory;
+    @Inject CellFactory<Integer> cellFactory;
 
     private ActionBar actionBar;
     private AppCompatActivity activity;
@@ -53,17 +51,10 @@ public class ControlFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ((HabitApplication)getContext().getApplicationContext()).component().inject(this);
         super.onCreate(savedInstanceState);
 
         realm = Realm.getDefaultInstance();
-
-        cellFactory = new CellFactory<>();
-        cellFactory.setDefaultBuilder(new EmptyCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
-
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_ID);
             controller = ControllerDB.load(realm, id);

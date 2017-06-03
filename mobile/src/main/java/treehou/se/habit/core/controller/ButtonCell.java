@@ -19,14 +19,6 @@ public class ButtonCell {
         this.buttonCellDB = cellDB;
     }
 
-    public long getId() {
-        return getDB().getId();
-    }
-
-    public void setId(long id) {
-        getDB().setId(id);
-    }
-
     public OHItem getItem() {
         return null; //getDB().getItem();
     }
@@ -41,14 +33,6 @@ public class ButtonCell {
 
     public void setIcon(String icon) {
         getDB().setIcon(icon);
-    }
-
-    public Cell getCell() {
-        return new Cell(getDB().getCell());
-    }
-
-    public void setCell(Cell cell) {
-        getDB().setCell(cell.getDB());
     }
 
     public String getCommand() {

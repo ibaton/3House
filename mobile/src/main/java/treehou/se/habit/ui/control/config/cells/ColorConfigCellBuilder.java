@@ -30,7 +30,7 @@ public class ColorConfigCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        ColorCellDB colorCell = ColorCellDB.getCell(realm, cell);
+        ColorCellDB colorCell = cell.getCellColor();
 
         Drawable icon = Util.getIconDrawable(context, colorCell.getIcon());
         if(icon != null) {

@@ -26,17 +26,15 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.VoiceCellDB;
+import treehou.se.habit.ui.util.IconPickerActivity;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
-import treehou.se.habit.ui.util.IconPickerActivity;
 
 public class CellVoiceConfigFragment extends RxFragment {
 
@@ -51,7 +49,7 @@ public class CellVoiceConfigFragment extends RxFragment {
     @Inject ConnectionFactory connectionFactory;
 
     private VoiceCellDB voiceCell;
-    private Cell cell;
+    private CellDB cell;
 
     private OHItem item;
 
@@ -83,15 +81,16 @@ public class CellVoiceConfigFragment extends RxFragment {
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
-            cell = new Cell(CellDB.load(realm, id));
-            voiceCell = VoiceCellDB.getCell(realm, cell.getDB());
+            cell = CellDB.load(realm, id);
+            voiceCell = cell.getCellVoice();
             if(voiceCell == null){
                 realm.beginTransaction();
                 voiceCell = new VoiceCellDB();
-                voiceCell.setId(VoiceCellDB.getUniqueId(realm));
                 voiceCell = realm.copyToRealm(voiceCell);
-                voiceCell.setCell(cell.getDB());
                 realm.commitTransaction();
+
+                cell.setCellVoice(voiceCell);
+                CellDB.save(realm, cell);
             }
 
             ItemDB itemDB = voiceCell.getItem();

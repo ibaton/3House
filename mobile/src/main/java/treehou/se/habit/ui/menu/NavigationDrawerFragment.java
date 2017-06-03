@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import com.f2prateek.rx.preferences.Preference;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
@@ -76,7 +79,6 @@ public class NavigationDrawerFragment extends BaseFragment {
     private boolean mUserLearnedDrawer;
 
     private List<DrawerItem> items = new ArrayList<>();
-    private Map<OHServer, List<OHSitemap>> sitemaps = new HashMap<>();
     private DrawerAdapter menuAdapter;
 
     @Inject SharedPreferences sharedPreferences;
@@ -135,11 +137,11 @@ public class NavigationDrawerFragment extends BaseFragment {
         return mDrawerListView;
     }
 
-    private Observable<ServerSitemapsResponse> sitemapsObservable() {
+    private Observable<List<ServerSitemapsResponse>> sitemapsObservable() {
         return Realm.getDefaultInstance().asObservable()
-                .compose(serverLoaderFactory.loadServersRx())
-                .compose(serverLoaderFactory.serverToSitemap(getActivity()))
-                .compose(serverLoaderFactory.filterDisplaySitemaps());
+                .compose(serverLoaderFactory.loadAllServersRx())
+                .compose(serverLoaderFactory.serversToSitemap(getActivity()))
+                .compose(serverLoaderFactory.filterDisplaySitemapsList());
     }
 
     @Override
@@ -160,17 +162,15 @@ public class NavigationDrawerFragment extends BaseFragment {
                 })
                 .compose(bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(serverSitemaps -> {
-                    if (serverSitemaps != null) {
-                        sitemaps.put(serverSitemaps.getServer(), serverSitemaps.getSitemaps());
-                    } else {
-                        sitemaps.clear();
+                .subscribe(serverSitemapsResponses -> {
+
+                    List<OHSitemap> sitemaps = new ArrayList<>();
+                    for(ServerSitemapsResponse response : serverSitemapsResponses) {
+                        sitemaps.addAll(response.getSitemaps());
                     }
 
                     menuAdapter.clearSitemaps();
-                    for (List<OHSitemap> serverEntry : this.sitemaps.values()) {
-                        menuAdapter.addSitemaps(serverEntry);
-                    }
+                    menuAdapter.addSitemaps(sitemaps);
                 });
     }
 

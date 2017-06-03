@@ -41,7 +41,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        final SliderCellDB sliderCell = SliderCellDB.getCell(realm, cell);
+        final SliderCellDB sliderCell = cell.getCellSlider();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
@@ -78,7 +78,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
         Realm realm = Realm.getDefaultInstance();
-        final SliderCellDB numberCell = SliderCellDB.getCell(realm, cell);
+        final SliderCellDB numberCell = cell.getCellSlider();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 

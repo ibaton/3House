@@ -32,7 +32,7 @@ public class IncDecConfigCellBuilder implements CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        IncDecCellDB numberCell = IncDecCellDB.getCell(realm, cell);
+        IncDecCellDB numberCell = cell.getCellIncDec();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);

@@ -33,10 +33,6 @@ public class Cell {
         return getDB().getType();
     }
 
-    public void setType(int type) {
-        getDB().setType(type);
-    }
-
     public CellRow getCellRow() {
         return new CellRow(getDB().getCellRow());
     }

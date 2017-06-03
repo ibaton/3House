@@ -1,7 +1,9 @@
 package treehou.se.habit.ui.control;
 
 import android.app.Notification;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -12,18 +14,12 @@ import android.widget.RemoteViews;
 
 import com.mattyork.colours.Colour;
 
-import java.util.List;
-
 import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.CellRowDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
-import treehou.se.habit.ui.control.builders.ButtonCellBuilder;
-import treehou.se.habit.ui.control.builders.EmptyCellBuilder;
-import treehou.se.habit.ui.control.builders.IncDecCellBuilder;
-import treehou.se.habit.ui.control.builders.SliderCellBuilder;
-import treehou.se.habit.ui.control.builders.VoiceCellBuilder;
+import treehou.se.habit.ui.homescreen.ControllerWidget;
 import treehou.se.habit.util.Util;
 
 public class ControllerUtil {
@@ -31,6 +27,16 @@ public class ControllerUtil {
     private static final String TAG = ControllerUtil.class.getSimpleName();
 
     public static final int INDEX_BUTTON = 0;
+
+    private Context context;
+    private CellFactory<Integer> cellFactory;
+    private Realm realm;
+
+    public ControllerUtil(Context context, Realm realm, CellFactory<Integer> cellFactory) {
+        this.context = context;
+        this.cellFactory = cellFactory;
+        this.realm = realm;
+    }
 
     public static int[] generateColor(ControllerDB controller, CellDB cell) {
         return generateColor(controller, cell, true);
@@ -51,6 +57,13 @@ public class ControllerUtil {
         return pallete;
     }
 
+    public void updateWidget(int widgetId){
+        Intent intent = new Intent(context, ControllerWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = {widgetId};
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
+        context.sendBroadcast(intent);
+    }
 
     /**
      * Populate remote view with controller cells
@@ -58,17 +71,9 @@ public class ControllerUtil {
      * @param rows
      * @return
      */
-    public static RemoteViews drawRemoteController(Context context, RemoteViews rows, ControllerDB controller){
+    public RemoteViews drawRemoteController(RemoteViews rows, ControllerDB controller){
 
         Log.d(TAG, "Drawing remote controller");
-
-        CellFactory<Integer> cellFactory = new CellFactory<>();
-        cellFactory.setDefaultBuilder(new EmptyCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceCellBuilder());
-
         for (final CellRowDB row : controller.getCellRows()) {
             Log.d(TAG, "Rows " + controller.getCellRows().size());
             RemoteViews rowView = new RemoteViews(context.getPackageName(), R.layout.homescreen_widget_row);
@@ -85,7 +90,7 @@ public class ControllerUtil {
     /**
      * Show remote view as notification
      */
-    public static void showNotification(Context context, ControllerDB controller) {
+    public void showNotification(ControllerDB controller) {
 
         Log.d(TAG, "Show controller as notification");
 
@@ -96,7 +101,7 @@ public class ControllerUtil {
             views.setInt(R.id.lou_rows, "setBackgroundColor", controller.getColor());
             views.setViewVisibility(R.id.lbl_title, View.GONE);
 
-            ControllerUtil.drawRemoteController(context, views, controller);
+            drawRemoteController(views, controller);
 
             Notification notification = new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_notification)
@@ -115,12 +120,11 @@ public class ControllerUtil {
      *
      * @param context
      */
-    public static void showNotifications(Context context) {
-        Realm realm = Realm.getDefaultInstance();
+    public void showNotifications(Context context) {
         NotificationManagerCompat.from(context).cancelAll();
         for(ControllerDB controller : realm.where(ControllerDB.class).findAll()) {
             if (controller.isShowNotification()) {
-                ControllerUtil.showNotification(context, controller);
+                showNotification(controller);
             }
         }
         realm.close();
@@ -129,10 +133,9 @@ public class ControllerUtil {
     /**
      * Hide controller notification
      *
-     * @param context
      * @param controller
      */
-    public static void hideNotification(Context context, ControllerDB controller) {
+    public void hideNotification(ControllerDB controller) {
         NotificationManagerCompat.from(context).cancel((int) controller.getId());
     }
 }

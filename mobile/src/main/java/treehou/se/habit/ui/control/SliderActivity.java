@@ -15,7 +15,6 @@ import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.BaseActivity;
 import treehou.se.habit.HabitApplication;
@@ -73,7 +72,7 @@ public class SliderActivity extends BaseActivity {
      */
     public static class SliderFragment extends BaseFragment {
 
-        private SliderCellDB numberCell;
+        private SliderCellDB sliederCell;
         private SeekBar sbrNumber;
         private TextView itemName;
 
@@ -100,10 +99,10 @@ public class SliderActivity extends BaseActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (numberCell != null) {
-                    OHServer server = numberCell.getItem().getServer().toGeneric();
+                if (sliederCell != null) {
+                    OHServer server = sliederCell.getItem().getServer().toGeneric();
                     IServerHandler serverHandler = connectionFactory.createServerHandler(server, getContext());
-                    serverHandler.sendCommand(numberCell.getItem().getName(), "" + seekBar.getProgress());
+                    serverHandler.sendCommand(sliederCell.getItem().getName(), "" + seekBar.getProgress());
                 }
             }
         };
@@ -117,7 +116,7 @@ public class SliderActivity extends BaseActivity {
                 long id = getArguments().getLong(ARG_CELL);
                 logger.d(TAG, "Loading cell " + id);
                 CellDB cell = CellDB.load(realm, id);
-                numberCell = SliderCellDB.getCell(realm, cell);
+                sliederCell = cell.getCellSlider();
             }
         }
 
@@ -128,7 +127,7 @@ public class SliderActivity extends BaseActivity {
 
                 itemName = (TextView) rootView.findViewById(R.id.item_name);
                 sbrNumber = (SeekBar) rootView.findViewById(R.id.sbrNumber);
-                sbrNumber.setMax(numberCell.getMax());
+                sbrNumber.setMax(sliederCell.getMax());
                 sbrNumber.setOnSeekBarChangeListener(sliderListener);
                 return rootView;
             }catch (Exception e){
@@ -141,9 +140,9 @@ public class SliderActivity extends BaseActivity {
         public void onResume() {
             super.onResume();
 
-            OHServer server = numberCell.getItem().getServer().toGeneric();
+            OHServer server = sliederCell.getItem().getServer().toGeneric();
             IServerHandler serverHandler = connectionFactory.createServerHandler(server, getContext());
-            serverHandler.requestItemRx(numberCell.getItem().getName())
+            serverHandler.requestItemRx(sliederCell.getItem().getName())
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(bindToLifecycle())

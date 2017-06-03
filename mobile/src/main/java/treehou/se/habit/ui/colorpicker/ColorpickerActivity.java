@@ -39,7 +39,7 @@ public class ColorpickerActivity extends BaseActivity {
         OHWidget widget = gson.fromJson(jWidget, OHWidget.class);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, LightFragment.newInstance(serverId, widget, color))
                     .commit();
         }

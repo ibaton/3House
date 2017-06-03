@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.colorpicker;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,17 +19,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
+import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.core.db.model.ServerDB;
+import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.mvp.BaseDaggerFragment;
+import treehou.se.habit.ui.colorpicker.LightContract.Presenter;
 import treehou.se.habit.util.ConnectionFactory;
 
-public class LightFragment extends Fragment {
+public class LightFragment extends BaseDaggerFragment<Presenter> implements LightContract.View {
 
     private static final String TAG = "LightFragment";
 
@@ -42,6 +43,7 @@ public class LightFragment extends Fragment {
     @BindView(R.id.pcr_color_h) ColorPicker pcrColor;
 
     @Inject ConnectionFactory connectionFactory;
+    @Inject Presenter presenter;
 
     private Realm realm;
 
@@ -85,6 +87,11 @@ public class LightFragment extends Fragment {
     }
 
     @Override
+    public Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_colorpicker, container, false);
@@ -111,14 +118,13 @@ public class LightFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         realm.close();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    unbinder.unbind();
+        unbinder.unbind();
     }
 
     private ColorPicker.ColorChangeListener colorChangeListener = new ColorPicker.ColorChangeListener() {
@@ -131,18 +137,25 @@ public class LightFragment extends Fragment {
 
                 @Override
                 public void run() {
-                    IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
-
                     hsv[1] *= 100;
                     hsv[2] *= 100;
-                    Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
-                    if (hsv[2] > 5) {
-                        serverHandler.sendCommand(widget.getItem().getName(), String.format(Locale.getDefault(), Constants.COMMAND_COLOR, (int) hsv[0], (int) (hsv[1]), (int) (hsv[2])));
-                    } else {
-                        serverHandler.sendCommand(widget.getItem().getName(), Constants.COMMAND_OFF);
-                    }
+
+                    int hue = (int) hsv[0];
+                    int saturation = (int) hsv[1];
+                    int value = (int) hsv[2];
+
+                    presenter.setHSV(widget.getItem(), hue, saturation, value);
                 }
             }, 300);
         }
     };
+
+
+
+    @Override
+    protected void injectMembers(HasActivitySubcomponentBuilders hasActivitySubcomponentBuilders) {
+        ((LightComponent.Builder) hasActivitySubcomponentBuilders.getFragmentComponentBuilder(LightFragment.class))
+                .fragmentModule(new LightModule(this, getArguments()))
+                .build().injectMembers(this);
+    }
 }

@@ -87,13 +87,15 @@ public class CellButtonConfigFragment extends RxFragment {
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
             cell = CellDB.load(realm, id);
-            buttonCell = ButtonCellDB.getCell(realm, cell);
+            buttonCell = cell.getCellButton();
 
             if (buttonCell == null){
                 buttonCell = new ButtonCellDB();
-                buttonCell.setCell(cell);
                 buttonCell.setCommand(Constants.COMMAND_ON);
                 buttonCell = ButtonCellDB.save(realm, buttonCell);
+
+                cell.setCellButton(buttonCell);
+                CellDB.save(realm, cell);
             }
 
             ItemDB itemDB = buttonCell.getItem();

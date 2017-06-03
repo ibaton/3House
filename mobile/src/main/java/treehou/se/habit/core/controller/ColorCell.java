@@ -22,14 +22,6 @@ public class ColorCell {
         this.colorCellDB = colorCellDB;
     }
 
-    public long getId() {
-        return getDB().getId();
-    }
-
-    public void setId(long id) {
-        getDB().setId(id);
-    }
-
     public OHItem getItem() {
         return null; /*getDB().getItem();*/
     }
@@ -44,14 +36,6 @@ public class ColorCell {
 
     public void setIcon(String iconOn) {
         getDB().setIcon(iconOn);
-    }
-
-    public Cell getCell() {
-        return new Cell(getDB().getCell());
-    }
-
-    public void setCell(Cell cell) {
-        getDB().setCell(cell.getDB());
     }
 
     public String getCommand() {

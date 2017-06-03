@@ -21,10 +21,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.CellRowDB;
@@ -50,6 +53,8 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     @BindView(R.id.lou_btn_holder) LinearLayout louController;
     @BindView(R.id.viw_background) View viwBackground;
 
+    @Inject ControllerUtil controllerUtil;
+
     private ActionBar actionBar;
     private ControllerDB controller;
     private AppCompatActivity activity;
@@ -71,6 +76,7 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ((HabitApplication)getContext().getApplicationContext()).component().inject(this);
         super.onCreate(savedInstanceState);
 
         realm = Realm.getDefaultInstance();
@@ -89,8 +95,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
             long id = getArguments().getLong(ARG_ID);
             controller = ControllerDB.load(realm, id);
         }
-
-        ControllerUtil.showNotification(getActivity(), controller);
 
         setHasOptionsMenu(true);
     }
@@ -175,9 +179,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     }
 
     public void redrawController(){
-
-        ControllerUtil.showNotification(getActivity(), controller);
-
         louController.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         Log.d(TAG, "Drawing controller " + controller.getCellRows().size());
@@ -268,7 +269,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
                 actionBar.setBackgroundDrawable(new ColorDrawable(activity.getResources().getColor(R.color.colorPrimary)));
             }
         }
-        ControllerUtil.showNotification(getActivity(), controller);
 
         super.onDestroyView();
     }

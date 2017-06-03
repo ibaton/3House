@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +13,7 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
@@ -43,6 +46,45 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
         return RxUtil.loadServers();
     }
 
+    @Override
+    public Observable.Transformer<Realm, List<OHServer>> loadAllServersRx() {
+        return observable -> observable.flatMap(realmLocal ->
+                realmLocal.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0).findAllAsync().asObservable())
+                .map(serverDBS -> {
+                    List<OHServer> serverList = new ArrayList<>();
+                    for(ServerDB serverDB : serverDBS){
+                        serverList.add(serverDB.toGeneric());
+                    }
+                    return serverList;
+                })
+                .distinct();
+    }
+
+    @Override
+    public Observable.Transformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context) {
+        return observable -> observable
+                .switchMap(servers -> {
+                    List<Observable<ServerSitemapsResponse>> sitemapResponseRx = new ArrayList<>();
+                    for (OHServer server : servers) {
+                        Observable<ServerSitemapsResponse> serverSitemapsResponseRx = Observable.just(server)
+                                .compose(serverToSitemap(context))
+                                .subscribeOn(Schedulers.io())
+                                .startWith(EMPTY_RESPONSE);
+
+                        sitemapResponseRx.add(serverSitemapsResponseRx);
+                    }
+
+                    return Observable.<ServerSitemapsResponse, List<ServerSitemapsResponse>>combineLatest(sitemapResponseRx, responsesObject -> {
+                        List<ServerSitemapsResponse> responses = new ArrayList<>();
+                        for (Object responseObject : responsesObject) {
+                            ServerSitemapsResponse response = (ServerSitemapsResponse) responseObject;
+                            responses.add(response);
+                        }
+
+                        return responses;
+                    });
+                });
+    }
 
     /**
      * Fetches sitemaps from server.
@@ -68,22 +110,35 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
     }
 
     public Observable.Transformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps() {
-        return observable -> observable.map((Func1<ServerSitemapsResponse, ServerSitemapsResponse>) serverSitemapsResponse -> {
-            List<OHSitemap> sitemaps = new ArrayList<>();
-            for(OHSitemap sitemap : serverSitemapsResponse.getSitemaps()){
-                SitemapDB sitemapDB = realm.realm().where(SitemapDB.class)
-                        .equalTo("name", sitemap.getName())
-                        .equalTo("server.name", serverSitemapsResponse.getServer().getName())
-                        .findFirst();
+        return observable -> observable.map((Func1<ServerSitemapsResponse, ServerSitemapsResponse>) this::filterDisplaySitemaps);
+    }
 
-                if(sitemapDB == null || sitemapDB.getSettingsDB() == null
-                        || sitemapDB.getSettingsDB().isDisplay()){
-
-                    sitemaps.add(sitemap);
-                }
+    @Override
+    public Observable.Transformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList() {
+        return observable -> observable.map((Func1<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>>) serverSitemapsResponses -> {
+            List<ServerSitemapsResponse> responses = new ArrayList<>();
+            for (ServerSitemapsResponse sitemapsResponse : serverSitemapsResponses){
+                responses.add(filterDisplaySitemaps(sitemapsResponse));
             }
-            return new ServerSitemapsResponse(serverSitemapsResponse.getServer(), sitemaps, serverSitemapsResponse.getError());
+            return responses;
         });
+    }
+
+    private ServerSitemapsResponse filterDisplaySitemaps(ServerSitemapsResponse response){
+        List<OHSitemap> sitemaps = new ArrayList<>();
+        for(OHSitemap sitemap : response.getSitemaps()){
+            SitemapDB sitemapDB = realm.realm().where(SitemapDB.class)
+                    .equalTo("name", sitemap.getName())
+                    .equalTo("server.name", response.getServer().getName())
+                    .findFirst();
+
+            if(sitemapDB == null || sitemapDB.getSettingsDB() == null
+                    || sitemapDB.getSettingsDB().isDisplay()){
+
+                sitemaps.add(sitemap);
+            }
+        }
+        return new ServerSitemapsResponse(response.getServer(), sitemaps, response.getError());
     }
 
     private static class SitemapResponse{
