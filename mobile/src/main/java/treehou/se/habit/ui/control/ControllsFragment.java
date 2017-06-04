@@ -17,10 +17,13 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.BaseFragment;
@@ -39,7 +42,7 @@ public class ControllsFragment extends BaseFragment {
     @BindView(R.id.empty) View viwEmpty;
     @BindView(R.id.fab_add) FloatingActionButton fabAdd;
 
-    private Realm realm;
+    @Inject Realm realm;
     private Unbinder unbinder;
 
     public static ControllsFragment newInstance() {
@@ -53,9 +56,8 @@ public class ControllsFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ((HabitApplication)getContext().getApplicationContext()).component().inject(this);
         super.onCreate(savedInstanceState);
-
-        realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -102,9 +104,8 @@ public class ControllsFragment extends BaseFragment {
                                         mAdapter.removeItem(controllerHolder.getAdapterPosition());
 
                                         final long id = controller.getId();
-                                        realm.executeTransactionAsync(realm -> {
-                                            ControllerDB controller1 = ControllerDB.load(realm, id);
-                                            controller1.deleteFromRealm();
+                                        realm.executeTransaction(realm -> {
+                                            realm.where(ControllerDB.class).equalTo("id", id).findAll().deleteAllFromRealm();
                                         });
                                         break;
                                 }

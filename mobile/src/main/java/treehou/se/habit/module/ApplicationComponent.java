@@ -16,6 +16,7 @@ import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
 import treehou.se.habit.ui.colorpicker.LightFragment;
 import treehou.se.habit.ui.control.CommandService;
 import treehou.se.habit.ui.control.ControlFragment;
+import treehou.se.habit.ui.control.ControllsFragment;
 import treehou.se.habit.ui.control.EditControlFragment;
 import treehou.se.habit.ui.control.EditControllerSettingsActivity;
 import treehou.se.habit.ui.control.SliderActivity;
@@ -41,6 +42,7 @@ import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 public interface ApplicationComponent {
     void inject(HabitApplication application);
     void inject(BaseFragment fragment);
+    void inject(ControllsFragment fragment);
     void inject(ColorpickerActivity activity);
     void inject(BaseActivity activity);
     void inject(ControllerWidgetConfigureActivity activity);

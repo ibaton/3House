@@ -133,9 +133,9 @@ public class ControllerUtil {
     /**
      * Hide controller notification
      *
-     * @param controller
+     * @param controllerID
      */
-    public void hideNotification(ControllerDB controller) {
-        NotificationManagerCompat.from(context).cancel((int) controller.getId());
+    public void hideNotification(int controllerID) {
+        NotificationManagerCompat.from(context).cancel(controllerID);
     }
 }

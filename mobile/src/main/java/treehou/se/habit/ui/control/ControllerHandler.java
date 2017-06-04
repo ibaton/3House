@@ -1,21 +1,24 @@
 package treehou.se.habit.ui.control;
 
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import io.realm.OrderedCollectionChangeSet;
-import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import rx.Observable;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 public class ControllerHandler {
 
     private Realm realm;
     private ControllerUtil controllerUtil;
+    private Set<Long> notificationIds = new HashSet<>();
 
-    private OrderedRealmCollectionChangeListener<RealmResults<ControllerDB>>
+    private RealmChangeListener<RealmResults<ControllerDB>>
             controllerDBListener = this::handleControllerUpdates;
 
     @SuppressWarnings("FieldCanBeLocal") // Needed for listener
@@ -33,29 +36,22 @@ public class ControllerHandler {
         controllers.addChangeListener(controllerDBListener);
     }
 
-    private void handleControllerUpdates(RealmResults<ControllerDB> controllerDBS, OrderedCollectionChangeSet orderedCollectionChangeSet){
-        if(orderedCollectionChangeSet == null || controllerDBS.size() == 0) return;
+    private void handleControllerUpdates(RealmResults<ControllerDB> controllerDBS){
+        Set<Long> updateNotificationIds = new HashSet<>();
+        Observable.from(controllerDBS).map(ControllerDB::getId).subscribe(updateNotificationIds::add);
 
-        List<ControllerDB> deletions = getControllers(controllerDBS, orderedCollectionChangeSet.getDeletions());
-        List<ControllerDB> changes = getControllers(controllerDBS, orderedCollectionChangeSet.getChanges());
-        List<ControllerDB> insertions = getControllers(controllerDBS, orderedCollectionChangeSet.getInsertions());
+        Set<Long> notificationsDeleted = new HashSet<>(notificationIds);
+        notificationsDeleted.removeAll(updateNotificationIds);
 
-        deleteNotifications(deletions);
-        updateNotifications(changes);
-        updateNotifications(insertions);
+        deleteNotifications(notificationsDeleted);
+        updateNotifications(controllerDBS);
+
+        notificationIds = updateNotificationIds;
     }
 
-    private List<ControllerDB> getControllers(RealmResults<ControllerDB> controllerDBs, int[] locations){
-        List<ControllerDB> controllerList = new ArrayList<>();
-        for(int insertionIndex : locations){
-            controllerList.add(controllerDBs.get(insertionIndex));
-        }
-        return controllerList;
-    }
-
-    private void deleteNotifications(List<ControllerDB> controllerDBs){
-        for(ControllerDB controllerDB : controllerDBs){
-            controllerUtil.hideNotification(controllerDB);
+    private void deleteNotifications(Collection<Long> controllerIds){
+        for(long controllerDbId : controllerIds){
+            controllerUtil.hideNotification((int) controllerDbId);
         }
     }
 
@@ -64,7 +60,7 @@ public class ControllerHandler {
             if(controllerDB.isShowNotification()) {
                 controllerUtil.showNotification(controllerDB);
             } else {
-                controllerUtil.hideNotification(controllerDB);
+                controllerUtil.hideNotification((int) controllerDB.getId());
             }
         }
     }
