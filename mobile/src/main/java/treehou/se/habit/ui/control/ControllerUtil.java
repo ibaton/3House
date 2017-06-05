@@ -95,7 +95,7 @@ public class ControllerUtil {
         Log.d(TAG, "Show controller as notification");
 
         if(controller.isShowNotification() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.controller_widget);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.controller_widget_notification);
             views.removeAllViews(R.id.lou_rows);
             views.setInt(R.id.lou_widget, "setBackgroundColor", controller.getColor());
             views.setInt(R.id.lou_rows, "setBackgroundColor", controller.getColor());
@@ -108,7 +108,9 @@ public class ControllerUtil {
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setContent(views)
+                    .setContentTitle(controller.getName())
+                    .setContentText(controller.getName())
+                    .setCustomBigContentView(views)
                     .build();
 
             NotificationManagerCompat.from(context).notify((int) controller.getId(), notification);
