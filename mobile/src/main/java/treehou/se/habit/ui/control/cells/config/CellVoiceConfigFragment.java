@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.config;
+package treehou.se.habit.ui.control.cells.config;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -84,13 +84,12 @@ public class CellVoiceConfigFragment extends RxFragment {
             cell = CellDB.load(realm, id);
             voiceCell = cell.getCellVoice();
             if(voiceCell == null){
-                realm.beginTransaction();
-                voiceCell = new VoiceCellDB();
-                voiceCell = realm.copyToRealm(voiceCell);
-                realm.commitTransaction();
-
-                cell.setCellVoice(voiceCell);
-                CellDB.save(realm, cell);
+                realm.executeTransaction(realm -> {
+                    voiceCell = new VoiceCellDB();
+                    voiceCell = realm.copyToRealm(voiceCell);
+                    cell.setCellVoice(voiceCell);
+                    realm.copyToRealmOrUpdate(cell);
+                });
             }
 
             ItemDB itemDB = voiceCell.getItem();

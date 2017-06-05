@@ -1,9 +1,8 @@
-package treehou.se.habit.ui.control.config;
+package treehou.se.habit.ui.control.cells.config;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +27,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback;
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse;
 import treehou.se.habit.R;
-import treehou.se.habit.core.controller.Cell;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -92,13 +87,12 @@ public class CellIncDecConfigFragment extends RxFragment {
             incDecCell = cell.getCellIncDec();
 
             if (incDecCell == null) {
-                realm.beginTransaction();
-                incDecCell = new IncDecCellDB();
-                incDecCell = realm.copyToRealm(incDecCell);
-                realm.commitTransaction();
-
-                cell.setCellIncDec(incDecCell);
-                CellDB.save(realm, cell);
+                realm.executeTransaction(realm -> {
+                    incDecCell = new IncDecCellDB();
+                    incDecCell = realm.copyToRealm(incDecCell);
+                    cell.setCellIncDec(incDecCell);
+                    realm.copyToRealmOrUpdate(cell);
+                });
             }
 
             ItemDB itemDB = incDecCell.getItem();

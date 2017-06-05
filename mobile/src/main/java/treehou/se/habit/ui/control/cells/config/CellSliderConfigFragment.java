@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.config;
+package treehou.se.habit.ui.control.cells.config;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -80,13 +80,12 @@ public class CellSliderConfigFragment extends BaseFragment {
             sliderCell = cell.getCellSlider();
 
             if(sliderCell == null){
-                realm.beginTransaction();
-                sliderCell = new SliderCellDB();
-                sliderCell = realm.copyToRealm(sliderCell);
-                realm.commitTransaction();
-
-                cell.setCellSlider(sliderCell);
-                CellDB.save(realm, cell);
+                realm.executeTransaction(realm -> {
+                    sliderCell = new SliderCellDB();
+                    sliderCell = realm.copyToRealm(sliderCell);
+                    cell.setCellSlider(sliderCell);
+                    realm.copyToRealmOrUpdate(cell);
+                });
             }
 
             ItemDB itemDB = sliderCell.getItem();

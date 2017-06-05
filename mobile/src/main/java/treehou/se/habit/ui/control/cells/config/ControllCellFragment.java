@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.config;
+package treehou.se.habit.ui.control.cells.config;
 
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -20,7 +20,7 @@ import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
-import treehou.se.habit.ui.control.config.cells.CellColorConfigFragment;
+import treehou.se.habit.ui.control.cells.config.cells.CellColorConfigFragment;
 
 public class ControllCellFragment extends Fragment implements ColorDialog.ColorDialogCallback {
 
@@ -116,7 +116,7 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
 
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             Fragment fragment = null;
-            switch (cell.getType()) {
+            switch (cellType) {
                 case CellDB.TYPE_BUTTON :
                     Log.d(TAG,"Loading button fragment.");
                     fragment = CellButtonConfigFragment.newInstance(cell);

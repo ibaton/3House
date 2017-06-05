@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.builders;
+package treehou.se.habit.ui.control.cells.builders;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -35,7 +35,6 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         View cellView = inflater.inflate(R.layout.cell_button, null);
         ButterKnife.bind(this, cellView);
 
-        Realm realm = Realm.getDefaultInstance();
         final VoiceCellDB voiceCell = cell.getCellVoice();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
@@ -74,7 +73,6 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
     @Override
     public RemoteViews buildRemote(final Context context, ControllerDB controller, CellDB cell) {
-        Realm realm = Realm.getDefaultInstance();
         final VoiceCellDB voiceCell = cell.getCellVoice();
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);

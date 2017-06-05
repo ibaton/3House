@@ -225,7 +225,7 @@ ADDED from AndroidManifest.xml:48:9
 		ADDED from AndroidManifest.xml:50:13
 	android:name
 		ADDED from AndroidManifest.xml:49:13
-activity#treehou.se.habit.ui.control.config.ColorpickerActivity
+activity#treehou.se.habit.ui.control.cells.config.ColorpickerActivity
 ADDED from AndroidManifest.xml:52:9
 	android:label
 		ADDED from AndroidManifest.xml:54:13

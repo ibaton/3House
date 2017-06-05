@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.builders;
+package treehou.se.habit.ui.control.cells.builders;
 
 import android.content.Context;
 import android.graphics.PorterDuff;

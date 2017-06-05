@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.config.cells;
+package treehou.se.habit.ui.control.cells.config.cells;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -21,7 +21,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHItem;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;

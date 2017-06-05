@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.config;
+package treehou.se.habit.ui.control.cells.config;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -90,12 +90,13 @@ public class CellButtonConfigFragment extends RxFragment {
             buttonCell = cell.getCellButton();
 
             if (buttonCell == null){
-                buttonCell = new ButtonCellDB();
-                buttonCell.setCommand(Constants.COMMAND_ON);
-                buttonCell = ButtonCellDB.save(realm, buttonCell);
-
-                cell.setCellButton(buttonCell);
-                CellDB.save(realm, cell);
+                realm.executeTransaction(realm -> {
+                    buttonCell = new ButtonCellDB();
+                    buttonCell.setCommand(Constants.COMMAND_ON);
+                    buttonCell = realm.copyToRealm(buttonCell);
+                    cell.setCellButton(buttonCell);
+                    realm.copyToRealmOrUpdate(cell);
+                });
             }
 
             ItemDB itemDB = buttonCell.getItem();

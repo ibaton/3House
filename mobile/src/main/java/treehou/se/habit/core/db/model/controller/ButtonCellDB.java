@@ -35,11 +35,4 @@ public class ButtonCellDB extends RealmObject {
     public void setCommand(String command) {
         this.command = command;
     }
-
-    public static ButtonCellDB save(Realm realm, ButtonCellDB item){
-        realm.beginTransaction();
-        ButtonCellDB buttonCellDB = realm.copyToRealmOrUpdate(item);
-        realm.commitTransaction();
-        return buttonCellDB;
-    }
 }

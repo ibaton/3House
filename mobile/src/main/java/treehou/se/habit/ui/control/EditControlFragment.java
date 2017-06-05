@@ -3,7 +3,6 @@ package treehou.se.habit.ui.control;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,13 +33,7 @@ import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.CellRowDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
-import treehou.se.habit.ui.control.config.ControllCellFragment;
-import treehou.se.habit.ui.control.config.cells.ButtonConfigCellBuilder;
-import treehou.se.habit.ui.control.config.cells.ColorConfigCellBuilder;
-import treehou.se.habit.ui.control.config.cells.DefaultConfigCellBuilder;
-import treehou.se.habit.ui.control.config.cells.IncDecConfigCellBuilder;
-import treehou.se.habit.ui.control.config.cells.SliderConfigCellBuilder;
-import treehou.se.habit.ui.control.config.cells.VoiceConfigCellBuilder;
+import treehou.se.habit.ui.control.cells.config.ControllCellFragment;
 import treehou.se.habit.ui.homescreen.ControllerWidget;
 
 public class EditControlFragment extends Fragment implements ColorDialog.ColorDialogCallback {
@@ -54,11 +48,11 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
     @BindView(R.id.viw_background) View viwBackground;
 
     @Inject ControllerUtil controllerUtil;
+    @Inject @Named("config") CellFactory<Integer> cellFactory;
 
     private ActionBar actionBar;
     private ControllerDB controller;
     private AppCompatActivity activity;
-    private CellFactory<Integer> cellFactory;
 
     private Realm realm;
     private Unbinder unbinder;
@@ -82,14 +76,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         realm = Realm.getDefaultInstance();
 
         activity = (AppCompatActivity) getActivity();
-
-        cellFactory = new CellFactory<>();
-        cellFactory.setDefaultBuilder(new DefaultConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_COLOR, new ColorConfigCellBuilder());
 
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_ID);

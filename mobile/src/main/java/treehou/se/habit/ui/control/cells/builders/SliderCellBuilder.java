@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.control.builders;
+package treehou.se.habit.ui.control.cells.builders;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,13 +15,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.core.db.model.controller.SliderCellDB;
 import treehou.se.habit.ui.util.ViewHelper;
+import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerUtil;
@@ -34,6 +34,12 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
     @BindView(R.id.img_icon_button) ImageView imgIcon;
     @BindView(R.id.sbrNumber) SeekBar sbrNumber;
     @BindView(R.id.viw_background) View viwBackground;
+
+    private ConnectionFactory connectionFactory;
+
+    public SliderCellBuilder(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
 
     public View build(final Context context, ControllerDB controller, final CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -65,9 +71,9 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
                     return;
                 }
 
-                /*OHServer server = sliderCell.getItem().getServer().toGeneric();
-                IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                serverHandler.sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress()); TODO fix*/
+                OHServer server = sliderCell.getItem().getServer().toGeneric();
+                IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
+                serverHandler.sendCommand(sliderCell.getItem().getName(), ""+seekBar.getProgress());
             }
         });
         realm.close();

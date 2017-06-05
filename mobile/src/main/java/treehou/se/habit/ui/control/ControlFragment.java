@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.mattyork.colours.Colour;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.realm.Realm;
 import treehou.se.habit.HabitApplication;
@@ -30,7 +31,7 @@ public class ControlFragment extends Fragment {
     private LinearLayout louController;
 
     private ControllerDB controller;
-    @Inject CellFactory<Integer> cellFactory;
+    @Inject @Named("display") CellFactory<Integer> cellFactory;
 
     private ActionBar actionBar;
     private AppCompatActivity activity;

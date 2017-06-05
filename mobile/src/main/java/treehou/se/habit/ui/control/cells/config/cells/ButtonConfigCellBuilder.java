@@ -1,46 +1,58 @@
-package treehou.se.habit.ui.control.config.cells;
+package treehou.se.habit.ui.control.cells.config.cells;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.RemoteViews;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import treehou.se.habit.R;
+import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 import treehou.se.habit.core.db.model.controller.CellDB;
-import treehou.se.habit.core.db.model.controller.ColorCellDB;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.control.CellFactory;
+import treehou.se.habit.ui.control.ControllerUtil;
 
-public class ColorConfigCellBuilder implements CellFactory.CellBuilder {
+public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
 
-    private static final String TAG = "ColorConfigCellBuilder";
+    private static final String TAG = "ButtonConfigCellBuilder";
 
-    @BindView(R.id.img_icon) ImageView imgIcon;
+    @BindView(R.id.img_icon_button) ImageButton imgIcon;
 
-    public View build(Context context, ControllerDB controller, CellDB cell){
+    public View build(final Context context, ControllerDB controller, CellDB cell){
         LayoutInflater inflater = LayoutInflater.from(context);
         View cellView = inflater.inflate(R.layout.cell_conf_button, null);
         ButterKnife.bind(this, cellView);
 
         Realm realm = Realm.getDefaultInstance();
-        ColorCellDB colorCell = cell.getCellColor();
+        final ButtonCellDB buttonCell = cell.getCellButton();
 
-        Drawable icon = Util.getIconDrawable(context, colorCell.getIcon());
+        int[] pallete = ControllerUtil.generateColor(controller, cell);
+
+        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+
+        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+
+        Log.d(TAG, "Build: Button icon " + buttonCell.getIcon());
+
+        Drawable icon = Util.getIconDrawable(context, buttonCell.getIcon());
         if(icon != null) {
             imgIcon.setImageDrawable(icon);
         }
-        imgIcon.getBackground().setColorFilter(cell.getColor(), PorterDuff.Mode.MULTIPLY);
         realm.close();
 
         return cellView;
     }
+
+
 
     @Override
     public RemoteViews buildRemote(Context context, ControllerDB controller, CellDB cell) {
