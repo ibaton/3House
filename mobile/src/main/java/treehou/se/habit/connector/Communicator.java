@@ -22,6 +22,7 @@ import de.duenndns.ssl.MemorizingTrustManager;
 import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -60,6 +61,7 @@ public class Communicator {
 
         final IServerHandler serverHandler = new Connector.ServerHandler(server, context, null, null, null);
         serverHandler.requestItemRx(itemName)
+                .subscribeOn(Schedulers.io())
                 .doOnNext(newItem -> Log.d(TAG, "Item state " + newItem.getState() + " " + newItem.getType()))
                 .subscribe(newItem -> {
                     String state = newItem.getState();
@@ -82,9 +84,7 @@ public class Communicator {
                             }
                         }
                     }
-                }, throwable -> {
-                    Log.d(TAG, "incDec onError");
-                });
+                }, throwable -> Log.d(TAG, "incDec onError"));
     }
 
     public Picasso buildPicasso(Context context, final OHServer server){

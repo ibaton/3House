@@ -52,6 +52,7 @@ public class CellIncDecConfigFragment extends RxFragment {
     @BindView(R.id.btn_set_icon) ImageButton btnSetIcon;
 
     @Inject ConnectionFactory connectionFactory;
+    Realm realm;
 
     private ArrayAdapter<OHItem> itemAdapter;
     private ArrayList<OHItem> items = new ArrayList<>();
@@ -59,7 +60,6 @@ public class CellIncDecConfigFragment extends RxFragment {
     private IncDecCellDB incDecCell;
     private CellDB cell;
     private OHItem item;
-    private Realm realm;
     private Unbinder unbinder;
 
     public static CellIncDecConfigFragment newInstance(CellDB cell) {
@@ -129,7 +129,7 @@ public class CellIncDecConfigFragment extends RxFragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
-        sprItems.post(() -> sprItems.setAdapter(itemAdapter));
+        sprItems.setAdapter(itemAdapter);
         List<ServerDB> servers = realm.where(ServerDB.class).findAll();
         items.clear();
 
@@ -140,7 +140,7 @@ public class CellIncDecConfigFragment extends RxFragment {
         }
 
         if(incDecCell.getItem() != null) {
-            //items.add(incDecCell.getItem());
+            items.add(incDecCell.getItem().toGeneric());
         }
         for(final ServerDB serverDB : servers) {
             final OHServer server = serverDB.toGeneric();
@@ -151,7 +151,7 @@ public class CellIncDecConfigFragment extends RxFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newItems -> {
-                        this.items.addAll(items);
+                        this.items.addAll(newItems);
                         itemAdapter.notifyDataSetChanged();
                     });
         }

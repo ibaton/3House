@@ -166,6 +166,7 @@ public class CellButtonConfigFragment extends RxFragment {
             final OHServer server = serverDB.toGeneric();
             IServerHandler serverHandler = connectionFactory.createServerHandler(server, getActivity());
             serverHandler.requestItemsRx()
+                    .map(this::filterItems)
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
