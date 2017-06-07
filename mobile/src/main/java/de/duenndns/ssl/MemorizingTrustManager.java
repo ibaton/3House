@@ -650,10 +650,6 @@ public class MemorizingTrustManager implements X509TrustManager {
 		final Context context = master.getApplicationContext();
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			@SuppressWarnings("deprecation")
-			// Use an extra identifier for the legacy build notification, so
-			// that we suppress the deprecation warning. We will latter assign
-			// this to the correct identifier.
 			Notification n  = new Notification(android.R.drawable.ic_lock_lock,
 					mtmNotification,
 					currentMillis);

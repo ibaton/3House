@@ -24,12 +24,11 @@
 package de.duenndns.ssl;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.*;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -37,22 +36,31 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import treehou.se.habit.BaseActivity;
 import treehou.se.habit.R;
 
-public class MemorizingActivity extends Activity
-		implements OnClickListener,OnCancelListener {
+public class MemorizingActivity extends BaseActivity {
+
+	@BindView(R.id.title) TextView title;
+	@BindView(R.id.message) TextView content;
+	private Unbinder unbinder;
+
+	private Handler handler = new Handler();
 
 	private static final String TAG = MemorizingActivity.class.getSimpleName();
 	int decisionId;
 	byte[] cert;
 	String hostname;
 
-	AlertDialog dialog;
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_memorizing);
+		unbinder = ButterKnife.bind(this);
 	}
 
 	@Override
@@ -65,21 +73,14 @@ public class MemorizingActivity extends Activity
 		String message = i.getStringExtra(MemorizingTrustManager.DECISION_INTENT_MESSAGE);
 		cert = i.getByteArrayExtra(MemorizingTrustManager.DECISION_INTENT_CERT);
 
-		Log.d(TAG,  "onResume with host " + hostname + " : " + titleId);
-		dialog = new AlertDialog.Builder(this).setTitle(titleId)
-			.setMessage(message)
-			.setPositiveButton(R.string.mtm_decision_always, this)
-			.setNegativeButton(R.string.mtm_decision_abort, this)
-			.setOnCancelListener(this)
-			.create();
-		dialog.show();
+		title.setText(titleId);
+		content.setText(message);
 	}
 
 	@Override
-	protected void onPause() {
-		if (dialog.isShowing())
-			dialog.dismiss();
-		super.onPause();
+	protected void onDestroy() {
+		unbinder.unbind();
+		super.onDestroy();
 	}
 
 	void sendDecision(byte[] bytes, String hostname, int decision) {
@@ -93,27 +94,24 @@ public class MemorizingActivity extends Activity
 		} catch (CertificateException e) {
 			e.printStackTrace();
 		}
+
 		finish();
+
+		Intent i = getBaseContext().getPackageManager().
+				getLaunchIntentForPackage(getBaseContext().getPackageName());
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(i);
 	}
 
-	// react on AlertDialog button press
-	public void onClick(DialogInterface dialog, int btnId) {
-		int decision;
-		dialog.dismiss();
-		switch (btnId) {
-		case DialogInterface.BUTTON_POSITIVE:
-			decision = MTMDecision.DECISION_ALWAYS;
-			break;
-		case DialogInterface.BUTTON_NEUTRAL:
-			decision = MTMDecision.DECISION_ONCE;
-			break;
-		default:
-			decision = MTMDecision.DECISION_ABORT;
-		}
+	@OnClick(R.id.accept)
+	void acceptAlways(){
+		int decision = MTMDecision.DECISION_ALWAYS;
 		sendDecision(cert, hostname, decision);
 	}
 
-	public void onCancel(DialogInterface dialog) {
-		sendDecision(cert, hostname, MTMDecision.DECISION_ABORT);
+	@OnClick(R.id.abort)
+	void abort(){
+		int decision = MTMDecision.DECISION_ABORT;
+		sendDecision(cert, hostname, decision);
 	}
 }
