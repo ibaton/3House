@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.tasker.reciever.IFireReciever;
-import treehou.se.habit.tasker.reciever.OpenSitemapReciever;
 
 public class OpenSitemapBoundleManager {
 
@@ -20,7 +19,6 @@ public class OpenSitemapBoundleManager {
 
         final Bundle result = new Bundle();
         result.putInt(IFireReciever.BUNDLE_EXTRA_TYPE, TYPE_COMMAND);
-        result.putLong(OpenSitemapReciever.BUNDLE_EXTRA_SITEMAP, sitemap.getId());
 
         return result;
     }

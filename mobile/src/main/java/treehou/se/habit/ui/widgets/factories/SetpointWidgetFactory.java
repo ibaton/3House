@@ -13,12 +13,19 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class SetpointWidgetFactory implements IWidgetFactory {
 
+    private ConnectionFactory connectionFactory;
+
+    public SetpointWidgetFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     @Override
     public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
-        return new SetpointWidgetHolder(context, factory, server, page, widget, parent);
+        return new SetpointWidgetHolder(context, connectionFactory, factory, server, page, widget, parent);
     }
 
     public static class SetpointWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -29,13 +36,15 @@ public class SetpointWidgetFactory implements IWidgetFactory {
         private TextView lblValue;
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
+        private ConnectionFactory connectionFactory;
         private Context context;
         private OHServer server;
 
-        public SetpointWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        public SetpointWidgetHolder(Context context, ConnectionFactory connectionFactory, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
 
             this.context = context;
             this.server = server;
+            this.connectionFactory = connectionFactory;
 
             itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_setpoint, null);
             btnDecrease = (Button) itemView.findViewById(R.id.btn_down);
@@ -67,19 +76,8 @@ public class SetpointWidgetFactory implements IWidgetFactory {
                 lblValue.setText(widget.getItem().getFormatedValue());
             }
 
-            btnIncrease.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setValueRelative(widget, widget.getStep());
-                }
-            });
-
-            btnDecrease.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setValueRelative(widget, -widget.getStep());
-                }
-            });
+            btnIncrease.setOnClickListener(v -> setValueRelative(widget, widget.getStep()));
+            btnDecrease.setOnClickListener(v -> setValueRelative(widget, -widget.getStep()));
 
             baseHolder.update(widget);
         }
@@ -115,8 +113,8 @@ public class SetpointWidgetFactory implements IWidgetFactory {
                         lblValue.setText(widget.getItem().getFormatedValue());
                     }
 
-                    /*IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                    serverHandler.sendCommand(widget.getItem().getName(), String.valueOf(value)); TODO fix*/
+                    IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
+                    serverHandler.sendCommand(widget.getItem().getName(), String.valueOf(value));
                 } catch (Exception e) {}
             }
         }

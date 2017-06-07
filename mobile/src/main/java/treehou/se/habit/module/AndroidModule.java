@@ -107,10 +107,10 @@ public class AndroidModule {
     }
 
     @Provides
-    public WidgetFactory provideWidgetFactory(SliderWidgetFactory sliderWidgetFactory,
+    public WidgetFactory provideWidgetFactory(ConnectionFactory connectionFactory, SliderWidgetFactory sliderWidgetFactory,
                   SwitchWidgetFactory switchWidgetFactory, ColorpickerWidgetFactory provideColorWidgetFactory){
 
-        WidgetFactory factory = new WidgetFactory();
+        WidgetFactory factory = new WidgetFactory(connectionFactory);
         factory.addWidgetFactory(OHWidget.WIDGET_TYPE_SLIDER, sliderWidgetFactory);
         factory.addWidgetFactory(OHWidget.WIDGET_TYPE_COLORPICKER, provideColorWidgetFactory);
         factory.addWidgetFactory(OHWidget.WIDGET_TYPE_SWITCH, switchWidgetFactory);

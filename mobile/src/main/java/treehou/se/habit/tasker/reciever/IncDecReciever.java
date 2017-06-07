@@ -4,10 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
+import treehou.se.habit.util.Util;
 
 public class IncDecReciever implements IFireReciever {
 
@@ -19,6 +22,8 @@ public class IncDecReciever implements IFireReciever {
     public static final String BUNDLE_EXTRA_MIN     = "treehou.se.habit.extra.MIN";
     public static final String BUNDLE_EXTRA_MAX     = "treehou.se.habit.extra.MAX";
     public static final String BUNDLE_EXTRA_ITEM    = "treehou.se.habit.extra.ITEM";
+
+    @Inject Communicator communicator;
 
     public boolean isBundleValid(Bundle bundle) {
         if (null == bundle) {
@@ -42,6 +47,7 @@ public class IncDecReciever implements IFireReciever {
 
     @Override
     public boolean fire(Context context, Bundle bundle) {
+        Util.getApplicationComponent(context).inject(this);
 
         if (isBundleValid(bundle)) {
             final int itemId = bundle.getInt(BUNDLE_EXTRA_ITEM);
@@ -55,7 +61,7 @@ public class IncDecReciever implements IFireReciever {
             Realm realm = Realm.getDefaultInstance();
             ItemDB item = ItemDB.load(realm, itemId);
             if(item != null){
-                Communicator.instance(context).incDec(item.getServer().toGeneric(), item.getName(), value, min, max);
+                communicator.incDec(item.getServer().toGeneric(), item.getName(), value, min, max);
                 Log.d(TAG, "Sent sendCommand " + value + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");

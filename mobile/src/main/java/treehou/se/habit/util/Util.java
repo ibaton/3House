@@ -149,6 +149,10 @@ public class Util {
         return ((HabitApplication) fragment.getContext().getApplicationContext()).component();
     }
 
+    public static ApplicationComponent getApplicationComponent(Context context) {
+        return ((HabitApplication) context.getApplicationContext()).component();
+    }
+
     /**
      * Create label text correctly formated to display values.
      *

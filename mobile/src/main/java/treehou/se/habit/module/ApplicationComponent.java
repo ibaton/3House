@@ -10,6 +10,8 @@ import treehou.se.habit.service.wear.VoiceActionService;
 import treehou.se.habit.tasker.items.CommandActionFragment;
 import treehou.se.habit.tasker.items.IncDecActionFragment;
 import treehou.se.habit.tasker.items.SwitchActionFragment;
+import treehou.se.habit.tasker.reciever.CommandReciever;
+import treehou.se.habit.tasker.reciever.IncDecReciever;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.bindings.BindingsFragment;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
@@ -69,4 +71,6 @@ public interface ApplicationComponent {
     void inject(CommandService service);
     void inject(RestartBroadcastReceiver receiver);
     void inject(ControllerWidget provider);
+    void inject(CommandReciever receiver);
+    void inject(IncDecReciever receiver);
 }

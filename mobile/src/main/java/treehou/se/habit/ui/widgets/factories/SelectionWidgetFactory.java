@@ -18,12 +18,19 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class SelectionWidgetFactory implements IWidgetFactory {
 
+    private ConnectionFactory connectionFactory;
+
+    public SelectionWidgetFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     @Override
     public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
-        return new SelectWidgetHolder(context, factory, server, page, widget, parent);
+        return new SelectWidgetHolder(context, connectionFactory, factory, server, page, widget, parent);
     }
 
     public static class SelectWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -35,15 +42,17 @@ public class SelectionWidgetFactory implements IWidgetFactory {
         private WidgetFactory factory;
         private OHServer server;
         private Context context;
+        private ConnectionFactory connectionFactory;
 
         private int lastPosition = -1;
 
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
 
-        public SelectWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        public SelectWidgetHolder(Context context, ConnectionFactory connectionFactory, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
             this.factory = factory;
             this.context = context;
             this.server = server;
+            this.connectionFactory = connectionFactory;
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
@@ -92,8 +101,8 @@ public class SelectionWidgetFactory implements IWidgetFactory {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             if(position != lastPosition) {
                                 OHMapping mapping = mappings.get(position);
-                                /*final IServerHandler serverHandler = new Connector.ServerHandler(server, context);
-                                serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand()); TODO fix*/
+                                final IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
+                                serverHandler.sendCommand(widget.getItem().getName(), mapping.getCommand());
                                 lastPosition = position;
                             }
                         }

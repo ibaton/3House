@@ -20,16 +20,20 @@ import treehou.se.habit.ui.widgets.factories.SetpointWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.TextWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.VideoWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.WebWidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class WidgetFactory {
 
     private static final String TAG = "WidgetFactory";
 
-    private IWidgetFactory defaultBuilder = new TextWidgetFactory();
+    private IWidgetFactory defaultBuilder;
 
     private Map<String, IWidgetFactory> builders = new HashMap<>();
 
-    public WidgetFactory(){
+    public WidgetFactory(ConnectionFactory connectionFactory){
+
+        TextWidgetFactory textWidgetFactory = new TextWidgetFactory(connectionFactory);
+        defaultBuilder = textWidgetFactory;
 
         // Populate factory
         builders.put(OHWidget.WIDGET_TYPE_FRAME, new FrameWidgetFactory());
@@ -37,9 +41,9 @@ public class WidgetFactory {
         builders.put(OHWidget.WIDGET_TYPE_IMAGE, new ImageWidgetFactory());
         builders.put(OHWidget.WIDGET_TYPE_VIDEO, new VideoWidgetFactory());
         builders.put(OHWidget.WIDGET_TYPE_WEB, new WebWidgetFactory());
-        builders.put(OHWidget.WIDGET_TYPE_SELECTION, new SelectionWidgetFactory());
-        builders.put(OHWidget.WIDGET_TYPE_SETPOINT, new SetpointWidgetFactory());
-        builders.put(OHWidget.WIDGET_TYPE_TEXT, new TextWidgetFactory());
+        builders.put(OHWidget.WIDGET_TYPE_SELECTION, new SelectionWidgetFactory(connectionFactory));
+        builders.put(OHWidget.WIDGET_TYPE_SETPOINT, new SetpointWidgetFactory(connectionFactory));
+        builders.put(OHWidget.WIDGET_TYPE_TEXT, textWidgetFactory);
         builders.put(OHWidget.WIDGET_TYPE_GROUP, new GroupWidgetFactory());
     }
 

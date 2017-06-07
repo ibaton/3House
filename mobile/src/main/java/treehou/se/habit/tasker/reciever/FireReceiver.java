@@ -18,7 +18,6 @@ public final class FireReceiver extends BroadcastReceiver {
     private static final Map<Integer, IFireReciever> recievers = new HashMap<>();
     static {
         recievers.put(CommandReciever.TYPE, new CommandReciever());
-        recievers.put(OpenSitemapReciever.TYPE, new OpenSitemapReciever());
         recievers.put(IncDecReciever.TYPE, new IncDecReciever());
     }
 

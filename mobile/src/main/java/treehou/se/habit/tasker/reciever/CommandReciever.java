@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.core.db.model.ItemDB;
 import treehou.se.habit.tasker.boundle.CommandBoundleManager;
+import treehou.se.habit.util.ConnectionFactory;
+import treehou.se.habit.util.Util;
 
 public class CommandReciever implements IFireReciever {
 
@@ -19,6 +23,8 @@ public class CommandReciever implements IFireReciever {
 
     public static final String BUNDLE_EXTRA_COMMAND = "treehou.se.habit.extra.COMMAND";
     public static final String BUNDLE_EXTRA_ITEM    = "treehou.se.habit.extra.ITEM";
+
+    @Inject ConnectionFactory connectionFactory;
 
     public boolean isBundleValid(Bundle bundle) {
         if (null == bundle) {
@@ -46,6 +52,7 @@ public class CommandReciever implements IFireReciever {
 
     @Override
     public boolean fire(Context context, Bundle bundle) {
+        Util.getApplicationComponent(context).inject(this);
 
         if (isBundleValid(bundle)) {
             final long itemId = bundle.getLong(BUNDLE_EXTRA_ITEM);
@@ -54,9 +61,9 @@ public class CommandReciever implements IFireReciever {
             Realm realm = Realm.getDefaultInstance();
             ItemDB item = ItemDB.load(realm, itemId);
             if(item != null){
-                /*IServerHandler serverHandler = new Connector.ServerHandler(item.getServer().toGeneric(), context);
+                IServerHandler serverHandler = connectionFactory.createServerHandler(item.getServer().toGeneric(), context);
                 serverHandler.sendCommand(item.getName(), command);
-                Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName()); TODO fix */
+                Log.d(TAG, "Sent sendCommand " + command + " to item " + item.getName());
             }else {
                 Log.d(TAG, "Item no longer exists");
             }

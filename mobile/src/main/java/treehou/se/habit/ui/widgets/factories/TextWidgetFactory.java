@@ -17,12 +17,19 @@ import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.R;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.ConnectionFactory;
 
 public class TextWidgetFactory implements IWidgetFactory {
 
+    private ConnectionFactory connectionFactory;
+
+    public TextWidgetFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
     @Override
     public WidgetFactory.IWidgetHolder build(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
-        return new TextWidgetHolder(context, factory, server, page, widget, parent);
+        return new TextWidgetHolder(context, connectionFactory, factory, server, page, widget, parent);
     }
 
     private static class TextWidgetHolder implements WidgetFactory.IWidgetHolder {
@@ -32,11 +39,13 @@ public class TextWidgetFactory implements IWidgetFactory {
         private BaseWidgetFactory.BaseWidgetHolder baseHolder;
         private Context context;
         private OHServer server;
+        private ConnectionFactory connectionFactory;
 
-        TextWidgetHolder(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
+        TextWidgetHolder(Context context, ConnectionFactory connectionFactory, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget, OHWidget parent) {
 
             this.server = server;
             this.context = context;
+            this.connectionFactory = connectionFactory;
 
             baseHolder = new BaseWidgetFactory.BaseWidgetHolder.Builder(context, factory, server, page)
                     .setWidget(widget)
@@ -80,10 +89,10 @@ public class TextWidgetFactory implements IWidgetFactory {
                         }
                         builder.setView(inputView);
 
-                        /*IServerHandler serverHandler = new Connector.ServerHandler(server, context);*/
+                        IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
                         builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
                             String text = input.getText().toString();
-                            //serverHandler.sendCommand(widget.getItem().getName(), text);
+                            serverHandler.sendCommand(widget.getItem().getName(), text);
                         });
                         builder.setNegativeButton(context.getString(R.string.cancel), (dialog, which) -> dialog.cancel());
                         builder.show();

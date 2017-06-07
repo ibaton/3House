@@ -1,9 +1,6 @@
 package treehou.se.habit.ui.widgets.factories;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -28,9 +25,8 @@ import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
-import treehou.se.habit.util.MenuTintUtils;
-import treehou.se.habit.util.Util;
 import treehou.se.habit.ui.widgets.WidgetFactory;
+import treehou.se.habit.util.Util;
 
 public class BaseWidgetFactory {
 
