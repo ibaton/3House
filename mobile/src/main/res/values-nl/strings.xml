@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="edit">Bewerken</string>
+    <string name="display_sitemap">Toon Sitemap</string>
+    <string name="enable_icon_background">Icon achtergrond in staat stellen</string>
+    <string name="theme">Thema</string>
+    <string name="treehouse">3Huis</string>
+</resources>

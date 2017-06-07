@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="cell_types">
-    <!-- treehou.se.habit.main color of your theme -->
+    <!-- a bit darker color of your treehou.se.habit.main color -->
         <item>Boş</item>
     <!-- treehou.se.habit.main color of your theme -->
         <item>Anahtar</item>
@@ -13,7 +13,9 @@
         <item>Ses</item>
     </string-array>
     <string-array name="controll_manager">
+    <!-- treehou.se.habit.main color of your theme -->
         <item>Düzenle</item>
+    <!-- treehou.se.habit.main color of your theme -->
         <item>@string/delete</item>
     </string-array>
 </resources>

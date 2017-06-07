@@ -83,4 +83,5 @@
     <string name="new_server">Neuer Server</string>
     <string name="open_source_libraries">Bibliotheken</string>
     <string name="delete">Löschen</string>
+    <string name="enable_icon_background">Aktiviere Icon Hintergrund.</string>
 </resources>

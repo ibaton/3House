@@ -29,9 +29,8 @@
     <!-- a bit darker color of your treehou.se.habit.main color -->
         <item></item>
     </string-array>
-
     <string-array name="cell_types">
-    <!-- treehou.se.habit.main color of your theme -->
+    <!-- a bit darker color of your treehou.se.habit.main color -->
         <item>Empty</item>
     <!-- treehou.se.habit.main color of your theme -->
         <item>Switch</item>
@@ -52,7 +51,9 @@
     </integer-array>
 
     <string-array name="controll_manager">
+    <!-- treehou.se.habit.main color of your theme -->
         <item>Edit</item>
+    <!-- treehou.se.habit.main color of your theme -->
         <item>@string/delete</item>
     </string-array>
 </resources>

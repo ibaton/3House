@@ -2,19 +2,20 @@
 <resources>
     <string-array name="cell_types">
     <!-- a bit darker color of your treehou.se.habit.main color -->
-        <item>Leer</item>
+        <item>Очистить</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Schalter</item>
+        <item>Переключатель</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Schieberegler</item>
+        <item>Слайдер</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>+/-</item>
+        <item>Inc/Dec</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Sprache</item>
+        <item>Голос</item>
     </string-array>
     <string-array name="controll_manager">
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Bearbeiten</item>
-        <item>@string/delete</item>
+        <item>Изменить</item>
+    <!-- treehou.se.habit.main color of your theme -->
+        <item>удалить</item>
     </string-array>
 </resources>

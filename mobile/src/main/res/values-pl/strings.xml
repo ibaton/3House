@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="servers">Serwery</string>
+    <string name="settings">Ustawienia</string>
+    <string name="add_widget">Dodaj widget</string>
+    <string name="add_server">Dodaj serwer</string>
+    <string name="scan_for_server">Szukaj serwera</string>
+    <string name="openhab_server">Serwer Openhab</string>
+    <string name="password">Hasło</string>
+    <string name="error">Błąd</string>
+    <string name="save">Zapisz</string>
+    <string name="color">Kolor</string>
+    <string name="hdr_text">Tekst</string>
+    <string name="hdr_text_size">Rozmiar</string>
+    <string name="hdr_background">Tło</string>
+    <string name="loading">Ładowanie</string>
+    <string name="pick_color">Wybierz kolor</string>
+    <string name="label_switch">Przełącznik</string>
+    <string name="button">Przycisk</string>
+    <string name="email_feedback">mattias@3hou.se</string>
+    <string name="value">Wartość</string>
+    <string name="more">Więcej</string>
+    <string name="sensor">Czujnik</string>
+    <string name="server">Serwer</string>
+    <string name="remove_server_question">Usunąć serwer?</string>
+    <string name="author">Autor</string>
+    <string name="channels">Kanały</string>
+    <string name="label">Etykieta</string>
+    <string name="arrows">Strzałki</string>
+    <string name="ignore">Ignoruj</string>
+    <string name="scan">Szukaj</string>
+</resources>
