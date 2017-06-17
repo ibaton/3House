@@ -41,14 +41,6 @@ public class Cell {
         getDB().setCellRow(cellRow.getDB());
     }
 
-    public long getId() {
-        return cellDB.getId();
-    }
-
-    public void setId(long id) {
-        cellDB.setId(id);
-    }
-
     public String getLabel() {
         return cellDB.getLabel();
     }

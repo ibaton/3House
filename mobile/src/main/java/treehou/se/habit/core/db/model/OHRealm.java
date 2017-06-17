@@ -1,6 +1,7 @@
 package treehou.se.habit.core.db.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -15,6 +16,7 @@ import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 
 public class OHRealm {
 
+    private static final String TAG = "OHRealm";
     private Context context;
 
     public OHRealm(Context context) {
@@ -31,7 +33,7 @@ public class OHRealm {
                 .modules(new OHRealmModule())
                 .migration(migration)
                 .name("treehou.realm")
-                .schemaVersion(2)
+                .schemaVersion(4)
                 .build();
     }
 
@@ -43,14 +45,14 @@ public class OHRealm {
 
         RealmSchema schema = realm.getSchema();
         switch ((int) oldVersion) {
-            case 1:
+            case 0:
                 schema.create("SitemapSettingsDB")
                         .addField("id", long.class, FieldAttribute.PRIMARY_KEY)
                         .addField("display", boolean.class);
 
                 schema.get("SitemapDB")
                         .addRealmObjectField("settingsDB", schema.get("SitemapSettingsDB"));
-            case 2:
+            case 1:
                 RealmResults<DynamicRealmObject> buttonCellDB = realm.where("ButtonCellDB").findAll();
                 RealmResults<DynamicRealmObject> cellColorDB = realm.where("ColorCellDB").findAll();
                 RealmResults<DynamicRealmObject> cellIncDecDB = realm.where("IncDecCellDB").findAll();
@@ -86,6 +88,8 @@ public class OHRealm {
                 schema.get("IncDecCellDB").removePrimaryKey().removeField("id").removeField("cell");
                 schema.get("SliderCellDB").removePrimaryKey().removeField("id").removeField("cell");
                 schema.get("VoiceCellDB").removePrimaryKey().removeField("id").removeField("cell");
+            case 2:
+                schema.get("CellRowDB").removePrimaryKey().removeField("id");
         }
     };
 }

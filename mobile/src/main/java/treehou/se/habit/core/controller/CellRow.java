@@ -21,33 +21,6 @@ public class CellRow {
         this.cellRowDB = cellRowDB;
     }
 
-    public long getId() {
-        return getDB().getId();
-    }
-
-    public void setId(long id) {
-        getDB().setId(id);
-    }
-
-    public List<Cell> getCells() {
-        List<Cell> cells = new ArrayList<>();
-        /*for (CellDB cell : getDB().getCells()) {
-            cells.add(new Cell(cell));
-        }*/
-
-        return cells;
-    }
-
-    public void setCells(List<Cell> cells) {
-
-        /*RealmList<CellDB> cellDbs = new RealmList<>();
-        for (Cell cell : cells) {
-            cellDbs.add(cell.getDB());
-        }
-
-        getDB().setCells(cellDbs);*/
-    }
-
     public Controller getController() {
         return new Controller(getDB().getController());
     }

@@ -20,7 +20,6 @@ import io.realm.Realm;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.ui.colorpicker.ColorDialog;
-import treehou.se.habit.ui.control.cells.config.cells.CellColorConfigFragment;
 
 public class ControllCellFragment extends Fragment implements ColorDialog.ColorDialogCallback {
 
@@ -128,10 +127,6 @@ public class ControllCellFragment extends Fragment implements ColorDialog.ColorD
                 case CellDB.TYPE_VOICE:
                     Log.d(TAG,"Loading voice fragment.");
                     fragment = CellVoiceConfigFragment.newInstance(cell);
-                    break;
-                case CellDB.TYPE_COLOR:
-                    Log.d(TAG,"Loading color fragment.");
-                    fragment = CellColorConfigFragment.newInstance(cell);
                     break;
                 case CellDB.TYPE_INC_DEC:
                     Log.d(TAG,"Loading IncDec fragment.");

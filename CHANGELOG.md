@@ -1,3 +1,9 @@
+## 5.4.1
+* Fix bug where only two controller rows could be created. 
+
+## 5.4.0
+* Updated database structure
+
 ## 5.3.4
 
 ### Bug Fixes

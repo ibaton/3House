@@ -25,7 +25,6 @@ import treehou.se.habit.ui.control.cells.config.CellButtonConfigFragment;
 import treehou.se.habit.ui.control.cells.config.CellIncDecConfigFragment;
 import treehou.se.habit.ui.control.cells.config.CellSliderConfigFragment;
 import treehou.se.habit.ui.control.cells.config.CellVoiceConfigFragment;
-import treehou.se.habit.ui.control.cells.config.cells.CellColorConfigFragment;
 import treehou.se.habit.ui.homescreen.ControllerWidget;
 import treehou.se.habit.ui.homescreen.ControllerWidgetConfigureActivity;
 import treehou.se.habit.ui.homescreen.VoiceService;
@@ -54,7 +53,6 @@ public interface ApplicationComponent {
     void inject(IncDecActionFragment fragment);
     void inject(CellVoiceConfigFragment fragment);
     void inject(SwitchActionFragment fragment);
-    void inject(CellColorConfigFragment fragment);
     void inject(BindingsFragment fragment);
     void inject(ServerMenuFragment fragment);
     void inject(CellIncDecConfigFragment fragment);

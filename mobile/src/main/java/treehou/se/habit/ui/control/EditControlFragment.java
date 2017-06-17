@@ -169,7 +169,6 @@ public class EditControlFragment extends Fragment implements ColorDialog.ColorDi
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         Log.d(TAG, "Drawing controller " + controller.getCellRows().size());
         for (final CellRowDB row : controller.getCellRows()){
-            Log.d(TAG, "Drawing row " + row.getId());
             final LinearLayout louRow = (LinearLayout) inflater.inflate(R.layout.controller_row_edit, null);
 
             LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(

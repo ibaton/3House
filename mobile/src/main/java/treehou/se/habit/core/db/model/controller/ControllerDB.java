@@ -84,7 +84,6 @@ public class ControllerDB extends RealmObject {
         realm.beginTransaction();
         cellRows.add(cellRow);
         realm.commitTransaction();
-        CellRowDB.save(realm,cellRow);
 
         CellDB cell = new CellDB();
         cell.setCellRow(cellRow);

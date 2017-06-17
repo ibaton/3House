@@ -27,7 +27,6 @@ import treehou.se.habit.ui.control.cells.builders.IncDecCellBuilder;
 import treehou.se.habit.ui.control.cells.builders.SliderCellBuilder;
 import treehou.se.habit.ui.control.cells.builders.VoiceCellBuilder;
 import treehou.se.habit.ui.control.cells.config.cells.ButtonConfigCellBuilder;
-import treehou.se.habit.ui.control.cells.config.cells.ColorConfigCellBuilder;
 import treehou.se.habit.ui.control.cells.config.cells.DefaultConfigCellBuilder;
 import treehou.se.habit.ui.control.cells.config.cells.IncDecConfigCellBuilder;
 import treehou.se.habit.ui.control.cells.config.cells.SliderConfigCellBuilder;
@@ -185,7 +184,6 @@ public class AndroidModule {
         cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceConfigCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderConfigCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_COLOR, new ColorConfigCellBuilder());
         return cellFactory;
     }
 
