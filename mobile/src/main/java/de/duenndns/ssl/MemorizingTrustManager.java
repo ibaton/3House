@@ -30,29 +30,36 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Notification;
-import android.app.Service;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
-import android.util.SparseArray;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.cert.*;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -84,6 +91,9 @@ public class MemorizingTrustManager implements X509TrustManager {
 	final static String DECISION_INTENT_CERT   = DECISION_INTENT + ".cert";
 	final static String DECISION_INTENT_HOST   = DECISION_INTENT + ".host";
 	final static String DECISION_INTENT_MESSAGE   = DECISION_INTENT + ".message";
+
+	final static String CHANNEL_ID_TRUST_MANAGER = "TRUST_MANAGER";
+	final static String CHANNEL_NAME_TRUST_MANAGER = "Self signed certificate";
 
 	final static String DECISION_TITLE_ID      = DECISION_INTENT + ".titleId";
 	private final static int NOTIFICATION_ID = 100509;
@@ -640,33 +650,38 @@ public class MemorizingTrustManager implements X509TrustManager {
 		}
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.O)
+    private void createNotificationChannel(Context context){
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String channelId = CHANNEL_ID_TRUST_MANAGER;
+        CharSequence channelName = CHANNEL_NAME_TRUST_MANAGER;
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, importance);
+        notificationManager.createNotificationChannel(notificationChannel);
+    }
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	void startActivityNotification(Intent intent, String certName) {
-		Notification notification;
 		final PendingIntent call = PendingIntent.getActivity(master, 0, intent,
 				0);
 		final String mtmNotification = master.getString(R.string.mtm_notification);
 		final long currentMillis = System.currentTimeMillis();
 		final Context context = master.getApplicationContext();
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			Notification n  = new Notification(android.R.drawable.ic_lock_lock,
-					mtmNotification,
-					currentMillis);
-			setLatestEventInfoReflective(n, context, mtmNotification, certName, call);
-			n.flags |= Notification.FLAG_AUTO_CANCEL;
-			notification = n;
-		} else {
-			notification = new Notification.Builder(master)
-					.setContentTitle(mtmNotification)
-					.setContentText(certName)
-					.setTicker(certName)
-					.setSmallIcon(android.R.drawable.ic_lock_lock)
-					.setWhen(currentMillis)
-					.setContentIntent(call)
-					.setAutoCancel(true)
-					.getNotification();
+		Notification.Builder notificationBuilder = new Notification.Builder(master);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(context);
+			notificationBuilder.setChannelId(CHANNEL_ID_TRUST_MANAGER);
 		}
+		Notification notification = notificationBuilder.setContentTitle(mtmNotification)
+				.setContentText(certName)
+				.setTicker(certName)
+				.setSmallIcon(android.R.drawable.ic_lock_lock)
+				.setWhen(currentMillis)
+				.setContentIntent(call)
+				.setAutoCancel(true)
+				.getNotification();
 
 		notificationManager.notify(NOTIFICATION_ID, notification);
 	}
