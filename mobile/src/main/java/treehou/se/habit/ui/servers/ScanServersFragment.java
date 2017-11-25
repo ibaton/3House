@@ -23,6 +23,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.IScanner;
 import se.treehou.ng.ohcommunicator.services.Scanner;
@@ -43,7 +46,6 @@ public class ScanServersFragment extends BaseFragment {
     private ServersAdapter serversAdapter;
     private OHCallback<List<OHServer>> discoveryListener;
     private Unbinder unbinder;
-    private IScanner scanner;
 
     public static ScanServersFragment newInstance() {
         ScanServersFragment fragment = new ScanServersFragment();
@@ -59,8 +61,6 @@ public class ScanServersFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        scanner = new Scanner(getContext());
 
         serversAdapter = new ServersAdapter(getActivity());
         // TODO serversAdapter.addAll(OHServer.loadAll());
@@ -131,11 +131,12 @@ public class ScanServersFragment extends BaseFragment {
                 logger.e(TAG, "Server discovery failed");
             }
         };
-        scanner.registerRx().compose(RxUtil.newToMainSchedulers())
-                .compose(RxLifecycle.bind(this.lifecycle()))
-                .subscribe(server -> {
-            serversAdapter.addItem(server);
-        });
+
+        IScanner scanner = new Scanner(getContext());
+        scanner.registerRx()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(server -> serversAdapter.addItem(server));
     }
 
     @Override
