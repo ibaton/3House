@@ -9,11 +9,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import io.realm.Realm;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.module.RxPresenter;
@@ -69,9 +70,9 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
      */
     private void loadSitemapsFromServers(){
         Observable.merge(
-                realm.asObservable()
+                realm.asFlowable().toObservable()
                         .compose(serverLoaderFactory.loadServersRx()),
-                serverBehaviorSubject.asObservable())
+                serverBehaviorSubject.toFlowable(BackpressureStrategy.DROP).toObservable())
                 .doOnNext(server -> view.hideEmptyView())
                 .observeOn(Schedulers.io())
                 .compose(serverLoaderFactory.serverToSitemap(context))
@@ -92,7 +93,7 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
             view.showServerError(server, serverSitemaps.getError());
         } else {
             view.populateSitemaps(server, sitemaps);
-            boolean autoloadLast = settings.getAutoloadSitemapRx().toBlocking().first();
+            boolean autoloadLast = settings.getAutoloadSitemapRx().blockingFirst();
             for (OHSitemap sitemap : sitemaps) {
                 if (autoloadLast && sitemap.getName().equals(showSitemap)) {
                     showSitemap = null; // Prevents sitemap from being accessed again.

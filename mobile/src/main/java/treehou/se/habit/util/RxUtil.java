@@ -1,17 +1,12 @@
 package treehou.se.habit.util;
 
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import io.realm.RealmResults;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.core.db.DBHelper;
@@ -24,7 +19,7 @@ public class RxUtil {
 
     private RxUtil() {}
 
-    public static <T> Observable.Transformer<T, T> newToMainSchedulers() {
+    public static <T> ObservableTransformer<T, T> newToMainSchedulers() {
         return observable -> observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -33,7 +28,7 @@ public class RxUtil {
      * Save sitemap to database
      * @return action that saves sitemap.
      */
-    public static Action1<ServerLoaderFactory.ServerSitemapsResponse> saveSitemap(){
+    public static Consumer<ServerLoaderFactory.ServerSitemapsResponse> saveSitemap(){
         return sitemapResponse -> {
             Realm realm = Realm.getDefaultInstance();
             for(OHSitemap sitemap : sitemapResponse.getSitemaps()){
@@ -87,10 +82,10 @@ public class RxUtil {
      * Load servers from database.
      * @return observable for generic server objects.
      */
-    public static Observable.Transformer<Realm, OHServer> loadServers() {
+    public static ObservableTransformer<Realm, OHServer> loadServers() {
         return observable -> observable.flatMap(realmLocal ->
-                realmLocal.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0).findAllAsync().asObservable())
-                .flatMap(Observable::from)
+                realmLocal.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0).findAllAsync().asFlowable().toObservable())
+                .flatMap(Observable::fromIterable)
                 .map(ServerDB::toGeneric)
                 .distinct();
     }

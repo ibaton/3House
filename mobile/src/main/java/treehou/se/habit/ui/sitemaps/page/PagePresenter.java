@@ -12,11 +12,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
@@ -111,9 +111,9 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
     }
 
 
-    private Action1<Throwable> dataLoadError = new Action1<Throwable>() {
+    private Consumer<Throwable> dataLoadError = new Consumer<Throwable>() {
         @Override
-        public void call(Throwable throwable) {
+        public void accept(Throwable throwable) {
             log.e(TAG, "Error when requesting page ", throwable);
             view.showLostServerConnectionMessage();
             view.closeView();
@@ -149,7 +149,7 @@ public class PagePresenter extends RxPresenter implements PageContract.Presenter
      *
      * @return
      */
-    private Subscription createLongPoller() {
+    private Disposable createLongPoller() {
         final long serverId = server.getId();
 
         OHServer server = serverLoaderFactory.loadServer(realm, serverId);

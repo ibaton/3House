@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 class HoldListener implements View.OnTouchListener {
 
@@ -18,9 +18,9 @@ class HoldListener implements View.OnTouchListener {
 
     private int tick=0;
     private Observable<Long> timer;
-    private Subscription subscribe = null;
+    private Disposable disposable = null;
     private OnHoldListener listener;
-    private Action1<Long> touchSubject;
+    private Consumer<Long> touchSubject;
 
     public HoldListener(@NotNull OnHoldListener listener) {
         this(listener, DEFAULT_TICK_TIME);
@@ -32,20 +32,20 @@ class HoldListener implements View.OnTouchListener {
         timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS);
 
         touchSubject = time -> updateTick();
-        timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS).doOnUnsubscribe(() -> listener.onRelease(tick));
+        timer = Observable.interval(tickTime, TimeUnit.MILLISECONDS).doOnDispose(() -> listener.onRelease(tick));
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            subscribe = timer.subscribe(touchSubject);
+            disposable = timer.subscribe(touchSubject);
         } else if (event.getAction() == MotionEvent.ACTION_UP ||
                 event.getAction() == MotionEvent.ACTION_CANCEL ||
                 event.getAction() == MotionEvent.ACTION_OUTSIDE) {
 
-            if (!subscribe.isUnsubscribed()) {
-                subscribe.unsubscribe();
+            if (!disposable.isDisposed()) {
+                disposable.dispose();
             }
         }
         return true;

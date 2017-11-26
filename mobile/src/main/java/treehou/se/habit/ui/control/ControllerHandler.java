@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.reactivex.Observable;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
-import rx.Observable;
 import treehou.se.habit.core.db.model.controller.ControllerDB;
 
 public class ControllerHandler {
@@ -38,7 +38,7 @@ public class ControllerHandler {
 
     private void handleControllerUpdates(RealmResults<ControllerDB> controllerDBS){
         Set<Long> updateNotificationIds = new HashSet<>();
-        Observable.from(controllerDBS).map(ControllerDB::getId).subscribe(updateNotificationIds::add);
+        Observable.fromIterable(controllerDBS).map(ControllerDB::getId).subscribe(updateNotificationIds::add);
 
         Set<Long> notificationsDeleted = new HashSet<>(notificationIds);
         notificationsDeleted.removeAll(updateNotificationIds);

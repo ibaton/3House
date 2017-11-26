@@ -7,13 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle2.RxLifecycle;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import treehou.se.habit.util.Settings;
 import treehou.se.habit.util.logging.Logger;
 

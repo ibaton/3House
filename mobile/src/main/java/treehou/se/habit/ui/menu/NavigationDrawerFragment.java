@@ -21,7 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.f2prateek.rx.preferences.Preference;
+import com.f2prateek.rx.preferences2.Preference;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,11 +32,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -138,7 +136,7 @@ public class NavigationDrawerFragment extends BaseFragment {
     }
 
     private Observable<List<ServerSitemapsResponse>> sitemapsObservable() {
-        return Realm.getDefaultInstance().asObservable()
+        return Realm.getDefaultInstance().asFlowable().toObservable()
                 .compose(serverLoaderFactory.loadAllServersRx())
                 .compose(serverLoaderFactory.serversToSitemap(getActivity()))
                 .compose(serverLoaderFactory.filterDisplaySitemapsList());

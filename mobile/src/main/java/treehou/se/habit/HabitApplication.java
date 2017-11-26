@@ -7,8 +7,6 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.github.anrwatchdog.ANRWatchDog;
-
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.Map;
@@ -43,7 +41,6 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         component().inject(this);
         setTheme(settings.getThemeResourse());
         super.onCreate();
-        new ANRWatchDog().start();
         JodaTimeAndroid.init(this);
         controllHandler.init();
     }
@@ -85,7 +82,6 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         try {
             MultiDex.install(this);
         } catch (RuntimeException multiDexException) {
-
             multiDexException.printStackTrace();
         }
     }

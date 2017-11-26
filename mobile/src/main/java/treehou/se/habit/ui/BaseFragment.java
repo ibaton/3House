@@ -4,7 +4,7 @@ package treehou.se.habit.ui;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import javax.inject.Inject;
 

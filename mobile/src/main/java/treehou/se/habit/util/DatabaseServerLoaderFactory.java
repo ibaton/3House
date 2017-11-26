@@ -4,17 +4,15 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.Observable;
-import rx.functions.Func1;
-import rx.functions.FuncN;
-import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -42,14 +40,14 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
     }
 
     @Override
-    public Observable.Transformer<Realm, OHServer> loadServersRx() {
+    public ObservableTransformer<Realm, OHServer> loadServersRx() {
         return RxUtil.loadServers();
     }
 
     @Override
-    public Observable.Transformer<Realm, List<OHServer>> loadAllServersRx() {
+    public ObservableTransformer<Realm, List<OHServer>> loadAllServersRx() {
         return observable -> observable.flatMap(realmLocal ->
-                realmLocal.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0).findAllAsync().asObservable())
+                realmLocal.where(ServerDB.class).isNotEmpty("localurl").or().isNotEmpty("remoteurl").greaterThan("id", 0).findAllAsync().asFlowable().toObservable())
                 .map(serverDBS -> {
                     List<OHServer> serverList = new ArrayList<>();
                     for(ServerDB serverDB : serverDBS){
@@ -61,7 +59,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
     }
 
     @Override
-    public Observable.Transformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context) {
+    public ObservableTransformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context) {
         return observable -> observable
                 .switchMap(servers -> {
                     List<Observable<ServerSitemapsResponse>> sitemapResponseRx = new ArrayList<>();
@@ -91,7 +89,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
      * @param context the used to fetch sitemaps.
      * @return
      */
-    public Observable.Transformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context) {
+    public ObservableTransformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context) {
         return observable -> observable
                 .flatMap(server -> {
             IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
@@ -109,13 +107,13 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
         .doOnNext(RxUtil.saveSitemap());
     }
 
-    public Observable.Transformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps() {
-        return observable -> observable.map((Func1<ServerSitemapsResponse, ServerSitemapsResponse>) this::filterDisplaySitemaps);
+    public ObservableTransformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps() {
+        return observable -> observable.map((Function<ServerSitemapsResponse, ServerSitemapsResponse>) this::filterDisplaySitemaps);
     }
 
     @Override
-    public Observable.Transformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList() {
-        return observable -> observable.map((Func1<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>>) serverSitemapsResponses -> {
+    public ObservableTransformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList() {
+        return observable -> observable.map((Function<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>>) serverSitemapsResponses -> {
             List<ServerSitemapsResponse> responses = new ArrayList<>();
             for (ServerSitemapsResponse sitemapsResponse : serverSitemapsResponses){
                 responses.add(filterDisplaySitemaps(sitemapsResponse));

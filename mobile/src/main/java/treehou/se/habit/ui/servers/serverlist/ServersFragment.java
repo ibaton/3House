@@ -146,7 +146,7 @@ public class ServersFragment extends BaseDaggerFragment<ServersContract.Presente
      * Hookup server list, listening for server updates.
      */
     private void setupAdapter(){
-        realm.where(ServerDB.class).findAllAsync().asObservable()
+        realm.where(ServerDB.class).findAllAsync().asFlowable().toObservable()
                 .compose(this.bindToLifecycle())
                 .subscribe(servers1 -> {
                     Log.d(TAG, "Loaded " + servers1.size() + " servers");

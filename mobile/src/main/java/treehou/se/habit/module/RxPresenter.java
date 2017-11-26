@@ -6,11 +6,12 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-import com.trello.rxlifecycle.LifecycleTransformer;
-import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle2.LifecycleTransformer;
+import com.trello.rxlifecycle2.RxLifecycle;
 
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 import treehou.se.habit.module.RxPresenterEvent.PresenterEvent;
 import treehou.se.habit.mvp.BasePresenter;
 
@@ -21,7 +22,7 @@ public class RxPresenter implements BasePresenter {
     @NonNull
     @CheckResult
     public final Observable<PresenterEvent> lifecycle() {
-        return lifecycleSubject.asObservable();
+        return lifecycleSubject.toFlowable(BackpressureStrategy.BUFFER).toObservable();
     }
 
     @NonNull

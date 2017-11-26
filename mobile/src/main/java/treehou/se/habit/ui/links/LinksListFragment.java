@@ -17,10 +17,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHLink;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
@@ -182,11 +182,6 @@ public class LinksListFragment extends BaseFragment {
                     clearList();
                     emptyView.setVisibility(View.GONE);
                     adapter.addAll(ohLinks);
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        logger.w(TAG, "Failed to load link items", throwable);
-                    }
-                });
+                }, throwable -> logger.w(TAG, "Failed to load link items", throwable));
     }
 }

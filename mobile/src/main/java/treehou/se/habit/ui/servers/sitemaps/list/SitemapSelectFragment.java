@@ -19,10 +19,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import io.realm.Realm;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subjects.BehaviorSubject;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import treehou.se.habit.R;
@@ -184,8 +184,8 @@ public class SitemapSelectFragment extends BaseDaggerFragment<SitemapSelectContr
      * Load servers from database and request their sitemaps.
      */
     private void loadSitemapsFromServers(){
-        realm.where(ServerDB.class).equalTo("id", serverId).findAll().asObservable()
-                .flatMap(Observable::from)
+        realm.where(ServerDB.class).equalTo("id", serverId).findAll().asFlowable().toObservable()
+                .flatMap(Observable::fromIterable)
                 .map(ServerDB::toGeneric)
                 .distinct()
                 .compose(serverLoader.serverToSitemap(getActivity()))

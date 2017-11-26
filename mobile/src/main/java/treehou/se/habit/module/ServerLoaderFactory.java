@@ -5,20 +5,20 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.ObservableTransformer;
 import io.realm.Realm;
-import rx.Observable;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 
 public interface ServerLoaderFactory {
 
     OHServer loadServer(Realm realm, long id);
-    Observable.Transformer<Realm, OHServer> loadServersRx();
-    Observable.Transformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context);
-    Observable.Transformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context);
-    Observable.Transformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps();
-    Observable.Transformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList();
-    Observable.Transformer<Realm, List<OHServer>> loadAllServersRx();
+    ObservableTransformer<Realm, OHServer> loadServersRx();
+    ObservableTransformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context);
+    ObservableTransformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context);
+    ObservableTransformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps();
+    ObservableTransformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList();
+    ObservableTransformer<Realm, List<OHServer>> loadAllServersRx();
 
     ServerSitemapsResponse EMPTY_RESPONSE = new ServerSitemapsResponse(null, new ArrayList<>());
 

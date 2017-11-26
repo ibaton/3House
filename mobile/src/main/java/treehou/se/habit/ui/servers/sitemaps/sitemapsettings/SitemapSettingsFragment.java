@@ -9,18 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
@@ -92,13 +93,8 @@ public class SitemapSettingsFragment extends BaseDaggerFragment<SitemapSettingsC
         unbinder = ButterKnife.bind(this, view);
         setupActionBar();
 
-        Observable<SitemapDB> sitemapObservable = realm.where(SitemapDB.class).equalTo("id", sitemapId).findAll().asObservable()
-                .flatMap(new Func1<RealmResults<SitemapDB>, Observable<SitemapDB>>() {
-                    @Override
-                    public Observable<SitemapDB> call(RealmResults<SitemapDB> sitemapDBs) {
-                        return Observable.from(sitemapDBs);
-                    }
-                })
+        Observable<SitemapDB> sitemapObservable = realm.where(SitemapDB.class).equalTo("id", sitemapId).findAll().asFlowable().toObservable()
+                .flatMap(Observable::fromIterable)
                 .filter(sitemapDB -> sitemapDB != null && sitemapDB.getSettingsDB() != null)
                 .distinctUntilChanged();
 

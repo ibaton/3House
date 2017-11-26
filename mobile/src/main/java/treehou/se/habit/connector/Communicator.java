@@ -19,10 +19,10 @@ import java.util.Map;
 import javax.net.ssl.X509TrustManager;
 
 import de.duenndns.ssl.MemorizingTrustManager;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;

@@ -13,14 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-import com.jakewharton.rxbinding.widget.RxCompoundButton;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import treehou.se.habit.R;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.mvp.BaseDaggerFragment;

@@ -1,10 +1,10 @@
 package treehou.se.habit.core.db.settings;
 
+import io.reactivex.Observable;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
-import rx.Observable;
 import treehou.se.habit.util.Constants;
 
 public class WidgetSettingsDB extends RealmObject {
@@ -99,7 +99,7 @@ public class WidgetSettingsDB extends RealmObject {
     }
 
     public static WidgetSettingsDB loadGlobal(Realm realm){
-        return loadGlobalRx(realm).toBlocking().first().first();
+        return loadGlobalRx(realm).blockingFirst().first();
     }
 
     public static Observable<RealmResults<WidgetSettingsDB>> loadGlobalRx(Realm realm){
@@ -115,6 +115,6 @@ public class WidgetSettingsDB extends RealmObject {
         }
         result = realm.where(WidgetSettingsDB.class).findAll();
 
-        return result.asObservable();
+        return result.asFlowable().toObservable();
     }
 }
