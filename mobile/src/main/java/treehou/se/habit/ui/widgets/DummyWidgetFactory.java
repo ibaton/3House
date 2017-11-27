@@ -52,7 +52,7 @@ public class DummyWidgetFactory {
         }
 
         View iconHolder = itemView.findViewById(R.id.img_widget_icon_holder);
-        ImageView imgIcon = (ImageView) itemView.findViewById(R.id.img_widget_icon);
+        ImageView imgIcon = itemView.findViewById(R.id.img_widget_icon);
 
         ViewGroup.LayoutParams layoutParams = imgIcon.getLayoutParams();
         layoutParams.width = (int) (((float)layoutParams.width) * imageSizePercentage);

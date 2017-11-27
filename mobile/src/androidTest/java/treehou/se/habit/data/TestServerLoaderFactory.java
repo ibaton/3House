@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.ObservableTransformer;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
@@ -33,27 +33,27 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
     }
 
     @Override
-    public Observable.Transformer<Realm, OHServer> loadServersRx() {
+    public ObservableTransformer<Realm, OHServer> loadServersRx() {
         return RxUtil.loadServers();
     }
 
     @Override
-    public Observable.Transformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps() {
+    public ObservableTransformer<ServerSitemapsResponse, ServerSitemapsResponse> filterDisplaySitemaps() {
         return observable -> observable;
     }
 
     @Override
-    public Observable.Transformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context) {
+    public ObservableTransformer<List<OHServer>, List<ServerSitemapsResponse>> serversToSitemap(Context context) {
         return null; // TODO
     }
 
     @Override
-    public Observable.Transformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList() {
+    public ObservableTransformer<List<ServerSitemapsResponse>, List<ServerSitemapsResponse>> filterDisplaySitemapsList() {
         return null; // TODO
     }
 
     @Override
-    public Observable.Transformer<Realm, List<OHServer>> loadAllServersRx() {
+    public ObservableTransformer<Realm, List<OHServer>> loadAllServersRx() {
         return null; // TODO
     }
 
@@ -62,7 +62,7 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
      * @param context the used to fetch sitemaps.
      * @return
      */
-    public Observable.Transformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context) {
+    public ObservableTransformer<OHServer, ServerSitemapsResponse> serverToSitemap(Context context) {
         return observable -> observable.flatMap(server -> {
             IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
             return serverHandler.requestSitemapRx()

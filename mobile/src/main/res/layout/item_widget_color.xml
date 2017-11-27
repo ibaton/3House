@@ -20,9 +20,9 @@
 
             <ImageView
                 android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:minHeight="50dp"
+                android:layout_height="50dp"
                 android:padding="@dimen/short_space"
+                android:layout_gravity="center_vertical"
                 android:id="@+id/img_widget_icon"/>
         </FrameLayout>
         <View

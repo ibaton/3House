@@ -1,87 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?android:selectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:background="?android:selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:orientation="horizontal">
 
         <FrameLayout
+            android:id="@+id/img_widget_icon_holder"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/img_widget_icon_holder"
             android:background="@color/image_background"
             android:visibility="invisible">
 
             <ImageView
                 android:id="@+id/img_widget_icon"
                 android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:minHeight="50dp"
-                android:padding="@dimen/short_space"/>
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:padding="@dimen/short_space" />
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:gravity="center_vertical"
-            android:layout_weight="1">
+            android:orientation="vertical">
 
             <com.wefika.flowlayout.FlowLayout
-                android:orientation="horizontal"
+                android:id="@+id/lou_base_data_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/lou_base_data_holder"
-                android:layout_marginRight="@dimen/item_spacing"
                 android:layout_marginLeft="@dimen/short_space"
-                android:paddingTop="@dimen/widget_default_padding_vertical"
+                android:layout_marginRight="@dimen/item_spacing"
+                android:orientation="horizontal"
                 android:paddingBottom="@dimen/widget_default_padding_vertical"
-                android:paddingRight="@dimen/widget_default_padding_vertical">
+                android:paddingRight="@dimen/widget_default_padding_vertical"
+                android:paddingTop="@dimen/widget_default_padding_vertical">
 
                 <TextView
+                    android:id="@+id/lbl_widget_name"
+                    style="@style/WidgetText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/WidgetText"
                     android:layout_marginRight="@dimen/item_spacing"
-                    android:text=""
-                    android:id="@+id/lbl_widget_name"/>
+                    android:text="" />
 
             </com.wefika.flowlayout.FlowLayout>
 
             <LinearLayout
-                android:orientation="vertical"
+                android:id="@+id/lou_widget_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/lou_widget_details">
-            </LinearLayout>
+                android:orientation="vertical"></LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
+                android:id="@+id/lou_widget_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/lou_widget_holder">
-            </LinearLayout>
+                android:orientation="vertical"></LinearLayout>
         </LinearLayout>
 
         <ImageButton
+            android:id="@+id/btn_next_page"
+            style="?attr/menu_item_style"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/btn_next_page"
+            android:background="@null"
+            android:clickable="false"
+            android:paddingBottom="@dimen/medium_spacing"
             android:paddingLeft="@dimen/large_spacing"
             android:paddingRight="@dimen/large_spacing"
             android:paddingTop="@dimen/medium_spacing"
-            android:paddingBottom="@dimen/medium_spacing"
-            android:visibility="visible"
-            android:clickable="false"
             android:selectable="false"
-            android:background="@null"
-            style="?attr/menu_item_style"
-            app:srcCompat="@drawable/next_page_icon"/>
+            android:visibility="visible"
+            app:srcCompat="@drawable/next_page_icon" />
     </LinearLayout>
 </FrameLayout>
