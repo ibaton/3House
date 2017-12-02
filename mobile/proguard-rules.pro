@@ -22,6 +22,8 @@
 -keep class com.google.inject.* { *; }
 -keep class org.apache.http.* { *; }
 
+-keep class **$$ViewBinder { *; }
+
 -keep class io.realm.annotations.RealmModule
 -keep @io.realm.annotations.RealmModule class *
 -keep class io.realm.internal.Keep

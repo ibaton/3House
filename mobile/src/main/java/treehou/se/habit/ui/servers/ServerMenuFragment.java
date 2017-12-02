@@ -180,7 +180,7 @@ public class ServerMenuFragment extends Fragment {
         Fragment fragment = null;
         switch (id) {
             case ServerActions.ITEM_EDIT:
-                fragment = SetupServerFragment.newInstance(serverId);
+                fragment = SetupServerFragment.Companion.newInstance(serverId);
                 break;
             case ServerActions.ITEM_INBOX:
                 openInboxPage(serverId);

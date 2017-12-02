@@ -31,6 +31,7 @@ import treehou.se.habit.ui.homescreen.VoiceService;
 import treehou.se.habit.ui.links.LinksListFragment;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.servers.ServerMenuFragment;
+import treehou.se.habit.ui.servers.serverlist.ServersFragment;
 import treehou.se.habit.ui.util.IconPickerActivity;
 import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 

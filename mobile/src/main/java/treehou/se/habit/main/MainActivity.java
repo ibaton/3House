@@ -138,7 +138,7 @@ public class MainActivity extends BaseDaggerActivity<MainContract.Presenter>
 
     @Override
     public void openServers() {
-        ServersFragment fragment = ServersFragment.newInstance();
+        ServersFragment fragment = ServersFragment.Companion.newInstance();
         openFragment(fragment);
     }
 

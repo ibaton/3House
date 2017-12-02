@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.module.ActivityComponentBuilder;
 import treehou.se.habit.module.AndroidModule;
@@ -42,6 +43,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         setTheme(settings.getThemeResourse());
         super.onCreate();
         JodaTimeAndroid.init(this);
+        ButterKnife.setDebug(true);
         controllHandler.init();
     }
 
