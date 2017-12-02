@@ -16,14 +16,43 @@
 #   public *;
 #}
 
--dontobfuscate
+#-dontobfuscate
 
+#picasso
+-dontwarn com.squareup.okhttp.**
+
+# OKIO
+-dontwarn okio.**
+
+# Retrofit
+-dontwarn retrofit2.Platform$Java8
+
+# Dagger
+-dontwarn com.google.errorprone.annotations.**
 -keep class com.google.gson.** { *; }
 -keep class com.google.inject.* { *; }
+
+# slf4j logger
+-dontwarn javax.naming.**
+-dontwarn javax.servlet.**
+-dontwarn org.slf4j.**
+
 -keep class org.apache.http.* { *; }
 
+# Butterknife
 -keep class **$$ViewBinder { *; }
 
+# greenrobot:eventbus
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+# Realm
 -keep class io.realm.annotations.RealmModule
 -keep @io.realm.annotations.RealmModule class *
 -keep class io.realm.internal.Keep
