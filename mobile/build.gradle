@@ -55,7 +55,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
     implementation 'com.android.support:recyclerview-v7:27.0.1'
     implementation 'com.android.support:appcompat-v7:27.0.1'
@@ -79,12 +79,13 @@ dependencies {
     implementation 'com.mikepenz:iconics-core:3.0.0@aar'
     implementation 'com.mikepenz:octicons-typeface:3.2.0.2@aar'
     implementation 'com.github.matthewyork:ColoursLibrary:1.0.0@aar'
-    implementation ('com.wefika:flowlayout:0.4.1') {
+    implementation('com.wefika:flowlayout:0.4.1') {
         exclude group: 'com.intellij', module: 'annotations'
     }
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2'
 
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.android.support:support-v4:27.0.2'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'

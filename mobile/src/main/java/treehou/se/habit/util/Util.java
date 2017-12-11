@@ -3,8 +3,10 @@ package treehou.se.habit.util;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
@@ -14,8 +16,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import com.mattyork.colours.Colour;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -255,5 +261,25 @@ public class Util {
 
     public static int[] generatePallete(int color){
         return Colour.colorSchemeOfType(color, Colour.ColorScheme.ColorSchemeAnalagous);
+    }
+
+    public static Point getScreenSize(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int x = size.x;
+        int y = size.y;
+
+        return new Point(x, y);
+    }
+
+    public static Point getCenterPointOfView(View view) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        int x = location[0] + view.getWidth() / 2;
+        int y = location[1] + view.getHeight() / 2;
+
+        return new Point(x, y);
     }
 }

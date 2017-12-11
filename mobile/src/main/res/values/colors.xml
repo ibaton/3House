@@ -6,13 +6,15 @@
     <color name="colorPrimaryDark">#ff689F38</color>
     <color name="colorAccent">#FF9800</color>
 
-    <color name="navigationBarColor">#55000000</color>
+    <color name="navigationBarColor">#bcbcbc</color>
 
     //Used for flat ui
     <color name="colorPrimaryLighter">#FFAED581</color>
     <color name="colorPrimaryDarker">#FF33691E</color>
 
     <color name="colorValueItem">@color/colorAccent</color>
+
+    <color name="semi_transparent_dark">#44000000</color>
 
     <!--<color name="background">#ff515151</color>-->
     <color name="background">#ffdcdcdc</color>
@@ -46,7 +48,9 @@
 
     <color name="frame_header">#ff686868</color>
 
-    <color name="transparent_dark">#77000000</color>
+    <color name="transparent_dark">#44000000</color>
+    <color name="semi_transparent_light">#44FFFFFF</color>
+    <color name="colorError">#c9000a</color>
 
     <color name="load">#cacac5</color>
 

@@ -1,28 +1,23 @@
 package treehou.se.habit.ui.servers.serverlist
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-
-import javax.inject.Inject
-
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
-import io.realm.Realm
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.RealmResults
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
@@ -33,24 +28,32 @@ import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.ServersAdapter
 import treehou.se.habit.ui.servers.ScanServersFragment
 import treehou.se.habit.ui.servers.ServerMenuFragment
-import treehou.se.habit.ui.servers.SetupServerFragment
+import treehou.se.habit.ui.servers.create.CreateServerActivity
 import treehou.se.habit.util.Settings
+import javax.inject.Inject
 
 class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), ServersContract.View {
 
-    private var container: ViewGroup? = null
-    @BindView(R.id.list) @JvmField var lstServer: RecyclerView? = null
-    @BindView(R.id.empty) @JvmField var viwEmpty: View? = null
-    @BindView(R.id.fab_add) @JvmField var fabAdd: FloatingActionButton? = null
+    @BindView(R.id.list)
+    @JvmField
+    var lstServer: RecyclerView? = null
+    @BindView(R.id.empty)
+    @JvmField
+    var viwEmpty: View? = null
+    @BindView(R.id.fab_add)
+    @JvmField
+    var fabAdd: FloatingActionButton? = null
 
-    //@Inject internal var settings: Settings? = null
-    //@Inject internal var presenter: ServersContract.Presenter? = null
+    @Inject
+    @JvmField
+    var settings: Settings? = null
+    @Inject
+    @JvmField
+    var presenter: ServersContract.Presenter? = null
 
     private var serversAdapter: ServersAdapter? = null
     private var servers: RealmResults<ServerDB>? = null
     private var unbinder: Unbinder? = null
-
-    //private lateinit var realm: Realm
 
     protected val applicationComponent: ApplicationComponent
         get() = (context!!.applicationContext as HabitApplication).component()
@@ -58,7 +61,9 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     private val serverListener = object : ServersAdapter.ItemListener {
         override fun onItemClickListener(serverHolder: ServersAdapter.ServerHolder) {
             val server = serversAdapter!!.getItem(serverHolder.adapterPosition)
-            openServerPage(server)
+            if (server != null) {
+                openServerPage(server)
+            }
         }
 
         /**
@@ -75,7 +80,9 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         override fun onItemLongClickListener(serverHolder: ServersAdapter.ServerHolder): Boolean {
 
             val server = serversAdapter!!.getItem(serverHolder.adapterPosition)
-            showRemoveDialog(serverHolder, server)
+            if(server != null) {
+                showRemoveDialog(serverHolder, server)
+            }
             return true
         }
     }
@@ -99,30 +106,27 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        this.container = container
-        val rootView = inflater.inflate(R.layout.fragment_servers, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+        return inflater.inflate(R.layout.fragment_servers, container, false)
+    }
 
-        val gridLayoutManager = GridLayoutManager(activity, 1)
-        lstServer!!.layoutManager = gridLayoutManager
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        unbinder = ButterKnife.bind(this, view)
+
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        lstServer!!.layoutManager = layoutManager
         lstServer!!.itemAnimator = DefaultItemAnimator()
         serversAdapter = ServersAdapter()
         serversAdapter!!.setItemListener(serverListener)
         lstServer!!.adapter = serversAdapter
 
         setupActionbar()
-
-        return rootView
     }
 
     override fun onResume() {
         super.onResume()
         setupAdapter()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        lstServer!!.adapter = null
     }
 
     override fun onDestroyView() {
@@ -141,7 +145,6 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     private fun setupActionbar() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.servers)
-        setHasOptionsMenu(true)
     }
 
     /**
@@ -150,6 +153,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     private fun setupAdapter() {
         realm!!.where(ServerDB::class.java).findAllAsync().asFlowable().toObservable()
                 .compose(this.bindToLifecycle<RealmResults<ServerDB>>())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ servers1 ->
                     Log.d(TAG, "Loaded " + servers1.size + " servers")
                     this@ServersFragment.servers = servers1
@@ -157,9 +161,9 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                     serversAdapter!!.setItems(servers1)
                 })
 
-        /*if (!settings!!.serverSetupAsked) {
+        if (!settings!!.serverSetupAsked) {
             showScanServerFlow()
-        }*/
+        }
     }
 
     /**
@@ -175,27 +179,24 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                 .show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.servers, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.action_scan_for_server -> openServerScan()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     /**
      * Launch flow for creating new server.
      */
     @OnClick(R.id.empty, R.id.fab_add)
     fun startNewServerFlow() {
-        activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.page_container, SetupServerFragment.newInstance())
-                .addToBackStack(null)
-                .commit()
+        startNewServerReveal()
+    }
+
+    private fun startNewServerReveal() {
+        startNewServerRevealBasic()
+    }
+
+    private fun startNewServerRevealBasic() {
+        val activity = activity
+        if (activity != null) {
+            val intent = CreateServerActivity.createIntent(activity)
+            startActivity(intent);
+        }
     }
 
     /**

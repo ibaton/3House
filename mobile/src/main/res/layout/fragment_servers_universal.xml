@@ -28,5 +28,6 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
+        android:transitionName="simple_activity_transition"
         app:srcCompat="@drawable/fab_add_icon" />
 </FrameLayout>

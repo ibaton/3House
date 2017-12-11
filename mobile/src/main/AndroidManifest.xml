@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="treehou.se.habit" >
+    package="treehou.se.habit">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.NFC" />
@@ -20,7 +19,6 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="org.openhab.habdroid.gcm.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
 
     <uses-feature
@@ -32,7 +30,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme.Base" >
+        android:theme="@style/AppTheme.Base">
         <meta-data
             android:name="AA_DB_NAME"
             android:value="treestore26.db" />
@@ -46,35 +44,33 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.colorpicker.ColorpickerActivity"
-            android:label="@string/title_activity_colorpicker" >
-        </activity>
+            android:label="@string/title_activity_colorpicker"></activity>
 
         <service android:name=".gcm.GcmIntentService" />
 
-        <activity android:name=".ui.homescreen.VoiceControlWidgetConfigureActivity" >
+        <activity android:name=".ui.homescreen.VoiceControlWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
-        <activity android:name="de.duenndns.ssl.MemorizingActivity"/>
+        <activity android:name="de.duenndns.ssl.MemorizingActivity" />
 
         <service
             android:name=".ui.homescreen.VoiceService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
 
         <receiver
             android:name=".ui.homescreen.VoiceControlWidget"
-            android:label="3Hou.se Voice" >
+            android:label="3Hou.se Voice">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -85,7 +81,7 @@
         </receiver>
         <receiver
             android:name=".ui.homescreen.ControllerWidget"
-            android:label="3Hou.se controller" >
+            android:label="3Hou.se controller">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -98,7 +94,7 @@
                 android:resource="@xml/controller_widget_info" />
         </receiver>
 
-        <activity android:name=".ui.homescreen.ControllerWidgetConfigureActivity" >
+        <activity android:name=".ui.homescreen.ControllerWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
@@ -106,12 +102,11 @@
 
         <service
             android:name=".ui.control.CommandService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
 
         <receiver
             android:name=".gcm.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
@@ -126,8 +121,7 @@
             android:label="@string/title_activity_slider"
             android:launchMode="singleTask"
             android:taskAffinity="treehou.se.habit.ui.control"
-            android:theme="@style/TransparentTheme" >
-        </activity>
+            android:theme="@style/TransparentTheme"></activity>
         <activity
             android:name=".tasker.TaskerInitActivity"
             android:exported="true"
@@ -136,7 +130,7 @@
             android:theme="@style/AppTheme.Base"
             android:uiOptions="splitActionBarWhenNarrow"
             android:windowSoftInputMode="adjustResize"
-            tools:ignore="ExportedActivity" >
+            tools:ignore="ExportedActivity">
 
             <!-- this Intent filter allows the plug-in to be discovered by Locale -->
             <intent-filter>
@@ -148,7 +142,7 @@
             android:name=".tasker.reciever.FireReceiver"
             android:exported="true"
             android:process=":background"
-            tools:ignore="ExportedReceiver" >
+            tools:ignore="ExportedReceiver">
 
             <!-- this Intent filter allows the plug-in to discovered by Locale -->
             <intent-filter>
@@ -156,25 +150,28 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.homescreen.SitemapWidgetConfigureActivity" >
+        <activity android:name=".ui.homescreen.SitemapWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.util.IconPickerActivity"
-            android:label="@string/title_activity_icon_picker" >
-        </activity>
+            android:label="@string/title_activity_icon_picker"></activity>
         <activity
             android:name=".ui.control.EditControllerSettingsActivity"
-            android:theme="@style/TransparentTheme">
-        </activity>
+            android:theme="@style/TransparentTheme"></activity>
 
         <receiver android:name=".RestartBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".ui.servers.create.CreateServerActivity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.Base.Transparent"></activity>
     </application>
 
 </manifest>
