@@ -12,8 +12,12 @@ import treehou.se.habit.ui.colorpicker.LightComponent;
 import treehou.se.habit.ui.colorpicker.LightFragment;
 import treehou.se.habit.ui.servers.create.CreateServerActivity;
 import treehou.se.habit.ui.servers.create.CreateServerActivityComponent;
+import treehou.se.habit.ui.servers.create.custom.SetupServerComponent;
+import treehou.se.habit.ui.servers.create.custom.SetupServerFragment;
 import treehou.se.habit.ui.servers.create.myopenhab.CreateMyOpenhabComponent;
 import treehou.se.habit.ui.servers.create.myopenhab.CreateMyOpenhabFragment;
+import treehou.se.habit.ui.servers.create.scan.ScanServersComponent;
+import treehou.se.habit.ui.servers.create.scan.ScanServersFragment;
 import treehou.se.habit.ui.servers.serverlist.ServersComponent;
 import treehou.se.habit.ui.servers.serverlist.ServersFragment;
 import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectComponent;
@@ -38,6 +42,7 @@ subcomponents = {
         MainActivityComponent.class,
         CreateServerActivityComponent.class,
         CreateMyOpenhabComponent.class,
+        SetupServerComponent.class,
         SettingsComponent.class,
         GeneralSettingsComponent.class,
         WidgetSettingsComponent.class,
@@ -47,6 +52,7 @@ subcomponents = {
         SitemapSelectComponent.class,
         PageComponent.class,
         SitemapListComponent.class,
+        ScanServersComponent.class,
         LightComponent.class
 })
 public abstract class AppBindingModule {
@@ -63,6 +69,11 @@ public abstract class AppBindingModule {
 
     @Binds
     @IntoMap
+    @FragmentKey(ScanServersFragment.class)
+    public abstract FragmentComponentBuilder scanServersFragmentComponentBuilder(ScanServersComponent.Builder impl);
+
+    @Binds
+    @IntoMap
     @FragmentKey(SitemapListFragment.class)
     public abstract FragmentComponentBuilder sitemapListComponentBuilder(SitemapListComponent.Builder impl);
 
@@ -75,6 +86,11 @@ public abstract class AppBindingModule {
     @IntoMap
     @FragmentKey(CreateMyOpenhabFragment.class)
     public abstract FragmentComponentBuilder createMyOpenhabFragmentBuilder(CreateMyOpenhabComponent.Builder impl);
+
+    @Binds
+    @IntoMap
+    @FragmentKey(SetupServerFragment.class)
+    public abstract FragmentComponentBuilder createSetupServerFragmentBuilder(SetupServerComponent.Builder impl);
 
     @Binds
     @IntoMap

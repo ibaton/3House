@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import butterknife.*
 
 import treehou.se.habit.R
+import treehou.se.habit.ui.servers.create.custom.SetupServerFragment
 import treehou.se.habit.ui.servers.create.myopenhab.CreateMyOpenhabFragment
+import treehou.se.habit.ui.servers.create.scan.ScanServersFragment
 
 
 class CreateServerFragment : Fragment() {
@@ -53,6 +55,30 @@ class CreateServerFragment : Fragment() {
             val createMyOpenhabFragment = CreateMyOpenhabFragment()
             fragmentManager.beginTransaction()
                     .replace((view!!.parent as ViewGroup).id, createMyOpenhabFragment)
+                    .addToBackStack(null)
+                    .commit()
+        }
+    }
+
+    @OnClick(R.id.add_new_server)
+    fun startCreateServerFlow(){
+        val fragmentManager = fragmentManager
+        if(fragmentManager != null) {
+            val createMyOpenhabFragment = SetupServerFragment()
+            fragmentManager.beginTransaction()
+                    .replace((view!!.parent as ViewGroup).id, createMyOpenhabFragment)
+                    .addToBackStack(null)
+                    .commit()
+        }
+    }
+
+    @OnClick(R.id.scan_for_servers)
+    fun startScanServerFlow(){
+        val fragmentManager = fragmentManager
+        if(fragmentManager != null) {
+            val scanServersFragment = ScanServersFragment()
+            fragmentManager.beginTransaction()
+                    .replace((view!!.parent as ViewGroup).id, scanServersFragment)
                     .addToBackStack(null)
                     .commit()
         }

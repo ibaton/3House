@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.servers
+package treehou.se.habit.ui.servers.create.scan
 
 import android.content.Context
 import android.os.Bundle
@@ -26,9 +26,16 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
+import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.BaseFragment
+import treehou.se.habit.ui.servers.create.custom.ScanServersContract
+import treehou.se.habit.ui.servers.create.custom.ScanServersModule
+import javax.inject.Inject
 
-class ScanServersFragment : BaseFragment() {
+class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(), ScanServersContract.View {
+
+    @Inject @JvmField var presenter: ScanServersContract.Presenter? = null
 
     @BindView(R.id.empty) @JvmField var viwEmpty: View? = null
     @BindView(R.id.list) @JvmField var lstServer: RecyclerView? = null
@@ -64,6 +71,10 @@ class ScanServersFragment : BaseFragment() {
         realm.copyToRealmOrUpdate(serverDB)
         realm.commitTransaction()
         realm.close()
+    }
+
+    override fun getPresenter(): ScanServersContract.Presenter? {
+        return presenter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -224,9 +235,15 @@ class ScanServersFragment : BaseFragment() {
         }
     }
 
+    override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
+        (hasActivitySubcomponentBuilders.getFragmentComponentBuilder(ScanServersFragment::class.java) as ScanServersComponent.Builder)
+                .fragmentModule(ScanServersModule(this))
+                .build().injectMembers(this)
+    }
+
     interface ItemListener {
 
-        fun onItemClickListener(serverHolder: ScanServersFragment.ServersAdapter.ServerHolder)
+        fun onItemClickListener(serverHolder: ServersAdapter.ServerHolder)
 
         fun itemCountUpdated(itemCount: Int)
     }

@@ -1,12 +1,10 @@
 package treehou.se.habit.ui.servers.serverlist
 
 import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -26,7 +24,7 @@ import treehou.se.habit.module.ApplicationComponent
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.ServersAdapter
-import treehou.se.habit.ui.servers.ScanServersFragment
+import treehou.se.habit.ui.servers.create.scan.ScanServersFragment
 import treehou.se.habit.ui.servers.ServerMenuFragment
 import treehou.se.habit.ui.servers.create.CreateServerActivity
 import treehou.se.habit.util.Settings

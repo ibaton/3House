@@ -1,4 +1,4 @@
-package treehou.se.habit.ui.servers
+package treehou.se.habit.ui.servers.create.custom
 
 import android.net.Uri
 import android.os.Bundle
@@ -9,28 +9,48 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-
-import com.jakewharton.rxbinding2.widget.RxTextView
-
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
+import com.jakewharton.rxbinding2.widget.RxTextView
 import io.realm.Realm
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.ui.BaseFragment
+import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.mvp.BaseDaggerFragment
+import javax.inject.Inject
 
-class SetupServerFragment : BaseFragment() {
+class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(), SetupServerContract.View {
 
-    @BindView(R.id.server_name_text) @JvmField var txtName: EditText? = null
-    @BindView(R.id.server_local_text) @JvmField var localUrlText: EditText? = null
-    @BindView(R.id.error_local_url) @JvmField var errorLocalUrlText: TextView? = null
-    @BindView(R.id.txt_server_remote) @JvmField var remoteUrlText: EditText? = null
-    @BindView(R.id.error_remote_url) @JvmField var errorRemoteUrlText: TextView? = null
-    @BindView(R.id.txt_username) @JvmField var txtUsername: EditText? = null
-    @BindView(R.id.txt_password) @JvmField var txtPassword: EditText? = null
-    @BindView(R.id.btn_back) @JvmField var btnBack: Button? = null
+    @Inject
+    @JvmField
+    var presenter: SetupServerContract.Presenter? = null
+
+    @BindView(R.id.server_name_text)
+    @JvmField
+    var txtName: EditText? = null
+    @BindView(R.id.server_local_text)
+    @JvmField
+    var localUrlText: EditText? = null
+    @BindView(R.id.error_local_url)
+    @JvmField
+    var errorLocalUrlText: TextView? = null
+    @BindView(R.id.txt_server_remote)
+    @JvmField
+    var remoteUrlText: EditText? = null
+    @BindView(R.id.error_remote_url)
+    @JvmField
+    var errorRemoteUrlText: TextView? = null
+    @BindView(R.id.txt_username)
+    @JvmField
+    var txtUsername: EditText? = null
+    @BindView(R.id.txt_password)
+    @JvmField
+    var txtPassword: EditText? = null
+    @BindView(R.id.btn_back)
+    @JvmField
+    var btnBack: Button? = null
 
     private var serverId: Long = -1
     private var buttonTextId = R.string.back
@@ -46,6 +66,10 @@ class SetupServerFragment : BaseFragment() {
             if (bundle.containsKey(ARG_SERVER)) serverId = bundle.getLong(ARG_SERVER)
             buttonTextId = bundle.getInt(ARG_BUTTON_TEXT_ID, R.string.back)
         }
+    }
+
+    override fun getPresenter(): SetupServerContract.Presenter? {
+        return presenter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -123,6 +147,12 @@ class SetupServerFragment : BaseFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putLong(EXTRA_SERVER_ID, serverId)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
+        (hasActivitySubcomponentBuilders.getFragmentComponentBuilder(SetupServerFragment::class.java) as SetupServerComponent.Builder)
+                .fragmentModule(SetupServerModule(this))
+                .build().injectMembers(this)
     }
 
     companion object {

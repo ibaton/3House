@@ -171,7 +171,8 @@
         <activity
             android:name=".ui.servers.create.CreateServerActivity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.Base.Transparent"></activity>
+            android:theme="@style/AppTheme.Base"></activity>
     </application>
+
 
 </manifest>
