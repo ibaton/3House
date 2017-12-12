@@ -7,4 +7,5 @@ class SetupServerPresenter
 @Inject
 constructor(private val view: SetupServerContract.View) : RxPresenter(), SetupServerContract.Presenter {
 
+
 }

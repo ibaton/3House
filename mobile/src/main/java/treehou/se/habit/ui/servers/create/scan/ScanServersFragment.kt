@@ -11,34 +11,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
-import java.util.ArrayList
-
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.services.Scanner
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse
 import treehou.se.habit.R
-import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
-import treehou.se.habit.ui.BaseFragment
 import treehou.se.habit.ui.servers.create.custom.ScanServersContract
 import treehou.se.habit.ui.servers.create.custom.ScanServersModule
+import java.util.*
 import javax.inject.Inject
 
 class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(), ScanServersContract.View {
 
-    @Inject @JvmField var presenter: ScanServersContract.Presenter? = null
+    @Inject
+    lateinit var scanPresenter: ScanServersContract.Presenter
 
-    @BindView(R.id.empty) @JvmField var viwEmpty: View? = null
-    @BindView(R.id.list) @JvmField var lstServer: RecyclerView? = null
+    @BindView(R.id.empty)
+    @JvmField
+    var viwEmpty: View? = null
+    @BindView(R.id.list)
+    @JvmField
+    var lstServer: RecyclerView? = null
 
     private lateinit var serversAdapter: ServersAdapter
     private var discoveryListener: OHCallback<List<OHServer>>? = null
@@ -54,8 +54,7 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         serversAdapter.setItemListener(object : ItemListener {
             override fun onItemClickListener(serverHolder: ServersAdapter.ServerHolder) {
                 val server = serversAdapter.getItem(serverHolder.adapterPosition)
-                saveServer(server)
-                fragmentManager!!.popBackStack()
+                presenter?.saveServer(server)
             }
 
             override fun itemCountUpdated(itemCount: Int) {
@@ -64,17 +63,15 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         })
     }
 
-    private fun saveServer(server: OHServer) {
-        val realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
-        val serverDB = ServerDB.fromGeneric(server)
-        realm.copyToRealmOrUpdate(serverDB)
-        realm.commitTransaction()
-        realm.close()
+    /**
+     * Close this window
+     */
+    override fun closeWindow() {
+        activity?.finish()
     }
 
     override fun getPresenter(): ScanServersContract.Presenter? {
-        return presenter
+        return scanPresenter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

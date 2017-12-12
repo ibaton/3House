@@ -62,6 +62,9 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
                 })
     }
 
+    /**
+     * Close this window
+     */
     override fun closeWindow() {
         activity?.finish()
     }

@@ -6,6 +6,7 @@ import treehou.se.habit.mvp.BaseView
 interface SetupServerContract {
 
     interface View : BaseView<Presenter> {
+        fun closeWindow()
     }
 
     interface Presenter : BasePresenter {

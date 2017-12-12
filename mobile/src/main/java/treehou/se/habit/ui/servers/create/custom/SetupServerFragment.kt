@@ -85,7 +85,7 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
 
     @OnClick(R.id.btn_back)
     internal fun onBack() {
-        activity!!.supportFragmentManager.popBackStack()
+        closeWindow()
     }
 
     override fun onResume() {
@@ -137,6 +137,13 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
             realm1.copyToRealmOrUpdate(server)
         }
         realm.close()
+    }
+
+    /**
+     * Close this window
+     */
+    override fun closeWindow() {
+        activity?.finish()
     }
 
     override fun onDestroyView() {
