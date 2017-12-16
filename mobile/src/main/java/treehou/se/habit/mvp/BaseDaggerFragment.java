@@ -14,7 +14,7 @@ public abstract class BaseDaggerFragment<T extends BasePresenter> extends BaseFr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupComponent();
-        getPresenter().load(savedInstanceState);
+        getPresenter().load(getArguments(), savedInstanceState);
     }
 
     @Override

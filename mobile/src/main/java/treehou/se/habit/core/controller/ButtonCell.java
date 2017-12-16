@@ -43,7 +43,7 @@ public class ButtonCell {
         buttonCellDB.setCommand(command);
     }
 
-    /*public void save(ButtonCell item){
-        ButtonCellDB.save(item.getDB());
+    /*public void saveServer(ButtonCell item){
+        ButtonCellDB.saveServer(item.getDB());
     }*/
 }

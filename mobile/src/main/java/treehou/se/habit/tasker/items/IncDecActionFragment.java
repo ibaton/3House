@@ -149,7 +149,7 @@ public class IncDecActionFragment extends RxFragment {
             getActivity().setResult(Activity.RESULT_OK, resultIntent);
 
         }catch (NumberFormatException e){
-            Log.e(TAG, "save", e);
+            Log.e(TAG, "saveServer", e);
         }
     }
 }

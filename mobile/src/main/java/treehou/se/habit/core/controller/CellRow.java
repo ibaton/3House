@@ -32,12 +32,12 @@ public class CellRow {
     public static Cell addCell(CellRow cellRowDB){
         Cell cell = new Cell();
         cell.setCellRow(cellRowDB);
-        //Cell.save(cell);
+        //Cell.saveServer(cell);
 
         return cell;
     }
 
     public static void save(CellRow item){
-        //CellRowDB.save(item.getDB());
+        //CellRowDB.saveServer(item.getDB());
     }
 }

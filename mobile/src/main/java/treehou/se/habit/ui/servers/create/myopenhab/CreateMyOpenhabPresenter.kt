@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.servers.create.myopenhab
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.reactivex.schedulers.Schedulers
@@ -28,6 +29,8 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
     @JvmField
     var context: Context? = null
 
+    override fun load(launchData: Bundle?, savedData: Bundle?) {
+    }
 
     override fun login(username: String, password: String) {
         Log.d(TAG, "Attempting Login")

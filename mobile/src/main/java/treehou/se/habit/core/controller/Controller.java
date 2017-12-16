@@ -84,7 +84,7 @@ public class Controller {
     }
 
     public static void save(Controller item){
-        //ControllerDB.save(item.getDB());
+        //ControllerDB.saveServer(item.getDB());
     }
 
     public static CellRow addRow(Controller controller){

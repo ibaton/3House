@@ -46,8 +46,8 @@ public class SitemapListPresenter extends RxPresenter implements SitemapListCont
     }
 
     @Override
-    public void load(Bundle savedData) {
-        super.load(savedData);
+    public void load(Bundle launchData, Bundle savedData) {
+        super.load(launchData, savedData);
         if (savedData != null) showSitemap = "";
         else showSitemap = arguments.getString(SitemapListFragment.ARG_SHOW_SITEMAP);
     }

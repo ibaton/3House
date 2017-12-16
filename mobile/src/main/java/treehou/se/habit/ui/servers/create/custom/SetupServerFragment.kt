@@ -14,7 +14,6 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.jakewharton.rxbinding2.widget.RxTextView
-import io.realm.Realm
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
@@ -48,24 +47,19 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     @BindView(R.id.txt_password)
     @JvmField
     var txtPassword: EditText? = null
-    @BindView(R.id.btn_back)
+    @BindView(R.id.btn_save)
     @JvmField
-    var btnBack: Button? = null
+    var btnSave: Button? = null
+
+    @BindView(R.id.top_label)
+    @JvmField
+    var topLabel: View? = null
 
     private var serverId: Long = -1
-    private var buttonTextId = R.string.back
     private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val bundle = arguments
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_SERVER_ID)) {
-            serverId = savedInstanceState.getLong(EXTRA_SERVER_ID)
-        } else if (bundle != null) {
-            if (bundle.containsKey(ARG_SERVER)) serverId = bundle.getLong(ARG_SERVER)
-            buttonTextId = bundle.getInt(ARG_BUTTON_TEXT_ID, R.string.back)
-        }
     }
 
     override fun getPresenter(): SetupServerContract.Presenter? {
@@ -74,33 +68,24 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
         val rootView = inflater.inflate(R.layout.fragment_setup_server, container, false)
         unbinder = ButterKnife.bind(this, rootView)
-
-        btnBack!!.setText(buttonTextId)
 
         return rootView
     }
 
-    @OnClick(R.id.btn_back)
-    internal fun onBack() {
-        closeWindow()
+    override fun showTopLabel(show: Boolean){
+        topLabel?.visibility = if(show) View.VISIBLE else View.GONE
+    }
+
+    @OnClick(R.id.btn_save)
+    internal fun onSave() {
+        save()
     }
 
     override fun onResume() {
         super.onResume()
-
-        val realm = Realm.getDefaultInstance()
-        val server = realm.where(ServerDB::class.java).equalTo("id", serverId).findFirst()
-        if (server != null) {
-            txtName!!.setText(server.name)
-            localUrlText!!.setText(server.localUrl)
-            remoteUrlText!!.setText(server.remoteUrl)
-            txtUsername!!.setText(server.username)
-            txtPassword!!.setText(server.password)
-        }
-        realm.close()
 
         RxTextView.textChanges(remoteUrlText!!)
                 .compose(bindToLifecycle())
@@ -111,32 +96,35 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
                 .subscribe { text -> errorLocalUrlText!!.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE }
     }
 
+    override fun loadServer(server: ServerDB) {
+        txtName!!.setText(server.name)
+        localUrlText!!.setText(server.localUrl)
+        remoteUrlText!!.setText(server.remoteUrl)
+        txtUsername!!.setText(server.username)
+        txtPassword!!.setText(server.password)
+    }
+
     private fun toUrl(text: String): String {
 
         val uri = Uri.parse(text)
         return uri.toString()
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        val realm = Realm.getDefaultInstance()
-        realm.executeTransaction { realm1 ->
-            val server = ServerDB()
-            if (serverId <= 0) {
-                server.id = ServerDB.getUniqueId()
-                serverId = server.id
-            } else {
-                server.id = serverId
-            }
-            server.name = txtName!!.text.toString()
-            server.localUrl = toUrl(localUrlText!!.text.toString())
-            server.remoteUrl = toUrl(remoteUrlText!!.text.toString())
-            server.username = txtUsername!!.text.toString()
-            server.password = txtPassword!!.text.toString()
-            realm1.copyToRealmOrUpdate(server)
+    private fun save() {
+        val server = ServerDB()
+        if (serverId <= 0) {
+            server.id = ServerDB.getUniqueId()
+            serverId = server.id
+        } else {
+            server.id = serverId
         }
-        realm.close()
+        server.name = txtName!!.text.toString()
+        server.localUrl = toUrl(localUrlText!!.text.toString())
+        server.remoteUrl = toUrl(remoteUrlText!!.text.toString())
+        server.username = txtUsername!!.text.toString()
+        server.password = txtPassword!!.text.toString()
+
+        presenter?.saveServer(server)
     }
 
     /**
@@ -151,11 +139,6 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
         unbinder!!.unbind()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putLong(EXTRA_SERVER_ID, serverId)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
         (hasActivitySubcomponentBuilders.getFragmentComponentBuilder(SetupServerFragment::class.java) as SetupServerComponent.Builder)
                 .fragmentModule(SetupServerModule(this))
@@ -163,11 +146,6 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     companion object {
-
-        private val ARG_SERVER = "ARG_SERVER"
-        val ARG_BUTTON_TEXT_ID = "ARG_BUTTON_TEXT_ID"
-
-        private val EXTRA_SERVER_ID = "EXTRA_SERVER_ID"
 
         fun newInstance(): SetupServerFragment {
             val fragment = SetupServerFragment()
@@ -179,7 +157,7 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
         fun newInstance(serverId: Long): SetupServerFragment {
             val fragment = SetupServerFragment()
             val args = Bundle()
-            args.putLong(ARG_SERVER, serverId)
+            args.putLong(SetupServerPresenter.ARG_SERVER, serverId)
             fragment.arguments = args
             return fragment
         }

@@ -89,7 +89,7 @@ public class ServersTest {
         closeSoftKeyboard();
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
         onView(withText("Edit")).perform(click());
-        onView(withId(R.id.btn_back)).perform(click());
+        onView(withId(R.id.btn_save)).perform(click());
         pressBack();
         deleteServer(testServerName);
     }

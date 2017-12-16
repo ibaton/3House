@@ -8,7 +8,7 @@ class CreateServerPresenter
 @Inject
 constructor(private val view: CreateServerContract.View, private val realm: Realm) : CreateServerContract.Presenter {
 
-    override fun load(savedData: Bundle?) {}
+    override fun load(launchData: Bundle?, savedData: Bundle?) {}
 
 
     override fun subscribe() {

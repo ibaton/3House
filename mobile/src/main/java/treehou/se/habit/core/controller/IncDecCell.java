@@ -71,7 +71,7 @@ public class IncDecCell {
     }
 
     public void save(){
-        //IncDecCellDB.save(getDB());
+        //IncDecCellDB.saveServer(getDB());
     }
 
     public static IncDecCell getCell(Cell cell){

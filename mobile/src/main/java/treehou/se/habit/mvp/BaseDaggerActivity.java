@@ -17,7 +17,7 @@ public abstract class BaseDaggerActivity<T extends BasePresenter> extends BaseAc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActivityComponent();
-        getPresenter().load(savedInstanceState);
+        getPresenter().load(getIntent().getExtras(), savedInstanceState);
     }
 
     @Override

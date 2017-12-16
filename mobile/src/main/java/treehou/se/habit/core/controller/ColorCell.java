@@ -47,7 +47,7 @@ public class ColorCell {
     }
 
     public static void save(ColorCell item){
-        //ColorCellDB.save(item.getDB());
+        //ColorCellDB.saveServer(item.getDB());
     }
 
     public static ColorCell getCell(Cell cell){
