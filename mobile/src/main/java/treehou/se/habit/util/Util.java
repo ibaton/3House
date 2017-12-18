@@ -159,6 +159,10 @@ public class Util {
         return ((HabitApplication) context.getApplicationContext()).component();
     }
 
+    public static Spanned createLabel(Context context, String name){
+        return createLabel(context, name, null);
+    }
+
     /**
      * Create label text correctly formated to display values.
      *
@@ -166,9 +170,18 @@ public class Util {
      * @param name the label.
      * @return formated label
      */
-    public static Spanned createLabel(Context context, String name){
-        String nameSpaned = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & ContextCompat.getColor(context, R.color.colorAccent)) +"'>$2</font>");
+    public static Spanned createLabel(Context context, String name, String valueColor){
+        String nameSpaned = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & getValueColor(context, valueColor)) +"'>$2</font>");
         return Html.fromHtml(nameSpaned);
+    }
+
+    private static int getValueColor(Context context, String value){
+        Integer colorRes = OpenHabUtil.openhabColors.get(value);
+        if(colorRes != null){
+            return ContextCompat.getColor(context, colorRes);
+        }
+
+        return ContextCompat.getColor(context, R.color.colorAccent);
     }
 
     /**
@@ -263,23 +276,5 @@ public class Util {
         return Colour.colorSchemeOfType(color, Colour.ColorScheme.ColorSchemeAnalagous);
     }
 
-    public static Point getScreenSize(Activity activity) {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int x = size.x;
-        int y = size.y;
 
-        return new Point(x, y);
-    }
-
-    public static Point getCenterPointOfView(View view) {
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
-
-        int x = location[0] + view.getWidth() / 2;
-        int y = location[1] + view.getHeight() / 2;
-
-        return new Point(x, y);
-    }
 }

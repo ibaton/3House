@@ -14,12 +14,30 @@ constructor(private val view: SetupServerContract.View) : RxPresenter(), SetupSe
     @Inject lateinit var realm: Realm
     var serverId: Long = -1
 
-    override fun saveServer(server: ServerDB) {
+    override fun saveServer(serverData: ServerData) {
+        val server = convertServerDataToDB(serverData)
+
         realm.executeTransaction { realm1 ->
             realm1.copyToRealmOrUpdate(server)
         }
         realm.close()
         view.closeWindow()
+    }
+
+    private fun convertServerDataToDB(serverData: ServerData): ServerDB{
+        val server = ServerDB()
+        if (serverId <= 0) {
+            server.id = ServerDB.getUniqueId()
+            serverId = server.id
+        } else {
+            server.id = serverId
+        }
+        server.name = serverData.name
+        server.localUrl = serverData.localUrl
+        server.remoteUrl = serverData.remoteUrl
+        server.username = serverData.username
+        server.password = serverData.password
+        return server
     }
 
     override fun load(launchData: Bundle?, savedData: Bundle?) {

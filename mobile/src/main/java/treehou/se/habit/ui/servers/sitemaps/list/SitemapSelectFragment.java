@@ -201,7 +201,7 @@ public class SitemapSelectFragment extends BaseDaggerFragment<SitemapSelectContr
                         sitemapAdapter.add(server, sitemap);
                     }
                 }, throwable -> {
-                    logger.e(TAG, "Request sitemap failed", throwable);
+                    getLogger().e(TAG, "Request sitemap failed", throwable);
                 });
     }
 }

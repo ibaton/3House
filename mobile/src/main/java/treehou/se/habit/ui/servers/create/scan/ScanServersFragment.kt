@@ -23,6 +23,7 @@ import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse
 import treehou.se.habit.R
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
+import treehou.se.habit.ui.servers.create.CreateServerActivity
 import treehou.se.habit.ui.servers.create.custom.ScanServersContract
 import treehou.se.habit.ui.servers.create.custom.ScanServersModule
 import java.util.*
@@ -67,7 +68,12 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
      * Close this window
      */
     override fun closeWindow() {
-        activity?.finish()
+        val currentActivity = activity
+        if(currentActivity is CreateServerActivity){
+            activity?.finish()
+        } else {
+            fragmentManager?.popBackStack()
+        }
     }
 
     override fun getPresenter(): ScanServersContract.Presenter? {

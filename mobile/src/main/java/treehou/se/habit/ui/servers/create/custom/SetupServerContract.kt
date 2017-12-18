@@ -13,6 +13,6 @@ interface SetupServerContract {
     }
 
     interface Presenter : BasePresenter {
-        fun saveServer(server: ServerDB)
+        fun saveServer(serverData: ServerData)
     }
 }

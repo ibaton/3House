@@ -61,4 +61,24 @@
     <color name="dark_blue">#1e89b4</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+
+
+
+    <color name="openhab_maroon">#800000</color>
+    <color name="openhab_red">#ff0000</color>
+    <color name="openhab_orange">#ffa500</color>
+    <color name="openhab_olive">#808000</color>
+    <color name="openhab_yellow">#ffff00</color>
+    <color name="openhab_purple">#800080</color>
+    <color name="openhab_fuchsia">#ff00ff</color>
+    <color name="openhab_white">#ffffff</color>
+    <color name="openhab_lime">#00ff00</color>
+    <color name="openhab_green">#008000</color>
+    <color name="openhab_navy">#000080</color>
+    <color name="openhab_blue">#0000ff</color>
+    <color name="openhab_teal">#008080</color>
+    <color name="openhab_aqua">#00ffff</color>
+    <color name="openhab_black">#000000</color>
+    <color name="openhab_silver">#c0c0c0</color>
+    <color name="openhab_gray">#808080</color>
 </resources>

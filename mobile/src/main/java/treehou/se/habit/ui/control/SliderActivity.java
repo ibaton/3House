@@ -114,8 +114,8 @@ public class SliderActivity extends BaseActivity {
             ((HabitApplication) getActivity().getApplication()).component().inject(this);
             if (getArguments() != null) {
                 long id = getArguments().getLong(ARG_CELL);
-                logger.d(TAG, "Loading cell " + id);
-                CellDB cell = CellDB.load(realm, id);
+                getLogger().d(TAG, "Loading cell " + id);
+                CellDB cell = CellDB.load(getRealm(), id);
                 sliederCell = cell.getCellSlider();
             }
         }
@@ -125,13 +125,13 @@ public class SliderActivity extends BaseActivity {
             try {
                 View rootView = inflater.inflate(R.layout.fragment_slider, null, false);
 
-                itemName = (TextView) rootView.findViewById(R.id.item_name);
-                sbrNumber = (SeekBar) rootView.findViewById(R.id.sbrNumber);
+                itemName = rootView.findViewById(R.id.item_name);
+                sbrNumber = rootView.findViewById(R.id.sbrNumber);
                 sbrNumber.setMax(sliederCell.getMax());
                 sbrNumber.setOnSeekBarChangeListener(sliderListener);
                 return rootView;
             }catch (Exception e){
-                logger.e(TAG, "Slider adapter inflater fail", e);
+                getLogger().e(TAG, "Slider adapter inflater fail", e);
                 return inflater.inflate(R.layout.item_widget_null, null, false);
             }
         }
@@ -162,10 +162,10 @@ public class SliderActivity extends BaseActivity {
                                 sbrNumber.setOnSeekBarChangeListener(sliderListener);
                             }
                         } catch (Exception e) {
-                            logger.e(TAG, "Failed to update progress", e);
+                            getLogger().e(TAG, "Failed to update progress", e);
                         }
                     }, e -> {
-                        logger.e(TAG, "Error getting slider data", e);
+                        getLogger().e(TAG, "Error getting slider data", e);
                     });
         }
     }

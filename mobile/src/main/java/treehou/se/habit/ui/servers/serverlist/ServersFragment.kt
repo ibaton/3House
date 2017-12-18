@@ -134,7 +134,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
 
     override fun onDestroy() {
         super.onDestroy()
-        realm!!.close()
+        realm.close()
     }
 
     /**
@@ -149,7 +149,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
      * Hookup server list, listening for server updates.
      */
     private fun setupAdapter() {
-        realm!!.where(ServerDB::class.java).findAllAsync().asFlowable().toObservable()
+        realm.where(ServerDB::class.java).findAllAsync().asFlowable().toObservable()
                 .compose(this.bindToLifecycle<RealmResults<ServerDB>>())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ servers1 ->
@@ -171,8 +171,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         //settings!!.serverSetupAsked = true
         AlertDialog.Builder(activity)
                 .setMessage(R.string.start_scan_question)
-                .setNeutralButton(R.string.new_server) { _, _ -> startNewServerFlow() }
-                .setPositiveButton(R.string.scan) { _, _ -> openServerScan() }
+                .setPositiveButton(R.string.new_server) { _, _ -> startNewServerFlow() }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
     }
@@ -198,16 +197,6 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     }
 
     /**
-     * Launch flow used to scan for server on network.
-     */
-    private fun openServerScan() {
-        activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.page_container, ScanServersFragment.newInstance())
-                .addToBackStack(null)
-                .commit()
-    }
-
-    /**
      * Launchs flow asking user to remove or keep server.
      * @param serverHolder holder that triggered flow.
      * @param server the server to remove.
@@ -216,13 +205,13 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         AlertDialog.Builder(activity)
                 .setMessage(R.string.remove_server_question)
                 .setPositiveButton(R.string.ok) { _, _ ->
-                    realm!!.beginTransaction()
+                    realm.beginTransaction()
                     val position = serverHolder.adapterPosition
                     val i = servers!!.indexOf(server)
                     if (i >= 0) {
                         servers!!.deleteFromRealm(i)
                     }
-                    realm!!.commitTransaction()
+                    realm.commitTransaction()
                     serversAdapter!!.notifyItemRemoved(position)
                 }
                 .setNegativeButton(R.string.cancel, null)

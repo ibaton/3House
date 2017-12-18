@@ -18,6 +18,7 @@ import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
+import treehou.se.habit.ui.servers.create.CreateServerActivity
 import javax.inject.Inject
 
 class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(), SetupServerContract.View {
@@ -55,7 +56,6 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     @JvmField
     var topLabel: View? = null
 
-    private var serverId: Long = -1
     private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +75,8 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
         return rootView
     }
 
-    override fun showTopLabel(show: Boolean){
-        topLabel?.visibility = if(show) View.VISIBLE else View.GONE
+    override fun showTopLabel(show: Boolean) {
+        topLabel?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     @OnClick(R.id.btn_save)
@@ -111,18 +111,7 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     private fun save() {
-        val server = ServerDB()
-        if (serverId <= 0) {
-            server.id = ServerDB.getUniqueId()
-            serverId = server.id
-        } else {
-            server.id = serverId
-        }
-        server.name = txtName!!.text.toString()
-        server.localUrl = toUrl(localUrlText!!.text.toString())
-        server.remoteUrl = toUrl(remoteUrlText!!.text.toString())
-        server.username = txtUsername!!.text.toString()
-        server.password = txtPassword!!.text.toString()
+        val server = ServerData(txtName!!.text.toString(), toUrl(localUrlText!!.text.toString()), toUrl(remoteUrlText!!.text.toString()), txtUsername!!.text.toString(), txtPassword!!.text.toString())
 
         presenter?.saveServer(server)
     }
@@ -131,7 +120,12 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
      * Close this window
      */
     override fun closeWindow() {
-        activity?.finish()
+        val currentActivity = activity
+        if (currentActivity is CreateServerActivity) {
+            activity?.finish()
+        } else {
+            fragmentManager?.popBackStack()
+        }
     }
 
     override fun onDestroyView() {
