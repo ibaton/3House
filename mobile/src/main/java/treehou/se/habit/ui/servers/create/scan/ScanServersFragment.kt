@@ -55,7 +55,7 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         serversAdapter.setItemListener(object : ItemListener {
             override fun onItemClickListener(serverHolder: ServersAdapter.ServerHolder) {
                 val server = serversAdapter.getItem(serverHolder.adapterPosition)
-                presenter?.saveServer(server)
+                scanPresenter.saveServer(server)
             }
 
             override fun itemCountUpdated(itemCount: Int) {

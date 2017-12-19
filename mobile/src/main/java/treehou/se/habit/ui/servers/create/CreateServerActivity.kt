@@ -16,7 +16,7 @@ class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(
 
     @Inject
     @JvmField
-    var presenter: CreateServerPresenter? = null;
+    var serverPresenter: CreateServerPresenter? = null;
 
     @BindView(R.id.container) lateinit var container: View
 
@@ -51,10 +51,10 @@ class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(
     }
 
     override fun getPresenter(): CreateServerContract.Presenter? {
-        return presenter
+        return serverPresenter
     }
 
-    override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders?) {
+    override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
         (hasActivitySubcomponentBuilders?.getActivityComponentBuilder(CreateServerActivity::class.java) as CreateServerActivityComponent.Builder)
                 .activityModule(CreateServerModule(this))
                 .build().injectMembers(this)

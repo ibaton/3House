@@ -94,7 +94,7 @@ class BaseWidgetFactory {
             }
 
             Log.d(TAG, "update " + (if (widget.item != null) widget.item.name else "") + " " + widget.label)
-            setLabelColor(widget.labelColor)
+            setLabelColor(Util.getLabelColor(context, widget.labelColor))
             setName(widget.label, widget.valueColor)
 
             if (widget.linkedPage != null) {
@@ -171,13 +171,7 @@ class BaseWidgetFactory {
             }
         }
 
-        private fun setLabelColor(value: String?) {
-            val colorRes: Int? = OpenHabUtil.openhabColors[value]
-            if (colorRes != null) {
-                lblName.setTextColor(ContextCompat.getColor(context, colorRes))
-                return
-            }
-
+        private fun setLabelColor(labelColor: Int) {
             lblName.setTextColor(labelColor)
         }
 

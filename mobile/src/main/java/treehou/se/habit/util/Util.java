@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
@@ -175,13 +176,44 @@ public class Util {
         return Html.fromHtml(nameSpaned);
     }
 
-    private static int getValueColor(Context context, String value){
+    /**
+     * Get value color
+     * @param context
+     * @param value
+     * @return
+     */
+    private static int getColor(Context context, String value, @ColorRes int defaultColorRes){
         Integer colorRes = OpenHabUtil.openhabColors.get(value);
         if(colorRes != null){
             return ContextCompat.getColor(context, colorRes);
         }
 
-        return ContextCompat.getColor(context, R.color.colorAccent);
+        try {
+            return Color.parseColor(value);
+        } catch (Exception ignore) {}
+
+        return ContextCompat.getColor(context, defaultColorRes);
+    }
+
+    /**
+     * Get value color
+     *
+     * @param context
+     * @param value
+     * @return
+     */
+    public static int getValueColor(Context context, String value){
+        return getColor(context, value, R.color.colorAccent);
+    }
+
+    /**
+     * Get label color
+     * @param context
+     * @param value
+     * @return
+     */
+    public static int getLabelColor(Context context, String value){
+        return getColor(context, value, R.color.text_primary);
     }
 
     /**
