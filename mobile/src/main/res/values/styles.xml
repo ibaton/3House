@@ -10,8 +10,25 @@
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
+    <style name="Label.Color" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="CreateServerText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
+
+    <style name="CreateServerText.Large">
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="CreateServerText.Error">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorError</item>
+    </style>
+
     <style name="MenuItemText" parent="TextAppearance.AppCompat.Large">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:lines">1</item>
     </style>
 
@@ -70,8 +87,7 @@
     </style>
 
     <!-- ActionBar title text -->
-    <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-    </style>
+    <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"></style>
 
     <style name="drawer_item_text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:layout_width">wrap_content</item>
@@ -83,7 +99,7 @@
     <style name="inbox_item_button" parent="Widget.AppCompat.ImageButton">
         <item name="android:padding">10dp</item>
     </style>
-    
+
     <style name="item_card" parent="CardView">
         <item name="cardElevation">@dimen/item_elevation</item>
         <item name="cardUseCompatPadding">true</item>
@@ -123,4 +139,8 @@
         <item name="android:background">@color/grey</item>
         <item name="android:padding">@dimen/item_spacing</item>
     </style>
+
+    <style name="AppTheme.Base.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.Base.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -3,8 +3,11 @@ package treehou.se.habit.util;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
@@ -14,8 +17,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import com.mattyork.colours.Colour;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -153,6 +160,10 @@ public class Util {
         return ((HabitApplication) context.getApplicationContext()).component();
     }
 
+    public static Spanned createLabel(Context context, String name){
+        return createLabel(context, name, null);
+    }
+
     /**
      * Create label text correctly formated to display values.
      *
@@ -160,9 +171,49 @@ public class Util {
      * @param name the label.
      * @return formated label
      */
-    public static Spanned createLabel(Context context, String name){
-        String nameSpaned = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & ContextCompat.getColor(context, R.color.colorAccent)) +"'>$2</font>");
+    public static Spanned createLabel(Context context, String name, String valueColor){
+        String nameSpaned = name.replaceAll("(\\[)(.*)(\\])", "<font color='"+ String.format("#%06X", 0xFFFFFF & getValueColor(context, valueColor)) +"'>$2</font>");
         return Html.fromHtml(nameSpaned);
+    }
+
+    /**
+     * Get value color
+     * @param context
+     * @param value
+     * @return
+     */
+    private static int getColor(Context context, String value, @ColorRes int defaultColorRes){
+        Integer colorRes = OpenHabUtil.openhabColors.get(value);
+        if(colorRes != null){
+            return ContextCompat.getColor(context, colorRes);
+        }
+
+        try {
+            return Color.parseColor(value);
+        } catch (Exception ignore) {}
+
+        return ContextCompat.getColor(context, defaultColorRes);
+    }
+
+    /**
+     * Get value color
+     *
+     * @param context
+     * @param value
+     * @return
+     */
+    public static int getValueColor(Context context, String value){
+        return getColor(context, value, R.color.colorAccent);
+    }
+
+    /**
+     * Get label color
+     * @param context
+     * @param value
+     * @return
+     */
+    public static int getLabelColor(Context context, String value){
+        return getColor(context, value, R.color.text_primary);
     }
 
     /**
@@ -256,4 +307,6 @@ public class Util {
     public static int[] generatePallete(int color){
         return Colour.colorSchemeOfType(color, Colour.ColorScheme.ColorSchemeAnalagous);
     }
+
+
 }

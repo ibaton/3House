@@ -12,6 +12,7 @@ import treehou.se.habit.tasker.items.IncDecActionFragment;
 import treehou.se.habit.tasker.items.SwitchActionFragment;
 import treehou.se.habit.tasker.reciever.CommandReciever;
 import treehou.se.habit.tasker.reciever.IncDecReciever;
+import treehou.se.habit.ui.BaseDialogFragment;
 import treehou.se.habit.ui.BaseFragment;
 import treehou.se.habit.ui.bindings.BindingsFragment;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
@@ -31,7 +32,6 @@ import treehou.se.habit.ui.homescreen.VoiceService;
 import treehou.se.habit.ui.links.LinksListFragment;
 import treehou.se.habit.ui.menu.NavigationDrawerFragment;
 import treehou.se.habit.ui.servers.ServerMenuFragment;
-import treehou.se.habit.ui.servers.serverlist.ServersFragment;
 import treehou.se.habit.ui.util.IconPickerActivity;
 import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 
@@ -43,6 +43,7 @@ import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 public interface ApplicationComponent {
     void inject(HabitApplication application);
     void inject(BaseFragment fragment);
+    void inject(BaseDialogFragment fragment);
     void inject(ControllsFragment fragment);
     void inject(ColorpickerActivity activity);
     void inject(BaseActivity activity);

@@ -68,7 +68,7 @@ public class SliderCell {
     }
 
     public static void save(SliderCell item){
-        //SliderCellDB.save(item.getDB());
+        //SliderCellDB.saveServer(item.getDB());
     }
 
     public static SliderCell getCell(Cell cell){

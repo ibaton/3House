@@ -2,18 +2,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".ui.servers.SetupServerFragment">
+    tools:context=".ui.servers.create.custom.SetupServerFragment">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/top_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/item_margin"
+        android:transitionName="card_expand_transition">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/default_item_padding">
+
+            <ImageView
+                app:srcCompat="@drawable/add_row_icon"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:transitionName="icon_expand_transition" />
+
+            <TextView
+                android:id="@+id/button3"
+                style="@style/CreateServerText.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_server"
+                android:transitionName="text_transition" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -22,7 +55,8 @@
                 android:id="@+id/server_name_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/server_name" />
+                android:labelFor="@+id/server_name_text"
+            android:text="@string/server_name" />
 
             <EditText
                 android:id="@+id/server_name_text"
@@ -35,6 +69,7 @@
                 android:id="@+id/server_local_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:labelFor="@+id/server_local_text"
                 android:text="@string/server_local" />
 
             <EditText
@@ -56,6 +91,7 @@
                 android:id="@+id/hdr_server_remote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:labelFor="@+id/txt_server_remote"
                 android:text="@string/server_remote" />
 
             <EditText
@@ -77,18 +113,21 @@
                 android:id="@+id/hdr_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:labelFor="@+id/txt_username"
                 android:text="@string/username" />
 
             <EditText
                 android:id="@+id/txt_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
                 android:lines="1" />
 
             <TextView
                 android:id="@+id/hdr_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:labelFor="@+id/txt_password"
                 android:text="@string/password" />
 
             <EditText
@@ -102,11 +141,12 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/btn_back"
+        android:id="@+id/btn_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:paddingBottom="30dp"
         android:paddingTop="30dp"
-        android:text="@string/back" />
+        android:text="@string/save" />
 
 </LinearLayout>

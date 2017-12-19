@@ -70,35 +70,32 @@ public class TextWidgetFactory implements IWidgetFactory {
             final OHItem item = widget.getItem();
             if(item != null && item.getType().equals(OHItem.TYPE_STRING) && item.getType().equals(OHItem.TYPE_STRING)){
 
-                baseHolder.getView().setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(context.getString(R.string.send_text_command));
+                baseHolder.getView().setOnLongClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(context.getString(R.string.send_text_command));
 
-                        View inputView = LayoutInflater.from(context).inflate(R.layout.dialog_input_text, null);
+                    View inputView = LayoutInflater.from(context).inflate(R.layout.dialog_input_text, null);
 
-                        final EditText input = (EditText) inputView.findViewById(R.id.txt_command);
-                        input.setText(item.getState());
+                    final EditText input = inputView.findViewById(R.id.txt_command);
+                    input.setText(item.getState());
 
-                        if(item.getType().equals(OHItem.TYPE_STRING)) {
-                            input.setInputType(InputType.TYPE_CLASS_TEXT);
-                        }
-                        else if (item.getType().equals(OHItem.TYPE_NUMBER)) {
-                            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        }
-                        builder.setView(inputView);
-
-                        IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
-                        builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
-                            String text = input.getText().toString();
-                            serverHandler.sendCommand(widget.getItem().getName(), text);
-                        });
-                        builder.setNegativeButton(context.getString(R.string.cancel), (dialog, which) -> dialog.cancel());
-                        builder.show();
-
-                        return false;
+                    if(item.getType().equals(OHItem.TYPE_STRING)) {
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
                     }
+                    else if (item.getType().equals(OHItem.TYPE_NUMBER)) {
+                        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    }
+                    builder.setView(inputView);
+
+                    IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
+                    builder.setPositiveButton(context.getString(R.string.ok), (dialog, which) -> {
+                        String text = input.getText().toString();
+                        serverHandler.sendCommand(widget.getItem().getName(), text);
+                    });
+                    builder.setNegativeButton(context.getString(R.string.cancel), (dialog, which) -> dialog.cancel());
+                    builder.show();
+
+                    return false;
                 });
             }
 

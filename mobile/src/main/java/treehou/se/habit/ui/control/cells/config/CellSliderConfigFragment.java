@@ -76,11 +76,11 @@ public class CellSliderConfigFragment extends BaseFragment {
 
         if (getArguments() != null) {
             long id = getArguments().getLong(ARG_CELL_ID);
-            cell = CellDB.load(realm, id);
+            cell = CellDB.load(getRealm(), id);
             sliderCell = cell.getCellSlider();
 
             if(sliderCell == null){
-                realm.executeTransaction(realm -> {
+                getRealm().executeTransaction(realm -> {
                     sliderCell = new SliderCellDB();
                     sliderCell = realm.copyToRealm(sliderCell);
                     cell.setCellSlider(sliderCell);
@@ -108,8 +108,8 @@ public class CellSliderConfigFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 OHItem item = items.get(position);
                 if (item != null) {
-                    realm.beginTransaction();
-                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(realm, item);
+                    getRealm().beginTransaction();
+                    ItemDB itemDB = ItemDB.createOrLoadFromGeneric(getRealm(), item);
                     if (item.getType().equals(OHItem.TYPE_NUMBER) || item.getType().equals(OHItem.TYPE_GROUP)) {
                         louRange.setVisibility(View.VISIBLE);
                     } else {
@@ -117,7 +117,7 @@ public class CellSliderConfigFragment extends BaseFragment {
                     }
 
                     sliderCell.setItem(itemDB);
-                    realm.commitTransaction();
+                    getRealm().commitTransaction();
                 }
             }
 
@@ -127,7 +127,7 @@ public class CellSliderConfigFragment extends BaseFragment {
         });
         mItemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         sprItems.post(() -> sprItems.setAdapter(mItemAdapter));
-        List<ServerDB> servers = realm.where(ServerDB.class).findAll();
+        List<ServerDB> servers = getRealm().where(ServerDB.class).findAll();
         items.clear();
 
         if(item != null){
@@ -197,7 +197,7 @@ public class CellSliderConfigFragment extends BaseFragment {
             return;
         }
 
-        realm.beginTransaction();
+        getRealm().beginTransaction();
         if(sliderCell.getItem().getType().equals(OHItem.TYPE_NUMBER)
                 || sliderCell.getItem().getType().equals(OHItem.TYPE_GROUP)){
             sliderCell.setMin(0);
@@ -206,7 +206,7 @@ public class CellSliderConfigFragment extends BaseFragment {
             sliderCell.setMin(0);
             sliderCell.setMax(100);
         }
-        realm.commitTransaction();
+        getRealm().commitTransaction();
     }
 
     @Override
@@ -222,9 +222,9 @@ public class CellSliderConfigFragment extends BaseFragment {
                 data.hasExtra(IconPickerActivity.RESULT_ICON)){
 
             String iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON);
-            realm.beginTransaction();
+            getRealm().beginTransaction();
             sliderCell.setIcon(iconName.equals("") ? null : iconName);
-            realm.commitTransaction();
+            getRealm().commitTransaction();
             updateIconImage();
         }
     }

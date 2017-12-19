@@ -129,7 +129,7 @@ public class LinksListFragment extends BaseFragment {
                     adapter.addItem(link);
                     Toast.makeText(getContext(), R.string.failed_delete_link, Toast.LENGTH_SHORT).show();
                 }, throwable -> {
-                    logger.e(TAG, "removeLink Failed", throwable);
+                    getLogger().e(TAG, "removeLink Failed", throwable);
                 });
     }
 
@@ -182,6 +182,6 @@ public class LinksListFragment extends BaseFragment {
                     clearList();
                     emptyView.setVisibility(View.GONE);
                     adapter.addAll(ohLinks);
-                }, throwable -> logger.w(TAG, "Failed to load link items", throwable));
+                }, throwable -> getLogger().w(TAG, "Failed to load link items", throwable));
     }
 }

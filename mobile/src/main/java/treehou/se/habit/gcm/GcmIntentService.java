@@ -136,7 +136,7 @@ public class GcmIntentService extends IntentService {
         realm.close();
 
         /*NotificationDB notification = new NotificationDB(msg);
-        notification.save();
+        notification.saveServer();
         List<NotificationDB> notifications = new Select().all().from(NotificationDB.class).execute();*/
         //TODO create inbox style
 

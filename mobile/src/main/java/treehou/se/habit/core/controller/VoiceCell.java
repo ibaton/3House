@@ -40,7 +40,7 @@ public class VoiceCell {
     }
 
     public void save(){
-        //VoiceCellDB.save(getDB());
+        //VoiceCellDB.saveServer(getDB());
     }
 
     public static VoiceCell getCell(Cell cell){

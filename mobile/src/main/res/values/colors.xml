@@ -6,13 +6,15 @@
     <color name="colorPrimaryDark">#ff689F38</color>
     <color name="colorAccent">#FF9800</color>
 
-    <color name="navigationBarColor">#55000000</color>
+    <color name="navigationBarColor">#bcbcbc</color>
 
     //Used for flat ui
     <color name="colorPrimaryLighter">#FFAED581</color>
     <color name="colorPrimaryDarker">#FF33691E</color>
 
     <color name="colorValueItem">@color/colorAccent</color>
+
+    <color name="semi_transparent_dark">#44000000</color>
 
     <!--<color name="background">#ff515151</color>-->
     <color name="background">#ffdcdcdc</color>
@@ -46,7 +48,9 @@
 
     <color name="frame_header">#ff686868</color>
 
-    <color name="transparent_dark">#77000000</color>
+    <color name="transparent_dark">#44000000</color>
+    <color name="semi_transparent_light">#44FFFFFF</color>
+    <color name="colorError">#c9000a</color>
 
     <color name="load">#cacac5</color>
 
@@ -57,4 +61,24 @@
     <color name="dark_blue">#1e89b4</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+
+
+
+    <color name="openhab_maroon">#800000</color>
+    <color name="openhab_red">#ff0000</color>
+    <color name="openhab_orange">#ffa500</color>
+    <color name="openhab_olive">#808000</color>
+    <color name="openhab_yellow">#ffff00</color>
+    <color name="openhab_purple">#800080</color>
+    <color name="openhab_fuchsia">#ff00ff</color>
+    <color name="openhab_white">#ffffff</color>
+    <color name="openhab_lime">#00ff00</color>
+    <color name="openhab_green">#008000</color>
+    <color name="openhab_navy">#000080</color>
+    <color name="openhab_blue">#0000ff</color>
+    <color name="openhab_teal">#008080</color>
+    <color name="openhab_aqua">#00ffff</color>
+    <color name="openhab_black">#000000</color>
+    <color name="openhab_silver">#c0c0c0</color>
+    <color name="openhab_gray">#808080</color>
 </resources>

@@ -4,6 +4,7 @@ package treehou.se.habit.module;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
 import javax.inject.Named;
@@ -211,5 +212,11 @@ public class AndroidModule {
     @Singleton
     public IncDecCellBuilder provideIncDecCellBuilder(Communicator communicator){
         return new IncDecCellBuilder(communicator);
+    }
+
+    @Provides
+    @Singleton
+    public FirebaseAnalytics provideAnalytics(Context context){
+        return FirebaseAnalytics.getInstance(context);
     }
 }

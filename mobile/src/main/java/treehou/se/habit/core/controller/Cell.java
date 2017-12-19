@@ -61,7 +61,7 @@ public class Cell {
         return null;// new Cell(CellDB.load(id));
     }
 
-    /*public static void save(Cell item){
-        CellDB.save(item.getDB());
+    /*public static void saveServer(Cell item){
+        CellDB.saveServer(item.getDB());
     }*/
 }

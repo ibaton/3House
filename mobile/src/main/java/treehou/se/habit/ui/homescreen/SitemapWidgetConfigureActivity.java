@@ -76,7 +76,7 @@ public class SitemapWidgetConfigureActivity extends BaseActivity implements Site
     // Write the prefix to the SharedPreferences object for this widget
     static void saveSitemapIdPref(Context context, int appWidgetId, OHSitemap sitemap) {
 
-        /*sitemap.save();
+        /*sitemap.saveServer();
         Log.d(TAG, "saveSitemapIdPref " + sitemap.getId());
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putLong(PREF_PREFIX_KEY + appWidgetId, sitemap.getId());
