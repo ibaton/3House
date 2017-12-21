@@ -14,7 +14,7 @@ public class SitemapSettingsModule extends ViewModule<SitemapSettingsFragment> {
 
     @Provides
     public SitemapSettingsContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides

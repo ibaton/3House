@@ -13,6 +13,6 @@ public class CreateServerModule extends ViewModule<CreateServerActivity> {
 
     @Provides
     public CreateServerContract.View provideView() {
-        return view;
+        return getView();
     }
 }

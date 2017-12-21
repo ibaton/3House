@@ -14,7 +14,7 @@ public class ServersModule extends ViewModule<ServersFragment> {
 
     @Provides
     public ServersContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides

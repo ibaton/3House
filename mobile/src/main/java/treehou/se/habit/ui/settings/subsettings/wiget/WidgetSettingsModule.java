@@ -17,7 +17,7 @@ public class WidgetSettingsModule extends ViewModule<WidgetSettingsFragment> {
 
     @Provides
     public WidgetSettingsContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides

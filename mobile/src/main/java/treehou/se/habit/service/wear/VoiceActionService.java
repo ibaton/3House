@@ -9,7 +9,6 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
-import se.treehou.ng.ohcommunicator.services.Connector;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.connector.Constants;

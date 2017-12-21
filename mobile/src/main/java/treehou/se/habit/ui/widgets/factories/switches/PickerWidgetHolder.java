@@ -52,7 +52,7 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
                 .build();
 
         View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_switch_mapping, null);
-        rgpMapping = (RadioGroup) itemView.findViewById(R.id.rgp_mapping);
+        rgpMapping = itemView.findViewById(R.id.rgp_mapping);
 
         baseHolder.getSubView().addView(itemView);
         update(widget);

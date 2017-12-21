@@ -14,7 +14,7 @@ public class GeneralSettingsModule extends ViewModule<GeneralSettingsFragment> {
 
     @Provides
     public GeneralSettingsContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides

@@ -21,7 +21,7 @@ public class SitemapListModule extends ViewModule<SitemapListFragment> {
 
     @Provides
     public SitemapListContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides
