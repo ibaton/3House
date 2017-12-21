@@ -37,7 +37,7 @@ public class EditControllerSettingsActivity extends BaseActivity implements Colo
 
         if (getIntent().getExtras() != null) {
             long id = getIntent().getExtras().getLong(ARG_ID);
-            controller = ControllerDB.load(realm, id);
+            controller = ControllerDB.load(getRealm(), id);
         }
 
         txtName = (EditText) findViewById(R.id.txt_name);
@@ -55,9 +55,9 @@ public class EditControllerSettingsActivity extends BaseActivity implements Colo
         cbxAsNotification = (CheckBox) findViewById(R.id.as_notification);
         cbxAsNotification.setChecked(controller.isShowNotification());
         cbxAsNotification.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            realm.beginTransaction();
+            getRealm().beginTransaction();
             controller.setShowNotification(isChecked);
-            realm.commitTransaction();
+            getRealm().commitTransaction();
         });
 
         updateColorPalette(controller.getColor());
@@ -79,9 +79,9 @@ public class EditControllerSettingsActivity extends BaseActivity implements Colo
     protected void onPause() {
         super.onPause();
 
-        realm.beginTransaction();
+        getRealm().beginTransaction();
         controller.setName(txtName.getText().toString());
-        realm.commitTransaction();
+        getRealm().commitTransaction();
 
         finish();
     }
@@ -94,9 +94,9 @@ public class EditControllerSettingsActivity extends BaseActivity implements Colo
 
     @Override
     public void setColor(int color) {
-        realm.beginTransaction();
+        getRealm().beginTransaction();
         controller.setColor(color);
-        realm.commitTransaction();
+        getRealm().commitTransaction();
         btnColor.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
     }
 }
