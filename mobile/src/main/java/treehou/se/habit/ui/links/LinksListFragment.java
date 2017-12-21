@@ -18,7 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHLink;

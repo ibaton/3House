@@ -6,7 +6,6 @@ import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,10 +13,10 @@ import org.junit.runner.RunWith;
 
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
-import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 import treehou.se.habit.data.TestAndroidModule;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.DaggerApplicationComponent;
 

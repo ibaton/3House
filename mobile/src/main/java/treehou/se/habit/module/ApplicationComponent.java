@@ -42,35 +42,66 @@ import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder;
 })
 public interface ApplicationComponent {
     void inject(HabitApplication application);
+
     void inject(BaseFragment fragment);
+
     void inject(BaseDialogFragment fragment);
+
     void inject(ControllsFragment fragment);
+
     void inject(ColorpickerActivity activity);
+
     void inject(BaseActivity activity);
+
     void inject(ControllerWidgetConfigureActivity activity);
+
     void inject(EditControllerSettingsActivity activity);
+
     void inject(IconPickerActivity activity);
+
     void inject(CellButtonConfigFragment fragment);
+
     void inject(NavigationDrawerFragment fragment);
+
     void inject(IncDecActionFragment fragment);
+
     void inject(CellVoiceConfigFragment fragment);
+
     void inject(SwitchActionFragment fragment);
+
     void inject(BindingsFragment fragment);
+
     void inject(ServerMenuFragment fragment);
+
     void inject(CellIncDecConfigFragment fragment);
+
     void inject(CellSliderConfigFragment fragment);
+
     void inject(RollerShutterWidgetHolder holder);
+
     void inject(SliderActivity activity);
+
     void inject(SliderActivity.SliderFragment fragment);
+
     void inject(EditControlFragment fragment);
+
     void inject(CommandActionFragment fragment);
+
     void inject(LinksListFragment fragment);
+
     void inject(ControlFragment fragment);
+
     void inject(VoiceActionService service);
+
     void inject(VoiceService service);
+
     void inject(CommandService service);
+
     void inject(RestartBroadcastReceiver receiver);
+
     void inject(ControllerWidget provider);
+
     void inject(CommandReciever receiver);
+
     void inject(IncDecReciever receiver);
 }

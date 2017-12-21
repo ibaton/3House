@@ -24,7 +24,6 @@ import treehou.se.habit.module.ApplicationComponent
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.ServersAdapter
-import treehou.se.habit.ui.servers.create.scan.ScanServersFragment
 import treehou.se.habit.ui.servers.ServerMenuFragment
 import treehou.se.habit.ui.servers.create.CreateServerActivity
 import treehou.se.habit.util.Settings
