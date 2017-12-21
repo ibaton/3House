@@ -14,7 +14,7 @@ public class SitemapSelectModule extends ViewModule<SitemapSelectFragment> {
 
     @Provides
     public SitemapSelectContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides
