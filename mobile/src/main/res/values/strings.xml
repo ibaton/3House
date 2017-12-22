@@ -151,7 +151,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="myopenhab">my<font color="#e64a19">open</font>HAB</string>
+    <string name="myopenhab">my openHAB</string>
     <string name="email">Email</string>
     <string name="login">Login</string>
     <string name="error_username_password">Username or password is incorrect</string>

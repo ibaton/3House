@@ -18,6 +18,12 @@
 
 #-dontobfuscate
 
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+
 #picasso
 -dontwarn com.squareup.okhttp.**
 
@@ -70,3 +76,36 @@
 -keep class **.R$* {
     <fields>;
 }
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Keep the BuildConfig
+-keep class com.example.BuildConfig { *; }
+
+# Keep the support library
+-keep class android.support.v4.** { *; }
+-keep interface android.support.v4.** { *; }
+
+# Keep the support library
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+# Keep the support library
+-keep class se.treehou.ng.ohcommunicator.** { *; }
+-keep interface se.treehou.ng.ohcommunicator.** { *; }
+
+# Gson specific classes
+-dontwarn sun.misc.**
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { *; }
+
+# Prevent proguard from stripping interface information from TypeAdapterFactory,
+# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
