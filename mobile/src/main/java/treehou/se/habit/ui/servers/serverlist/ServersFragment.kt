@@ -15,7 +15,9 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
+import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Predicate
 import io.realm.RealmResults
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
@@ -24,7 +26,6 @@ import treehou.se.habit.module.ApplicationComponent
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.ServersAdapter
-import treehou.se.habit.ui.servers.create.scan.ScanServersFragment
 import treehou.se.habit.ui.servers.ServerMenuFragment
 import treehou.se.habit.ui.servers.create.CreateServerActivity
 import treehou.se.habit.util.Settings
@@ -43,8 +44,8 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     var fabAdd: FloatingActionButton? = null
 
     @Inject
-    @JvmField
-    var settings: Settings? = null
+    lateinit var settings: Settings
+
     @Inject
     @JvmField
     var presenter: ServersContract.Presenter? = null
@@ -89,6 +90,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         super.onCreate(savedInstanceState)
 
         (activity!!.application as HabitApplication).component().inject(this)
+        launchScanDialogIfNoServers()
     }
 
     override fun getPresenter(): ServersContract.Presenter? {
@@ -145,6 +147,19 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         actionBar?.setTitle(R.string.servers)
     }
 
+    private fun launchScanDialogIfNoServers(){
+        realm.where(ServerDB::class.java).findAllAsync().asFlowable().toObservable()
+                .compose(this.bindToLifecycle<RealmResults<ServerDB>>())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter({it.isLoaded})
+                .firstElement()
+                .subscribe({ servers1 ->
+                    if(servers1.size == 0){
+                        showScanServerFlow()
+                    }
+                })
+    }
+
     /**
      * Hookup server list, listening for server updates.
      */
@@ -158,17 +173,12 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                     updateEmptyView(servers1.size)
                     serversAdapter!!.setItems(servers1)
                 })
-
-        if (!settings!!.serverSetupAsked) {
-            showScanServerFlow()
-        }
     }
 
     /**
      * Launch flow for opening server scanning.
      */
     private fun showScanServerFlow() {
-        //settings!!.serverSetupAsked = true
         AlertDialog.Builder(activity)
                 .setMessage(R.string.start_scan_question)
                 .setPositiveButton(R.string.new_server) { _, _ -> startNewServerFlow() }

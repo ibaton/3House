@@ -1,29 +1,5 @@
 package treehou.se.habit.ui.settings;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.filters.SmallTest;
-import android.view.View;
-
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import treehou.se.habit.main.MainActivity;
-import treehou.se.habit.NavigationUtil;
-import treehou.se.habit.R;
-import treehou.se.habit.util.Settings;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /*@RunWith(AndroidJUnit4.class)

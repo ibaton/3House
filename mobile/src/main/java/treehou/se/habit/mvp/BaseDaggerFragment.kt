@@ -2,9 +2,8 @@ package treehou.se.habit.mvp
 
 
 import android.os.Bundle
-
-import treehou.se.habit.BaseActivity
 import treehou.se.habit.HabitApplication
+
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.ui.BaseFragment
 

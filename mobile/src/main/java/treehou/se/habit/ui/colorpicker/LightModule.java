@@ -21,7 +21,7 @@ public class LightModule extends ViewModule<LightFragment> {
 
     @Provides
     public LightContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides

@@ -13,6 +13,6 @@ public class MainActivityModule extends ViewModule<MainActivity> {
 
     @Provides
     public MainContract.View provideView() {
-        return view;
+        return getView();
     }
 }

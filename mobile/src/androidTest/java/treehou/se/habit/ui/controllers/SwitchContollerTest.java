@@ -1,10 +1,7 @@
 package treehou.se.habit.ui.controllers;
 
 import android.app.Activity;
-import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.SmallTest;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
@@ -14,27 +11,19 @@ import org.junit.runner.RunWith;
 
 import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
-import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 import treehou.se.habit.data.TestAndroidModule;
+import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.DaggerApplicationComponent;
 
-import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.AnyOf.anyOf;

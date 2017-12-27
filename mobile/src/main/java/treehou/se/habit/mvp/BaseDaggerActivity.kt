@@ -7,8 +7,6 @@ import android.support.annotation.CallSuper
 import treehou.se.habit.BaseActivity
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
-import treehou.se.habit.mvp.BasePresenter
-import treehou.se.habit.mvp.BaseView
 
 abstract class BaseDaggerActivity<out T : BasePresenter> : BaseActivity(), BaseView<T> {
 

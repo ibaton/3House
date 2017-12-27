@@ -21,7 +21,7 @@ public class PageModule extends ViewModule<PageFragment> {
 
     @Provides
     public PageContract.View provideView() {
-        return view;
+        return getView();
     }
 
     @Provides

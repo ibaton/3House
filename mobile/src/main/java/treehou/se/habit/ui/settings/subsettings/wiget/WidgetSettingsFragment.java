@@ -171,7 +171,11 @@ public class WidgetSettingsFragment extends BaseDaggerFragment<WidgetSettingsCon
                 .subscribe(useBackground -> {
                     cbxEnableImageBackground.setOnCheckedChangeListener(null);
                     cbxEnableImageBackground.setChecked(useBackground);
-                    cbxEnableImageBackground.setOnCheckedChangeListener((compoundButton, checked) -> setWidgetBackground(checked ?  WidgetSettingsDB.MUTED_COLOR : WidgetSettingsDB.NO_COLOR));
+                    cbxEnableImageBackground.setOnCheckedChangeListener((compoundButton, checked) -> {
+                        int backgroundType = checked ? WidgetSettingsDB.MUTED_COLOR : WidgetSettingsDB.NO_COLOR;
+                        presenter.setWidgetBackground(backgroundType);
+                        setWidgetBackground(backgroundType);
+                    });
 
                     louIconBackground.setVisibility(useBackground ? View.VISIBLE : View.GONE);
                 });
