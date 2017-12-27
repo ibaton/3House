@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 
-import com.trello.rxlifecycle2.RxLifecycle;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import javax.inject.Inject;
@@ -25,6 +25,8 @@ public class BaseActivity extends RxAppCompatActivity {
 
     protected @Inject Settings settings;
     protected @Inject Logger logger;
+    protected @Inject FirebaseAnalytics analytics;
+
     protected Realm realm;
 
     @Override

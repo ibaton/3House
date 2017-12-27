@@ -16,6 +16,7 @@ import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
 import treehou.se.habit.R;
+import treehou.se.habit.connector.Analytics;
 import treehou.se.habit.connector.Communicator;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.controller.CellDB;
@@ -216,7 +217,13 @@ public class AndroidModule {
 
     @Provides
     @Singleton
-    public FirebaseAnalytics provideAnalytics(Context context){
+    public FirebaseAnalytics provideFirebaseAnalytics(Context context){
         return FirebaseAnalytics.getInstance(context);
+    }
+
+    @Provides
+    @Singleton
+    public Analytics provideAnalytics(FirebaseAnalytics firebaseAnalytics){
+        return new Analytics(firebaseAnalytics);
     }
 }

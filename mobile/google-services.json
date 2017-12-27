@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "823255055512-dikc6qo0ej66ps4195srj4n2sc3j2cbs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "treehou.se.habit",
+            "certificate_hash": "6ef3229561c3412c8694f32dcb0e53ace92d2592"
+          }
+        },
+        {
           "client_id": "823255055512-b4plucmgv9rfln7b1bch9emtlj9f1l37.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "treehou.se.habit",
-            "certificate_hash": "5642C7F5F6385C9E0E83805C01AF10129F879D7C"
+            "certificate_hash": "5642c7f5f6385c9e0e83805c01af10129f879d7c"
           }
         },
         {
@@ -27,7 +35,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "treehou.se.habit",
-            "certificate_hash": "809F64664076EECA6CF6B6FA44C659627AF36516"
+            "certificate_hash": "809f64664076eeca6cf6b6fa44c659627af36516"
           }
         },
         {

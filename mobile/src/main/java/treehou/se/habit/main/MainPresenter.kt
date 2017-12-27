@@ -10,6 +10,9 @@ import io.realm.RealmResults
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.util.Settings
+import com.google.firebase.analytics.FirebaseAnalytics
+
+
 
 class MainPresenter @Inject
 constructor(private val mainView: MainContract.View, private val realm: Realm, private val settings: Settings) : MainContract.Presenter {
