@@ -41,3 +41,6 @@ captures/
 *.log
 
 *.properties
+
+# Firebase Private Key.
+/firebase-crashreporting.json

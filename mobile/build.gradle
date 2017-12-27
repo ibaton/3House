@@ -31,9 +31,11 @@ android {
     buildTypes {
         debug {
             minifyEnabled true
+            useProguard true
         }
         release {
             minifyEnabled true
+            useProguard true
         }
     }
     lintOptions {
