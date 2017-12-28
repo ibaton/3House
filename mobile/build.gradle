@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileSdkVersion 27
