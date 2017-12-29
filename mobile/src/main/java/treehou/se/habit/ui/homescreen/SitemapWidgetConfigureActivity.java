@@ -53,7 +53,7 @@ public class SitemapWidgetConfigureActivity extends BaseActivity implements Site
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(fragmentManager.findFragmentById(R.id.container) == null){
             fragmentManager.beginTransaction()
-                .add(R.id.container, SitemapSelectorFragment.newInstance())
+                .add(R.id.container, SitemapSelectorFragment.Companion.newInstance())
                 .commit();
         }
     }

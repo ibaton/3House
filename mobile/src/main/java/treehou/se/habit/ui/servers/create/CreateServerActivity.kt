@@ -55,7 +55,7 @@ class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(
     }
 
     override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
-        (hasActivitySubcomponentBuilders?.getActivityComponentBuilder(CreateServerActivity::class.java) as CreateServerActivityComponent.Builder)
+        (hasActivitySubcomponentBuilders.getActivityComponentBuilder(CreateServerActivity::class.java) as CreateServerActivityComponent.Builder)
                 .activityModule(CreateServerModule(this))
                 .build().injectMembers(this)
     }

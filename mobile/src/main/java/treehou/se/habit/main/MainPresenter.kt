@@ -4,14 +4,10 @@ import android.os.Bundle
 
 import javax.inject.Inject
 
-import de.duenndns.ssl.MemorizingTrustManager
 import io.realm.Realm
-import io.realm.RealmResults
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.util.Settings
-import com.google.firebase.analytics.FirebaseAnalytics
-
 
 
 class MainPresenter @Inject
@@ -64,8 +60,8 @@ constructor(private val mainView: MainContract.View, private val realm: Realm, p
         mainView.openSitemaps()
     }
 
-    override fun showSitemap(sitemap: OHSitemap) {
-        mainView.openSitemap(sitemap)
+    override fun showSitemap(ohSitemap: OHSitemap) {
+        mainView.openSitemap(ohSitemap)
     }
 
     override fun showControllers() {

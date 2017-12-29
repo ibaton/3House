@@ -28,10 +28,11 @@ android {
     dexOptions {
         maxProcessCount 4
         javaMaxHeapSize "4g"
+        preDexLibraries true
     }
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled true
             useProguard true
         }
         release {
