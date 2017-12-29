@@ -124,7 +124,7 @@ public class SitemapFragment extends BaseDaggerFragment<Presenter> implements Si
 
         Log.d(TAG, "Add page " + page.getLink());
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.pgr_sitemap, PageFragment.newInstance(server, page))
+                .replace(R.id.pgr_sitemap, PageFragment.Companion.newInstance(server, page))
                 .addToBackStack(null)
                 .commit();
     }
