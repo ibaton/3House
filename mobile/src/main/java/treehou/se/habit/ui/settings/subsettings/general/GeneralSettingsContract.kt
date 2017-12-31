@@ -16,6 +16,6 @@ interface GeneralSettingsContract {
         fun themeSelected(theme: Int)
         fun setAutoLoadSitemap(show: Boolean)
         fun setFullscreen(fullscreen: Boolean)
-        fun setShowSitemapsInMenu(show: Boolean?)
+        fun setShowSitemapsInMenu(show: Boolean)
     }
 }

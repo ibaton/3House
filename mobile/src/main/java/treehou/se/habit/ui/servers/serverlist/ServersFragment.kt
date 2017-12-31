@@ -33,22 +33,12 @@ import javax.inject.Inject
 
 class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), ServersContract.View {
 
-    @BindView(R.id.list)
-    @JvmField
-    var lstServer: RecyclerView? = null
-    @BindView(R.id.empty)
-    @JvmField
-    var viwEmpty: View? = null
-    @BindView(R.id.fab_add)
-    @JvmField
-    var fabAdd: FloatingActionButton? = null
+    @BindView(R.id.list) lateinit var lstServer: RecyclerView
+    @BindView(R.id.empty) lateinit var viwEmpty: View
 
-    @Inject
-    lateinit var settings: Settings
+    @Inject lateinit var settings: Settings
 
-    @Inject
-    @JvmField
-    var presenter: ServersContract.Presenter? = null
+    @Inject lateinit var serverPresenter: ServersContract.Presenter
 
     private var serversAdapter: ServersAdapter? = null
     private var servers: RealmResults<ServerDB>? = null
@@ -79,7 +69,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         override fun onItemLongClickListener(serverHolder: ServersAdapter.ServerHolder): Boolean {
 
             val server = serversAdapter!!.getItem(serverHolder.adapterPosition)
-            if(server != null) {
+            if (server != null) {
                 showRemoveDialog(serverHolder, server)
             }
             return true
@@ -94,7 +84,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     }
 
     override fun getPresenter(): ServersContract.Presenter? {
-        return presenter
+        return serverPresenter
     }
 
     override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
@@ -115,11 +105,11 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         unbinder = ButterKnife.bind(this, view)
 
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        lstServer!!.layoutManager = layoutManager
-        lstServer!!.itemAnimator = DefaultItemAnimator()
+        lstServer.layoutManager = layoutManager
+        lstServer.itemAnimator = DefaultItemAnimator()
         serversAdapter = ServersAdapter()
         serversAdapter!!.setItemListener(serverListener)
-        lstServer!!.adapter = serversAdapter
+        lstServer.adapter = serversAdapter
 
         setupActionbar()
     }
@@ -147,14 +137,14 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         actionBar?.setTitle(R.string.servers)
     }
 
-    private fun launchScanDialogIfNoServers(){
+    private fun launchScanDialogIfNoServers() {
         realm.where(ServerDB::class.java).findAllAsync().asFlowable().toObservable()
                 .compose(this.bindToLifecycle<RealmResults<ServerDB>>())
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter({it.isLoaded})
+                .filter({ it.isLoaded })
                 .firstElement()
                 .subscribe({ servers1 ->
-                    if(servers1.size == 0){
+                    if (servers1.size == 0) {
                         showScanServerFlow()
                     }
                 })
@@ -232,7 +222,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
      * Show empty view if no controllers exist
      */
     private fun updateEmptyView(itemCount: Int) {
-        viwEmpty!!.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
+        viwEmpty.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
     }
 
     companion object {
