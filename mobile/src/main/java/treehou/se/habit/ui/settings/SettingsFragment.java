@@ -95,7 +95,7 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
 
     @Override
     public void showWidgetSettings() {
-        Fragment fragment = WidgetSettingsFragment.newInstance();
+        Fragment fragment = WidgetSettingsFragment.Companion.newInstance();
         openPage(fragment);
     }
 

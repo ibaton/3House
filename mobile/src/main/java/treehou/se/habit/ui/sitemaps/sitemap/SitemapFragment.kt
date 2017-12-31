@@ -58,7 +58,7 @@ class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
      */
     private fun setupActionbar() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
-        if (actionBar != null) actionBar.title = sitemap!!.label
+        if (actionBar != null) actionBar.title = sitemap.label
     }
 
     /**
@@ -75,9 +75,6 @@ class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
      * @param page the page to add to pager
      */
     override fun showPage(server: ServerDB, page: OHLinkedPage) {
-        Log.d(TAG, "Add page " + page.link)
-        val fragmentManager = childFragmentManager ?: return
-
         Log.d(TAG, "Add page " + page.link)
         childFragmentManager.beginTransaction()
                 .replace(R.id.pgr_sitemap, PageFragment.newInstance(server, page))
