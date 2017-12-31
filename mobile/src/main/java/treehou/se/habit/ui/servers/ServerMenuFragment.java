@@ -160,7 +160,7 @@ public class ServerMenuFragment extends Fragment {
      */
     private void openSitemapSettingsPage(long serverId){
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(container.getId(), SitemapSelectFragment.newInstance(serverId))
+                .replace(container.getId(), SitemapSelectFragment.Companion.newInstance(serverId))
                 .addToBackStack(null)
                 .commit();
     }
