@@ -74,7 +74,7 @@ class GeneralSettingsFragment : BaseDaggerFragment<GeneralSettingsContract.Prese
         settings.themeRx
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
-                .subscribe { integer ->
+                .subscribe {
                     for (i in themes.indices) {
                         if (themes[i].theme == settings.theme) {
                             spinnerThemes.onItemSelectedListener = null

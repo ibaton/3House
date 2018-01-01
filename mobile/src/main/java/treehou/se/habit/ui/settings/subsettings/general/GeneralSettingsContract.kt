@@ -9,7 +9,7 @@ interface GeneralSettingsContract {
         fun updateTheme()
         fun showAutoLoadSitemap(show: Boolean)
         fun showSitemapsInMenu(show: Boolean?)
-        fun setFullscreen(fullscreaan: Boolean)
+        fun setFullscreen(fullscreen: Boolean)
     }
 
     interface Presenter : BasePresenter {
