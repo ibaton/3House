@@ -55,7 +55,7 @@ class CellFactory<T> {
         return cellView
     }
 
-    fun createRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews {
+    fun createRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews? {
 
         Log.d(TAG, "cellBuilder cell type " + cell.type)
 
@@ -68,7 +68,7 @@ class CellFactory<T> {
             Log.d(TAG, "cellBuilder using custom")
         }
 
-        var remoteViews: RemoteViews
+        var remoteViews: RemoteViews?
         try {
             remoteViews = cellBuilder.buildRemote(context, controller, cell)
         } catch (e: Exception) {
@@ -81,7 +81,7 @@ class CellFactory<T> {
     interface CellBuilder {
 
         fun build(context: Context, controller: ControllerDB, cell: CellDB): View
-        fun buildRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews
+        fun buildRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews?
     }
 
     class DefaultBuilder : CellBuilder {
