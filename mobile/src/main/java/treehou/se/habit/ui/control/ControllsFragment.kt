@@ -50,8 +50,8 @@ class ControllsFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_control_universal, container, false)
         unbinder = ButterKnife.bind(this, view)
 
-        viwEmpty.setOnClickListener { view1 -> createNewController() }
-        fabAdd.setOnClickListener { v -> createNewController() }
+        viwEmpty.setOnClickListener { createNewController() }
+        fabAdd.setOnClickListener { createNewController() }
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.controllers)
 
@@ -72,7 +72,7 @@ class ControllsFragment : BaseFragment() {
             override fun itemLongClickListener(controllerHolder: ControllerAdapter.ControllerHolder): Boolean {
                 val controller = mAdapter!!.getItem(controllerHolder.adapterPosition)
                 AlertDialog.Builder(activity)
-                        .setItems(R.array.controll_manager) { dialog, which ->
+                        .setItems(R.array.controll_manager) { _, which ->
                             when (which) {
                                 0 -> loadController(controller.id)
                                 1 -> {

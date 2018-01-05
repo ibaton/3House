@@ -91,9 +91,9 @@ public class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
                 if (widget.getItem() != null) {
                     Intent intent = new Intent(context, ColorpickerActivity.class);
                     Gson gson = GsonHelper.createGsonBuilder();
-                    intent.putExtra(ColorpickerActivity.EXTRA_SERVER, server.getId());
-                    intent.putExtra(ColorpickerActivity.EXTRA_WIDGET, gson.toJson(widget));
-                    intent.putExtra(ColorpickerActivity.EXTRA_COLOR, color);
+                    intent.putExtra(ColorpickerActivity.Companion.getEXTRA_SERVER(), server.getId());
+                    intent.putExtra(ColorpickerActivity.Companion.getEXTRA_WIDGET(), gson.toJson(widget));
+                    intent.putExtra(ColorpickerActivity.Companion.getEXTRA_COLOR(), color);
 
                     context.startActivity(intent);
                 } else {

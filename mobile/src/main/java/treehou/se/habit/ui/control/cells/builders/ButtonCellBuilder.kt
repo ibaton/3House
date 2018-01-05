@@ -43,7 +43,7 @@ class ButtonCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
 
         imgIcon.setImageDrawable(Util.getIconDrawable(context, buttonCell.icon))
 
-        imgIcon.setOnClickListener { v ->
+        imgIcon.setOnClickListener {
             val item = buttonCell.item
             if (item != null) {
                 val server = item.server.toGeneric()

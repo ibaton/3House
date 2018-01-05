@@ -42,7 +42,7 @@ class EditControllerSettingsActivity : BaseActivity(), ColorDialog.ColorDialogCa
         txtName.setText(controller!!.name)
 
         btnColor = findViewById(R.id.btn_color)
-        btnColor.setOnClickListener { v ->
+        btnColor.setOnClickListener {
             val fragmentManager = supportFragmentManager
             val fragment = ColorDialog.instance()
             fragmentManager.beginTransaction()
@@ -52,7 +52,7 @@ class EditControllerSettingsActivity : BaseActivity(), ColorDialog.ColorDialogCa
 
         cbxAsNotification = findViewById(R.id.as_notification)
         cbxAsNotification.isChecked = controller!!.isShowNotification
-        cbxAsNotification.setOnCheckedChangeListener { buttonView, isChecked ->
+        cbxAsNotification.setOnCheckedChangeListener { _, isChecked ->
             realm.beginTransaction()
             controller!!.isShowNotification = isChecked
             realm.commitTransaction()
@@ -60,7 +60,7 @@ class EditControllerSettingsActivity : BaseActivity(), ColorDialog.ColorDialogCa
 
         updateColorPalette(controller!!.color)
 
-        findViewById<View>(R.id.container).setOnClickListener({ v -> finish() })
+        findViewById<View>(R.id.container).setOnClickListener({ finish() })
     }
 
     /**

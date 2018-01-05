@@ -15,10 +15,8 @@ import javax.inject.Inject
 @SuppressLint("Registered")
 open class BaseActivity : RxAppCompatActivity() {
 
-    @Inject
-    lateinit var settings: Settings
-    @Inject
-    lateinit var logger: Logger
+    @Inject lateinit var settings: Settings
+    @Inject lateinit var logger: Logger
 
     protected lateinit var realm: Realm
 

@@ -41,7 +41,7 @@ class IncDecCellBuilder(private val communicator: Communicator) : CellFactory.Ce
         val icon = Util.getIconDrawable(context, buttonCell.icon)
         if (icon != null) {
             imgIcon.setImageDrawable(icon)
-            imgIcon.setOnClickListener { v ->
+            imgIcon.setOnClickListener {
                 val server = buttonCell.item.server
                 communicator.incDec(server.toGeneric(), buttonCell.item.name, buttonCell.value, buttonCell.min, buttonCell.max)
             }

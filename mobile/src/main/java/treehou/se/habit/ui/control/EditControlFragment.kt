@@ -67,7 +67,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
         updateColorPalette(controller.color)
 
         val btnAddRow = rootView.findViewById<View>(R.id.btn_add_row) as ImageButton
-        btnAddRow.setOnClickListener { v ->
+        btnAddRow.setOnClickListener {
             controller.addRow(realm)
             Log.d("Controller", "Added controller, currently " + controller.cellRows.size + " rows")
             redrawController()
@@ -150,14 +150,14 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
                 if (activity != null) {
                     val itemView = cellFactory.create(activity, controller, cell)
 
-                    itemView.setOnClickListener { v ->
+                    itemView.setOnClickListener {
                         getActivity()!!.supportFragmentManager.beginTransaction()
                                 .replace(R.id.page_container, ControllCellFragment.newInstance(cell.id))
                                 .addToBackStack(null)
                                 .commit()
                     }
 
-                    itemView.setOnLongClickListener { v ->
+                    itemView.setOnLongClickListener {
                         AlertDialog.Builder(activity)
                                 .setMessage(activity!!.getString(R.string.delete_cell))
                                 .setPositiveButton(R.string.ok) { dialog, which ->
@@ -176,7 +176,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
                 }
             }
 
-            btnAddCell.setOnClickListener { v ->
+            btnAddCell.setOnClickListener {
                 row.addCell(realm)
                 redrawController()
             }
