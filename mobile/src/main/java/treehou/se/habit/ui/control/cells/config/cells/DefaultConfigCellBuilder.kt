@@ -17,7 +17,7 @@ import treehou.se.habit.ui.control.ControllerUtil
 
 class DefaultConfigCellBuilder : CellFactory.CellBuilder {
 
-    @BindView(R.id.img_icon_button) internal var imgView: ImageButton? = null
+    @BindView(R.id.img_icon_button) lateinit var imgView: ImageButton
 
     override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
 
@@ -27,7 +27,7 @@ class DefaultConfigCellBuilder : CellFactory.CellBuilder {
 
         val pallete = ControllerUtil.generateColor(controller, cell)
 
-        imgView!!.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
+        imgView.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
 
         return rootView
     }

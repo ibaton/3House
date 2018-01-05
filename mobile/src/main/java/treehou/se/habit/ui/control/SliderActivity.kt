@@ -67,7 +67,7 @@ class SliderActivity : BaseActivity() {
         private var sbrNumber: SeekBar? = null
         private var itemName: TextView? = null
 
-        @Inject internal var connectionFactory: ConnectionFactory? = null
+        @Inject lateinit var connectionFactory: ConnectionFactory
 
         internal var sliderListener: SeekBar.OnSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {}
@@ -77,7 +77,7 @@ class SliderActivity : BaseActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 if (sliederCell != null) {
                     val server = sliederCell!!.item.server.toGeneric()
-                    val serverHandler = connectionFactory!!.createServerHandler(server, context)
+                    val serverHandler = connectionFactory.createServerHandler(server, context)
                     serverHandler.sendCommand(sliederCell!!.item.name, "" + seekBar.progress)
                 }
             }
@@ -115,7 +115,7 @@ class SliderActivity : BaseActivity() {
             super.onResume()
 
             val server = sliederCell!!.item.server.toGeneric()
-            val serverHandler = connectionFactory!!.createServerHandler(server, context)
+            val serverHandler = connectionFactory.createServerHandler(server, context)
             serverHandler.requestItemRx(sliederCell!!.item.name)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
