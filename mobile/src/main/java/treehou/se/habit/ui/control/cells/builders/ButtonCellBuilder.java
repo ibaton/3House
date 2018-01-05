@@ -49,9 +49,9 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         final ButtonCellDB buttonCell = cell.getCellButton();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+        cellView.setBackgroundColor(pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
 
-        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
 
         Log.d(TAG, "Build: Button icon " + buttonCell.getIcon());
 
@@ -81,10 +81,10 @@ public class ButtonCellBuilder implements CellFactory.CellBuilder {
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
 
         cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, buttonCell.getIcon()));
-        Intent intent = CommandService.getActionCommand(context, buttonCell.getCommand(), buttonCell.getItem().getId());
+        Intent intent = CommandService.Companion.getActionCommand(context, buttonCell.getCommand(), buttonCell.getItem().getId());
 
         //TODO give intent unique id
         PendingIntent pendingIntent = PendingIntent.getService(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_CANCEL_CURRENT);

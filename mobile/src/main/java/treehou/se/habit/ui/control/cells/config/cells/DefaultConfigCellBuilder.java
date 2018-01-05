@@ -27,7 +27,7 @@ public class DefaultConfigCellBuilder implements CellFactory.CellBuilder {
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        imgView.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        imgView.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
 
         return rootView;
     }

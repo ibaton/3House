@@ -51,7 +51,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
 
         imgIcon.setImageDrawable(Util.getIconDrawable(context, sliderCell.getIcon()));
         sbrNumber.setMax(sliderCell.getMax());
@@ -89,7 +89,7 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
 
         Bitmap icon = Util.getIconBitmap(context, numberCell.getIcon());
         if(icon != null) {
@@ -113,8 +113,8 @@ public class SliderCellBuilder implements CellFactory.CellBuilder {
      */
     private Intent createSliderIntent(Context context, long cellID){
         Intent intent = new Intent(context.getApplicationContext(), SliderActivity.class);
-        intent.setAction(SliderActivity.ACTION_NUMBER);
-        intent.putExtra(SliderActivity.ARG_CELL, cellID);
+        intent.setAction(SliderActivity.Companion.getACTION_NUMBER());
+        intent.putExtra(SliderActivity.Companion.getARG_CELL(), cellID);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NO_ANIMATION );
         return intent;
     }

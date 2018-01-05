@@ -38,7 +38,7 @@ public class SliderConfigCellBuilder implements CellFactory.CellBuilder {
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        viwBackground.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
         sbrValue.setOnTouchListener((v, event) -> true);
 
         Drawable icon = Util.getIconDrawable(context, numberCell.getIcon());

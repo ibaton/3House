@@ -36,10 +36,10 @@ public class VoiceConfigCellBuilder implements CellFactory.CellBuilder {
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+        cellView.setBackgroundColor(pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
 
         Drawable icon = Util.getIconDrawable(context, voiceCell.getIcon());
-        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
         if(icon != null){
             imgIcon.setImageDrawable(icon);
         }

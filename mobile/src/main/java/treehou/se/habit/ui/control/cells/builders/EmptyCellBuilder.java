@@ -24,9 +24,9 @@ public class EmptyCellBuilder implements CellFactory.CellBuilder {
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        rootView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+        rootView.setBackgroundColor(pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
         ImageButton imgButton = (ImageButton) rootView.findViewById(R.id.img_icon_button);
-        imgButton.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        imgButton.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
 
         return rootView;
     }
@@ -38,7 +38,7 @@ public class EmptyCellBuilder implements CellFactory.CellBuilder {
 
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_empty);
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
         realm.close();
 
         return cellView;

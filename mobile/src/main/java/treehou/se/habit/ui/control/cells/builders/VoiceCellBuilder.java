@@ -40,7 +40,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
         imgIcon.setImageDrawable(Util.getIconDrawable(context, voiceCell.getIcon()));
-        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
         imgIcon.setOnClickListener(v -> {
 
             if(voiceCell.getItem() == null || voiceCell.getItem().getServer()  == null){
@@ -78,7 +78,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
 
         cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, voiceCell.getIcon()));
 

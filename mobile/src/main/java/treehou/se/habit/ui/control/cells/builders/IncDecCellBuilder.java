@@ -50,7 +50,7 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         final IncDecCellDB buttonCell = cell.getCellIncDec();
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
 
         Log.d(TAG, "Build: Button icon " + buttonCell.getIcon());
 
@@ -75,12 +75,12 @@ public class IncDecCellBuilder implements CellFactory.CellBuilder {
         RemoteViews cellView = new RemoteViews(context.getPackageName(), R.layout.cell_button);
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON]);
+        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
         Bitmap icon = Util.getIconBitmap(context, buttonCell.getIcon());
         if(icon != null) {
             cellView.setImageViewBitmap(R.id.img_icon_button, icon);
         }
-        Intent intent = CommandService.getActionIncDec(context, buttonCell.getMin(), buttonCell.getMax(), buttonCell.getValue(), buttonCell.getItem().getId());
+        Intent intent = CommandService.Companion.getActionIncDec(context, buttonCell.getMin(), buttonCell.getMax(), buttonCell.getValue(), buttonCell.getItem().getId());
         PendingIntent pendingIntent = PendingIntent.getService(context, (int) (Math.random() * Integer.MAX_VALUE), intent, PendingIntent.FLAG_CANCEL_CURRENT);
         cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent);
         realm.close();

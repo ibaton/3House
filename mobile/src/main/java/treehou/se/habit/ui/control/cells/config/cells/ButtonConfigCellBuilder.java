@@ -37,9 +37,9 @@ public class ButtonConfigCellBuilder implements CellFactory.CellBuilder {
 
         int[] pallete = ControllerUtil.generateColor(controller, cell);
 
-        cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON]);
+        cellView.setBackgroundColor(pallete[ControllerUtil.Companion.getINDEX_BUTTON()]);
 
-        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY);
+        imgIcon.getBackground().setColorFilter(pallete[ControllerUtil.Companion.getINDEX_BUTTON()], PorterDuff.Mode.MULTIPLY);
 
         Log.d(TAG, "Build: Button icon " + buttonCell.getIcon());
 
