@@ -14,8 +14,7 @@ import treehou.se.habit.util.logging.Logger
 class BaseDialogFragment : RxDialogFragment() {
 
     protected lateinit var realm: Realm
-    @Inject @JvmField
-    var logger: Logger? = null
+    @Inject lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

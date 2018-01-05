@@ -23,38 +23,17 @@ import javax.inject.Inject
 
 class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(), SetupServerContract.View {
 
-    @Inject
-    @JvmField
-    var presenter: SetupServerContract.Presenter? = null
+    @Inject lateinit var serverPresenter: SetupServerContract.Presenter
 
-    @BindView(R.id.server_name_text)
-    @JvmField
-    var txtName: EditText? = null
-    @BindView(R.id.server_local_text)
-    @JvmField
-    var localUrlText: EditText? = null
-    @BindView(R.id.error_local_url)
-    @JvmField
-    var errorLocalUrlText: TextView? = null
-    @BindView(R.id.txt_server_remote)
-    @JvmField
-    var remoteUrlText: EditText? = null
-    @BindView(R.id.error_remote_url)
-    @JvmField
-    var errorRemoteUrlText: TextView? = null
-    @BindView(R.id.txt_username)
-    @JvmField
-    var txtUsername: EditText? = null
-    @BindView(R.id.txt_password)
-    @JvmField
-    var txtPassword: EditText? = null
-    @BindView(R.id.btn_save)
-    @JvmField
-    var btnSave: Button? = null
-
-    @BindView(R.id.top_label)
-    @JvmField
-    var topLabel: View? = null
+    @BindView(R.id.server_name_text) lateinit var txtName: EditText
+    @BindView(R.id.server_local_text) lateinit var localUrlText: EditText
+    @BindView(R.id.error_local_url) lateinit var errorLocalUrlText: TextView
+    @BindView(R.id.txt_server_remote) lateinit var remoteUrlText: EditText
+    @BindView(R.id.error_remote_url) lateinit var errorRemoteUrlText: TextView
+    @BindView(R.id.txt_username) lateinit var txtUsername: EditText
+    @BindView(R.id.txt_password) lateinit var txtPassword: EditText
+    @BindView(R.id.btn_save) lateinit var btnSave: Button
+    @BindView(R.id.top_label) lateinit var topLabel: View
 
     private var unbinder: Unbinder? = null
 
@@ -63,7 +42,7 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     override fun getPresenter(): SetupServerContract.Presenter? {
-        return presenter
+        return serverPresenter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -76,7 +55,7 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     override fun showTopLabel(show: Boolean) {
-        topLabel?.visibility = if (show) View.VISIBLE else View.GONE
+        topLabel.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     @OnClick(R.id.btn_save)
@@ -87,21 +66,21 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     override fun onResume() {
         super.onResume()
 
-        RxTextView.textChanges(remoteUrlText!!)
+        RxTextView.textChanges(remoteUrlText)
                 .compose(bindToLifecycle())
-                .subscribe { text -> errorRemoteUrlText!!.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE }
+                .subscribe { text -> errorRemoteUrlText.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE }
 
-        RxTextView.textChanges(localUrlText!!)
+        RxTextView.textChanges(localUrlText)
                 .compose(bindToLifecycle())
-                .subscribe { text -> errorLocalUrlText!!.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE }
+                .subscribe { text -> errorLocalUrlText.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE }
     }
 
     override fun loadServer(server: ServerDB) {
-        txtName!!.setText(server.name)
-        localUrlText!!.setText(server.localUrl)
-        remoteUrlText!!.setText(server.remoteUrl)
-        txtUsername!!.setText(server.username)
-        txtPassword!!.setText(server.password)
+        txtName.setText(server.name)
+        localUrlText.setText(server.localUrl)
+        remoteUrlText.setText(server.remoteUrl)
+        txtUsername.setText(server.username)
+        txtPassword.setText(server.password)
     }
 
     private fun toUrl(text: String): String {
@@ -111,9 +90,9 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     private fun save() {
-        val server = ServerData(txtName!!.text.toString(), toUrl(localUrlText!!.text.toString()), toUrl(remoteUrlText!!.text.toString()), txtUsername!!.text.toString(), txtPassword!!.text.toString())
+        val server = ServerData(txtName.text.toString(), toUrl(localUrlText.text.toString()), toUrl(remoteUrlText.text.toString()), txtUsername.text.toString(), txtPassword.text.toString())
 
-        presenter?.saveServer(server)
+        serverPresenter.saveServer(server)
     }
 
     /**

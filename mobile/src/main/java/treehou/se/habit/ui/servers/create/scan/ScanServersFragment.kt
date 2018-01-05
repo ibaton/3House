@@ -35,11 +35,9 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
     lateinit var scanPresenter: ScanServersContract.Presenter
 
     @BindView(R.id.empty)
-    @JvmField
-    var viwEmpty: View? = null
+    lateinit var viwEmpty: View
     @BindView(R.id.list)
-    @JvmField
-    var lstServer: RecyclerView? = null
+    lateinit var lstServer: RecyclerView
 
     private lateinit var serversAdapter: ServersAdapter
     private var discoveryListener: OHCallback<List<OHServer>>? = null

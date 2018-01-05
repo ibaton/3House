@@ -3,24 +3,23 @@ package treehou.se.habit.ui.servers.create
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import treehou.se.habit.R
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerActivity
 import javax.inject.Inject
-import android.view.View
-import treehou.se.habit.ui.anim.AnimationFinishListener
-import butterknife.*
 
 
 class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(), CreateServerContract.View {
 
-    @Inject
-    @JvmField
-    var serverPresenter: CreateServerPresenter? = null;
+    @Inject lateinit var serverPresenter: CreateServerPresenter
 
     @BindView(R.id.container) lateinit var container: View
 
-    var unbinder : Unbinder? = null
+    var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +27,7 @@ class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(
         unbinder = ButterKnife.bind(this)
 
         val fragment = supportFragmentManager.findFragmentById(R.id.container)
-        if(fragment == null) {
+        if (fragment == null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.container, CreateServerFragment.createFragment())
                     .addToBackStack(null)
@@ -38,7 +37,7 @@ class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(
 
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.container)
-        if(fragment is CreateServerFragment){
+        if (fragment is CreateServerFragment) {
             finish()
         } else {
             supportFragmentManager.popBackStack()

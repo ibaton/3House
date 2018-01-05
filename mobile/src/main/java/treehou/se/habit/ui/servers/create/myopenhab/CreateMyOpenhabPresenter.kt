@@ -17,20 +17,9 @@ class CreateMyOpenhabPresenter
 @Inject
 constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), CreateMyOpenhabContract.Presenter {
 
-    @Inject
-    @JvmField
-    var connectionFactory: ConnectionFactory? = null
-
-    @Inject
-    @JvmField
-    var analytics: FirebaseAnalytics? = null
-
-    @Inject
-    @JvmField
-    var context: Context? = null
-
-    override fun load(launchData: Bundle?, savedData: Bundle?) {
-    }
+    @Inject lateinit var connectionFactory: ConnectionFactory
+    @Inject lateinit var analytics: FirebaseAnalytics
+    @Inject lateinit var context: Context
 
     override fun login(username: String, password: String) {
         Log.d(TAG, "Attempting Login")
@@ -42,7 +31,7 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
         server.remoteUrl = MY_OPENHAB_URL
         server.setLocalurl(MY_OPENHAB_URL)
 
-        val createServerHandler = connectionFactory?.createServerHandler(server, context)
+        val createServerHandler = connectionFactory.createServerHandler(server, context)
 
         createServerHandler?.requestSitemapRx()
                 ?.subscribeOn(Schedulers.io())

@@ -24,11 +24,11 @@ import javax.inject.Inject
  */
 class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Presenter>(), CreateMyOpenhabContract.View {
 
-    @Inject @JvmField var presenter: CreateMyOpenhabContract.Presenter? = null
+    @Inject lateinit var myPresenter: CreateMyOpenhabContract.Presenter
 
-    @BindView(R.id.email) @JvmField var email : TextView? = null
-    @BindView(R.id.password) @JvmField var password : TextView? = null
-    @BindView(R.id.error) @JvmField var errorView : TextView? = null
+    @BindView(R.id.email) lateinit var email : TextView
+    @BindView(R.id.password) lateinit var password : TextView
+    @BindView(R.id.error) lateinit var errorView : TextView
 
     var unbinder : Unbinder? = null
 
@@ -45,7 +45,7 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
 
     @OnClick(R.id.login)
     fun login(){
-        presenter?.login(email?.text.toString(), password?.text.toString())
+        myPresenter.login(email.text.toString(), password.text.toString())
     }
 
     override fun onDestroyView() {
@@ -57,8 +57,8 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
         Flowable.just(error)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({errorValue ->
-                    errorView?.visibility = View.VISIBLE
-                    errorView?.text = errorValue
+                    errorView.visibility = View.VISIBLE
+                    errorView.text = errorValue
                 })
     }
 
@@ -70,7 +70,7 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
     }
 
     override fun getPresenter(): CreateMyOpenhabContract.Presenter? {
-        return presenter
+        return myPresenter
     }
 
     override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
