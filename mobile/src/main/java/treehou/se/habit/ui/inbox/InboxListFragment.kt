@@ -86,8 +86,8 @@ class InboxListFragment : BaseFragment() {
      */
     private fun hookupInboxList() {
         val gridLayoutManager = GridLayoutManager(activity, 1)
-        listView!!.layoutManager = gridLayoutManager
-        listView!!.itemAnimator = DefaultItemAnimator()
+        listView.layoutManager = gridLayoutManager
+        listView.itemAnimator = DefaultItemAnimator()
 
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun getSwipeDirs(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
@@ -113,7 +113,7 @@ class InboxListFragment : BaseFragment() {
         itemTouchHelper.attachToRecyclerView(listView)
 
         adapter = InboxAdapter(context, server, connectionFactory)
-        listView!!.adapter = adapter
+        listView.adapter = adapter
     }
 
     /**
@@ -127,13 +127,13 @@ class InboxListFragment : BaseFragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.inbox, menu)
         actionHide = menu!!.findItem(R.id.action_hide)
-        actionHide!!.setOnMenuItemClickListener { item ->
+        actionHide!!.setOnMenuItemClickListener {
             showIgnoredItems(false)
             true
         }
 
         actionShow = menu.findItem(R.id.action_show)
-        actionShow!!.setOnMenuItemClickListener { item ->
+        actionShow!!.setOnMenuItemClickListener {
             showIgnoredItems(true)
             true
         }
@@ -201,13 +201,13 @@ class InboxListFragment : BaseFragment() {
      */
     private fun ignoreInboxItem(item: OHInboxItem) {
         item.flag = OHInboxItem.FLAG_IGNORED
-        val serverHandler = connectionFactory!!.createServerHandler(server!!.toGeneric(), context)
+        val serverHandler = connectionFactory.createServerHandler(server!!.toGeneric(), context)
         serverHandler.ignoreInboxItem(item)
 
         val rootView = view
         if (rootView != null) {
             Snackbar.make(rootView, R.string.hide_item, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo) { view ->
+                    .setAction(R.string.undo) {
                         unignoreInboxItem(item)
                         Snackbar.make(rootView, R.string.restore_item, Snackbar.LENGTH_SHORT).show()
                     }.show()
@@ -224,7 +224,7 @@ class InboxListFragment : BaseFragment() {
      */
     private fun unignoreInboxItem(item: OHInboxItem) {
         item.flag = ""
-        val serverHandler = connectionFactory!!.createServerHandler(server!!.toGeneric(), context)
+        val serverHandler = connectionFactory.createServerHandler(server!!.toGeneric(), context)
         serverHandler.unignoreInboxItem(item)
         setItems(items, showIgnored)
     }
@@ -233,7 +233,7 @@ class InboxListFragment : BaseFragment() {
         super.onResume()
 
         showErrorView(false)
-        val serverHandler = connectionFactory!!.createServerHandler(server!!.toGeneric(), context)
+        val serverHandler = connectionFactory.createServerHandler(server!!.toGeneric(), context)
         serverHandler.requestInboxItemsRx()
                 .compose(RxUtil.newToMainSchedulers())
                 .compose(this.bindToLifecycle())
@@ -252,11 +252,11 @@ class InboxListFragment : BaseFragment() {
      */
     private fun showErrorView(showError: Boolean) {
         if (showError) {
-            empty!!.visibility = View.VISIBLE
-            listView!!.visibility = View.GONE
+            empty.visibility = View.VISIBLE
+            listView.visibility = View.GONE
         } else {
-            empty!!.visibility = View.GONE
-            listView!!.visibility = View.VISIBLE
+            empty.visibility = View.GONE
+            listView.visibility = View.VISIBLE
         }
     }
 

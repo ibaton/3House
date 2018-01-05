@@ -49,7 +49,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
             ServerDB server = voiceCell.getItem().getServer();
 
-            Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
+            Intent callbackIntent = VoiceService.Companion.createVoiceCommand(context, server);
             PendingIntent openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -88,7 +88,7 @@ public class VoiceCellBuilder implements CellFactory.CellBuilder {
 
         ServerDB server = voiceCell.getItem().getServer();
 
-        Intent callbackIntent = VoiceService.createVoiceCommand(context, server);
+        Intent callbackIntent = VoiceService.Companion.createVoiceCommand(context, server);
         PendingIntent openhabPendingIntent = PendingIntent.getService(context.getApplicationContext(), (int)(Math.random()*Integer.MAX_VALUE), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);

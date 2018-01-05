@@ -46,7 +46,7 @@ class ServerMenuFragment : Fragment() {
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private var adapter: ImageItemAdapter? = null
+    private lateinit var adapter: ImageItemAdapter
 
     protected val applicationComponent: ApplicationComponent
         get() = (context!!.applicationContext as HabitApplication).component()
@@ -94,13 +94,13 @@ class ServerMenuFragment : Fragment() {
         adapter = ImageItemAdapter(R.layout.item_menu_image_box)
 
         // Set the adapter
-        listView!!.adapter = adapter
+        listView.adapter = adapter
         val layoutManager = GridLayoutManager(activity, 2)
-        listView!!.layoutManager = layoutManager
-        listView!!.itemAnimator = DefaultItemAnimator()
-        adapter!!.setItemClickListener(optionsSelectListener)
-        adapter!!.addAll(items)
-        listView!!.adapter = adapter
+        listView.layoutManager = layoutManager
+        listView.itemAnimator = DefaultItemAnimator()
+        adapter.setItemClickListener(optionsSelectListener)
+        adapter.addAll(items)
+        listView.adapter = adapter
 
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.settings)

@@ -84,7 +84,7 @@ class LinksListFragment : BaseFragment() {
     private fun openRemoveLinkDialog(link: OHLink) {
         AlertDialog.Builder(context!!)
                 .setMessage(R.string.remove_link)
-                .setPositiveButton(android.R.string.ok) { dialogInterface, i -> removeLink(link) }
+                .setPositiveButton(android.R.string.ok) { dialogInterface, _ -> removeLink(link) }
                 .setNegativeButton(android.R.string.cancel, null)
                 .create()
                 .show()
@@ -97,12 +97,12 @@ class LinksListFragment : BaseFragment() {
     private fun removeLink(link: OHLink) {
         adapter!!.removeItem(link)
 
-        connectionFactory!!.createServerHandler(server!!.toGeneric(), context)
+        connectionFactory.createServerHandler(server!!.toGeneric(), context)
                 .deleteLinkRx(link)
                 .compose<Response<ResponseBody>>(bindToLifecycle<Response<ResponseBody>>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ responseBodyResponse ->
+                .subscribe({
                     adapter!!.addItem(link)
                     Toast.makeText(context, R.string.failed_delete_link, Toast.LENGTH_SHORT).show()
                 }) { throwable -> logger.e(TAG, "removeLink Failed", throwable) }
@@ -139,7 +139,7 @@ class LinksListFragment : BaseFragment() {
      * Load servers from database and request their sitemaps.
      */
     private fun loadLinks() {
-        connectionFactory!!.createServerHandler(server!!.toGeneric(), context)
+        connectionFactory.createServerHandler(server!!.toGeneric(), context)
                 .requestLinksRx()
                 .filter { ohLinks -> ohLinks.size > 0 }
                 .subscribeOn(Schedulers.newThread())

@@ -88,10 +88,10 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.scan_for_server)
 
-        lstServer!!.adapter = serversAdapter
+        lstServer.adapter = serversAdapter
         val gridLayoutManager = GridLayoutManager(activity, 1)
-        lstServer!!.layoutManager = gridLayoutManager
-        lstServer!!.itemAnimator = DefaultItemAnimator()
+        lstServer.layoutManager = gridLayoutManager
+        lstServer.itemAnimator = DefaultItemAnimator()
 
         return rootView
     }
@@ -133,7 +133,7 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
      * Show empty view if no controllers exist
      */
     private fun updateEmptyView(itemCount: Int) {
-        viwEmpty!!.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
+        viwEmpty.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
     }
 
     class ServersAdapter(private val context: Context) : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
