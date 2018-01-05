@@ -32,8 +32,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
     @BindView(R.id.viw_background) lateinit var viwBackground: View
 
     @Inject lateinit var controllerUtil: ControllerUtil
-    @Inject
-    @Named("config") lateinit var cellFactory: CellFactory<Int>
+    @Inject @field:Named("config") lateinit var cellFactory: CellFactory
 
     private lateinit var actionBar: ActionBar
     private lateinit var controller: ControllerDB
@@ -146,31 +145,35 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
             for (cell in row.cells) {
                 Log.d(TAG, "Drawing cell " + cell.id)
-                val itemView = cellFactory.create(getActivity(), controller, cell)
 
-                itemView.setOnClickListener { v ->
-                    getActivity()!!.supportFragmentManager.beginTransaction()
-                            .replace(R.id.page_container, ControllCellFragment.newInstance(cell.id))
-                            .addToBackStack(null)
-                            .commit()
+                val activity = getActivity()
+                if (activity != null) {
+                    val itemView = cellFactory.create(activity, controller, cell)
+
+                    itemView.setOnClickListener { v ->
+                        getActivity()!!.supportFragmentManager.beginTransaction()
+                                .replace(R.id.page_container, ControllCellFragment.newInstance(cell.id))
+                                .addToBackStack(null)
+                                .commit()
+                    }
+
+                    itemView.setOnLongClickListener { v ->
+                        AlertDialog.Builder(activity)
+                                .setMessage(activity!!.getString(R.string.delete_cell))
+                                .setPositiveButton(R.string.ok) { dialog, which ->
+                                    realm!!.beginTransaction()
+                                    cell.deleteFromRealm()
+                                    if (row.cells.size <= 0) row.deleteFromRealm()
+                                    realm!!.commitTransaction()
+                                    redrawController()
+                                }
+                                .setNegativeButton(R.string.cancel, null)
+                                .show()
+
+                        true
+                    }
+                    louColumnHolder.addView(itemView)
                 }
-
-                itemView.setOnLongClickListener { v ->
-                    AlertDialog.Builder(getActivity()!!)
-                            .setMessage(activity!!.getString(R.string.delete_cell))
-                            .setPositiveButton(R.string.ok) { dialog, which ->
-                                realm!!.beginTransaction()
-                                cell.deleteFromRealm()
-                                if (row.cells.size <= 0) row.deleteFromRealm()
-                                realm!!.commitTransaction()
-                                redrawController()
-                            }
-                            .setNegativeButton(R.string.cancel, null)
-                            .show()
-
-                    true
-                }
-                louColumnHolder.addView(itemView)
             }
 
             btnAddCell.setOnClickListener { v ->

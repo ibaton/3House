@@ -9,26 +9,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-
 import com.mattyork.colours.Colour
-
-import javax.inject.Inject
-import javax.inject.Named
-
 import io.realm.Realm
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
-import treehou.se.habit.core.db.model.controller.CellDB
-import treehou.se.habit.core.db.model.controller.CellRowDB
 import treehou.se.habit.core.db.model.controller.ControllerDB
 import treehou.se.habit.util.Util
+import javax.inject.Inject
+import javax.inject.Named
 
 class ControlFragment : Fragment() {
 
     private lateinit var louController: LinearLayout
 
     private var controller: ControllerDB? = null
-    @Inject @Named("display") lateinit var cellFactory: CellFactory<Int>
+    @Inject @field:Named("display") lateinit var cellFactory: CellFactory
 
     private var actionBar: ActionBar? = null
     private var activity: AppCompatActivity? = null
@@ -116,9 +111,12 @@ class ControlFragment : Fragment() {
 
             val louColumnHolder = louRow.findViewById<View>(R.id.lou_btn_holder) as LinearLayout
             for (cell in row.cells) {
-                val itemView = cellFactory.create(getActivity(), controller, cell)
-
-                louColumnHolder.addView(itemView)
+                val activity = getActivity()
+                val controller = controller
+                if (activity != null && controller != null) {
+                    val itemView = cellFactory.create(activity, controller, cell)
+                    louColumnHolder.addView(itemView)
+                }
             }
             louController.addView(louRow)
         }

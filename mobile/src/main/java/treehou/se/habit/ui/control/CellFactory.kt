@@ -13,7 +13,7 @@ import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
 import treehou.se.habit.core.db.model.controller.ControllerDB
 
-class CellFactory<T> {
+class CellFactory {
 
     private val cellBuilders = HashMap<Int, CellBuilder>()
     private var defaultBuilder: CellBuilder = DefaultBuilder()

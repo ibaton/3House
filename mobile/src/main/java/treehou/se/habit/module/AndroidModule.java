@@ -13,8 +13,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
-import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget;
+import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Analytics;
 import treehou.se.habit.connector.Communicator;
@@ -35,8 +35,8 @@ import treehou.se.habit.ui.control.cells.config.cells.SliderConfigCellBuilder;
 import treehou.se.habit.ui.control.cells.config.cells.VoiceConfigCellBuilder;
 import treehou.se.habit.ui.settings.subsettings.general.ThemeItem;
 import treehou.se.habit.ui.widgets.WidgetFactory;
-import treehou.se.habit.ui.widgets.factories.colorpicker.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory;
+import treehou.se.habit.ui.widgets.factories.colorpicker.ColorpickerWidgetFactory;
 import treehou.se.habit.ui.widgets.factories.switches.SwitchWidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.DatabaseServerLoaderFactory;
@@ -52,7 +52,9 @@ public class AndroidModule {
         this.application = application;
     }
 
-    @Provides @Singleton Context provideApplicationContext() {
+    @Provides
+    @Singleton
+    Context provideApplicationContext() {
         return application;
     }
 
@@ -81,35 +83,35 @@ public class AndroidModule {
 
     @Provides
     @Singleton
-    public Settings provideSettingsManager(){
+    public Settings provideSettingsManager() {
         return Settings.instance(application);
     }
 
     @Provides
     @Singleton
-    public ConnectionFactory provideConnectionFactory(Context context){
+    public ConnectionFactory provideConnectionFactory(Context context) {
         return new ConnectionFactory(context);
     }
 
     @Provides
     @Singleton
-    public Communicator provideCommunicator(Context context){
+    public Communicator provideCommunicator(Context context) {
         return Communicator.instance(context);
     }
 
     @Provides
-    public ServerLoaderFactory provideServerLoaderFactory(DatabaseServerLoaderFactory databaseServerLoaderFactory){
+    public ServerLoaderFactory provideServerLoaderFactory(DatabaseServerLoaderFactory databaseServerLoaderFactory) {
         return databaseServerLoaderFactory;
     }
 
     @Provides
-    public Logger provideLogger(){
+    public Logger provideLogger() {
         return new FirebaseLogger();
     }
 
     @Provides
     public WidgetFactory provideWidgetFactory(ConnectionFactory connectionFactory, SliderWidgetFactory sliderWidgetFactory,
-                  SwitchWidgetFactory switchWidgetFactory, ColorpickerWidgetFactory provideColorWidgetFactory){
+                                              SwitchWidgetFactory switchWidgetFactory, ColorpickerWidgetFactory provideColorWidgetFactory) {
 
         WidgetFactory factory = new WidgetFactory(connectionFactory);
         factory.addWidgetFactory(OHWidget.WIDGET_TYPE_SLIDER, sliderWidgetFactory);
@@ -120,21 +122,21 @@ public class AndroidModule {
     }
 
     @Provides
-    public SliderWidgetFactory provideSliderWidgetFactory(ConnectionFactory connectionFactory){
+    public SliderWidgetFactory provideSliderWidgetFactory(ConnectionFactory connectionFactory) {
         SliderWidgetFactory factory = new SliderWidgetFactory(connectionFactory);
 
         return factory;
     }
 
     @Provides
-    public ColorpickerWidgetFactory provideColorWidgetFactory(ConnectionFactory connectionFactory){
+    public ColorpickerWidgetFactory provideColorWidgetFactory(ConnectionFactory connectionFactory) {
         ColorpickerWidgetFactory factory = new ColorpickerWidgetFactory(connectionFactory);
 
         return factory;
     }
 
     @Provides
-    public SwitchWidgetFactory provideSwitchWidgetFactory(ConnectionFactory connectionFactory){
+    public SwitchWidgetFactory provideSwitchWidgetFactory(ConnectionFactory connectionFactory) {
         SwitchWidgetFactory factory = new SwitchWidgetFactory(connectionFactory);
         return factory;
     }
@@ -142,31 +144,31 @@ public class AndroidModule {
     @Provides
     @Singleton
     public ThemeItem[] provideThemes(Context context) {
-        ThemeItem[] themes = new ThemeItem[] {
-            new ThemeItem(Settings.Themes.THEME_DEFAULT, context.getString(R.string.treehouse)),
-                    new ThemeItem(Settings.Themes.THEME_HABDROID_LIGHT, context.getString(R.string.habdroid)),
-                    new ThemeItem(Settings.Themes.THEME_HABDROID_DARK, context.getString(R.string.dark))
+        ThemeItem[] themes = new ThemeItem[]{
+                new ThemeItem(Settings.Themes.THEME_DEFAULT, context.getString(R.string.treehouse)),
+                new ThemeItem(Settings.Themes.THEME_HABDROID_LIGHT, context.getString(R.string.habdroid)),
+                new ThemeItem(Settings.Themes.THEME_HABDROID_DARK, context.getString(R.string.dark))
         };
         return themes;
     }
 
     @Provides
     @Singleton
-    public ControllerUtil provideControllerUtil(Context context, Realm realm, @Named("display") CellFactory<Integer> factory){
+    public ControllerUtil provideControllerUtil(Context context, Realm realm, @Named("display") CellFactory factory) {
         return new ControllerUtil(context, realm, factory);
     }
 
     @Provides
     @Singleton
-    public ControllerHandler provideControllHandler(Realm realm, ControllerUtil controllerUtil){
+    public ControllerHandler provideControllHandler(Realm realm, ControllerUtil controllerUtil) {
         return new ControllerHandler(realm, controllerUtil);
     }
 
     @Provides
     @Singleton
     @Named("display")
-    public CellFactory<Integer> provideCellFactory(ButtonCellBuilder buttonCellBuilder, SliderCellBuilder sliderCellBuilder, IncDecCellBuilder incDecCellBuilder, VoiceCellBuilder voiceCellBuilder){
-        CellFactory<Integer> cellFactory = new CellFactory<>();
+    public CellFactory provideCellFactory(ButtonCellBuilder buttonCellBuilder, SliderCellBuilder sliderCellBuilder, IncDecCellBuilder incDecCellBuilder, VoiceCellBuilder voiceCellBuilder) {
+        CellFactory cellFactory = new CellFactory();
         cellFactory.setDefaultBuilder(new EmptyCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_BUTTON, buttonCellBuilder);
         cellFactory.addBuilder(CellDB.TYPE_INC_DEC, incDecCellBuilder);
@@ -179,8 +181,8 @@ public class AndroidModule {
     @Provides
     @Singleton
     @Named("config")
-    public CellFactory<Integer> provideConfigCellFactory() {
-        CellFactory<Integer> cellFactory = new CellFactory<>();
+    public CellFactory provideConfigCellFactory() {
+        CellFactory cellFactory = new CellFactory();
         cellFactory.setDefaultBuilder(new DefaultConfigCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonConfigCellBuilder());
         cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceConfigCellBuilder());
@@ -192,38 +194,38 @@ public class AndroidModule {
 
     @Provides
     @Singleton
-    public VoiceCellBuilder provideVoiceCellBuilder(){
+    public VoiceCellBuilder provideVoiceCellBuilder() {
         return new VoiceCellBuilder();
     }
 
     @Provides
     @Singleton
-    public ButtonCellBuilder provideButtonCellBuilder(ConnectionFactory connectionFactory){
+    public ButtonCellBuilder provideButtonCellBuilder(ConnectionFactory connectionFactory) {
         return new ButtonCellBuilder(connectionFactory);
     }
 
 
     @Provides
     @Singleton
-    public SliderCellBuilder provideSliderCellBuilder(ConnectionFactory connectionFactory){
+    public SliderCellBuilder provideSliderCellBuilder(ConnectionFactory connectionFactory) {
         return new SliderCellBuilder(connectionFactory);
     }
 
     @Provides
     @Singleton
-    public IncDecCellBuilder provideIncDecCellBuilder(Communicator communicator){
+    public IncDecCellBuilder provideIncDecCellBuilder(Communicator communicator) {
         return new IncDecCellBuilder(communicator);
     }
 
     @Provides
     @Singleton
-    public FirebaseAnalytics provideFirebaseAnalytics(Context context){
+    public FirebaseAnalytics provideFirebaseAnalytics(Context context) {
         return FirebaseAnalytics.getInstance(context);
     }
 
     @Provides
     @Singleton
-    public Analytics provideAnalytics(FirebaseAnalytics firebaseAnalytics){
+    public Analytics provideAnalytics(FirebaseAnalytics firebaseAnalytics) {
         return new Analytics(firebaseAnalytics);
     }
 }

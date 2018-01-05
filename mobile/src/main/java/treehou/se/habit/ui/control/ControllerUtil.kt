@@ -22,7 +22,7 @@ import treehou.se.habit.core.db.model.controller.ControllerDB
 import treehou.se.habit.ui.homescreen.ControllerWidget
 import treehou.se.habit.util.Util
 
-class ControllerUtil(private val context: Context, private val realm: Realm, private val cellFactory: CellFactory<Int>) {
+class ControllerUtil(private val context: Context, private val realm: Realm, private val cellFactory: CellFactory) {
 
     fun updateWidget(widgetId: Int) {
         val intent = Intent(context, ControllerWidget::class.java)
