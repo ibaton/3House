@@ -55,7 +55,7 @@ class ControllsFragment : BaseFragment() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.controllers)
 
-        mAdapter = ControllerAdapter(activity)
+        mAdapter = ControllerAdapter(context!!)
         mAdapter!!.setItemListener(object : ControllerAdapter.ItemListener {
             override fun itemCountUpdated(itemCount: Int) {
                 updateEmptyView(itemCount)

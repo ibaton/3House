@@ -16,7 +16,7 @@ interface SitemapListContract {
     }
 
     interface Presenter : BasePresenter {
-        fun openSitemap(server: OHServer, sitemap: OHSitemap)
+        fun openSitemap(server: OHServer, sitemap: OHSitemap?)
         fun reloadSitemaps(server: OHServer)
     }
 }

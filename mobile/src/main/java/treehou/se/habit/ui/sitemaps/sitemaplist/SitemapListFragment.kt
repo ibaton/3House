@@ -53,7 +53,7 @@ class SitemapListFragment : BaseDaggerFragment<SitemapListContract.Presenter>(),
         sitemapAdapter = SitemapListAdapter()
         sitemapAdapter!!.setSitemapSelectedListener(object : SitemapListAdapter.SitemapSelectedListener {
 
-            override fun onSelected(server: OHServer, sitemap: OHSitemap) {
+            override fun onSelected(server: OHServer, sitemap: OHSitemap?) {
                 sitemapListPresenter.openSitemap(server, sitemap)
             }
 

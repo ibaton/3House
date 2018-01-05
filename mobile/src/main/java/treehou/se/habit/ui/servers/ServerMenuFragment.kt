@@ -51,22 +51,23 @@ class ServerMenuFragment : Fragment() {
     protected val applicationComponent: ApplicationComponent
         get() = (context!!.applicationContext as HabitApplication).component()
 
-    private val optionsSelectListener = { id: Int ->
+    private val optionsSelectListener = object : ImageItemAdapter.OnItemClickListener {
+        override fun onItemClicked(id: Int) {
+            var fragment: Fragment? = null
+            when (id) {
+                ITEM_EDIT -> fragment = SetupServerFragment.newInstance(serverId)
+                ITEM_INBOX -> openInboxPage(serverId)
+                ITEM_BINDINGS -> openBindingsPage(serverId)
+                ITEM_LINKS -> openLinksPage(serverId)
+                ITEM_SITEMAP_FILTER -> openSitemapSettingsPage(serverId)
+            }
 
-        var fragment: Fragment? = null
-        when (id) {
-            ITEM_EDIT -> fragment = SetupServerFragment.newInstance(serverId)
-            ITEM_INBOX -> openInboxPage(serverId)
-            ITEM_BINDINGS -> openBindingsPage(serverId)
-            ITEM_LINKS -> openLinksPage(serverId)
-            ITEM_SITEMAP_FILTER -> openSitemapSettingsPage(serverId)
-        }
-
-        if (fragment != null) {
-            activity!!.supportFragmentManager.beginTransaction()
-                    .replace(R.id.page_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+            if (fragment != null) {
+                activity!!.supportFragmentManager.beginTransaction()
+                        .replace(R.id.page_container, fragment)
+                        .addToBackStack(null)
+                        .commit()
+            }
         }
     }
 

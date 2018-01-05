@@ -70,10 +70,10 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
         sitemapAdapter = SitemapListAdapter()
         sitemapAdapter!!.setSitemapSelectedListener(object : SitemapListAdapter.SitemapSelectedListener {
 
-            override fun onSelected(server: OHServer, sitemap: OHSitemap) {
+            override fun onSelected(server: OHServer, sitemap: OHSitemap?) {
                 val sitemapDB = realm.where(SitemapDB::class.java)
                         .equalTo("server.id", serverId)
-                        .equalTo("name", sitemap.name)
+                        .equalTo("name", sitemap?.name)
                         .findFirst()
 
                 if (sitemapDB != null) {

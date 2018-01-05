@@ -81,9 +81,9 @@ constructor(@param:Named("arguments") private val arguments: Bundle, private val
         }
     }
 
-    override fun openSitemap(server: OHServer, sitemap: OHSitemap) {
+    override fun openSitemap(server: OHServer, sitemap: OHSitemap?) {
         settings.setDefaultSitemap(sitemap)
-        view.showSitemap(server, sitemap)
+        view.showSitemap(server, sitemap!!)
     }
 
     companion object {

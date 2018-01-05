@@ -112,7 +112,7 @@ class InboxListFragment : BaseFragment() {
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(listView)
 
-        adapter = InboxAdapter(context, server, connectionFactory)
+        adapter = InboxAdapter(context!!, server!!, connectionFactory)
         listView.adapter = adapter
     }
 
