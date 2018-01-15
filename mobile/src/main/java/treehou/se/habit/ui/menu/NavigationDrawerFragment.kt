@@ -155,7 +155,10 @@ class NavigationDrawerFragment : BaseFragment() {
 
                     val sitemaps = ArrayList<OHSitemap>()
                     for (response in serverSitemapsResponses) {
-                        sitemaps.addAll(response.sitemaps)
+                        val newSitemaps = response.sitemaps
+                        if(newSitemaps != null) {
+                            sitemaps.addAll(newSitemaps)
+                        }
                     }
 
                     menuAdapter.clearSitemaps()

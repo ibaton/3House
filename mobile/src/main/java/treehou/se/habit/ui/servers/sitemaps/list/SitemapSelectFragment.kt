@@ -138,21 +138,27 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
      * Load servers from database and request their sitemaps.
      */
     private fun loadSitemapsFromServers() {
+        val context = context ?: return
+
         realm.where(ServerDB::class.java).equalTo("id", serverId).findAll().asFlowable().toObservable()
                 .flatMap<ServerDB>({ Observable.fromIterable(it) })
                 .map<OHServer>({ it.toGeneric() })
                 .distinct()
-                .compose<ServerLoaderFactory.ServerSitemapsResponse>(serverLoader.serverToSitemap(activity))
+                .compose<ServerLoaderFactory.ServerSitemapsResponse>(serverLoader.serverToSitemap(context))
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose<ServerLoaderFactory.ServerSitemapsResponse>(bindToLifecycle<ServerLoaderFactory.ServerSitemapsResponse>())
                 .subscribe({ serverSitemaps ->
                     emptyView.visibility = View.GONE
 
-                    val server = serverSitemaps.getServer()
-                    val sitemaps = serverSitemaps.getSitemaps()
+                    val server = serverSitemaps.server
+                    val sitemaps = serverSitemaps.sitemaps
 
-                    for (sitemap in sitemaps) {
-                        sitemapAdapter!!.add(server, sitemap)
+                    if(sitemaps != null) {
+                        for (sitemap in sitemaps) {
+                            if(server != null) {
+                                sitemapAdapter!!.add(server, sitemap)
+                            }
+                        }
                     }
                 }) { throwable -> logger.e(TAG, "Request sitemap failed", throwable) }
     }

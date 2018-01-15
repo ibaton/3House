@@ -67,7 +67,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
                         Observable<ServerSitemapsResponse> serverSitemapsResponseRx = Observable.just(server)
                                 .compose(serverToSitemap(context))
                                 .subscribeOn(Schedulers.io())
-                                .startWith(EMPTY_RESPONSE);
+                                .startWith(Companion.getEMPTY_RESPONSE());
 
                         sitemapResponseRx.add(serverSitemapsResponseRx);
                     }

@@ -141,7 +141,7 @@ public class GcmIntentService extends IntentService {
         //TODO create inbox style
 
         String replyLabel = getString(R.string.notification_title);
-        RemoteInput remoteInput = new RemoteInput.Builder(VoiceActionService.EXTRA_VOICE_REPLY)
+        RemoteInput remoteInput = new RemoteInput.Builder(VoiceActionService.Companion.getEXTRA_VOICE_REPLY())
                 .setLabel(replyLabel)
                 .build();
 

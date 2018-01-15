@@ -141,10 +141,10 @@ public class IncDecActionFragment extends RxFragment {
             ItemDB itemDb = ItemDB.createOrLoadFromGeneric(realm, item);
             realm.commitTransaction();
 
-            final Bundle resultBundle = IncDecBoundleManager.generateCommandBundle(getActivity(), itemDb.getId(), value, min, max);
+            final Bundle resultBundle = IncDecBoundleManager.Companion.generateCommandBundle(getActivity(), itemDb.getId(), value, min, max);
 
-            resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_STRING_BLURB, item.getName() + " - " + value);
-            resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_BUNDLE, resultBundle);
+            resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.Companion.getEXTRA_STRING_BLURB(), item.getName() + " - " + value);
+            resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.Companion.getEXTRA_BUNDLE(), resultBundle);
 
             getActivity().setResult(Activity.RESULT_OK, resultIntent);
 

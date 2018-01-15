@@ -130,10 +130,10 @@ public class SwitchActionFragment extends RxFragment {
         realm.commitTransaction();
 
         String command = tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF;
-        final Bundle resultBundle = CommandBoundleManager.generateCommandBundle(itemDb.getId(), command);
+        final Bundle resultBundle = CommandBoundleManager.Companion.generateCommandBundle(itemDb.getId(), command);
 
-        resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_STRING_BLURB, item.getName() + " - " + command);
-        resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.EXTRA_BUNDLE, resultBundle);
+        resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.Companion.getEXTRA_STRING_BLURB(), item.getName() + " - " + command);
+        resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.Companion.getEXTRA_BUNDLE(), resultBundle);
 
         getActivity().setResult(Activity.RESULT_OK, resultIntent);
     }

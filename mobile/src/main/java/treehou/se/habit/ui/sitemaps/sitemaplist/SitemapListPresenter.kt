@@ -68,14 +68,23 @@ constructor(@param:Named("arguments") private val arguments: Bundle, private val
         val sitemaps = serverSitemaps.sitemaps
 
         if (serverSitemaps.hasError()) {
-            view.showServerError(server, serverSitemaps.error)
+            val error = serverSitemaps.error
+            if(error != null && server != null) {
+                view.showServerError(server, error)
+            }
         } else {
-            view.populateSitemaps(server, sitemaps)
+            if(sitemaps != null && server != null) {
+                view.populateSitemaps(server, sitemaps)
+            }
             val autoloadLast = settings.autoloadSitemapRx.blockingFirst()
-            for (sitemap in sitemaps) {
-                if (autoloadLast && sitemap.name == showSitemap) {
-                    showSitemap = null // Prevents sitemap from being accessed again.
-                    openSitemap(server, sitemap)
+            if(sitemaps != null) {
+                for (sitemap in sitemaps) {
+                    if (autoloadLast && sitemap.name == showSitemap) {
+                        showSitemap = null // Prevents sitemap from being accessed again.
+                        if(server != null) {
+                            openSitemap(server, sitemap)
+                        }
+                    }
                 }
             }
         }
