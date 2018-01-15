@@ -149,7 +149,7 @@ internal class DrawerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val sitemap = getSitemap(position)
             val sitemapItemHolder = holder as SitemapItemHolder
             sitemapItemHolder.update(sitemap)
-            sitemapItemHolder.itemView.setOnClickListener { view ->
+            sitemapItemHolder.itemView.setOnClickListener {
                 if (sitemapItemClickListener != null) {
                     sitemapItemClickListener!!.onClickItem(sitemap)
                 }
@@ -158,7 +158,7 @@ internal class DrawerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val drawerItem = getMenuItem(position)
             val drawerItemHolder = holder as DrawerItemHolder
             drawerItemHolder.update(drawerItem!!)
-            drawerItemHolder.itemView.setOnClickListener { view ->
+            drawerItemHolder.itemView.setOnClickListener {
                 if (itemClickListener != null) {
                     itemClickListener!!.onClickItem(drawerItem)
                 }

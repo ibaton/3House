@@ -137,7 +137,7 @@ class CellIncDecConfigFragment : RxFragment() {
         }
 
         updateIconImage()
-        btnSetIcon.setOnClickListener { v ->
+        btnSetIcon.setOnClickListener {
             val intent = Intent(activity, IconPickerActivity::class.java)
             startActivityForResult(intent, REQUEST_ICON)
         }

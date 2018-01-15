@@ -153,14 +153,14 @@ class CellButtonConfigFragment : RxFragment() {
                     .subscribe({ items ->
                         this.items.addAll(items)
                         itemAdapter!!.notifyDataSetChanged()
-                    }) { throwable -> Log.e(TAG, "Error fetching switch items") }
+                    }) { Log.e(TAG, "Error fetching switch items") }
         }
 
         tglOnOff.isChecked = Constants.COMMAND_ON == buttonCell!!.command || Constants.COMMAND_OPEN == buttonCell!!.command
         txtCommand.text = buttonCell!!.command
 
         updateIconImage()
-        btnSetIcon.setOnClickListener { v ->
+        btnSetIcon.setOnClickListener {
             val intent = Intent(activity, IconPickerActivity::class.java)
             startActivityForResult(intent, REQUEST_ICON)
         }

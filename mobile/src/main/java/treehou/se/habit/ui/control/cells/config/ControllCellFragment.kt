@@ -104,7 +104,7 @@ class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
         sprItems.onItemSelectedListener = itemSelectListener
 
         updateColorButton(cell!!.color)
-        btnPicker.setOnClickListener { v ->
+        btnPicker.setOnClickListener {
             val dialog = ColorDialog.instance()
             dialog.setTargetFragment(this@ControllCellFragment, REQUEST_COLOR)
             activity!!.supportFragmentManager.beginTransaction()

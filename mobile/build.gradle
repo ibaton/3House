@@ -20,6 +20,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         proguardFile 'proguard-rules.pro'
+        testProguardFiles 'proguardTest-rules.pro'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
