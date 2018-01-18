@@ -8,7 +8,7 @@ apply plugin: 'com.google.firebase.firebase-crash'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "treehou.se.habit"
         minSdkVersion 19
@@ -16,11 +16,14 @@ android {
         versionCode 72
         versionName "5.5.1"
         // Enabling multidex support.
-        multiDexEnabled false
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         proguardFile 'proguard-rules.pro'
-        testProguardFiles 'proguardTest-rules.pro'
+        multiDexEnabled true
+    }
+    configurations.all {
+        // OkHttp 3.5.0+ includes the websockets API, so we need this to prevent a conflict
+        exclude module: 'okhttp-ws'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -33,11 +36,9 @@ android {
     }
     buildTypes {
         debug {
-            minifyEnabled true
             useProguard true
         }
         release {
-            minifyEnabled true
             useProguard true
         }
     }
@@ -63,6 +64,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+
+    compile 'com.android.support:multidex:1.0.2'
 
     implementation 'com.android.support:recyclerview-v7:27.0.2'
     implementation 'com.android.support:appcompat-v7:27.0.2'
@@ -93,6 +96,7 @@ dependencies {
 
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
@@ -118,7 +122,6 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.13'
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
-
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
@@ -127,7 +130,6 @@ dependencies {
         exclude module: 'design'
     }
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
-    androidTestImplementation 'com.android.support:recyclerview-v7:27.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -31,7 +31,7 @@ interface ServerLoaderFactory {
             this.sitemaps = sitemaps
         }
 
-        constructor(server: OHServer, sitemaps: List<OHSitemap>, error: Throwable?) {
+        constructor(server: OHServer?, sitemaps: List<OHSitemap>, error: Throwable?) {
             this.server = server
             this.sitemaps = sitemaps
             this.error = error
