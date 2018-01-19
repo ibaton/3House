@@ -1,32 +1,56 @@
 package treehou.se.habit.ui.settings;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.filters.SmallTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import treehou.se.habit.NavigationUtil;
+import treehou.se.habit.R;
+import treehou.se.habit.main.MainActivity;
+import treehou.se.habit.util.Settings;
+
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-/*@RunWith(AndroidJUnit4.class)
-@SmallTest*/
+@RunWith(AndroidJUnit4.class)
+@SmallTest
 public class GeneralTest {
 
-    /*@Rule
+    @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void setup(){
         Settings.instance(activityRule.getActivity()).setAutoloadSitemapRx(false);
         Settings.instance(activityRule.getActivity()).getFullscreenPref().set(false);
-    }*/
+    }
 
     /**
      * Navigate to general settings.
      */
-    /*public void navigateToGeneral(){
-        NavigationUtil.navigateToSettings();
-        onView(withText(R.string.settings_general)).perform(ViewActions.click());
+    public void navigateToGeneral(){
+        NavigationUtil.INSTANCE.navigateToSettings();
+        Espresso.onView(withText(R.string.settings_general)).perform(ViewActions.click());
     }
 
     @Test
     public void testOpenSettings() {
         navigateToGeneral();
-        ViewInteraction cbxLoadLast = onView(withText(R.string.open_last_sitemap_on_upstart));
+        ViewInteraction cbxLoadLast = Espresso.onView(withText(R.string.open_last_sitemap_on_upstart));
         cbxLoadLast.check(ViewAssertions.matches(CoreMatchers.not(isChecked())));
         cbxLoadLast.perform(ViewActions.click());
         cbxLoadLast.check(ViewAssertions.matches(isChecked()));
@@ -38,7 +62,7 @@ public class GeneralTest {
     @Test
     public void testSetFullscreen() {
         navigateToGeneral();
-        ViewInteraction cbxFullscreen = onView(withText(R.string.fullscreen));
+        ViewInteraction cbxFullscreen = Espresso.onView(withText(R.string.fullscreen));
         Assert.assertTrue("Expected !fullscreen", !isFullscreen());
         cbxFullscreen.check(ViewAssertions.matches(CoreMatchers.not(isChecked())));
         cbxFullscreen.perform(ViewActions.click());
@@ -53,5 +77,5 @@ public class GeneralTest {
     private boolean isFullscreen(){
         View decorView = activityRule.getActivity().getWindow().getDecorView();
         return ((decorView.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_FULLSCREEN) > 0);
-    }*/
+    }
 }

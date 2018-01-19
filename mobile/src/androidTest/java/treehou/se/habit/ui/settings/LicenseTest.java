@@ -32,7 +32,7 @@ public class LicenseTest {
 
     @Test
     public void testOpenAboutPage() {
-        NavigationUtil.navigateToSettings();
+        NavigationUtil.INSTANCE.navigateToSettings();
         onView(withText(R.string.open_source_libraries)).perform(ViewActions.click());
         onView(withText(R.string.library_AboutLibraries_libraryName)).check(matches(isDisplayed()));
     }

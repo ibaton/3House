@@ -41,7 +41,7 @@ public class TranslationTest {
 
     @Test
     public void testOpenSettings() {
-        NavigationUtil.navigateToSettings();
+        NavigationUtil.INSTANCE.navigateToSettings();
         onView(withText(R.string.help_translate)).perform(ViewActions.click());
 
         Intent intent = IntentHelper.helpTranslateIntent();

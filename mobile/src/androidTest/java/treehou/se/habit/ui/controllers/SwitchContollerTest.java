@@ -46,7 +46,7 @@ public class SwitchContollerTest {
 
     @Test
     public void testIconSet() {
-        NavigationUtil.navigateToController();
+        NavigationUtil.INSTANCE.navigateToController();
 
         onView(withId(R.id.fab_add)).perform(click());
         onView(withId(R.id.btn_add_column)).perform(click());

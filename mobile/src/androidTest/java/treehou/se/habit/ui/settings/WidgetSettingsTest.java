@@ -15,6 +15,7 @@ import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
+import treehou.se.habit.ViewActions.SliderActions;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.module.ApplicationComponent;
@@ -27,7 +28,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static treehou.se.habit.ViewActions.SliderActions.setProgress;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -43,7 +43,7 @@ public class WidgetSettingsTest {
 
     @Before
     public void moveToWidget(){
-        NavigationUtil.navigateToSettings();
+        NavigationUtil.INSTANCE.navigateToSettings();
         onView(withText(R.string.settings_widgets)).perform(ViewActions.click());
     }
 
@@ -55,6 +55,7 @@ public class WidgetSettingsTest {
 
     @Test
     public void testImageColor() {
+        onView(withId(R.id.cbx_enable_image_background)).perform(scrollTo(), ViewActions.click());
         onView(withId(R.id.img_widget_icon1)).perform(scrollTo(), ViewActions.click());
         onView(withId(R.id.img_widget_icon2)).perform(scrollTo(), ViewActions.click());
         onView(withId(R.id.img_widget_icon3)).perform(scrollTo(), ViewActions.click());
@@ -65,18 +66,18 @@ public class WidgetSettingsTest {
 
     @Test
     public void testImageSize() {
-        onView(withId(R.id.bar_image_size)).perform(scrollTo(), setProgress(12));
-        onView(withId(R.id.bar_image_size)).perform(setProgress(100));
-        onView(withId(R.id.bar_image_size)).perform(setProgress(0));
-        onView(withId(R.id.bar_image_size)).perform(setProgress(50));
+        onView(withId(R.id.bar_image_size)).perform(scrollTo(), SliderActions.INSTANCE.setProgress(12));
+        onView(withId(R.id.bar_image_size)).perform(SliderActions.INSTANCE.setProgress(100));
+        onView(withId(R.id.bar_image_size)).perform(SliderActions.INSTANCE.setProgress(0));
+        onView(withId(R.id.bar_image_size)).perform(SliderActions.INSTANCE.setProgress(50));
     }
 
     @Test
     public void testTextSize() {
-        onView(withId(R.id.bar_text_size)).perform(scrollTo(), setProgress(12));
-        onView(withId(R.id.bar_text_size)).perform(setProgress(100));
-        onView(withId(R.id.bar_text_size)).perform(setProgress(0));
-        onView(withId(R.id.bar_text_size)).perform(setProgress(50));
+        onView(withId(R.id.bar_text_size)).perform(scrollTo(), SliderActions.INSTANCE.setProgress(12));
+        onView(withId(R.id.bar_text_size)).perform(SliderActions.INSTANCE.setProgress(100));
+        onView(withId(R.id.bar_text_size)).perform(SliderActions.INSTANCE.setProgress(0));
+        onView(withId(R.id.bar_text_size)).perform(SliderActions.INSTANCE.setProgress(50));
     }
 
     @Test

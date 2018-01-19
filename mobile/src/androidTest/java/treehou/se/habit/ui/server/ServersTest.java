@@ -43,9 +43,10 @@ public class ServersTest {
 
     private void createServer(String testServerName){
         onView(anyOf(allOf(withId(R.id.fab_add), isDisplayed()), allOf(withText(R.string.new_server), isDisplayed()))).perform(click());
+        onView(withId(R.id.add_new_server)).perform(click());
         onView(withId(R.id.server_name_text)).perform(ViewActions.typeText(testServerName));
+        onView(withId(R.id.btn_save)).perform(click());
         closeSoftKeyboard();
-        pressBack();
     }
 
     private void deleteServer(String testServerName){
@@ -58,7 +59,7 @@ public class ServersTest {
     @Test
     public void testCreateRemoveServer() {
         String testServerName = "Test Server " + new Random().nextInt(10000);
-        NavigationUtil.navigateToServer();
+        NavigationUtil.INSTANCE.navigateToServer();
         createServer(testServerName);
         deleteServer(testServerName);
     }
@@ -66,7 +67,7 @@ public class ServersTest {
     @Test
     public void testEditServer() {
         String testServerName = "Test Server " + new Random().nextInt(10000);
-        NavigationUtil.navigateToServer();
+        NavigationUtil.INSTANCE.navigateToServer();
         createServer(testServerName);
 
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
@@ -83,7 +84,7 @@ public class ServersTest {
     @Test
     public void testBackButton() {
         String testServerName = "Test Server " + new Random().nextInt(10000);
-        NavigationUtil.navigateToServer();
+        NavigationUtil.INSTANCE.navigateToServer();
         createServer(testServerName);
 
         closeSoftKeyboard();
@@ -97,7 +98,7 @@ public class ServersTest {
     @Test
     public void testCreateRemoveMultipleServer() {
         final int serversToCreate = 8;
-        NavigationUtil.navigateToServer();
+        NavigationUtil.INSTANCE.navigateToServer();
         String serverBaseName = "Test Server ";
         for(int i=0; i<serversToCreate; i++){
             createServer(serverBaseName+i);
