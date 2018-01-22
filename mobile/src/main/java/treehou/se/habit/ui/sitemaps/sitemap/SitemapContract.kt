@@ -2,7 +2,6 @@ package treehou.se.habit.ui.sitemaps.sitemap
 
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
-import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.mvp.BasePresenter
 import treehou.se.habit.mvp.BaseView

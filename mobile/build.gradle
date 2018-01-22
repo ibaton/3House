@@ -59,6 +59,7 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
 
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/androidTest/assets/'] } }
 }
 
 dependencies {
@@ -122,6 +123,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.13'
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
+    testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

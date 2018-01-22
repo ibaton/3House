@@ -1,7 +1,6 @@
 package treehou.se.habit.ui.servers.create.myopenhab
 
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.reactivex.schedulers.Schedulers

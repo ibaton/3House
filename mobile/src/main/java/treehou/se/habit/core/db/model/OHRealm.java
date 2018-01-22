@@ -41,7 +41,7 @@ public class OHRealm {
         return Realm.getDefaultInstance();
     }
 
-    RealmMigration migration = (realm, oldVersion, newVersion) -> {
+    public RealmMigration migration = (realm, oldVersion, newVersion) -> {
 
         RealmSchema schema = realm.getSchema();
         switch ((int) oldVersion) {

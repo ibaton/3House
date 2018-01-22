@@ -13,7 +13,6 @@ import javax.inject.Named
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.connector.Constants
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.module.RxPresenter

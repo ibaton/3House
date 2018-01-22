@@ -4,7 +4,6 @@ import android.content.Context
 
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.realm.RealmResults
 import treehou.se.habit.core.db.model.OHRealmModule
 import treehou.se.habit.core.db.model.ServerDB
 

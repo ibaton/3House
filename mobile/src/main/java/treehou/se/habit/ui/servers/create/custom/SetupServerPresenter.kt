@@ -2,7 +2,6 @@ package treehou.se.habit.ui.servers.create.custom
 
 import android.os.Bundle
 import io.realm.Realm
-import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.module.RxPresenter
 import javax.inject.Inject
@@ -24,7 +23,7 @@ constructor(private val view: SetupServerContract.View) : RxPresenter(), SetupSe
         view.closeWindow()
     }
 
-    private fun convertServerDataToDB(serverData: ServerData): ServerDB{
+    private fun convertServerDataToDB(serverData: ServerData): ServerDB {
         val server = ServerDB()
         if (serverId <= 0) {
             server.id = ServerDB.getUniqueId()

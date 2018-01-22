@@ -9,8 +9,6 @@ import android.util.Log
 import javax.inject.Inject
 
 import io.realm.Realm
-import se.treehou.ng.ohcommunicator.services.Connector
-import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Util

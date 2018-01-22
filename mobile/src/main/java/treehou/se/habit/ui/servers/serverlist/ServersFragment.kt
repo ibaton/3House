@@ -2,7 +2,6 @@ package treehou.se.habit.ui.servers.serverlist
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -15,9 +14,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
-import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Predicate
 import io.realm.RealmResults
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R

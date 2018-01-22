@@ -2,7 +2,6 @@ package treehou.se.habit.ui.inbox
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -27,8 +26,6 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem
-import se.treehou.ng.ohcommunicator.services.Connector
-import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.ui.BaseFragment

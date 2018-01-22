@@ -1,9 +1,6 @@
 package treehou.se.habit.data;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
-
-import com.google.gson.Gson;
 
 import javax.inject.Singleton;
 
@@ -11,7 +8,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.core.db.model.OHRealm;
 import treehou.se.habit.core.db.model.OHRealmModule;
 import treehou.se.habit.core.db.model.ServerDB;
@@ -19,7 +15,6 @@ import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.module.ForApplication;
 import treehou.se.habit.module.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
-import treehou.se.habit.util.Settings;
 
 @Module
 public class TestAndroidModule extends AndroidModule {

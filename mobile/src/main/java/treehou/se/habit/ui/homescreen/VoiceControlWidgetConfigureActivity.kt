@@ -4,10 +4,8 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.Spinner
 
@@ -15,7 +13,6 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.realm.Realm
-import io.realm.RealmResults
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.ui.adapter.ServerArrayAdapter

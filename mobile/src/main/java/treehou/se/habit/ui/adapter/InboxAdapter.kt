@@ -1,8 +1,6 @@
 package treehou.se.habit.ui.adapter
 
 import android.content.Context
-import android.content.DialogInterface
-import android.support.annotation.IntDef
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -12,13 +10,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import java.util.ArrayList
 
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem
-import se.treehou.ng.ohcommunicator.services.Connector
-import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.util.ConnectionFactory

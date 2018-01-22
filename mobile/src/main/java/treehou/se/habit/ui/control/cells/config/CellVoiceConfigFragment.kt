@@ -21,12 +21,9 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
-import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ItemDB
 import treehou.se.habit.core.db.model.ServerDB
