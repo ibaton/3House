@@ -38,7 +38,7 @@ class CommandService : IntentService("CommandService") {
             if (ACTION_COMMAND == action && itemId > 0) {
                 val command = intent.getStringExtra(ARG_COMMAND)
                 val item = ItemDB.load(realm, itemId)
-                handleActionCommand(command, item.toGeneric())
+                handleActionCommand(command, item!!.toGeneric())
             } else if (ACTION_INC_DEC == action && itemId > 0) {
                 val min = intent.getIntExtra(ARG_MIN, 0)
                 val max = intent.getIntExtra(ARG_MAX, 0)
@@ -46,7 +46,7 @@ class CommandService : IntentService("CommandService") {
                 val item = ItemDB.load(realm, itemId)
 
                 val communicator = Communicator.instance(this)
-                val server = item.server.toGeneric()
+                val server = item!!.server!!.toGeneric()
                 communicator.incDec(server, item.name, value, min, max)
             }
         }

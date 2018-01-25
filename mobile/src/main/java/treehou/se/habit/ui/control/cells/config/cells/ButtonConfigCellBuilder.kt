@@ -28,7 +28,7 @@ class ButtonConfigCellBuilder : CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView)
 
         val realm = Realm.getDefaultInstance()
-        val buttonCell = cell.cellButton
+        val buttonCell = cell.getCellButton()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
 
@@ -36,7 +36,7 @@ class ButtonConfigCellBuilder : CellFactory.CellBuilder {
 
         imgIcon.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
 
-        Log.d(TAG, "Build: Button icon " + buttonCell.icon)
+        Log.d(TAG, "Build: Button icon " + buttonCell!!.icon)
 
         val icon = Util.getIconDrawable(context, buttonCell.icon)
         if (icon != null) {

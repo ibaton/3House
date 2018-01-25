@@ -80,7 +80,7 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
     internal inner class ControllerItem(val controllerDB: ControllerDB) {
 
         override fun toString(): String {
-            return controllerDB.name
+            return controllerDB.name ?: "ControllerWidgetConfigureActivity"
         }
     }
 

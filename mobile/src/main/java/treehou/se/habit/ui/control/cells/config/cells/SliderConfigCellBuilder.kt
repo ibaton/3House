@@ -32,13 +32,13 @@ class SliderConfigCellBuilder : CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView)
 
         val realm = Realm.getDefaultInstance()
-        val numberCell = cell.cellSlider
+        val numberCell = cell.getCellSlider()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
 
         viwBackground.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
 
-        val icon = Util.getIconDrawable(context, numberCell.icon)
+        val icon = Util.getIconDrawable(context, numberCell!!.icon)
         if (icon != null) {
             imgIcon.setImageDrawable(icon)
         }

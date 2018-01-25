@@ -28,17 +28,23 @@ import javax.inject.Named
 
 class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
-    @BindView(R.id.lou_btn_holder) lateinit var louController: LinearLayout
-    @BindView(R.id.viw_background) lateinit var viwBackground: View
+    @BindView(R.id.lou_btn_holder)
+    lateinit var louController: LinearLayout
+    @BindView(R.id.viw_background)
+    lateinit var viwBackground: View
 
-    @Inject lateinit var controllerUtil: ControllerUtil
-    @Inject @field:Named("config") lateinit var cellFactory: CellFactory
+    @Inject
+    lateinit var controllerUtil: ControllerUtil
+    @Inject
+    @field:Named("config")
+    lateinit var cellFactory: CellFactory
 
     private lateinit var actionBar: ActionBar
-    private lateinit var controller: ControllerDB
+    @JvmField
+    var controller: ControllerDB? = null
     private lateinit var activity: AppCompatActivity
 
-    private var realm: Realm? = null
+    private lateinit var realm: Realm
     private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,12 +70,12 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
         actionBar = activity.supportActionBar!!
 
-        updateColorPalette(controller.color)
+        updateColorPalette(controller!!.color)
 
         val btnAddRow = rootView.findViewById<View>(R.id.btn_add_row) as ImageButton
         btnAddRow.setOnClickListener {
-            controller.addRow(realm)
-            Log.d("Controller", "Added controller, currently " + controller.cellRows.size + " rows")
+            controller!!.addRow(realm)
+            Log.d("Controller", "Added controller, currently " + controller?.cellRows?.size + " rows")
             redrawController()
         }
         redrawController()
@@ -97,7 +103,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
         val intent = Intent(getActivity(), EditControllerSettingsActivity::class.java)
         val extras = Bundle()
 
-        extras.putLong(ARG_ID, controller.id)
+        extras.putLong(ARG_ID, controller!!.id)
         intent.putExtras(extras)
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 
@@ -125,14 +131,14 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
     override fun onDestroy() {
         super.onDestroy()
 
-        realm!!.close()
+        realm.close()
     }
 
     fun redrawController() {
         louController.removeAllViews()
         val inflater = LayoutInflater.from(getActivity())
-        Log.d(TAG, "Drawing controller " + controller.cellRows.size)
-        for (row in controller.cellRows) {
+        Log.d(TAG, "Drawing controller " + controller!!.cellRows.size)
+        for (row in controller!!.cellRows) {
             val louRow = inflater.inflate(R.layout.controller_row_edit, null) as LinearLayout
 
             val rowParam = LinearLayout.LayoutParams(
@@ -148,7 +154,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
                 val activity = getActivity()
                 if (activity != null) {
-                    val itemView = cellFactory.create(activity, controller, cell)
+                    val itemView = cellFactory.create(activity, controller!!, cell)
 
                     itemView.setOnClickListener {
                         getActivity()!!.supportFragmentManager.beginTransaction()
@@ -161,10 +167,10 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
                         AlertDialog.Builder(activity)
                                 .setMessage(activity!!.getString(R.string.delete_cell))
                                 .setPositiveButton(R.string.ok) { dialog, which ->
-                                    realm!!.beginTransaction()
+                                    realm.beginTransaction()
                                     cell.deleteFromRealm()
                                     if (row.cells.size <= 0) row.deleteFromRealm()
-                                    realm!!.commitTransaction()
+                                    realm.commitTransaction()
                                     redrawController()
                                 }
                                 .setNegativeButton(R.string.cancel, null)
@@ -226,7 +232,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
     }
 
     override fun setColor(color: Int) {
-        controller.color = color
+        controller!!.color = color
         updateColorPalette(color)
     }
 

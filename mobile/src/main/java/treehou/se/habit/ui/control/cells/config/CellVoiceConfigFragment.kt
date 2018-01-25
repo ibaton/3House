@@ -41,14 +41,14 @@ class CellVoiceConfigFragment : RxFragment() {
     @Inject lateinit var connectionFactory: ConnectionFactory
 
     private var voiceCell: VoiceCellDB? = null
-    private lateinit var cell: CellDB
+    private var cell: CellDB? = null
 
     private var item: OHItem? = null
 
     private var itemAdapter: ArrayAdapter<OHItem>? = null
     private val items = ArrayList<OHItem>()
 
-    private var realm: Realm? = null
+    private lateinit var realm: Realm
     private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +61,12 @@ class CellVoiceConfigFragment : RxFragment() {
         if (arguments != null) {
             val id = arguments!!.getLong(ARG_CELL_ID)
             cell = CellDB.load(realm, id)
-            voiceCell = cell.cellVoice
+            voiceCell = cell!!.getCellVoice()
             if (voiceCell == null) {
-                realm!!.executeTransaction { realm ->
+                realm.executeTransaction { realm ->
                     voiceCell = VoiceCellDB()
                     voiceCell = realm.copyToRealm(voiceCell!!)
-                    cell.cellVoice = voiceCell
+                    cell!!.setCellVoice(voiceCell!!)
                     realm.copyToRealmOrUpdate(cell)
                 }
             }
@@ -109,7 +109,7 @@ class CellVoiceConfigFragment : RxFragment() {
                 val item = items[position]
                 if (item != null) {
                     realm!!.beginTransaction()
-                    val itemDB = ItemDB.createOrLoadFromGeneric(realm, item)
+                    val itemDB = ItemDB.createOrLoadFromGeneric(realm!!, item)
                     voiceCell!!.item = itemDB
                     realm!!.commitTransaction()
                 }

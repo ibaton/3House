@@ -53,7 +53,7 @@ class CellButtonConfigFragment : RxFragment() {
     private var item: OHItem? = null
     private var buttonCell: ButtonCellDB? = null
     private var cell: CellDB? = null
-    private var realm: Realm? = null
+    private lateinit var realm: Realm
     private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,14 +66,14 @@ class CellButtonConfigFragment : RxFragment() {
         if (arguments != null) {
             val id = arguments!!.getLong(ARG_CELL_ID)
             cell = CellDB.load(realm, id)
-            buttonCell = cell!!.cellButton
+            buttonCell = cell!!.getCellButton()
 
             if (buttonCell == null) {
                 realm!!.executeTransaction { realm ->
                     buttonCell = ButtonCellDB()
                     buttonCell!!.command = Constants.COMMAND_ON
                     buttonCell = realm.copyToRealm(buttonCell!!)
-                    cell!!.cellButton = buttonCell
+                    cell!!.setCellButton(buttonCell!!)
                     realm.copyToRealmOrUpdate(cell!!)
                 }
             }
@@ -96,7 +96,7 @@ class CellButtonConfigFragment : RxFragment() {
                 realm!!.beginTransaction()
                 val item = items[position]
                 if (item != null) {
-                    val itemDB = ItemDB.createOrLoadFromGeneric(realm, item)
+                    val itemDB = ItemDB.createOrLoadFromGeneric(realm!!, item)
                     buttonCell!!.item = itemDB
                     when (item.type) {
                         OHItem.TYPE_STRING -> {
@@ -137,7 +137,7 @@ class CellButtonConfigFragment : RxFragment() {
         }
 
         if (buttonCell!!.item != null) {
-            items.add(buttonCell!!.item.toGeneric())
+            items.add(buttonCell!!.item!!.toGeneric())
         }
         for (serverDB in servers) {
             val server = serverDB.toGeneric()
@@ -194,9 +194,9 @@ class CellButtonConfigFragment : RxFragment() {
         realm!!.beginTransaction()
         if (buttonCell!!.item == null) {
             buttonCell!!.command = ""
-        } else if (buttonCell!!.item.type == OHItem.TYPE_STRING || buttonCell!!.item.type == OHItem.TYPE_NUMBER) {
+        } else if (buttonCell!!.item!!.type == OHItem.TYPE_STRING || buttonCell!!.item!!.type == OHItem.TYPE_NUMBER) {
             buttonCell!!.command = txtCommand.text.toString()
-        } else if (buttonCell!!.item.type == OHItem.TYPE_CONTACT) {
+        } else if (buttonCell!!.item!!.type == OHItem.TYPE_CONTACT) {
             buttonCell!!.command = if (tglOnOff.isChecked) Constants.COMMAND_OPEN else Constants.COMMAND_CLOSE
         } else {
             buttonCell!!.command = if (tglOnOff.isChecked) Constants.COMMAND_ON else Constants.COMMAND_OFF

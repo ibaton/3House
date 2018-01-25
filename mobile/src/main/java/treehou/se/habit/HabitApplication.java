@@ -7,6 +7,8 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.OHRealm;
 import treehou.se.habit.module.ActivityComponentBuilder;
 import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.module.ApplicationComponent;
@@ -38,6 +40,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
 
     @Override
     public void onCreate() {
+        FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
         if(component == null) component = createComponent();
         component().inject(this);
         setTheme(settings.getThemeResourse());

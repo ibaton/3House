@@ -23,12 +23,14 @@ class ControlFragment : Fragment() {
     private lateinit var louController: LinearLayout
 
     private var controller: ControllerDB? = null
-    @Inject @field:Named("display") lateinit var cellFactory: CellFactory
+    @Inject
+    @field:Named("display")
+    lateinit var cellFactory: CellFactory
 
     private var actionBar: ActionBar? = null
     private var activity: AppCompatActivity? = null
 
-    private var realm: Realm? = null
+    private lateinit var realm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (context!!.applicationContext as HabitApplication).component().inject(this)

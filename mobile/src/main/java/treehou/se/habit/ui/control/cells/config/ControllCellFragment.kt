@@ -28,7 +28,7 @@ class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
     private var mTypeAdapter: ArrayAdapter<*>? = null
     private var cell: CellDB? = null
 
-    private var realm: Realm? = null
+    private lateinit var realm: Realm
     private var unbinder: Unbinder? = null
 
     private val itemSelectListener = object : AdapterView.OnItemSelectedListener {

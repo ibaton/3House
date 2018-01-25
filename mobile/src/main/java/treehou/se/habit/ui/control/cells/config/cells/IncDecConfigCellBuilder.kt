@@ -30,16 +30,16 @@ class IncDecConfigCellBuilder : CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView)
 
         val realm = Realm.getDefaultInstance()
-        val numberCell = cell.cellIncDec
+        val numberCell = cell.getCellIncDec()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON])
 
         imgIcon.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
 
-        Log.d(TAG, "Build: Button icon " + numberCell.icon)
+        Log.d(TAG, "Build: Button icon " + numberCell?.icon)
 
-        val icon = Util.getIconDrawable(context, numberCell.icon)
+        val icon = Util.getIconDrawable(context, numberCell?.icon)
         if (icon != null) {
             imgIcon.setImageDrawable(icon)
         }

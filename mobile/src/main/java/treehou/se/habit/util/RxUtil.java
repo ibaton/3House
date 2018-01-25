@@ -52,7 +52,7 @@ public class RxUtil {
 
                     sitemapDB = new SitemapDB();
                     sitemapDB.setServer(serverDB);
-                    sitemapDB.setId(SitemapDB.getUniqueId(realm));
+                    sitemapDB.setId(SitemapDB.Companion.getUniqueId(realm));
                     sitemapDB.setLabel(sitemap.getLabel());
                     sitemapDB.setLink(sitemap.getLink());
                     sitemapDB.setName(sitemap.getName());

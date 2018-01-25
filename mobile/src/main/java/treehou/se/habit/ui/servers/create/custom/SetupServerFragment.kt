@@ -77,8 +77,8 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
 
     override fun loadServer(server: ServerDB) {
         txtName.setText(server.name)
-        localUrlText.setText(server.localUrl)
-        remoteUrlText.setText(server.remoteUrl)
+        localUrlText.setText(server.localurl)
+        remoteUrlText.setText(server.remoteurl)
         txtUsername.setText(server.username)
         txtPassword.setText(server.password)
     }

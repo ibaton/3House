@@ -1,4 +1,4 @@
-package treehou.se.habit.core.db.model;
+package treehou.se.habit.core.db;
 
 import io.realm.annotations.RealmModule;
 

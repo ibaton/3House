@@ -29,7 +29,7 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
 
     @Override
     public OHServer loadServer(Realm realm, long serverId) {
-        return ServerDB.load(realm, serverId).toGeneric();
+        return ServerDB.Companion.load(realm, serverId).toGeneric();
     }
 
     @Override

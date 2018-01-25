@@ -18,7 +18,7 @@ import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Analytics;
 import treehou.se.habit.connector.Communicator;
-import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.OHRealm;
 import treehou.se.habit.core.db.model.controller.CellDB;
 import treehou.se.habit.ui.control.CellFactory;
 import treehou.se.habit.ui.control.ControllerHandler;
@@ -170,10 +170,10 @@ public class AndroidModule {
     public CellFactory provideCellFactory(ButtonCellBuilder buttonCellBuilder, SliderCellBuilder sliderCellBuilder, IncDecCellBuilder incDecCellBuilder, VoiceCellBuilder voiceCellBuilder) {
         CellFactory cellFactory = new CellFactory();
         cellFactory.setDefaultBuilder(new EmptyCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_BUTTON, buttonCellBuilder);
-        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, incDecCellBuilder);
-        cellFactory.addBuilder(CellDB.TYPE_SLIDER, sliderCellBuilder);
-        cellFactory.addBuilder(CellDB.TYPE_VOICE, voiceCellBuilder);
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_BUTTON(), buttonCellBuilder);
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_INC_DEC(), incDecCellBuilder);
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_SLIDER(), sliderCellBuilder);
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_VOICE(), voiceCellBuilder);
 
         return cellFactory;
     }
@@ -184,10 +184,10 @@ public class AndroidModule {
     public CellFactory provideConfigCellFactory() {
         CellFactory cellFactory = new CellFactory();
         cellFactory.setDefaultBuilder(new DefaultConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_BUTTON, new ButtonConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_VOICE, new VoiceConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_SLIDER, new SliderConfigCellBuilder());
-        cellFactory.addBuilder(CellDB.TYPE_INC_DEC, new IncDecConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_BUTTON(), new ButtonConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_VOICE(), new VoiceConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_SLIDER(), new SliderConfigCellBuilder());
+        cellFactory.addBuilder(CellDB.Companion.getTYPE_INC_DEC(), new IncDecConfigCellBuilder());
         return cellFactory;
     }
 

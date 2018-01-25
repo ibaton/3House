@@ -126,7 +126,7 @@ public class SwitchActionFragment extends RxFragment {
 
         OHItem item = (OHItem) sprItems.getSelectedItem();
         realm.beginTransaction();
-        ItemDB itemDb = ItemDB.createOrLoadFromGeneric(realm, item);
+        ItemDB itemDb = ItemDB.Companion.createOrLoadFromGeneric(realm, item);
         realm.commitTransaction();
 
         String command = tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF;

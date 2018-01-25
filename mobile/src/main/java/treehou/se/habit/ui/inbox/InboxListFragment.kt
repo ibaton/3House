@@ -63,7 +63,7 @@ class InboxListFragment : BaseFragment() {
 
         Util.getApplicationComponent(this).inject(this)
         relam = Realm.getDefaultInstance()
-        server = ServerDB.load(relam, arguments!!.getLong(ARG_SERVER))
+        server = ServerDB.load(relam!!, arguments!!.getLong(ARG_SERVER))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

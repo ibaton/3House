@@ -2,8 +2,6 @@ package treehou.se.habit.ui.control
 
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -51,10 +49,10 @@ class EditControllerSettingsActivity : BaseActivity(), ColorDialog.ColorDialogCa
         }
 
         cbxAsNotification = findViewById(R.id.as_notification)
-        cbxAsNotification.isChecked = controller!!.isShowNotification
+        cbxAsNotification.isChecked = controller!!.showNotification
         cbxAsNotification.setOnCheckedChangeListener { _, isChecked ->
             realm.beginTransaction()
-            controller!!.isShowNotification = isChecked
+            controller!!.showNotification = isChecked
             realm.commitTransaction()
         }
 

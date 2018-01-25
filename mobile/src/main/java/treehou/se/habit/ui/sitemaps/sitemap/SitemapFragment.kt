@@ -31,8 +31,8 @@ import treehou.se.habit.ui.sitemaps.sitemap.SitemapContract.Presenter
 class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
 
     @Inject lateinit var sitemapPresenter: Presenter
-    @Inject lateinit var server: ServerDB
-    @Inject lateinit var sitemap: OHSitemap
+    @Inject @JvmField var server: ServerDB? = null
+    @Inject @JvmField var sitemap: OHSitemap? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -55,7 +55,7 @@ class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
      */
     private fun setupActionbar() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
-        if (actionBar != null) actionBar.title = sitemap.label
+        if (actionBar != null) actionBar.title = sitemap?.label
     }
 
     /**

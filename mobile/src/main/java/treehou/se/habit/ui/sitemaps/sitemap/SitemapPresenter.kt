@@ -16,11 +16,13 @@ import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject
 
 class SitemapPresenter @Inject
-constructor(private val view: SitemapContract.View, private val server: ServerDB, private val sitemap: OHSitemap?, private val context: Context, private val log: Logger, private val connectionFactory: ConnectionFactory) : RxPresenter(), SitemapContract.Presenter {
+constructor(private val view: SitemapContract.View, private val server: ServerDB?, private val sitemap: OHSitemap?, private val context: Context, private val log: Logger, private val connectionFactory: ConnectionFactory) : RxPresenter(), SitemapContract.Presenter {
 
     override fun showPage(page: OHLinkedPage) {
         Log.d(TAG, "Received page " + page)
-        view.showPage(server, page)
+        if (server != null) {
+            view.showPage(server, page)
+        }
     }
 
     override fun subscribe() {

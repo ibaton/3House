@@ -63,13 +63,13 @@ class CellIncDecConfigFragment : RxFragment() {
         if (arguments != null) {
             val id = arguments!!.getLong(ARG_CELL_ID)
             cell = CellDB.load(realm, id)
-            incDecCell = cell!!.cellIncDec
+            incDecCell = cell!!.getCellIncDec()
 
             if (incDecCell == null) {
                 realm.executeTransaction { realm ->
                     incDecCell = IncDecCellDB()
                     incDecCell = realm.copyToRealm(incDecCell!!)
-                    cell!!.cellIncDec = incDecCell
+                    cell!!.setCellIncDec(incDecCell!!)
                     realm.copyToRealmOrUpdate(cell!!)
                 }
             }
@@ -117,7 +117,7 @@ class CellIncDecConfigFragment : RxFragment() {
         }
 
         if (incDecCell!!.item != null) {
-            items.add(incDecCell!!.item.toGeneric())
+            items.add(incDecCell!!.item!!.toGeneric())
         }
         for (serverDB in servers) {
             val server = serverDB.toGeneric()

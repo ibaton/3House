@@ -34,13 +34,13 @@ class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
         ButterKnife.bind(this, cellView)
 
         val realm = Realm.getDefaultInstance()
-        val sliderCell = cell.cellSlider
+        val sliderCell = cell.getCellSlider()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
 
         viwBackground.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
 
-        imgIcon.setImageDrawable(Util.getIconDrawable(context, sliderCell.icon))
+        imgIcon.setImageDrawable(Util.getIconDrawable(context, sliderCell!!.icon))
         sbrNumber.max = sliderCell.max
         sbrNumber.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {}
@@ -54,9 +54,9 @@ class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
                     return
                 }
 
-                val server = sliderCell.item.server.toGeneric()
+                val server = sliderCell.item!!.server!!.toGeneric()
                 val serverHandler = connectionFactory.createServerHandler(server, context)
-                serverHandler.sendCommand(sliderCell.item.name, "" + seekBar.progress)
+                serverHandler.sendCommand(sliderCell.item!!.name, "" + seekBar.progress)
             }
         })
         realm.close()
@@ -66,14 +66,14 @@ class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
 
     override fun buildRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews? {
         val realm = Realm.getDefaultInstance()
-        val numberCell = cell.cellSlider
+        val numberCell = cell.getCellSlider()
 
         val cellView = RemoteViews(context.packageName, R.layout.cell_button)
 
         val pallete = ControllerUtil.generateColor(controller, cell)
         ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON])
 
-        val icon = Util.getIconBitmap(context, numberCell.icon)
+        val icon = Util.getIconBitmap(context, numberCell!!.icon)
         if (icon != null) {
             cellView.setImageViewBitmap(R.id.img_icon_button, icon)
         }

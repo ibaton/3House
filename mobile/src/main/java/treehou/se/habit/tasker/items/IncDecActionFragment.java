@@ -138,7 +138,7 @@ public class IncDecActionFragment extends RxFragment {
 
             OHItem item = (OHItem) sprItems.getSelectedItem();
             realm.beginTransaction();
-            ItemDB itemDb = ItemDB.createOrLoadFromGeneric(realm, item);
+            ItemDB itemDb = ItemDB.Companion.createOrLoadFromGeneric(realm, item);
             realm.commitTransaction();
 
             final Bundle resultBundle = IncDecBoundleManager.Companion.generateCommandBundle(getActivity(), itemDb.getId(), value, min, max);

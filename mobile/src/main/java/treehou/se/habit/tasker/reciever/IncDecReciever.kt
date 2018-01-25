@@ -51,7 +51,7 @@ class IncDecReciever : IFireReciever {
             val realm = Realm.getDefaultInstance()
             val item = ItemDB.load(realm, itemId.toLong())
             if (item != null) {
-                communicator!!.incDec(item.server.toGeneric(), item.name, value, min, max)
+                communicator!!.incDec(item.server?.toGeneric(), item.name, value, min, max)
                 Log.d(TAG, "Sent sendCommand " + value + " to item " + item.name)
             } else {
                 Log.d(TAG, "Item no longer exists")

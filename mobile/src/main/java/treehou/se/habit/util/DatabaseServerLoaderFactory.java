@@ -16,7 +16,7 @@ import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
-import treehou.se.habit.core.db.model.OHRealm;
+import treehou.se.habit.core.db.OHRealm;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.module.ServerLoaderFactory;
@@ -36,7 +36,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
 
     @Override
     public OHServer loadServer(Realm realm, long serverId) {
-        return ServerDB.load(realm, serverId).toGeneric();
+        return ServerDB.Companion.load(realm, serverId).toGeneric();
     }
 
     @Override
@@ -131,7 +131,7 @@ public class DatabaseServerLoaderFactory implements ServerLoaderFactory {
                     .findFirst();
 
             if(sitemapDB == null || sitemapDB.getSettingsDB() == null
-                    || sitemapDB.getSettingsDB().isDisplay()){
+                    || sitemapDB.getSettingsDB().getDisplay()){
 
                 sitemaps.add(sitemap);
             }

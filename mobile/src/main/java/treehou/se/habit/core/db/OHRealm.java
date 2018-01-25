@@ -1,18 +1,14 @@
-package treehou.se.habit.core.db.model;
+package treehou.se.habit.core.db;
 
 import android.content.Context;
-import android.util.Log;
 
-import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmResults;
 import io.realm.RealmSchema;
-import treehou.se.habit.core.db.model.controller.ButtonCellDB;
 
 public class OHRealm {
 

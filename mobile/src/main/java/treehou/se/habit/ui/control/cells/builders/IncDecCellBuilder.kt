@@ -31,19 +31,19 @@ class IncDecCellBuilder(private val communicator: Communicator) : CellFactory.Ce
         ButterKnife.bind(this, cellView)
 
         val realm = Realm.getDefaultInstance()
-        val buttonCell = cell.cellIncDec
+        val buttonCell = cell.getCellIncDec()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
         imgIcon.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
 
-        Log.d(TAG, "Build: Button icon " + buttonCell.icon)
+        Log.d(TAG, "Build: Button icon " + buttonCell!!.icon)
 
         val icon = Util.getIconDrawable(context, buttonCell.icon)
         if (icon != null) {
             imgIcon.setImageDrawable(icon)
             imgIcon.setOnClickListener {
-                val server = buttonCell.item.server
-                communicator.incDec(server.toGeneric(), buttonCell.item.name, buttonCell.value, buttonCell.min, buttonCell.max)
+                val server = buttonCell.item!!.server
+                communicator.incDec(server!!.toGeneric(), buttonCell.item!!.name, buttonCell.value, buttonCell.min, buttonCell.max)
             }
         }
         realm.close()
@@ -53,17 +53,17 @@ class IncDecCellBuilder(private val communicator: Communicator) : CellFactory.Ce
 
     override fun buildRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews? {
         val realm = Realm.getDefaultInstance()
-        val buttonCell = cell.cellIncDec
+        val buttonCell = cell.getCellIncDec()
 
         val cellView = RemoteViews(context.packageName, R.layout.cell_button)
 
         val pallete = ControllerUtil.generateColor(controller, cell)
         ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON])
-        val icon = Util.getIconBitmap(context, buttonCell.icon)
+        val icon = Util.getIconBitmap(context, buttonCell!!.icon)
         if (icon != null) {
             cellView.setImageViewBitmap(R.id.img_icon_button, icon)
         }
-        val intent = CommandService.getActionIncDec(context, buttonCell.min, buttonCell.max, buttonCell.value, buttonCell.item.id)
+        val intent = CommandService.getActionIncDec(context, buttonCell!!.min, buttonCell.max, buttonCell.value, buttonCell.item!!.id)
         val pendingIntent = PendingIntent.getService(context, (Math.random() * Integer.MAX_VALUE).toInt(), intent, PendingIntent.FLAG_CANCEL_CURRENT)
         cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent)
         realm.close()

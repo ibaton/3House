@@ -1,11 +1,9 @@
 package treehou.se.habit.ui.control
 
-import android.app.Notification
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
@@ -17,7 +15,6 @@ import com.mattyork.colours.Colour
 import io.realm.Realm
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
-import treehou.se.habit.core.db.model.controller.CellRowDB
 import treehou.se.habit.core.db.model.controller.ControllerDB
 import treehou.se.habit.ui.homescreen.ControllerWidget
 import treehou.se.habit.util.Util
@@ -61,7 +58,7 @@ class ControllerUtil(private val context: Context, private val realm: Realm, pri
 
         Log.d(TAG, "Show controller as notification")
 
-        if (controller.isShowNotification) {
+        if (controller.showNotification) {
             val views = RemoteViews(context.packageName, R.layout.controller_widget_notification)
             views.removeAllViews(R.id.lou_rows)
             views.setInt(R.id.lou_widget, "setBackgroundColor", controller.color)
@@ -92,7 +89,7 @@ class ControllerUtil(private val context: Context, private val realm: Realm, pri
     fun showNotifications(context: Context) {
         NotificationManagerCompat.from(context).cancelAll()
         for (controller in realm.where(ControllerDB::class.java).findAll()) {
-            if (controller.isShowNotification) {
+            if (controller.showNotification) {
                 showNotification(controller)
             }
         }

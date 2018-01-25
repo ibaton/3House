@@ -121,7 +121,7 @@ public class CommandActionFragment extends RxFragment {
 
         OHItem item = (OHItem) sprItems.getSelectedItem();
         realm.beginTransaction();
-        ItemDB itemDb = ItemDB.createOrLoadFromGeneric(realm, item);
+        ItemDB itemDb = ItemDB.Companion.createOrLoadFromGeneric(realm, item);
         realm.commitTransaction();
 
         String command = txtCommand.getText().toString();

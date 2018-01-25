@@ -49,13 +49,13 @@ class CellSliderConfigFragment : BaseFragment() {
         if (arguments != null) {
             val id = arguments!!.getLong(ARG_CELL_ID)
             cell = CellDB.load(realm, id)
-            sliderCell = cell!!.cellSlider
+            sliderCell = cell!!.getCellSlider()
 
             if (sliderCell == null) {
                 realm.executeTransaction { realm ->
                     sliderCell = SliderCellDB()
                     sliderCell = realm.copyToRealm(sliderCell!!)
-                    cell!!.cellSlider = sliderCell
+                    cell!!.setCellSlider(sliderCell!!)
                     realm.copyToRealmOrUpdate(cell!!)
                 }
             }
@@ -166,7 +166,7 @@ class CellSliderConfigFragment : BaseFragment() {
         }
 
         realm.beginTransaction()
-        if (sliderCell!!.item.type == OHItem.TYPE_NUMBER || sliderCell!!.item.type == OHItem.TYPE_GROUP) {
+        if (sliderCell!!.item!!.type == OHItem.TYPE_NUMBER || sliderCell!!.item!!.type == OHItem.TYPE_GROUP) {
             sliderCell!!.min = 0
             sliderCell!!.max = Integer.parseInt(txtMax.text.toString())
         } else {

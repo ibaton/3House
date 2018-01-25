@@ -29,14 +29,14 @@ class VoiceConfigCellBuilder : CellFactory.CellBuilder {
         ButterKnife.bind(this, cellView)
 
         val realm = Realm.getDefaultInstance()
-        val voiceCell = cell.cellVoice
+        val voiceCell = cell.getCellVoice()
         realm.close()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
 
         cellView.setBackgroundColor(pallete[ControllerUtil.INDEX_BUTTON])
 
-        val icon = Util.getIconDrawable(context, voiceCell.icon)
+        val icon = Util.getIconDrawable(context, voiceCell?.icon)
         imgIcon.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
         if (icon != null) {
             imgIcon.setImageDrawable(icon)

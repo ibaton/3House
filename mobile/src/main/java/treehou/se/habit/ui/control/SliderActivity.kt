@@ -76,9 +76,9 @@ class SliderActivity : BaseActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 if (sliederCell != null) {
-                    val server = sliederCell!!.item.server.toGeneric()
+                    val server = sliederCell!!.item!!.server!!.toGeneric()
                     val serverHandler = connectionFactory.createServerHandler(server, context)
-                    serverHandler.sendCommand(sliederCell!!.item.name, "" + seekBar.progress)
+                    serverHandler.sendCommand(sliederCell!!.item!!.name, "" + seekBar.progress)
                 }
             }
         }
@@ -91,7 +91,7 @@ class SliderActivity : BaseActivity() {
                 val id = arguments!!.getLong(ARG_CELL)
                 logger.d(TAG, "Loading cell " + id)
                 val cell = CellDB.load(realm, id)
-                sliederCell = cell.cellSlider
+                sliederCell = cell!!.getCellSlider()
             }
         }
 
@@ -114,9 +114,9 @@ class SliderActivity : BaseActivity() {
         override fun onResume() {
             super.onResume()
 
-            val server = sliederCell!!.item.server.toGeneric()
+            val server = sliederCell!!.item!!.server!!.toGeneric()
             val serverHandler = connectionFactory.createServerHandler(server, context)
-            serverHandler.requestItemRx(sliederCell!!.item.name)
+            serverHandler.requestItemRx(sliederCell!!.item!!.name)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose<OHItem>(bindToLifecycle<OHItem>())

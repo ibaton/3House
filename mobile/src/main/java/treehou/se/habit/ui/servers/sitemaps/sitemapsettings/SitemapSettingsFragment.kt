@@ -2,7 +2,6 @@ package treehou.se.habit.ui.servers.sitemaps.sitemapsettings
 
 import android.os.Bundle
 import android.support.v4.util.Pair
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -17,21 +16,12 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function
-import io.realm.Realm
-import io.realm.RealmResults
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.SitemapDB
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
-import treehou.se.habit.ui.BaseFragment
-import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectComponent
-import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectContract
-import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectFragment
-import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectModule
 
 /**
  * Mandatory empty constructor for the fragment manager to instantiate the
@@ -73,7 +63,7 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
                 .filter { sitemapDB -> sitemapDB.settingsDB != null }
                 .distinctUntilChanged()
 
-        sitemapObservable.map { sitemapDB -> sitemapDB.settingsDB.isDisplay }
+        sitemapObservable.map { sitemapDB -> sitemapDB.settingsDB!!.display }
                 .compose(bindToLifecycle())
                 .subscribe(RxCompoundButton.checked(cbxShowSitemaps))
 
@@ -84,7 +74,7 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
                     val sitemapDB = sitemapDBBooleanPair.first
                     val showSitemap = sitemapDBBooleanPair.second!!
                     realm.beginTransaction()
-                    sitemapDB!!.settingsDB.isDisplay = showSitemap
+                    sitemapDB!!.settingsDB!!.display = showSitemap
                     realm.commitTransaction()
                 }
 

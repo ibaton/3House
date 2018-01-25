@@ -4,8 +4,6 @@ package treehou.se.habit.ui.control
 import java.util.HashSet
 
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
-import io.reactivex.functions.Function
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import io.realm.RealmResults
@@ -33,7 +31,7 @@ class ControllerHandler(realm: Realm, private val controllerUtil: ControllerUtil
 
     private fun handleControllerUpdates(controllerDBS: RealmResults<ControllerDB>) {
         val updateNotificationIds = HashSet<Long>()
-        Observable.fromIterable(controllerDBS).map<Long>({ it.getId() }).subscribe({ updateNotificationIds.add(it) })
+        Observable.fromIterable(controllerDBS).map<Long>({ it.id }).subscribe({ updateNotificationIds.add(it) })
 
         val notificationsDeleted = HashSet(notificationIds)
         notificationsDeleted.removeAll(updateNotificationIds)
@@ -52,7 +50,7 @@ class ControllerHandler(realm: Realm, private val controllerUtil: ControllerUtil
 
     private fun updateNotifications(controllerDBs: List<ControllerDB>?) {
         for (controllerDB in controllerDBs!!) {
-            if (controllerDB.isShowNotification) {
+            if (controllerDB.showNotification) {
                 controllerUtil.showNotification(controllerDB)
             } else {
                 controllerUtil.hideNotification(controllerDB.id.toInt())

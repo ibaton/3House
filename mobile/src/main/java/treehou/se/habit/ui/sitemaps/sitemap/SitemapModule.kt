@@ -34,13 +34,13 @@ class SitemapModule(fragment: SitemapFragment, protected val args: Bundle) : Vie
     }
 
     @Provides
-    fun provideServer(realm: Realm, @Named("arguments") args: Bundle): ServerDB {
+    fun provideServer(realm: Realm, @Named("arguments") args: Bundle): ServerDB? {
         val serverId = args.getLong(Presenter.ARG_SERVER)
         return ServerDB.load(realm, serverId)
     }
 
     @Provides
-    fun provideSitemap(gson: Gson, @Named("arguments") args: Bundle): OHSitemap {
+    fun provideSitemap(gson: Gson, @Named("arguments") args: Bundle): OHSitemap? {
         val jSitemap = args.getString(Presenter.ARG_SITEMAP)
         return gson.fromJson(jSitemap, OHSitemap::class.java)
     }

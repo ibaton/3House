@@ -8,8 +8,8 @@ import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import treehou.se.habit.core.db.model.OHRealm;
-import treehou.se.habit.core.db.model.OHRealmModule;
+import treehou.se.habit.core.db.OHRealm;
+import treehou.se.habit.core.db.OHRealmModule;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.module.ForApplication;
@@ -47,7 +47,7 @@ public class TestAndroidModule extends AndroidModule {
             int size = Realm.getDefaultInstance().where(ServerDB.class).findAll().size();
             if(size <= 0) {
                 ServerDB server = new ServerDB();
-                ServerDB.save(server);
+                ServerDB.Companion.save(server);
             }
         }
 

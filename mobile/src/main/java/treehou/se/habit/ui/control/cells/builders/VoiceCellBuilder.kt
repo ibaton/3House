@@ -29,21 +29,21 @@ class VoiceCellBuilder : CellFactory.CellBuilder {
         val cellView = inflater.inflate(R.layout.cell_button, null)
         ButterKnife.bind(this, cellView)
 
-        val voiceCell = cell.cellVoice
+        val voiceCell = cell.getCellVoice()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
 
-        imgIcon.setImageDrawable(Util.getIconDrawable(context, voiceCell.icon))
+        imgIcon.setImageDrawable(Util.getIconDrawable(context, voiceCell!!.icon))
         imgIcon.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
         imgIcon.setOnClickListener { v ->
 
-            if (voiceCell.item == null || voiceCell.item.server == null) {
+            if (voiceCell!!.item == null || voiceCell.item!!.server == null) {
                 return@setOnClickListener
             }
 
-            val server = voiceCell.item.server
+            val server = voiceCell.item!!.server
 
-            val callbackIntent = VoiceService.createVoiceCommand(context, server)
+            val callbackIntent = VoiceService.createVoiceCommand(context, server!!)
             val openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -66,22 +66,22 @@ class VoiceCellBuilder : CellFactory.CellBuilder {
     }
 
     override fun buildRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews? {
-        val voiceCell = cell.cellVoice
+        val voiceCell = cell.getCellVoice()
 
         val cellView = RemoteViews(context.packageName, R.layout.cell_button)
 
         val pallete = ControllerUtil.generateColor(controller, cell)
         ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON])
 
-        cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, voiceCell.icon))
+        cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, voiceCell!!.icon))
 
-        if (voiceCell.item == null || voiceCell.item.server == null) {
+        if (voiceCell.item == null || voiceCell.item!!.server == null) {
             return cellView
         }
 
-        val server = voiceCell.item.server
+        val server = voiceCell.item!!.server
 
-        val callbackIntent = VoiceService.createVoiceCommand(context, server)
+        val callbackIntent = VoiceService.createVoiceCommand(context, server!!)
         val openhabPendingIntent = PendingIntent.getService(context.applicationContext, (Math.random() * Integer.MAX_VALUE).toInt(), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)

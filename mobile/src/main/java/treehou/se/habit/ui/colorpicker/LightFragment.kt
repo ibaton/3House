@@ -67,7 +67,7 @@ class LightFragment : BaseDaggerFragment<Presenter>(), LightContract.View {
         color = args.getInt(ARG_COLOR)
 
         val gson = GsonHelper.createGsonBuilder()
-        server = ServerDB.load(realm, serverId).toGeneric()
+        server = ServerDB.load(realm, serverId)?.toGeneric()
         widget = gson.fromJson(jWidget, OHWidget::class.java)
     }
 

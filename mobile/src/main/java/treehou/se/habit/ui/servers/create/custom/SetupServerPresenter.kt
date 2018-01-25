@@ -26,14 +26,14 @@ constructor(private val view: SetupServerContract.View) : RxPresenter(), SetupSe
     private fun convertServerDataToDB(serverData: ServerData): ServerDB {
         val server = ServerDB()
         if (serverId <= 0) {
-            server.id = ServerDB.getUniqueId()
+            server.id = ServerDB.uniqueId
             serverId = server.id
         } else {
             server.id = serverId
         }
         server.name = serverData.name
-        server.localUrl = serverData.localUrl
-        server.remoteUrl = serverData.remoteUrl
+        server.localurl = serverData.localUrl
+        server.remoteurl = serverData.remoteUrl
         server.username = serverData.username
         server.password = serverData.password
         return server

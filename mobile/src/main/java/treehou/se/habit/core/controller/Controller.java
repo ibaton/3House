@@ -46,7 +46,7 @@ public class Controller {
     }
 
     public boolean isShowNotification() {
-        return getDB().isShowNotification();
+        return getDB().getShowNotification();
     }
 
     public void setShowNotification(boolean showNotification) {
@@ -54,7 +54,7 @@ public class Controller {
     }
 
     public boolean isShowTitle() {
-        return getDB().isShowTitle();
+        return getDB().getShowTitle();
     }
 
     public void setShowTitle(boolean showTitle) {
