@@ -27,7 +27,7 @@ public class TestAndroidModule extends AndroidModule {
     @Singleton
     @ForApplication
     Context provideApplicationContext() {
-        return application;
+        return getApplication();
     }
 
     @Provides
