@@ -19,7 +19,14 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class SitemapListPresenter @Inject
-constructor(@param:Named("arguments") private val arguments: Bundle, private val view: SitemapListContract.View, private val context: Context, private val settings: Settings, private val realm: Realm, private val serverLoaderFactory: ServerLoaderFactory) : RxPresenter(), SitemapListContract.Presenter {
+constructor(@param:Named("arguments") var arguments: Bundle) : RxPresenter(), SitemapListContract.Presenter {
+
+    @Inject lateinit var view: SitemapListContract.View
+    @Inject lateinit var context: Context
+    @Inject lateinit var settings: Settings
+    @Inject lateinit var realm: Realm
+    @Inject lateinit var serverLoaderFactory: ServerLoaderFactory
+
     private var showSitemap: String? = ""
 
     private val serverBehaviorSubject = BehaviorSubject.create<OHServer>()

@@ -16,10 +16,18 @@ import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject
 
 class SitemapPresenter @Inject
-constructor(private val view: SitemapContract.View, private val server: ServerDB?, private val sitemap: OHSitemap?, private val context: Context, private val log: Logger, private val connectionFactory: ConnectionFactory) : RxPresenter(), SitemapContract.Presenter {
+constructor() : RxPresenter(), SitemapContract.Presenter {
+
+    @Inject lateinit var view: SitemapContract.View
+    @Inject @JvmField var server: ServerDB? = null
+    @Inject @JvmField var sitemap: OHSitemap? = null
+    @Inject lateinit var context: Context
+    @Inject lateinit var log: Logger
+    @Inject lateinit var connectionFactory: ConnectionFactory
 
     override fun showPage(page: OHLinkedPage) {
         Log.d(TAG, "Received page " + page)
+        val server = server
         if (server != null) {
             view.showPage(server, page)
         }
@@ -34,8 +42,8 @@ constructor(private val view: SitemapContract.View, private val server: ServerDB
         }
 
         if (!view.hasPage()) {
-            val serverHandler = connectionFactory.createServerHandler(sitemap.server, context)
-            serverHandler.requestPageRx(sitemap.homepage)
+            val serverHandler = connectionFactory.createServerHandler(sitemap!!.server, context)
+            serverHandler.requestPageRx(sitemap!!.homepage)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(

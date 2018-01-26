@@ -291,7 +291,7 @@ ADDED from AndroidManifest.xml:103:9
 		ADDED from AndroidManifest.xml:105:13
 	android:name
 		ADDED from AndroidManifest.xml:104:13
-receiver#treehou.se.habit.gcm.GcmBroadcastReceiver
+receiver#treehou.se.habit.gcm.FcmBroadcastReceiver
 ADDED from AndroidManifest.xml:108:9
 	android:permission
 		ADDED from AndroidManifest.xml:110:13
