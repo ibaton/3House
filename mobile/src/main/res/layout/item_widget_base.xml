@@ -21,7 +21,8 @@
             <ImageView
                 android:id="@+id/img_widget_icon"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
+                android:minHeight="50dp"
                 android:layout_gravity="center"
                 android:padding="@dimen/short_space" />
         </FrameLayout>
