@@ -108,7 +108,7 @@ dependencies {
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.2@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
     implementation 'net.danlew:android.joda:2.9.9.1'
-    implementation 'com.google.android.gms:play-services-gcm:11.8.0'
+    compile "com.google.firebase:firebase-messaging:11.8.0"
     implementation 'com.android.support:multidex:1.0.2'
     implementation('com.mikepenz:aboutlibraries:5.9.4@aar') {
         transitive = true
