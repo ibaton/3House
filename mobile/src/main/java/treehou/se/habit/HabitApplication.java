@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.crash.FirebaseCrash;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -42,6 +43,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
 
     @Override
     public void onCreate() {
+        FirebaseApp.initializeApp(this);
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
         if(component == null) component = createComponent();
         component().inject(this);
