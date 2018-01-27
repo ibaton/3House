@@ -88,7 +88,7 @@ class ServerMenuFragment : Fragment() {
 
         val items = ArrayList<ImageItem>()
         items.add(ImageItem(ITEM_EDIT, getString(R.string.edit), R.drawable.ic_edit))
-        items.add(ImageItem(ITEM_INBOX, getString(R.string.inbox), R.drawable.ic_inbox))
+        //items.add(ImageItem(ITEM_INBOX, getString(R.string.inbox), R.drawable.ic_inbox))
         items.add(ImageItem(ITEM_BINDINGS, getString(R.string.bindings), R.drawable.ic_binding))
         items.add(ImageItem(ITEM_LINKS, getString(R.string.links), R.drawable.ic_link))
         items.add(ImageItem(ITEM_SITEMAP_FILTER, getString(R.string.sitemaps), R.drawable.ic_sitemap))
