@@ -2,14 +2,14 @@
 <resources>
     <string-array name="cell_types">
     <!-- a bit darker color of your treehou.se.habit.main color -->
-        <item>Очистить</item>
+        <item>Vacío</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Переключатель</item>
+        <item>Switch</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Слайдер</item>
+        <item>Deslizador</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Inc/Dec</item>
+        <item>Int/Dec</item>
     <!-- treehou.se.habit.main color of your theme -->
-        <item>Голос</item>
+        <item>Voz</item>
     </string-array>
 </resources>

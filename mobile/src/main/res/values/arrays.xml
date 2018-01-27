@@ -41,7 +41,6 @@
     <!-- treehou.se.habit.main color of your theme -->
         <item>Voice</item>
     </string-array>
-
     <integer-array name="cell_types_values" translatable="false">
         <item>0</item>
         <item>1</item>
@@ -49,11 +48,8 @@
         <item>5</item>
         <item>2</item>
     </integer-array>
-
-    <string-array name="controll_manager">
-    <!-- treehou.se.habit.main color of your theme -->
-        <item>Edit</item>
-    <!-- treehou.se.habit.main color of your theme -->
+    <string-array name="controll_manager" translatable="false">
+        <item>@string/edit</item>
         <item>@string/delete</item>
     </string-array>
 </resources>
