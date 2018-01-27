@@ -254,7 +254,7 @@ class BaseWidgetFactory {
              * @param parent the parent of widget.
              * @return this builder.
              */
-            fun setParent(parent: OHWidget): Builder {
+            fun setParent(parent: OHWidget?): Builder {
                 this.parent = parent
                 return this
             }
@@ -265,7 +265,7 @@ class BaseWidgetFactory {
              * @param view the view to display.
              * @return this builder.
              */
-            fun setView(view: View): Builder {
+            fun setView(view: View?): Builder {
                 this.view = view
                 return this
             }

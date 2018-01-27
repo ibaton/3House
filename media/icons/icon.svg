@@ -24,11 +24,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.53420635"
-     inkscape:cx="1157.0144"
-     inkscape:cy="553.34373"
+     inkscape:zoom="0.75548187"
+     inkscape:cx="501.36983"
+     inkscape:cy="246.9216"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g3006-0-5"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
@@ -417,5 +417,60 @@
         </g>
       </g>
     </g>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3036-0-8"
+       width="402.92749"
+       height="343.49475"
+       x="78.525421"
+       y="807.51093" />
+    <g
+       id="g3004-7"
+       transform="translate(87.704708,705.95861)"
+       inkscape:export-filename="C:\Users\matti\Pictures\logo.png"
+       inkscape:export-xdpi="480.16809"
+       inkscape:export-ydpi="480.16809">
+      <g
+         id="g3006-6"
+         inkscape:export-filename="/home/ibaton/projects/Habit/media/g3877.png"
+         inkscape:export-xdpi="167.37064"
+         inkscape:export-ydpi="167.37064"
+         transform="translate(49.734363,-14.975487)">
+        <path
+           style="fill:none;stroke:#ffffff;stroke-width:7.29533434;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           inkscape:transform-center-y="-12.12134"
+           d="m 138.57143,155.03723 c 18.21192,0 56.61096,31.27982 71.34472,41.98452 14.73375,10.7047 56.34858,37.55837 61.97638,54.87893 5.62779,17.32057 -12.25513,63.50623 -17.88293,80.82679 -5.62779,17.32056 -18.30745,65.19686 -33.04121,75.90156 -14.73375,10.7047 -64.18505,7.96918 -82.39697,7.96918 -18.21192,0 -67.663215,2.73552 -82.396967,-7.96918 C 41.440702,397.92433 28.761039,350.04803 23.133247,332.72746 17.505455,315.4069 -0.37746356,269.22124 5.2503294,251.90068 10.878122,234.58011 52.492959,207.72645 67.226711,197.02175 81.960464,186.31705 120.35951,155.03723 138.57143,155.03723 Z"
+           id="path3010-9"
+           transform="matrix(0.90551025,0,0,0.90551025,13.09358,28.286489)"
+           inkscape:connector-curvature="0" />
+      </g>
+      <g
+         id="g3012-2"
+         inkscape:export-xdpi="167.37064"
+         inkscape:export-ydpi="167.37064"
+         transform="translate(2,0)">
+        <g
+           transform="matrix(1.2290379,0,0,2.092033,12.18168,-459.0237)"
+           id="g3014-4">
+          <path
+             style="fill:#ffffff;fill-opacity:1;stroke:none"
+             d="m 130.5,298.15625 c 0,0 -2.03966,40.74594 -4.3125,69.1875 C 123.91466,395.78531 105.5,406.625 105.5,406.625 l 33.0625,-0.96875 33.09375,0.96875 c 0,0 -18.44591,-10.83969 -20.71875,-39.28125 -2.27284,-28.44156 -4.28125,-69.1875 -4.28125,-69.1875 -2.86458,0 -5.58185,0 -8.37278,0 -2.59449,0 -7.78347,0 -7.78347,0 z"
+             transform="matrix(1,0,0,1.0477448,3.1024598,-19.414091)"
+             id="path3016-9"
+             inkscape:connector-curvature="0"
+             sodipodi:nodetypes="cscccscac" />
+        </g>
+      </g>
+    </g>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none;stroke-width:6.4289999;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5150"
+       width="258.1134"
+       height="258.1134"
+       x="146.9538"
+       y="851.16608"
+       inkscape:export-filename="C:\Users\matti\Pictures\logo.png"
+       inkscape:export-xdpi="480.16809"
+       inkscape:export-ydpi="480.16809" />
   </g>
 </svg>

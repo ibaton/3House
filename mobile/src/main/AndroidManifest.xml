@@ -25,9 +25,11 @@
     <application
         android:name=".HabitApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme.Base">
+        android:theme="@style/AppTheme.Base"
+        tools:replace="icon, roundIcon">
         <meta-data
             android:name="AA_DB_NAME"
             android:value="treestore26.db" />
@@ -50,7 +52,7 @@
         </activity>
         <activity
             android:name=".ui.colorpicker.ColorpickerActivity"
-            android:label="@string/title_activity_colorpicker"></activity>
+            android:label="@string/title_activity_colorpicker"/>
 
         <activity android:name=".ui.homescreen.VoiceControlWidgetConfigureActivity">
             <intent-filter>
@@ -61,7 +63,7 @@
 
         <service
             android:name=".ui.homescreen.VoiceService"
-            android:exported="false"></service>
+            android:exported="false"/>
 
         <receiver
             android:name=".ui.homescreen.VoiceControlWidget"
@@ -98,7 +100,7 @@
 
         <service
             android:name=".ui.control.CommandService"
-            android:exported="false"></service>
+            android:exported="false"/>
 
         <activity
             android:name=".ui.control.SliderActivity"
@@ -106,7 +108,7 @@
             android:label="@string/title_activity_slider"
             android:launchMode="singleTask"
             android:taskAffinity="treehou.se.habit.ui.control"
-            android:theme="@style/TransparentTheme"></activity>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".tasker.TaskerInitActivity"
             android:exported="true"
@@ -142,10 +144,10 @@
         </activity>
         <activity
             android:name=".ui.util.IconPickerActivity"
-            android:label="@string/title_activity_icon_picker"></activity>
+            android:label="@string/title_activity_icon_picker"/>
         <activity
             android:name=".ui.control.EditControllerSettingsActivity"
-            android:theme="@style/TransparentTheme"></activity>
+            android:theme="@style/TransparentTheme"/>
 
         <receiver android:name=".RestartBroadcastReceiver">
             <intent-filter>
@@ -156,7 +158,7 @@
         <activity
             android:name=".ui.servers.create.CreateServerActivity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.Base"></activity>
+            android:theme="@style/AppTheme.Base"/>
     </application>
 
 
