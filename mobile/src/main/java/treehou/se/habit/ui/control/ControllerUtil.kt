@@ -17,6 +17,7 @@ import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
 import treehou.se.habit.core.db.model.controller.ControllerDB
 import treehou.se.habit.ui.homescreen.ControllerWidget
+import treehou.se.habit.util.NotificationUtil
 import treehou.se.habit.util.Util
 
 class ControllerUtil(private val context: Context, private val realm: Realm, private val cellFactory: CellFactory) {
@@ -67,7 +68,7 @@ class ControllerUtil(private val context: Context, private val realm: Realm, pri
 
             drawRemoteController(views, controller)
 
-            val notification = NotificationCompat.Builder(context)
+            val notification = NotificationCompat.Builder(context, NotificationUtil.CHANNEL_ID_CONTROLLERS)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setOngoing(true)

@@ -156,4 +156,6 @@
     <string name="login">Login</string>
     <string name="error_username_password">Username or password is incorrect</string>
     <string name="message_from_my_openhab">Messages sent from myOpenHAB</string>
+    <string name="channel_name_controllers">Controllers</string>
+    <string name="channel_name_certificates">Self signed certificate</string>
 </resources>

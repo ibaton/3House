@@ -40,6 +40,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
@@ -72,6 +73,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import treehou.se.habit.R;
+import treehou.se.habit.util.NotificationUtil;
 
 /**
  * A X509 trust manager implementation which asks the user about invalid
@@ -91,9 +93,6 @@ public class MemorizingTrustManager implements X509TrustManager {
 	final static String DECISION_INTENT_CERT   = DECISION_INTENT + ".cert";
 	final static String DECISION_INTENT_HOST   = DECISION_INTENT + ".host";
 	final static String DECISION_INTENT_MESSAGE   = DECISION_INTENT + ".message";
-
-	final static String CHANNEL_ID_TRUST_MANAGER = "TRUST_MANAGER";
-	final static String CHANNEL_NAME_TRUST_MANAGER = "Self signed certificate";
 
 	final static String DECISION_TITLE_ID      = DECISION_INTENT + ".titleId";
 	private final static int NOTIFICATION_ID = 100509;
@@ -174,7 +173,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         return new File(dir + File.separator + KEYSTORE_FILE);
     }
 
-	
+
 	/**
 	 * Returns a X509TrustManager list containing a new instance of
 	 * TrustManagerFactory.
@@ -309,10 +308,10 @@ public class MemorizingTrustManager implements X509TrustManager {
 	public HostnameVerifier wrapHostnameVerifier(final HostnameVerifier defaultVerifier) {
 		if (defaultVerifier == null)
 			throw new IllegalArgumentException("The default verifier may not be null");
-		
+
 		return new MemorizingHostnameVerifier(defaultVerifier);
 	}
-	
+
 	static X509TrustManager getTrustManager(KeyStore ks) {
 		try {
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
@@ -559,7 +558,7 @@ public class MemorizingTrustManager implements X509TrustManager {
 		si.append(c.getIssuerDN().toString());
 		si.append("\n");
 	}
-	
+
 	private String certChainMessage(final X509Certificate[] chain, CertificateException cause) {
 		Throwable e = cause;
 		Log.d(TAG, "certChainMessage for " + e);
@@ -650,17 +649,6 @@ public class MemorizingTrustManager implements X509TrustManager {
 		}
 	}
 
-	@RequiresApi(api = Build.VERSION_CODES.O)
-    private void createNotificationChannel(Context context){
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        String channelId = CHANNEL_ID_TRUST_MANAGER;
-        CharSequence channelName = CHANNEL_NAME_TRUST_MANAGER;
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, importance);
-        notificationManager.createNotificationChannel(notificationChannel);
-    }
-
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	void startActivityNotification(Intent intent, String certName) {
 		final PendingIntent call = PendingIntent.getActivity(master, 0, intent,
@@ -669,19 +657,15 @@ public class MemorizingTrustManager implements X509TrustManager {
 		final long currentMillis = System.currentTimeMillis();
 		final Context context = master.getApplicationContext();
 
-		Notification.Builder notificationBuilder = new Notification.Builder(master);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel(context);
-			notificationBuilder.setChannelId(CHANNEL_ID_TRUST_MANAGER);
-		}
-		Notification notification = notificationBuilder.setContentTitle(mtmNotification)
+		Notification notification = new NotificationCompat.Builder(master, NotificationUtil.CHANNEL_ID_TRUST_MANAGER)
+				.setContentTitle(mtmNotification)
 				.setContentText(certName)
 				.setTicker(certName)
 				.setSmallIcon(android.R.drawable.ic_lock_lock)
 				.setWhen(currentMillis)
 				.setContentIntent(call)
 				.setAutoCancel(true)
-				.getNotification();
+				.build();
 
 		notificationManager.notify(NOTIFICATION_ID, notification);
 	}
@@ -733,10 +717,10 @@ public class MemorizingTrustManager implements X509TrustManager {
 			storeCert(context, host, cert);
 		}
 	}
-	
+
 	class MemorizingHostnameVerifier implements HostnameVerifier {
 		private HostnameVerifier defaultVerifier;
-		
+
 		public MemorizingHostnameVerifier(HostnameVerifier wrapped) {
 			defaultVerifier = wrapped;
 		}

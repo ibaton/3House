@@ -24,6 +24,7 @@ import treehou.se.habit.module.DaggerApplicationComponent;
 import treehou.se.habit.module.FragmentComponentBuilder;
 import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.ui.control.ControllerHandler;
+import treehou.se.habit.util.NotificationUtil;
 import treehou.se.habit.util.Settings;
 
 public class HabitApplication extends Application implements HasActivitySubcomponentBuilders{
@@ -37,6 +38,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     @Inject OHRealm ohRealm;
     @Inject Settings settings;
     @Inject ControllerHandler controllHandler;
+    @Inject NotificationUtil notificationUtil;
 
     @Override
     public void onCreate() {
@@ -47,6 +49,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         super.onCreate();
         JodaTimeAndroid.init(this);
         ButterKnife.setDebug(true);
+        notificationUtil.setup();
         controllHandler.init();
     }
 
