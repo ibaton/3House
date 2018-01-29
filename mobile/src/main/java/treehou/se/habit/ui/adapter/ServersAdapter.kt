@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
+import io.realm.OrderedRealmCollectionSnapshot
 import io.realm.RealmResults
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 
 class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
 
-    private var realmResults: RealmResults<ServerDB>? = null
+    private var realmResults: OrderedRealmCollectionSnapshot<ServerDB>? = null
     private var itemListener: ItemListener = DummyItemListener()
+
+    private val ITEM_TYPE_SERVER = 1
+    private val ITEM_TYPE_MY_OPENHAB_SERVER = 2
 
     inner class ServerHolder(view: View) : RecyclerView.ViewHolder(view) {
         val lblName: TextView
@@ -25,8 +28,14 @@ class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ServerHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemView = inflater.inflate(R.layout.item_server, parent, false)
+        val itemViewType = getItemViewType(position)
 
+        if (itemViewType == ITEM_TYPE_MY_OPENHAB_SERVER) {
+            val itemView = inflater.inflate(R.layout.item_my_openhab_server, parent, false)
+            return ServerHolder(itemView)
+        }
+
+        val itemView = inflater.inflate(R.layout.item_server, parent, false)
         return ServerHolder(itemView)
     }
 
@@ -38,7 +47,7 @@ class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
         serverHolder.itemView.setOnLongClickListener { _ -> itemListener.onItemLongClickListener(serverHolder) }
     }
 
-    fun setItems(realmResults: RealmResults<ServerDB>) {
+    fun setItems(realmResults: OrderedRealmCollectionSnapshot<ServerDB>) {
         this.realmResults = realmResults
         notifyDataSetChanged()
     }
@@ -49,6 +58,14 @@ class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
 
     fun getItem(position: Int): ServerDB? {
         return realmResults!![position]
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        /*val item = try {getItem(position)} catch (_ : Exception) { null }
+        if (item != null && item.isMyOpenhabServer) {
+            return ITEM_TYPE_MY_OPENHAB_SERVER
+        }*/
+        return ITEM_TYPE_SERVER
     }
 
     interface ItemListener {

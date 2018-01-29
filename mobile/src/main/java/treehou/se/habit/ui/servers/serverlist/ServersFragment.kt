@@ -37,7 +37,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
 
     @Inject lateinit var serverPresenter: ServersContract.Presenter
 
-    private var serversAdapter: ServersAdapter? = null
+    private lateinit var serversAdapter: ServersAdapter
     private var servers: RealmResults<ServerDB>? = null
     private var unbinder: Unbinder? = null
 
@@ -46,7 +46,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
 
     private val serverListener = object : ServersAdapter.ItemListener {
         override fun onItemClickListener(serverHolder: ServersAdapter.ServerHolder) {
-            val server = serversAdapter!!.getItem(serverHolder.adapterPosition)
+            val server = serversAdapter.getItem(serverHolder.adapterPosition)
             if (server != null) {
                 openServerPage(server)
             }
@@ -65,7 +65,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
 
         override fun onItemLongClickListener(serverHolder: ServersAdapter.ServerHolder): Boolean {
 
-            val server = serversAdapter!!.getItem(serverHolder.adapterPosition)
+            val server = serversAdapter.getItem(serverHolder.adapterPosition)
             if (server != null) {
                 showRemoveDialog(serverHolder, server)
             }
@@ -105,7 +105,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         lstServer.layoutManager = layoutManager
         lstServer.itemAnimator = DefaultItemAnimator()
         serversAdapter = ServersAdapter()
-        serversAdapter!!.setItemListener(serverListener)
+        serversAdapter.setItemListener(serverListener)
         lstServer.adapter = serversAdapter
 
         setupActionbar()
@@ -158,7 +158,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                     Log.d(TAG, "Loaded " + servers1.size + " servers")
                     this@ServersFragment.servers = servers1
                     updateEmptyView(servers1.size)
-                    serversAdapter!!.setItems(servers1)
+                    serversAdapter.setItems(servers1.createSnapshot())
                 })
     }
 
@@ -189,7 +189,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
         val activity = activity
         if (activity != null) {
             val intent = CreateServerActivity.createIntent(activity)
-            startActivity(intent);
+            startActivity(intent)
         }
     }
 
@@ -209,7 +209,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                         servers!!.deleteFromRealm(i)
                     }
                     realm.commitTransaction()
-                    serversAdapter!!.notifyItemRemoved(position)
+                    serversAdapter.notifyItemRemoved(position)
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .show()

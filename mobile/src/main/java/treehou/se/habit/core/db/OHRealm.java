@@ -29,7 +29,7 @@ public class OHRealm {
                 .modules(new OHRealmModule())
                 .migration(migration)
                 .name("treehou.realm")
-                .schemaVersion(4)
+                .schemaVersion(5)
                 .build();
     }
 
@@ -86,6 +86,8 @@ public class OHRealm {
                 schema.get("VoiceCellDB").removePrimaryKey().removeField("id").removeField("cell");
             case 2:
                 schema.get("CellRowDB").removePrimaryKey().removeField("id");
+            case 4:
+                schema.get("ServerDB").addField("isMyOpenhabServer", boolean.class);
         }
     };
 }

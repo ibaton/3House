@@ -42,6 +42,8 @@ open class ServerDB : RealmObject() {
             if (remoteurl == null) remoteurl = ""
             field = remoteurl
         }
+    var isMyOpenhabServer = false
+
     /**
      * Set the major version of server
      *

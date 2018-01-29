@@ -51,6 +51,7 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         val serverDB = ServerDB.fromGeneric(server)
+        serverDB.isMyOpenhabServer = true
         realm.copyToRealmOrUpdate(serverDB)
         realm.commitTransaction()
         realm.close()

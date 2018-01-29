@@ -2,7 +2,6 @@ package treehou.se.habit.ui.widgets.factories
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -20,7 +19,6 @@ import treehou.se.habit.R
 import treehou.se.habit.connector.Communicator
 import treehou.se.habit.core.db.settings.WidgetSettingsDB
 import treehou.se.habit.ui.widgets.WidgetFactory
-import treehou.se.habit.util.OpenHabUtil
 import treehou.se.habit.util.Util
 import java.net.MalformedURLException
 import java.net.URL

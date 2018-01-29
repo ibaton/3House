@@ -5,15 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.SeekBar
-
-import javax.inject.Inject
-
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
-import se.treehou.ng.ohcommunicator.services.Connector
-import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.core.db.settings.WidgetSettingsDB
 import treehou.se.habit.ui.widgets.WidgetFactory
@@ -21,11 +16,11 @@ import treehou.se.habit.util.ConnectionFactory
 
 class SliderWidgetFactory(private val connectionFactory: ConnectionFactory) : IWidgetFactory {
 
-    override fun build(context: Context, factory: WidgetFactory, server: OHServer, page: OHLinkedPage, widget: OHWidget, parent: OHWidget): WidgetFactory.IWidgetHolder {
+    override fun build(context: Context, factory: WidgetFactory, server: OHServer, page: OHLinkedPage, widget: OHWidget, parent: OHWidget?): WidgetFactory.IWidgetHolder {
         return SliderWidgetHolder(context, factory, connectionFactory, server, page, widget, parent)
     }
 
-    class SliderWidgetHolder(private val context: Context, factory: WidgetFactory, private val connectionFactory: ConnectionFactory, private val server: OHServer, page: OHLinkedPage, widget: OHWidget, parent: OHWidget) : WidgetFactory.IWidgetHolder {
+    class SliderWidgetHolder(private val context: Context, factory: WidgetFactory, private val connectionFactory: ConnectionFactory, private val server: OHServer, page: OHLinkedPage, widget: OHWidget, parent: OHWidget?) : WidgetFactory.IWidgetHolder {
 
         private val itemView: View
         /**
