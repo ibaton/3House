@@ -140,6 +140,11 @@
         <item name="android:padding">@dimen/item_spacing</item>
     </style>
 
+    <style name="TextInput">
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/input_white_box</item>
+    </style>
+
     <style name="AppTheme.Base.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.Base.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
