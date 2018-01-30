@@ -13,8 +13,8 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 74
-        versionName "5.5.3"
+        versionCode 75
+        versionName "5.5.4"
         // Enabling multidex support.
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
