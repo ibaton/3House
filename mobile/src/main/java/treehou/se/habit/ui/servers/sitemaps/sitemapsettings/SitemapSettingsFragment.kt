@@ -15,6 +15,8 @@ import javax.inject.Inject
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
@@ -58,8 +60,9 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
         unbinder = ButterKnife.bind(this, view)
         setupActionBar()
 
-        val sitemapObservable = realm.where(SitemapDB::class.java).equalTo("id", sitemapId).findAll().asFlowable().toObservable()
-                .flatMap { Observable.fromIterable(it) }
+        val sitemapObservable = realm.where(SitemapDB::class.java).equalTo("id", sitemapId).findAll()
+                .asFlowable()
+                .flatMap { Flowable.fromIterable(it) }
                 .filter { sitemapDB -> sitemapDB.settingsDB != null }
                 .distinctUntilChanged()
 
@@ -67,8 +70,9 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
                 .compose(bindToLifecycle())
                 .subscribe(RxCompoundButton.checked(cbxShowSitemaps))
 
-        Observable.combineLatest<SitemapDB, Boolean, Pair<SitemapDB, Boolean>>(sitemapObservable,
-                RxCompoundButton.checkedChanges(cbxShowSitemaps), BiFunction<SitemapDB, Boolean, Pair<SitemapDB, Boolean>> { first, second -> Pair(first, second) })
+        Flowable.combineLatest<SitemapDB, Boolean, Pair<SitemapDB, Boolean>>(sitemapObservable,
+                RxCompoundButton.checkedChanges(cbxShowSitemaps).toFlowable(BackpressureStrategy.LATEST),
+                BiFunction<SitemapDB, Boolean, Pair<SitemapDB, Boolean>> { first, second -> Pair(first, second) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { sitemapDBBooleanPair ->
                     val sitemapDB = sitemapDBBooleanPair.first
@@ -87,11 +91,6 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
     private fun setupActionBar() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.sitemaps)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 
     override fun onDestroyView() {
