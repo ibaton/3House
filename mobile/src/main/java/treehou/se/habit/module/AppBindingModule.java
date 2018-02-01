@@ -10,6 +10,8 @@ import treehou.se.habit.main.MainActivity;
 import treehou.se.habit.main.MainActivityComponent;
 import treehou.se.habit.ui.colorpicker.LightComponent;
 import treehou.se.habit.ui.colorpicker.LightFragment;
+import treehou.se.habit.ui.servers.ServerMenuComponent;
+import treehou.se.habit.ui.servers.ServerMenuFragment;
 import treehou.se.habit.ui.servers.create.CreateServerActivity;
 import treehou.se.habit.ui.servers.create.CreateServerActivityComponent;
 import treehou.se.habit.ui.servers.create.custom.SetupServerComponent;
@@ -44,6 +46,7 @@ import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
                 CreateMyOpenhabComponent.class,
                 SetupServerComponent.class,
                 SettingsComponent.class,
+                ServerMenuComponent.class,
                 GeneralSettingsComponent.class,
                 WidgetSettingsComponent.class,
                 SitemapComponent.class,
@@ -66,6 +69,11 @@ public abstract class AppBindingModule {
     @IntoMap
     @ActivityKey(CreateServerActivity.class)
     public abstract ActivityComponentBuilder createServerActivityComponentBuilder(CreateServerActivityComponent.Builder impl);
+
+    @Binds
+    @IntoMap
+    @FragmentKey(ServerMenuFragment.class)
+    public abstract FragmentComponentBuilder serverMenuComponentBuilder(ServerMenuComponent.Builder impl);
 
     @Binds
     @IntoMap

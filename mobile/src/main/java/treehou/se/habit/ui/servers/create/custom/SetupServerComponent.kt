@@ -7,7 +7,7 @@ import treehou.se.habit.module.FragmentComponent
 import treehou.se.habit.module.FragmentComponentBuilder
 
 @ActivityScope
-@Subcomponent(modules = arrayOf(SetupServerModule::class))
+@Subcomponent(modules = [(SetupServerModule::class)])
 interface SetupServerComponent : FragmentComponent<SetupServerFragment> {
 
     @Subcomponent.Builder

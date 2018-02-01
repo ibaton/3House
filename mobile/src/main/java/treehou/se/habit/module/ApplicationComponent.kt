@@ -29,6 +29,9 @@ import treehou.se.habit.ui.util.IconPickerActivity
 import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder
 import javax.inject.Singleton
 
+/**
+ * Insert fragments that does not have their own subcomponents
+ */
 @Singleton
 @Component(modules = [(AndroidModule::class), (AppBindingModule::class)])
 interface ApplicationComponent {
@@ -61,8 +64,6 @@ interface ApplicationComponent {
     fun inject(fragment: SwitchActionFragment)
 
     fun inject(fragment: BindingsFragment)
-
-    fun inject(fragment: ServerMenuFragment)
 
     fun inject(fragment: CellIncDecConfigFragment)
 
