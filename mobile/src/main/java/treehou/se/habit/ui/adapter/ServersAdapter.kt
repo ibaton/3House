@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,11 +27,10 @@ class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, position: Int): ServerHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServerHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemViewType = getItemViewType(position)
 
-        if (itemViewType == ITEM_TYPE_MY_OPENHAB_SERVER) {
+        if (viewType == ITEM_TYPE_MY_OPENHAB_SERVER) {
             val itemView = inflater.inflate(R.layout.item_my_openhab_server, parent, false)
             return ServerHolder(itemView)
         }
@@ -61,10 +61,10 @@ class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        /*val item = try {getItem(position)} catch (_ : Exception) { null }
+        val item = getItem(position)
         if (item != null && item.isMyOpenhabServer) {
             return ITEM_TYPE_MY_OPENHAB_SERVER
-        }*/
+        }
         return ITEM_TYPE_SERVER
     }
 

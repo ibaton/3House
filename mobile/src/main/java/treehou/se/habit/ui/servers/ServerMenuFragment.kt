@@ -16,20 +16,26 @@ import butterknife.Unbinder
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
 import treehou.se.habit.module.ApplicationComponent
+import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.ImageItem
 import treehou.se.habit.ui.adapter.ImageItemAdapter
 import treehou.se.habit.ui.bindings.BindingsFragment
 import treehou.se.habit.ui.inbox.InboxListFragment
 import treehou.se.habit.ui.links.LinksListFragment
 import treehou.se.habit.ui.servers.create.custom.SetupServerFragment
+import treehou.se.habit.ui.servers.create.myopenhab.CreateMyOpenhabFragment
 import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectFragment
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Mandatory empty constructor for the fragment manager to instantiate the
  * fragment (e.g. upon screen orientation changes).
  */
-class ServerMenuFragment : Fragment() {
+class ServerMenuFragment : BaseDaggerFragment<ServerMenuContract.Presenter>(), ServerMenuContract.View {
+
+    @Inject lateinit var serverPresenter: ServerMenuContract.Presenter
 
     private var unbinder: Unbinder? = null
     private var serverId: Long = 0
@@ -55,7 +61,7 @@ class ServerMenuFragment : Fragment() {
         override fun onItemClicked(id: Int) {
             var fragment: Fragment? = null
             when (id) {
-                ITEM_EDIT -> fragment = SetupServerFragment.newInstance(serverId)
+                ITEM_EDIT -> getPresenter().editServerClicked(serverId)
                 ITEM_INBOX -> openInboxPage(serverId)
                 ITEM_BINDINGS -> openBindingsPage(serverId)
                 ITEM_LINKS -> openLinksPage(serverId)
@@ -68,6 +74,38 @@ class ServerMenuFragment : Fragment() {
                         .addToBackStack(null)
                         .commit()
             }
+        }
+    }
+
+    override fun getPresenter(): ServerMenuContract.Presenter {
+        return serverPresenter
+    }
+
+    override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
+        (hasActivitySubcomponentBuilders.getFragmentComponentBuilder(ServerMenuFragment::class.java) as ServerMenuComponent.Builder)
+                .fragmentModule(ServerMenuModule(this))
+                .build().injectMembers(this)
+    }
+
+    override fun openEditServerPage(serverId: Long) {
+        val fragment = SetupServerFragment.newInstance(serverId)
+        val activity = activity
+        if (activity != null) {
+            activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.page_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+        }
+    }
+
+    override fun openEditMyOpenhabServerPage(serverId: Long) {
+        val fragment = CreateMyOpenhabFragment.newInstance(serverId)
+        val activity = activity
+        if (activity != null) {
+            activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.page_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
         }
     }
 

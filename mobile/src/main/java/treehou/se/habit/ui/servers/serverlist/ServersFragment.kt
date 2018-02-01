@@ -15,6 +15,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Predicate
 import io.realm.RealmResults
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
@@ -151,11 +152,13 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
      * Hookup server list, listening for server updates.
      */
     private fun setupAdapter() {
-        realm.where(ServerDB::class.java).findAllAsync().asFlowable().toObservable()
+        realm.where(ServerDB::class.java).findAllAsync().asFlowable()
+                .filter({ it.isLoaded && it.isValid })
                 .compose(this.bindToLifecycle<RealmResults<ServerDB>>())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ servers1 ->
                     Log.d(TAG, "Loaded " + servers1.size + " servers")
+
                     this@ServersFragment.servers = servers1
                     updateEmptyView(servers1.size)
                     serversAdapter.setItems(servers1.createSnapshot())
