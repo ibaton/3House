@@ -1,24 +1,17 @@
 package treehou.se.habit.gcm
 
-import android.app.IntentService
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.JobIntentService
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.google.android.gms.gcm.GoogleCloudMessaging
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
 import treehou.se.habit.R
 import treehou.se.habit.main.MainActivity
 import treehou.se.habit.util.NotificationUtil
-import android.media.RingtoneManager
-import android.net.Uri
-import android.os.Bundle
-import android.preference.PreferenceManager
-import android.support.v4.app.JobIntentService
 
 
 class GcmIntentService : JobIntentService() {
@@ -32,18 +25,15 @@ class GcmIntentService : JobIntentService() {
     private var mNotificationManager: NotificationManager? = null
 
 
-
     override fun onHandleWork(intent: Intent) {
-        val extras = intent!!.extras ?: return
+        val extras = intent.extras ?: return
         val notificationId: Int
         if (mNotificationManager == null)
             mNotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val gcm = GoogleCloudMessaging.getInstance(this)
         val messageType = gcm.getMessageType(intent)
         if (!extras.isEmpty) {
-            Log.d(TAG, "Message type = $messageType $extras " + (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE == messageType))
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE == messageType) {
-                // If this is notification, create new one
                 if (!intent.hasExtra(EXTRA_NOTIFICATION_ID)) {
                     notificationId = 1
                 } else {
@@ -58,8 +48,6 @@ class GcmIntentService : JobIntentService() {
                 }
             }
         }
-        // Release the wake lock provided by the WakefulBroadcastReceiver.
-        //GcmBroadcastReceiver.completeWakefulIntent(intent)
     }
 
     private fun sendNotification(msg: String?, notificationId: Int) {
@@ -79,7 +67,7 @@ class GcmIntentService : JobIntentService() {
                 .setContentTitle(getString(R.string.app_name))
                 .setStyle(NotificationCompat.BigTextStyle()
                         .bigText(msg))
-                .setColor(ContextCompat.getColor(this, R.color.openhab_orange))
+                .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                 .setAutoCancel(true)
                 .setContentText(msg)
                 .setContentIntent(pendingNotificationIntent)

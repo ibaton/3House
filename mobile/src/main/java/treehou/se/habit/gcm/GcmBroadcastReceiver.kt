@@ -9,11 +9,11 @@
 
 package treehou.se.habit.gcm
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.WakefulBroadcastReceiver
 
-class GcmBroadcastReceiver : WakefulBroadcastReceiver() {
+class GcmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         GcmIntentService.enqueueWork(context, intent)
     }
