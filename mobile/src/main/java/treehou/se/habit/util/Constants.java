@@ -10,6 +10,8 @@ public class Constants {
     // TODO remove when support for multiple servers.
     public static final String PREFERENCE_SERVER    = "server";
 
+    public static final String MY_OPENHAB_URL = "https://myopenhab.org:443";
+
     public static final String GCM_SENDER_ID = "737820980945";
 
     // NotificationDB to speech.

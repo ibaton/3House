@@ -11,6 +11,7 @@ import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.module.RxPresenter
 import treehou.se.habit.util.ConnectionFactory
+import treehou.se.habit.util.Constants
 import javax.inject.Inject
 
 class CreateMyOpenhabPresenter
@@ -55,8 +56,8 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
         server.name = "My openHAB"
         server.username = username
         server.password = password
-        server.remoteUrl = MY_OPENHAB_URL
-        server.setLocalurl(MY_OPENHAB_URL)
+        server.remoteUrl = Constants.MY_OPENHAB_URL
+        server.setLocalurl(Constants.MY_OPENHAB_URL)
 
         val createServerHandler = connectionFactory.createServerHandler(server, context)
 
@@ -91,6 +92,5 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
 
     companion object {
         val TAG = CreateMyOpenhabPresenter::class.java.simpleName
-        val MY_OPENHAB_URL = "https://myopenhab.org:443"
     }
 }
