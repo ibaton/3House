@@ -28,23 +28,18 @@ class GcmIntentService : JobIntentService() {
     val EXTRA_MSG = "message"
     val EXTRA_NOTIFICATION_ID = "notificationId"
     val ACTION_NOTIFICATION_SELECTED = "org.openhab.notification.selected"
-    val ACTION_NOTIFICATION_DELETED = "org.openhab.notification.deleted"
 
     private var mNotificationManager: NotificationManager? = null
 
 
 
     override fun onHandleWork(intent: Intent) {
-        Log.d(TAG, "onReceive 2")
         val extras = intent!!.extras ?: return
         val notificationId: Int
-        Log.d(TAG, "onReceive 3")
         if (mNotificationManager == null)
             mNotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        Log.d(TAG, "onReceive 4")
         val gcm = GoogleCloudMessaging.getInstance(this)
         val messageType = gcm.getMessageType(intent)
-        Log.d(TAG, "onReceive 5")
         if (!extras.isEmpty) {
             Log.d(TAG, "Message type = $messageType $extras " + (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE == messageType))
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE == messageType) {
@@ -55,9 +50,7 @@ class GcmIntentService : JobIntentService() {
                     notificationId = Integer.parseInt(intent.extras!!.getString(EXTRA_NOTIFICATION_ID))
                 }
                 if ("notification" == intent.extras!!.getString("type")) {
-                    Log.d(TAG, "Show notification ")
                     val message = intent.extras!!.getString(EXTRA_MSG)
-                    Log.d(TAG, "Show notification $message")
                     sendNotification(message, notificationId)
                 } else if ("hideNotification" == intent.extras!!.getString("type")) {
                     Log.d(TAG, "Hide notification")
@@ -95,14 +88,8 @@ class GcmIntentService : JobIntentService() {
     }
 
     companion object {
-        /**
-         * Unique job ID for this service.
-         */
         val JOB_ID = 1000
 
-        /**
-         * Convenience method for enqueuing work in to this service.
-         */
         fun enqueueWork(context: Context, work: Intent) {
             JobIntentService.enqueueWork(context, GcmIntentService::class.java, JOB_ID, work)
         }
