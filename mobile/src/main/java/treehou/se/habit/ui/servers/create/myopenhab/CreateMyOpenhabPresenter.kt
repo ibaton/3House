@@ -9,6 +9,7 @@ import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
+import treehou.se.habit.gcm.GoogleCloudMessageConnector
 import treehou.se.habit.module.RxPresenter
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Constants
@@ -22,6 +23,7 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
     @Inject lateinit var analytics: FirebaseAnalytics
     @Inject lateinit var context: Context
     @Inject lateinit var realm: Realm
+    @Inject lateinit var gcmConnector: GoogleCloudMessageConnector
     var launchData = Bundle()
     var hasLoadedUser = false
     var serverId: Long? = null
@@ -43,8 +45,8 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
             val server = realm.where(ServerDB::class.java).equalTo("id", serverId).findFirst()
 
             if(server != null){
-                view.loadUsername(server?.username ?: "");
-                view.loadPassword(server?.password ?: "")
+                view.loadUsername(server.username ?: "");
+                view.loadPassword(server.password ?: "")
             }
         }
     }

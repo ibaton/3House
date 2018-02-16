@@ -84,16 +84,13 @@ public class RxUtil {
      * @return remove all non myopenhabservers from stream
      */
     public ObservableTransformer<OHServer, OHServer> filterMyOpenhabServers() {
-        return observable -> observable.filter(new Predicate<OHServer>() {
-            @Override
-            public boolean test(OHServer ohServer) throws Exception {
-                String remoteUrl = ohServer.getRemoteUrl();
-                String localUrl = ohServer.getRemoteUrl();
-                remoteUrl = TextUtils.isEmpty(remoteUrl) ? "" : remoteUrl;
-                localUrl = TextUtils.isEmpty(localUrl) ? "" : localUrl;
+        return observable -> observable.filter((Predicate<OHServer>) ohServer -> {
+            String remoteUrl = ohServer.getRemoteUrl();
+            String localUrl = ohServer.getRemoteUrl();
+            remoteUrl = TextUtils.isEmpty(remoteUrl) ? "" : remoteUrl;
+            localUrl = TextUtils.isEmpty(localUrl) ? "" : localUrl;
 
-                return localUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR) || remoteUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR);
-            }
+            return localUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR) || remoteUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR);
         });
     }
 
