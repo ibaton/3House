@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import treehou.se.habit.core.db.OHRealm;
+import treehou.se.habit.gcm.GoogleCloudMessageConnector;
 import treehou.se.habit.module.ActivityComponentBuilder;
 import treehou.se.habit.module.AndroidModule;
 import treehou.se.habit.module.ApplicationComponent;
@@ -40,6 +41,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     @Inject Settings settings;
     @Inject ControllerHandler controllHandler;
     @Inject NotificationUtil notificationUtil;
+    @Inject GoogleCloudMessageConnector googleCloudMessageConnector;
 
     @Override
     public void onCreate() {
@@ -53,6 +55,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         ButterKnife.setDebug(true);
         notificationUtil.setup();
         controllHandler.init();
+        googleCloudMessageConnector.registerGcm(this);
     }
 
     protected ApplicationComponent createComponent(){

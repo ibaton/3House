@@ -1,10 +1,13 @@
 package treehou.se.habit.util;
 
 
+import android.text.TextUtils;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import se.treehou.ng.ohcommunicator.connector.models.OHServer;
@@ -16,8 +19,6 @@ import treehou.se.habit.core.db.model.SitemapSettingsDB;
 import treehou.se.habit.module.ServerLoaderFactory;
 
 public class RxUtil {
-
-    private RxUtil() {}
 
     public static <T> ObservableTransformer<T, T> newToMainSchedulers() {
         return observable -> observable.subscribeOn(Schedulers.io())
@@ -76,6 +77,21 @@ public class RxUtil {
             }
             realm.close();
         };
+    }
+
+    /**
+     * Filter myopenhab servers
+     * @return remove all non myopenhabservers from stream
+     */
+    public ObservableTransformer<OHServer, OHServer> filterMyOpenhabServers() {
+        return observable -> observable.filter((Predicate<OHServer>) ohServer -> {
+            String remoteUrl = ohServer.getRemoteUrl();
+            String localUrl = ohServer.getRemoteUrl();
+            remoteUrl = TextUtils.isEmpty(remoteUrl) ? "" : remoteUrl;
+            localUrl = TextUtils.isEmpty(localUrl) ? "" : localUrl;
+
+            return localUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR) || remoteUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR);
+        });
     }
 
     /**

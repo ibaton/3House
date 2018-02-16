@@ -18,6 +18,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!--<permission android:name="org.openhab.habdroid.gcm.permission.C2D_MESSAGE"-->
+        <!--android:protectionLevel="signature" />-->
+    <uses-permission android:name="org.openhab.habdroid.gcm.permission.C2D_MESSAGE" />
+
+
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
@@ -76,6 +81,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/voice_control_widget_info" />
         </receiver>
+
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".gcm.GcmIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name=".ui.homescreen.ControllerWidget"

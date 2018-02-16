@@ -27,7 +27,7 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
 
     @Inject lateinit var myPresenter: CreateMyOpenhabContract.Presenter
 
-    @BindView(R.id.email) lateinit var emailView: TextView
+    @BindView(R.id.textEmail) lateinit var emailView: TextView
     @BindView(R.id.password) lateinit var passwordView: TextView
     @BindView(R.id.error) lateinit var errorView: TextView
 
