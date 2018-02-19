@@ -146,7 +146,7 @@ class NavigationDrawerFragment : BaseFragment() {
                     if (showSitemaps) {
                         sitemapsObservable()
                     } else {
-                        Observable.just(null)
+                        Observable.just(listOf())
                     }
                 }
                 .compose(bindToLifecycle())

@@ -33,13 +33,13 @@
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/spr_themes" />
+                    android:id="@+id/spinnerThemes" />
 
                 <CheckBox
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fullscreen"
-                    android:id="@+id/cbx_show_fullscreen" />
+                    android:id="@+id/cbxFullscreen" />
 
             </LinearLayout>
 
@@ -61,14 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/show_sitemaps_in_menu"
-                android:id="@+id/cbx_show_sitemap_menu" />
+                android:id="@+id/cbxShowSitemapInMenu" />
 
             <CheckBox
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/open_last_sitemap_on_upstart"
-                android:id="@+id/cbx_open_last_sitemap" />
-
+                android:id="@+id/cbxAutoLoadSitemap" />
         </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
