@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'com.google.firebase.firebase-crash'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
@@ -13,8 +14,8 @@ android {
         applicationId "treehou.se.habit"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 77
-        versionName "5.5.6"
+        versionCode 78
+        versionName "5.5.7"
         // Enabling multidex support.
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -121,6 +122,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.firebase:firebase-crash:11.8.0'
     implementation 'com.google.firebase:firebase-perf:11.8.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
+        transitive = true
+    }
 
     implementation "com.google.android.gms:play-services-gcm:11.8.0"
 

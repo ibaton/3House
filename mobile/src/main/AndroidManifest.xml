@@ -35,6 +35,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme.Base"
         tools:replace="icon, roundIcon">
+
         <meta-data
             android:name="AA_DB_NAME"
             android:value="treestore26.db" />

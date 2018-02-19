@@ -9,6 +9,7 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmResults;
 import io.realm.RealmSchema;
+import io.realm.exceptions.RealmMigrationNeededException;
 
 public class OHRealm {
 
@@ -34,7 +35,13 @@ public class OHRealm {
     }
 
     public Realm realm(){
-        return Realm.getDefaultInstance();
+        try {
+            return Realm.getDefaultInstance();
+        } catch (RealmMigrationNeededException e) {
+            // TODO remove when all migrations done
+            Realm.deleteRealm(configuration());
+            return Realm.getDefaultInstance();
+        }
     }
 
     public RealmMigration migration = (realm, oldVersion, newVersion) -> {
