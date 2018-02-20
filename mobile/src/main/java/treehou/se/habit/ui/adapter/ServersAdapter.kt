@@ -41,6 +41,7 @@ class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
 
     override fun onBindViewHolder(serverHolder: ServerHolder, position: Int) {
         val server = realmResults!![position]
+        if(server?.isValid == false) return
 
         serverHolder.lblName.text = server!!.displayName
         serverHolder.itemView.setOnClickListener { _ -> itemListener.onItemClickListener(serverHolder) }
@@ -62,7 +63,7 @@ class ServersAdapter : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
-        if (item != null && item.isMyOpenhabServer) {
+        if (item != null && item.isValid && item.isMyOpenhabServer) {
             return ITEM_TYPE_MY_OPENHAB_SERVER
         }
         return ITEM_TYPE_SERVER
