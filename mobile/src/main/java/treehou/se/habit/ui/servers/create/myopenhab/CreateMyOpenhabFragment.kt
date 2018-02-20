@@ -6,13 +6,10 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import butterknife.OnClick
-import butterknife.Unbinder
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.fragment_create_my_openhab.*
 import treehou.se.habit.R
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
@@ -27,13 +24,6 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
 
     @Inject lateinit var myPresenter: CreateMyOpenhabContract.Presenter
 
-    @BindView(R.id.textEmail) lateinit var emailView: TextView
-    @BindView(R.id.password) lateinit var passwordView: TextView
-    @BindView(R.id.error) lateinit var errorView: TextView
-
-    var unbinder: Unbinder? = null
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -42,17 +32,11 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        unbinder = ButterKnife.bind(this, view)
+        loginView.setOnClickListener { login() }
     }
 
-    @OnClick(R.id.login)
     fun login() {
         myPresenter.login(emailView.text.toString(), passwordView.text.toString())
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder?.unbind()
     }
 
     override fun showError(error: String) {
@@ -65,11 +49,11 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
     }
 
     override fun loadUsername(name: String) {
-        emailView.text = name
+        emailView.setText(name)
     }
 
     override fun loadPassword(password: String) {
-        passwordView.text = password
+        passwordView.setText(password)
     }
 
     /**
