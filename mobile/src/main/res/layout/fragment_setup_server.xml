@@ -63,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
+                style="@style/TextInput"
                 android:lines="1" />
 
             <TextView
@@ -77,6 +78,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
+                style="@style/TextInput"
                 android:lines="1" />
 
             <TextView
@@ -99,6 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
+                style="@style/TextInput"
                 android:lines="1" />
 
             <TextView
@@ -121,6 +124,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
+                android:autofillHints=".AUTOFILL_HINT_USERNAME"
+                style="@style/TextInput"
                 android:lines="1" />
 
             <TextView
@@ -134,6 +139,8 @@
                 android:id="@+id/txt_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints=".AUTOFILL_HINT_PASSWORD"
+                style="@style/TextInput"
                 android:inputType="textPassword"
                 android:lines="1" />
 
