@@ -64,7 +64,6 @@ constructor(private val view: SetupServerContract.View) : RxPresenter(), SetupSe
 
         if (server != null) {
             view.loadServer(server)
-            view.showTopLabel(false)
         }
     }
 

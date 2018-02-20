@@ -140,6 +140,14 @@
         <item name="android:padding">@dimen/item_spacing</item>
     </style>
 
+    <style name="TextInputLabel">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+    </style>
+
     <style name="TextInput">
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingTop">10dp</item>

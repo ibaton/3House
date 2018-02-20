@@ -6,14 +6,8 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Unbinder
 import com.jakewharton.rxbinding2.widget.RxTextView
+import kotlinx.android.synthetic.main.fragment_setup_server.*
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
@@ -23,19 +17,8 @@ import javax.inject.Inject
 
 class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(), SetupServerContract.View {
 
-    @Inject lateinit var serverPresenter: SetupServerContract.Presenter
-
-    @BindView(R.id.server_name_text) lateinit var txtName: EditText
-    @BindView(R.id.server_local_text) lateinit var localUrlText: EditText
-    @BindView(R.id.error_local_url) lateinit var errorLocalUrlText: TextView
-    @BindView(R.id.txt_server_remote) lateinit var remoteUrlText: EditText
-    @BindView(R.id.error_remote_url) lateinit var errorRemoteUrlText: TextView
-    @BindView(R.id.txt_username) lateinit var txtUsername: EditText
-    @BindView(R.id.txt_password) lateinit var txtPassword: EditText
-    @BindView(R.id.btn_save) lateinit var btnSave: Button
-    @BindView(R.id.top_label) lateinit var topLabel: View
-
-    private var unbinder: Unbinder? = null
+    @Inject
+    lateinit var serverPresenter: SetupServerContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,17 +31,14 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_setup_server, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
-
-        return rootView
+        return inflater.inflate(R.layout.fragment_setup_server, container, false)
     }
 
-    override fun showTopLabel(show: Boolean) {
-        topLabel.visibility = if (show) View.VISIBLE else View.GONE
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        btnSave.setOnClickListener { onSave() }
     }
 
-    @OnClick(R.id.btn_save)
     internal fun onSave() {
         save()
     }
@@ -76,7 +56,7 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     override fun loadServer(server: ServerDB) {
-        txtName.setText(server.name)
+        serverNameText.setText(server.name)
         localUrlText.setText(server.localurl)
         remoteUrlText.setText(server.remoteurl)
         txtUsername.setText(server.username)
@@ -90,7 +70,7 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     private fun save() {
-        val server = ServerData(txtName.text.toString(), toUrl(localUrlText.text.toString()), toUrl(remoteUrlText.text.toString()), txtUsername.text.toString(), txtPassword.text.toString())
+        val server = ServerData(serverNameText.text.toString(), toUrl(localUrlText.text.toString()), toUrl(remoteUrlText.text.toString()), txtUsername.text.toString(), txtPassword.text.toString())
 
         serverPresenter.saveServer(server)
     }
@@ -105,11 +85,6 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
         } else {
             fragmentManager?.popBackStack()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {

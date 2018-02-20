@@ -2,41 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="?colorPrimary"
     tools:context=".ui.servers.create.custom.SetupServerFragment">
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/top_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/item_margin"
-        android:transitionName="card_expand_transition">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/default_item_padding">
-
-            <ImageView
-                app:srcCompat="@drawable/add_row_icon"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:transitionName="icon_expand_transition" />
-
-            <TextView
-                android:id="@+id/button3"
-                style="@style/CreateServerText.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/new_server"
-                android:transitionName="text_transition" />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -48,10 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="20dp">
 
 
             <TextView
+                style="@style/TextInputLabel"
                 android:id="@+id/server_name_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +28,7 @@
             android:text="@string/server_name" />
 
             <EditText
-                android:id="@+id/server_name_text"
+                android:id="@+id/serverNameText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -67,6 +36,7 @@
                 android:lines="1" />
 
             <TextView
+                style="@style/TextInputLabel"
                 android:id="@+id/server_local_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +44,7 @@
                 android:text="@string/server_local" />
 
             <EditText
-                android:id="@+id/server_local_text"
+                android:id="@+id/localUrlText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
@@ -82,7 +52,7 @@
                 android:lines="1" />
 
             <TextView
-                android:id="@+id/error_local_url"
+                android:id="@+id/errorLocalUrlText"
                 style="@style/warning_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,6 +60,7 @@
                 android:visibility="gone" />
 
             <TextView
+                style="@style/TextInputLabel"
                 android:id="@+id/hdr_server_remote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +68,7 @@
                 android:text="@string/server_remote" />
 
             <EditText
-                android:id="@+id/txt_server_remote"
+                android:id="@+id/remoteUrlText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textUri"
@@ -105,7 +76,7 @@
                 android:lines="1" />
 
             <TextView
-                android:id="@+id/error_remote_url"
+                android:id="@+id/errorRemoteUrlText"
                 style="@style/warning_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,6 +84,7 @@
                 android:visibility="gone" />
 
             <TextView
+                style="@style/TextInputLabel"
                 android:id="@+id/hdr_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,7 +92,7 @@
                 android:text="@string/username" />
 
             <EditText
-                android:id="@+id/txt_username"
+                android:id="@+id/txtUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -129,6 +101,7 @@
                 android:lines="1" />
 
             <TextView
+                style="@style/TextInputLabel"
                 android:id="@+id/hdr_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,7 +109,7 @@
                 android:text="@string/password" />
 
             <EditText
-                android:id="@+id/txt_password"
+                android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints=".AUTOFILL_HINT_PASSWORD"
@@ -148,7 +121,7 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Widget.AppCompat.Button.Colored"

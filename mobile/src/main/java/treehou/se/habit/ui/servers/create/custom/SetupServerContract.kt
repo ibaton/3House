@@ -9,7 +9,6 @@ interface SetupServerContract {
     interface View : BaseView<Presenter> {
         fun closeWindow()
         fun loadServer(server: ServerDB)
-        fun showTopLabel(show: Boolean)
     }
 
     interface Presenter : BasePresenter {

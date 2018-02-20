@@ -3,42 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?colorPrimary"
     android:orientation="vertical"
     tools:context=".ui.servers.serverlist.ServersFragment">
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/add_my_openhab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/item_margin"
-        android:transitionName="card_expand_transition">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/default_item_padding">
-
-            <ImageView
-                app:srcCompat="@drawable/scan_menu_icon"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:transitionName="icon_expand_transition" />
-
-            <TextView
-                android:id="@+id/button3"
-                style="@style/CreateServerText.Large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/scan"
-                android:transitionName="text_transition" />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
 
     <FrameLayout
         android:layout_width="match_parent"
