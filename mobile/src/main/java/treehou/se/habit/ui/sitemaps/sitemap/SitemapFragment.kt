@@ -76,7 +76,7 @@ class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
         childFragmentManager.beginTransaction()
                 .replace(R.id.pgr_sitemap, PageFragment.newInstance(server, page))
                 .addToBackStack(null)
-                .commit()
+                .commitAllowingStateLoss()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
