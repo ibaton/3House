@@ -31,7 +31,7 @@ public class DatabaseUpgradeTest {
 
         return new RealmConfiguration.Builder()
                 .modules(new OHRealmModule())
-                .migration(ohRealm.migration)
+                .migration(ohRealm.getMigration())
                 .assetFile("treehou_04.realm")
                 .name("treehou_04.realm")
                 .schemaVersion(5)
