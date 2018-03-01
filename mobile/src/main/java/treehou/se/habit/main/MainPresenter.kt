@@ -18,13 +18,9 @@ constructor(private val mainView: MainContract.View, private val realm: Realm, p
     }
 
 
-    override fun subscribe() {
+    override fun subscribe() {}
 
-    }
-
-    override fun unsubscribe() {
-
-    }
+    override fun unsubscribe() {}
 
     override fun unload() {
         realm.close()
@@ -45,7 +41,8 @@ constructor(private val mainView: MainContract.View, private val realm: Realm, p
             } else {
                 // Load default sitemap if any
                 val defaultSitemap = settings.defaultSitemap
-                if (savedInstanceState == null && defaultSitemap != null) {
+                val autoloadLast = settings.autoloadSitemapRx.blockingFirst()
+                if (savedInstanceState == null && defaultSitemap != null && autoloadLast) {
                     mainView.openSitemaps(defaultSitemap)
                 } else {
                     mainView.openSitemaps()

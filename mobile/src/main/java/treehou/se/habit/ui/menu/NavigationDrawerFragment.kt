@@ -42,7 +42,7 @@ import treehou.se.habit.util.Settings
 
 class NavigationDrawerFragment : BaseFragment() {
 
-    private var mCallbacks: NavigationDrawerCallbacks? = null
+    private var mCallbacks: NavigationDrawerCallbacks = DummyNavigationDrawerCallbacks()
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
@@ -198,7 +198,7 @@ class NavigationDrawerFragment : BaseFragment() {
                     return
                 }
 
-                activity!!.invalidateOptionsMenu() // calls onPrepareOptionsMenu()
+                activity!!.invalidateOptionsMenu()
             }
 
             override fun onDrawerOpened(drawerView: View) {
@@ -210,7 +210,7 @@ class NavigationDrawerFragment : BaseFragment() {
                 if (!mUserLearnedDrawer) {
                     settings.userLearnedDrawer(true)
                 }
-                activity!!.invalidateOptionsMenu() // calls onPrepareOptionsMenu()
+                activity!!.invalidateOptionsMenu()
             }
         }
 
@@ -221,31 +221,22 @@ class NavigationDrawerFragment : BaseFragment() {
 
     private fun selectItem(value: Int) {
         mDrawerLayout!!.closeDrawer(mFragmentContainerView!!)
-        if (mCallbacks != null) {
-            mCallbacks!!.onNavigationDrawerItemSelected(value)
-        }
+        mCallbacks.onNavigationDrawerItemSelected(value)
     }
 
     private fun selectSitemap(sitemap: OHSitemap) {
         mDrawerLayout!!.closeDrawer(mFragmentContainerView!!)
-        if (mCallbacks != null) {
-            mCallbacks!!.onSitemapItemSelected(sitemap)
-        }
+        mCallbacks.onSitemapItemSelected(sitemap)
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        try {
-            mCallbacks = context as NavigationDrawerCallbacks?
-        } catch (e: ClassCastException) {
-            throw ClassCastException("Activity must implement NavigationDrawerCallbacks.")
-        }
-
+        mCallbacks = if (context is NavigationDrawerCallbacks) context else DummyNavigationDrawerCallbacks()
     }
 
     override fun onDetach() {
         super.onDetach()
-        mCallbacks = null
+        mCallbacks = DummyNavigationDrawerCallbacks()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -289,6 +280,12 @@ class NavigationDrawerFragment : BaseFragment() {
         fun onNavigationDrawerItemSelected(value: Int)
 
         fun onSitemapItemSelected(sitemap: OHSitemap)
+    }
+
+    class DummyNavigationDrawerCallbacks: NavigationDrawerCallbacks{
+        override fun onSitemapItemSelected(sitemap: OHSitemap) {}
+
+        override fun onNavigationDrawerItemSelected(value: Int) {}
     }
 
     companion object {

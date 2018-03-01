@@ -33,10 +33,7 @@ constructor(@param:Named("arguments") var arguments: Bundle) : RxPresenter(), Si
 
     override fun load(launchData: Bundle?, savedData: Bundle?) {
         super.load(launchData, savedData)
-        if (savedData != null)
-            showSitemap = ""
-        else
-            showSitemap = arguments.getString(SitemapListFragment.ARG_SHOW_SITEMAP)
+        showSitemap = if (savedData != null) "" else arguments.getString(SitemapListFragment.ARG_SHOW_SITEMAP)
     }
 
 
@@ -83,14 +80,12 @@ constructor(@param:Named("arguments") var arguments: Bundle) : RxPresenter(), Si
             if(sitemaps != null && server != null) {
                 view.populateSitemaps(server, sitemaps)
             }
-            val autoloadLast = settings.autoloadSitemapRx.blockingFirst()
+
             if(sitemaps != null) {
                 for (sitemap in sitemaps) {
-                    if (autoloadLast && sitemap.name == showSitemap) {
+                    if (sitemap.name == showSitemap && server != null) {
                         showSitemap = null // Prevents sitemap from being accessed again.
-                        if(server != null) {
-                            openSitemap(server, sitemap)
-                        }
+                        openSitemap(server, sitemap)
                     }
                 }
             }
