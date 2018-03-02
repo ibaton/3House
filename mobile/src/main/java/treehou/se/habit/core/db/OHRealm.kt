@@ -25,12 +25,12 @@ open class OHRealm(private val context: Context) {
         }
     }
 
-    fun setup(context: Context) {
+    open fun setup(context: Context) {
         Realm.init(context)
         Realm.setDefaultConfiguration(configuration())
     }
 
-    fun configuration(): RealmConfiguration {
+    open fun configuration(): RealmConfiguration {
         return RealmConfiguration.Builder()
                 .modules(OHRealmModule())
                 .migration(migration)

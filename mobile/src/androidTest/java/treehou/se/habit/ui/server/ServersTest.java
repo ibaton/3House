@@ -43,9 +43,10 @@ public class ServersTest {
 
     private void createServer(String testServerName){
         onView(anyOf(allOf(withId(R.id.fab_add), isDisplayed()), allOf(withText(R.string.new_server), isDisplayed()))).perform(click());
-        onView(withId(R.id.add_new_server)).perform(click());
-        onView(withId(R.id.server_name_text)).perform(ViewActions.typeText(testServerName));
-        onView(withId(R.id.btn_save)).perform(click());
+//        onView(withId(R.id.btnSave)).perform(click());
+        onView(withText(R.string.new_server)).perform(click());
+        onView(withId(R.id.serverNameText)).perform(ViewActions.typeText(testServerName));
+        onView(withId(R.id.btnSave)).perform(click());
         closeSoftKeyboard();
     }
 
@@ -53,7 +54,7 @@ public class ServersTest {
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))));
         onView(withId(R.id.list)).perform(actionOnItem(hasDescendant(withText(testServerName)), longClick()));
         onView(withText(R.string.ok)).perform(click());
-        onView(withId(R.id.server_name_text)).check(doesNotExist());
+        onView(withId(R.id.serverNameText)).check(doesNotExist());
     }
 
     @Test
@@ -72,8 +73,8 @@ public class ServersTest {
 
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
         onView(withText("Edit")).perform(click());
-        onView(withId(R.id.server_name_text)).perform(ViewActions.clearText());
-        onView(withId(R.id.server_name_text)).perform(ViewActions.typeText(testServerName));
+        onView(withId(R.id.serverNameText)).perform(ViewActions.clearText());
+        onView(withId(R.id.serverNameText)).perform(ViewActions.typeText(testServerName));
         closeSoftKeyboard();
         pressBack();
         pressBack();
@@ -90,7 +91,7 @@ public class ServersTest {
         closeSoftKeyboard();
         onView(withId(R.id.list)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(testServerName))), actionOnItem(hasDescendant(withText(testServerName)), click()));
         onView(withText("Edit")).perform(click());
-        onView(withId(R.id.btn_save)).perform(click());
+        onView(withId(R.id.btnSave)).perform(click());
         pressBack();
         deleteServer(testServerName);
     }
