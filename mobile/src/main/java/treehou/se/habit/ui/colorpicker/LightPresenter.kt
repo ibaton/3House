@@ -33,12 +33,15 @@ constructor(private val context: Context, private val realm: Realm, @param:Named
     }
 
     override fun setHSV(item: OHItem, hue: Int, saturation: Int, value: Int) {
-        val serverHandler = connectionFactory.createServerHandler(server, context)
-        Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", hue, saturation, value))
-        if (value > 5) {
-            serverHandler.sendCommand(item.name, String.format(Locale.getDefault(), Constants.COMMAND_COLOR, hue, saturation, value))
-        } else {
-            serverHandler.sendCommand(item.name, Constants.COMMAND_OFF)
+        val server = server
+        if(server != null) {
+            val serverHandler = connectionFactory.createServerHandler(server, context)
+            Log.d(TAG, "Color changed to " + String.format("%d,%d,%d", hue, saturation, value))
+            if (value > 5) {
+                serverHandler.sendCommand(item.name, String.format(Locale.getDefault(), Constants.COMMAND_COLOR, hue, saturation, value))
+            } else {
+                serverHandler.sendCommand(item.name, Constants.COMMAND_OFF)
+            }
         }
     }
 

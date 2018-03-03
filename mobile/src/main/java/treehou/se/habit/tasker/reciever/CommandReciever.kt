@@ -52,8 +52,9 @@ class CommandReciever : IFireReciever {
 
             val realm = Realm.getDefaultInstance()
             val item = ItemDB.load(realm, itemId)
-            if (item != null) {
-                val serverHandler = connectionFactory!!.createServerHandler(item.server?.toGeneric(), context)
+            val server = item?.server?.toGeneric()
+            if (server != null) {
+                val serverHandler = connectionFactory.createServerHandler(server, context)
                 serverHandler.sendCommand(item.name, command)
                 Log.d(TAG, "Sent sendCommand " + command + " to item " + item.name)
             } else {
