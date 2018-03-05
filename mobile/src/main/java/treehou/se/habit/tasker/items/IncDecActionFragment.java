@@ -116,7 +116,7 @@ public class IncDecActionFragment extends RxFragment {
 
         List<OHItem> tempItems = new ArrayList<>();
         for(OHItem item : items){
-            if(Constants.SUPPORT_INC_DEC.contains(item.getType())){
+            if(Constants.INSTANCE.getSUPPORT_INC_DEC().contains(item.getType())){
                 tempItems.add(item);
             }
         }

@@ -90,7 +90,7 @@ public class RxUtil {
             remoteUrl = TextUtils.isEmpty(remoteUrl) ? "" : remoteUrl;
             localUrl = TextUtils.isEmpty(localUrl) ? "" : localUrl;
 
-            return localUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR) || remoteUrl.contains(Constants.MY_OPENHAB_URL_COMPARATOR);
+            return localUrl.contains(Constants.INSTANCE.getMY_OPENHAB_URL_COMPARATOR()) || remoteUrl.contains(Constants.INSTANCE.getMY_OPENHAB_URL_COMPARATOR());
         });
     }
 

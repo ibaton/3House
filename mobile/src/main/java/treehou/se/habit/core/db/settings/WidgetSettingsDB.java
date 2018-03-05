@@ -44,7 +44,7 @@ public class WidgetSettingsDB extends RealmObject {
     }
 
     public void setTextSize(int textSize) {
-        this.textSize = Math.min(Constants.MAX_TEXT_ADDON,Math.max(Constants.MIN_TEXT_ADDON, textSize));
+        this.textSize = Math.min(Constants.INSTANCE.getMAX_TEXT_ADDON(),Math.max(Constants.INSTANCE.getMIN_TEXT_ADDON(), textSize));
     }
 
     public int getIconSize() {

@@ -110,7 +110,7 @@ public class SwitchActionFragment extends RxFragment {
 
         List<OHItem> tempItems = new ArrayList<>();
         for(OHItem item : items){
-            if(treehou.se.habit.util.Constants.SUPPORT_SWITCH.contains(item.getType())){
+            if(treehou.se.habit.util.Constants.INSTANCE.getSUPPORT_SWITCH().contains(item.getType())){
                 tempItems.add(item);
             }
         }
