@@ -75,9 +75,9 @@ class CellSliderConfigFragment : BaseFragment() {
         unbinder = ButterKnife.bind(this, rootView)
 
         sprItems.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val item = items[position]
-                if (item != null) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (items.count() > position) {
+                    val item = items[position]
                     realm.beginTransaction()
                     val itemDB = ItemDB.createOrLoadFromGeneric(realm, item)
                     if (item.type == OHItem.TYPE_NUMBER || item.type == OHItem.TYPE_GROUP) {

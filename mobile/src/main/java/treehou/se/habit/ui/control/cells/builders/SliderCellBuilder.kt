@@ -36,6 +36,9 @@ class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
         val realm = Realm.getDefaultInstance()
         val sliderCell = cell.getCellSlider()
 
+        val item = sliderCell?.item
+        val server = item?.server?.toGeneric()
+
         val pallete = ControllerUtil.generateColor(controller, cell)
 
         viwBackground.background.setColorFilter(pallete[ControllerUtil.INDEX_BUTTON], PorterDuff.Mode.MULTIPLY)
@@ -50,13 +53,12 @@ class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                if (sliderCell.item == null) {
+                if (item == null || server == null) {
                     return
                 }
 
-                val server = sliderCell.item!!.server!!.toGeneric()
                 val serverHandler = connectionFactory.createServerHandler(server, context)
-                serverHandler.sendCommand(sliderCell.item!!.name, "" + seekBar.progress)
+                serverHandler.sendCommand(item.name, "${seekBar.progress}")
             }
         })
         realm.close()
