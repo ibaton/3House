@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 import treehou.se.habit.core.db.OHRealm;
 import treehou.se.habit.gcm.GoogleCloudMessageConnector;
 import treehou.se.habit.module.ActivityComponentBuilder;
@@ -47,6 +49,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     public void onCreate() {
         FirebaseApp.initializeApp(this);
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
+        RxJava2Debug.enableRxJava2AssemblyTracking(new String[]{"treehou.se.habit", "se.treehou.ng"});
         if(component == null) component = createComponent();
         component().inject(this);
         setTheme(settings.getThemeResourse());
