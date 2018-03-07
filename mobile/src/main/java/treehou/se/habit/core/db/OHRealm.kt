@@ -128,11 +128,12 @@ open class OHRealm(private val context: Context) {
 
     fun upgradeFromVersion2(realm: DynamicRealm, schema: RealmSchema) {
         schema.get("CellRowDB")!!.removePrimaryKey().removeField("id")
-        schema.get("ServerDB")!!.addField("isMyOpenhabServer", Boolean::class.javaPrimitiveType)
     }
 
     fun upgradeFromVersion4(realm: DynamicRealm, schema: RealmSchema) {
-        schema.get("ServerDB")!!.addField("isMyOpenhabServer", Boolean::class.javaPrimitiveType)
+        if(!schema.get("ServerDB")!!.hasField("isMyOpenhabServer")) {
+            schema.get("ServerDB")!!.addField("isMyOpenhabServer", Boolean::class.javaPrimitiveType)
+        }
     }
 
     companion object {
