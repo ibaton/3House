@@ -45,9 +45,9 @@ class ButtonCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
 
         imgIcon.setOnClickListener {
             val item = buttonCell.item
-            if (item != null) {
-                val server = item.server!!.toGeneric()
-                val serverHandler = connectionFactory.createServerHandler(server, context)
+            val server = item?.server
+            if (item != null && server != null) {
+                val serverHandler = connectionFactory.createServerHandler(server.toGeneric(), context)
                 serverHandler.sendCommand(item.name, buttonCell.command)
             }
         }
