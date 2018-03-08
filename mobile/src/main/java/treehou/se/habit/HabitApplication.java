@@ -18,7 +18,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
 import treehou.se.habit.core.db.OHRealm;
 import treehou.se.habit.gcm.GoogleCloudMessageConnector;
 import treehou.se.habit.module.ActivityComponentBuilder;
@@ -31,7 +30,7 @@ import treehou.se.habit.ui.control.ControllerHandler;
 import treehou.se.habit.util.NotificationUtil;
 import treehou.se.habit.util.Settings;
 
-public class HabitApplication extends Application implements HasActivitySubcomponentBuilders{
+public class HabitApplication extends Application implements HasActivitySubcomponentBuilders {
 
     private static final String TAG = HabitApplication.class.getSimpleName();
 
@@ -50,7 +49,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         FirebaseApp.initializeApp(this);
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
         RxJava2Debug.enableRxJava2AssemblyTracking(new String[]{"treehou.se.habit", "se.treehou.ng"});
-        if(component == null) component = createComponent();
+        if (component == null) component = createComponent();
         component().inject(this);
         setTheme(settings.getThemeResourse());
         super.onCreate();
@@ -61,7 +60,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         googleCloudMessageConnector.registerGcm(this);
     }
 
-    protected ApplicationComponent createComponent(){
+    protected ApplicationComponent createComponent() {
         Log.d(TAG, "Creating app component");
         return DaggerApplicationComponent.builder()
                 .androidModule(new AndroidModule(this))

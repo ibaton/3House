@@ -90,7 +90,7 @@ public class WidgetSettingsTest {
         onView(withId(R.id.swt_compressed_slider)).perform(scrollTo(), ViewActions.click());
     }
 
-    private ApplicationComponent createComponent(HabitApplication application){
+        private ApplicationComponent createComponent(HabitApplication application){
         ApplicationComponent component = DaggerApplicationComponent.builder()
                 .androidModule(new TestAndroidModule(application){}).build();
 
