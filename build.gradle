@@ -25,7 +25,7 @@ buildscript {
 }
 
 ext{
-    supportLibraryVersion = '27.1.0'
+    supportLibraryVersion = '27.0.2'
     firebaseVersion = '11.8.0'
 }
 
