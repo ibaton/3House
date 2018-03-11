@@ -28,6 +28,7 @@
         <item name="card_style">@style/item_card</item>
         <item name="menu_item_style">@style/menu_item_icon</item>
         <item name="actionbar_style">@style/actionbar_primary</item>
+        <item name="inputBox">@drawable/input_box_light</item>
     </style>
 
     <style name="AppTheme.Base.Dark" parent="Theme.AppCompat.NoActionBar">
@@ -79,6 +80,7 @@
 
         <item name="colorControlActivated">#FF5722</item>
         <item name="colorControlHighlight">#ff8660</item>
+        <item name="inputBox">@drawable/input_box_dark</item>
     </style>
 
     <style name="AppTheme.Base.Transparent">
