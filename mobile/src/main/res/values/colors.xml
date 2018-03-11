@@ -20,7 +20,7 @@
     <color name="background">#ffdcdcdc</color>
     <color name="background_dark">#ff222222</color>
 
-    <color name="background_card">#f4f4f4</color>
+    <color name="background_card">#ffffff</color>
     <color name="background_card_dark">#454545</color>
 
     <color name="item_background">#ffffffff</color>
