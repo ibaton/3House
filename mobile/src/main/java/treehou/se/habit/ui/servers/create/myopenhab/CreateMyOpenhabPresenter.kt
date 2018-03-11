@@ -23,7 +23,6 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
     @Inject lateinit var analytics: FirebaseAnalytics
     @Inject lateinit var context: Context
     @Inject lateinit var realm: Realm
-    @Inject lateinit var gcmConnector: GoogleCloudMessageConnector
     var launchData = Bundle()
     var hasLoadedUser = false
     var serverId: Long? = null
@@ -45,17 +44,18 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
             val server = realm.where(ServerDB::class.java).equalTo("id", serverId).findFirst()
 
             if(server != null){
+                view.loadServerName(server.name ?: "My openHAB");
                 view.loadUsername(server.username ?: "");
                 view.loadPassword(server.password ?: "")
             }
         }
     }
 
-    override fun login(username: String, password: String) {
+    override fun login(serverName: String, username: String, password: String) {
         Log.d(TAG, "Attempting Login")
 
         val server = OHServer()
-        server.name = "My openHAB"
+        server.name = serverName
         server.username = username
         server.password = password
         server.remoteUrl = Constants.MY_OPENHAB_URL

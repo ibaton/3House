@@ -18,24 +18,49 @@
             android:orientation="vertical">
 
             <TextView
+                style="@style/TextInputLabel"
+                android:id="@+id/server_name_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/serverNameText"
+                android:text="@string/server_name" />
+
+            <EditText
+                android:id="@+id/openhabServerNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                style="@style/TextInput"
+                android:lines="1" />
+
+            <TextView
                 android:id="@+id/errorView"
                 style="@style/CreateServerText.Error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/item_margin"
                 android:visibility="gone"
-                android:animateLayoutChanges="true" />
+                android:animateLayoutChanges="true"
+                tools:visibility="visible"/>
+
+            <TextView
+                style="@style/TextInputLabel"
+                android:id="@+id/user_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/server_name_text"
+                android:text="@string/user" />
 
             <EditText
                 android:id="@+id/emailView"
+                style="@style/TextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints=".AUTOFILL_HINT_USERNAME"
-                style="@style/TextInput"
-                android:popupBackground = "#0FFF"
                 android:layout_marginBottom="@dimen/item_margin"
+                android:autofillHints=".AUTOFILL_HINT_USERNAME"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:popupBackground="#0FFF" />
 
             <EditText
                 android:id="@+id/passwordView"
@@ -53,7 +78,7 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/login" />
+                android:text="@string/save" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

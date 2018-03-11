@@ -24,7 +24,7 @@
                 android:id="@+id/server_name_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/server_name_text"
+                android:labelFor="@+id/serverNameText"
             android:text="@string/server_name" />
 
             <EditText
@@ -40,7 +40,7 @@
                 android:id="@+id/server_local_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/server_local_text"
+                android:labelFor="@+id/localUrlText"
                 android:text="@string/server_local" />
 
             <EditText
@@ -64,7 +64,7 @@
                 android:id="@+id/hdr_server_remote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/txt_server_remote"
+                android:labelFor="@+id/remoteUrlText"
                 android:text="@string/server_remote" />
 
             <EditText
@@ -88,7 +88,7 @@
                 android:id="@+id/hdr_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/txt_username"
+                android:labelFor="@+id/txtUsername"
                 android:text="@string/username" />
 
             <EditText
@@ -105,7 +105,7 @@
                 android:id="@+id/hdr_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/txt_password"
+                android:labelFor="@+id/txtPassword"
                 android:text="@string/password" />
 
             <EditText

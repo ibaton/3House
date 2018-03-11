@@ -10,6 +10,7 @@ import butterknife.OnClick
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_create_my_openhab.*
+import kotlinx.android.synthetic.main.fragment_setup_server.*
 import treehou.se.habit.R
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
@@ -36,7 +37,7 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
     }
 
     fun login() {
-        myPresenter.login(emailView.text.toString(), passwordView.text.toString())
+        myPresenter.login(openhabServerNameText.text.toString(), emailView.text.toString(), passwordView.text.toString())
     }
 
     override fun showError(error: String) {
@@ -46,6 +47,10 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
                     errorView.visibility = View.VISIBLE
                     errorView.text = errorValue
                 })
+    }
+
+    override fun loadServerName(name: String) {
+        openhabServerNameText.setText(name)
     }
 
     override fun loadUsername(name: String) {

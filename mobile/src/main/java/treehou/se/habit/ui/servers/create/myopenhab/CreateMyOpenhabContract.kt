@@ -10,10 +10,11 @@ interface CreateMyOpenhabContract {
         fun closeWindow()
         fun loadUsername(name: String)
         fun loadPassword(password: String)
+        fun loadServerName(name: String)
     }
 
     interface Presenter : BasePresenter {
-        fun login(username: String, password: String)
+        fun login(serverName: String, username: String, password: String)
     }
 
     companion object {
