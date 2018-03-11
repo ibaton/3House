@@ -24,7 +24,6 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
     @Inject lateinit var context: Context
     @Inject lateinit var realm: Realm
     var launchData = Bundle()
-    var hasLoadedUser = false
     var serverId: Long? = null
 
     override fun load(launchData: Bundle?, savedData: Bundle?) {
@@ -38,13 +37,12 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
     override fun subscribe() {
         super.subscribe()
 
-        if(!hasLoadedUser && launchData.containsKey(CreateMyOpenhabContract.ARG_SERVER)){
-            hasLoadedUser = true
+        if(launchData.containsKey(CreateMyOpenhabContract.ARG_SERVER)){
             serverId = launchData.getLong(CreateMyOpenhabContract.ARG_SERVER)
             val server = realm.where(ServerDB::class.java).equalTo("id", serverId).findFirst()
 
             if(server != null){
-                view.loadServerName(server.name ?: "My openHAB");
+                view.loadServerName(server.name ?: DEFAULT_SERVER_NAME);
                 view.loadUsername(server.username ?: "");
                 view.loadPassword(server.password ?: "")
             }
@@ -63,7 +61,7 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
 
         val createServerHandler = connectionFactory.createServerHandler(server, context)
 
-        createServerHandler?.requestSitemapRx()
+        createServerHandler.requestSitemapRx()
                 ?.subscribeOn(Schedulers.io())
                 ?.subscribe({ _ ->
                     Log.d(TAG, "Login succeded")
@@ -94,5 +92,10 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
 
     companion object {
         val TAG = CreateMyOpenhabPresenter::class.java.simpleName
+        val DEFAULT_SERVER_NAME = "My openHAB"
+    }
+
+    override fun save(savedData: Bundle?) {
+        super.save(savedData)
     }
 }

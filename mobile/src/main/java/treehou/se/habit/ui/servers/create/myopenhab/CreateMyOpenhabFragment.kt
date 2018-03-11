@@ -2,15 +2,12 @@ package treehou.se.habit.ui.servers.create.myopenhab
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.OnClick
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_create_my_openhab.*
-import kotlinx.android.synthetic.main.fragment_setup_server.*
 import treehou.se.habit.R
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 import treehou.se.habit.mvp.BaseDaggerFragment
@@ -18,16 +15,14 @@ import treehou.se.habit.ui.servers.create.CreateServerActivity
 import javax.inject.Inject
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Presenter>(), CreateMyOpenhabContract.View {
 
-    @Inject lateinit var myPresenter: CreateMyOpenhabContract.Presenter
+    @Inject
+    lateinit var myPresenter: CreateMyOpenhabContract.Presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_create_my_openhab, container, false)
     }
 

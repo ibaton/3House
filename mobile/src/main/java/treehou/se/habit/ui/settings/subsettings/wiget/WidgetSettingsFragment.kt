@@ -76,7 +76,7 @@ class WidgetSettingsFragment : BaseDaggerFragment<WidgetSettingsContract.Present
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        setupBackroundColorSelector()
+        setupBackgroundColorSelector()
 
         widgetImageSize.progress = settings.iconSize - BASE_IMAGE_SIZE
 
@@ -105,7 +105,7 @@ class WidgetSettingsFragment : BaseDaggerFragment<WidgetSettingsContract.Present
         return rootView
     }
 
-    private fun setupBackroundColorSelector() {
+    private fun setupBackgroundColorSelector() {
         val factory = DummyWidgetFactory(activity)
         val bitmap = BitmapFactory.decodeResource(activity!!.resources, R.drawable.ic_item_settings_widget)
 

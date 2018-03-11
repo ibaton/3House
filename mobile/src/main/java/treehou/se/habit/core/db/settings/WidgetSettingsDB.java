@@ -26,7 +26,7 @@ public class WidgetSettingsDB extends RealmObject {
     @PrimaryKey
     private long id = -1;
     private int textSize = DEFAULT_TEXT_SIZE;
-    private int imageBackground;
+    private int imageBackground = NO_COLOR;
     private int iconSize = DEFAULT_ICON_SIZE;
     private boolean compressedSingleButton = true;
     private boolean compressedSlider = true;
