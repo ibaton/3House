@@ -76,6 +76,15 @@ class CreateServerFragment : Fragment() {
         }
     }
 
+    @OnClick(R.id.addDemoServerButton)
+    fun addDemoServer(){
+        val activity = activity
+        if(activity is CreateServerContract.View){
+            activity.getPresenter()?.saveDemoServer()
+            activity.finish()
+        }
+    }
+
     /**
      * Close activity
      */
