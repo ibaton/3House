@@ -3,6 +3,7 @@ package treehou.se.habit;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -47,16 +48,37 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     @Override
     public void onCreate() {
         setupFirebase();
-        RxJava2Debug.enableRxJava2AssemblyTracking(new String[]{"treehou.se.habit", "se.treehou.ng"});
-        if (component == null) component = createComponent();
-        component().inject(this);
+        setupSimplifiedRxjavaDebugging();
+        setupDagger();
         setTheme(settings.getThemeResourse());
         super.onCreate();
         JodaTimeAndroid.init(this);
         ButterKnife.setDebug(true);
+        setupNotifications();
+        setupMyOpenhab();
+    }
+
+    /**
+     * Setup and initialize dagger.
+     */
+    private void setupDagger(){
+        if (component == null) component = createComponent();
+        component().inject(this);
+    }
+
+    /**
+     * Setup notification channels and controller notifications.
+     */
+    private void setupNotifications(){
         notificationUtil.setup();
         controllHandler.init();
-        setupMyOpenhab();
+    }
+
+    /**
+     * Make it somewhat easier to find the rxjava sources that cased exceptions.
+     */
+    private void setupSimplifiedRxjavaDebugging(){
+        RxJava2Debug.enableRxJava2AssemblyTracking(new String[]{"treehou.se.habit", "se.treehou.ng"});
     }
 
     /**
@@ -94,13 +116,15 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         return component;
     }
 
+    @NonNull
     @Override
-    public ActivityComponentBuilder getActivityComponentBuilder(Class<? extends Activity> activityClass) {
+    public ActivityComponentBuilder getActivityComponentBuilder(@NonNull Class<? extends Activity> activityClass) {
         return activityComponentBuilders.get(activityClass);
     }
 
+    @NonNull
     @Override
-    public FragmentComponentBuilder getFragmentComponentBuilder(Class<? extends Fragment> fragmentClass) {
+    public FragmentComponentBuilder getFragmentComponentBuilder(@NonNull Class<? extends Fragment> fragmentClass) {
         return fragmentComponentBuilders.get(fragmentClass);
     }
 
