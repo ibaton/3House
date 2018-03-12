@@ -10,7 +10,7 @@ import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import treehou.se.habit.R
-import treehou.se.habit.main.MainActivity
+import treehou.se.habit.ui.main.MainActivity
 import treehou.se.habit.util.NotificationUtil
 
 

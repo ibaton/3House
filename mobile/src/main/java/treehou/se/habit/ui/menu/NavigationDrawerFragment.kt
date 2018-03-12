@@ -176,7 +176,7 @@ class NavigationDrawerFragment : BaseFragment() {
         mFragmentContainerView = activity!!.findViewById(fragmentId)
         mDrawerLayout = drawerLayout
 
-        // set a custom shadow that overlays the treehou.se.habit.main content when the drawer opens
+        // set a custom shadow that overlays the treehou.se.habit.ui.main content when the drawer opens
         mDrawerLayout!!.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
         // set up the drawer's list view with items and click listener
 

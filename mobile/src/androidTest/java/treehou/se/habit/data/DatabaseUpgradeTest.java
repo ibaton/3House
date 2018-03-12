@@ -16,7 +16,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import treehou.se.habit.core.db.OHRealm;
 import treehou.se.habit.core.db.OHRealmModule;
-import treehou.se.habit.main.MainActivity;
+import treehou.se.habit.ui.main.MainActivity;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest

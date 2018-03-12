@@ -1,4 +1,4 @@
 <menu
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".main.MainActivity" >
+    tools:context=".ui.main.MainActivity" >
 </menu>

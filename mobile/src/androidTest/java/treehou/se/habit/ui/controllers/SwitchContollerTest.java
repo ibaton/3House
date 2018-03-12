@@ -14,7 +14,7 @@ import treehou.se.habit.HabitApplication;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 import treehou.se.habit.data.TestAndroidModule;
-import treehou.se.habit.main.MainActivity;
+import treehou.se.habit.ui.main.MainActivity;
 import treehou.se.habit.module.ApplicationComponent;
 import treehou.se.habit.module.DaggerApplicationComponent;
 

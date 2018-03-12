@@ -1,4 +1,4 @@
-package treehou.se.habit.main
+package treehou.se.habit.ui.main
 
 import android.os.Bundle
 

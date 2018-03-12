@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
-import treehou.se.habit.main.MainActivity;
+import treehou.se.habit.ui.main.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.*;

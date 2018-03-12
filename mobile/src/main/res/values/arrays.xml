@@ -2,10 +2,10 @@
 <resources>
 
     <integer-array name="custom_theme" translatable="false">
-        <item>@color/colorPrimaryDarker</item> <!-- really much darker color of treehou.se.habit.main color -->
-        <item>@color/colorPrimaryDark</item> <!-- a bit darker color of your treehou.se.habit.main color -->
-        <item>@color/colorPrimary</item> <!-- treehou.se.habit.main color of your theme -->
-        <item>@color/colorPrimaryLighter</item> <!-- really much lighter color of treehou.se.habit.main color -->
+        <item>@color/colorPrimaryDarker</item>
+        <item>@color/colorPrimaryDark</item>
+        <item>@color/colorPrimary</item>
+        <item>@color/colorPrimaryLighter</item>
     </integer-array>
 
     <array name="cell_colors" translatable="false">
@@ -26,19 +26,13 @@
     </array>
 
     <string-array name="empty" translatable="false">
-    <!-- a bit darker color of your treehou.se.habit.main color -->
         <item></item>
     </string-array>
     <string-array name="cell_types">
-    <!-- a bit darker color of your treehou.se.habit.main color -->
         <item>Empty</item>
-    <!-- treehou.se.habit.main color of your theme -->
         <item>Switch</item>
-    <!-- treehou.se.habit.main color of your theme -->
         <item>Slider</item>
-    <!-- treehou.se.habit.main color of your theme -->
         <item>Inc/Dec</item>
-    <!-- treehou.se.habit.main color of your theme -->
         <item>Voice</item>
     </string-array>
     <integer-array name="cell_types_values" translatable="false">
