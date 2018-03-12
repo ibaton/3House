@@ -128,7 +128,6 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
-
     implementation "com.google.android.gms:play-services-gcm:11.8.0"
 
     implementation 'com.google.dagger:dagger:2.14.1'
