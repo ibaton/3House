@@ -18,7 +18,6 @@ class CreateServerFragment : Fragment() {
 
     lateinit var unbinder: Unbinder
 
-    @BindView(R.id.background) lateinit var background: View
     @BindView(R.id.create_server_options) lateinit var createServerOptions: View
 
     var introFinished = false

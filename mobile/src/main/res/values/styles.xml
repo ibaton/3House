@@ -157,6 +157,10 @@
         <item name="android:background">?attr/inputBox</item>
     </style>
 
+    <style name="CreateServerCard">
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
+
     <style name="AppTheme.Base.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.Base.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

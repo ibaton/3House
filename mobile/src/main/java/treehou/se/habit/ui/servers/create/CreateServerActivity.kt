@@ -13,7 +13,7 @@ import treehou.se.habit.mvp.BaseDaggerActivity
 import javax.inject.Inject
 
 
-class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(), CreateServerContract.View {
+class CreateServerActivity : BaseDaggerActivity<CreateServerContract.Presenter>(useSettingsTheme = true), CreateServerContract.View {
 
     @Inject lateinit var serverPresenter: CreateServerPresenter
 

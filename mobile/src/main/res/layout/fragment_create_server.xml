@@ -3,7 +3,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="?colorPrimary"
     android:scrollbarStyle="outsideOverlay"
     android:visibility="visible"
     android:clipChildren="false">
@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/add_my_openhab"
             android:transitionName="card_expand_transition"
-            android:layout_marginBottom="@dimen/item_margin">
+            android:layout_marginBottom="@dimen/item_margin"
+            style="@style/CreateServerCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,7 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/scan_for_servers"
-            android:layout_marginBottom="@dimen/item_margin">
+            android:layout_marginBottom="@dimen/item_margin"
+            style="@style/CreateServerCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -82,7 +84,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/add_new_server"
-            android:layout_marginBottom="@dimen/item_margin">
+            android:layout_marginBottom="@dimen/item_margin"
+            style="@style/CreateServerCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -109,7 +112,8 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/addDemoServerButton">
+            android:id="@+id/addDemoServerButton"
+            style="@style/CreateServerCard">
 
             <LinearLayout
                 android:layout_width="match_parent"

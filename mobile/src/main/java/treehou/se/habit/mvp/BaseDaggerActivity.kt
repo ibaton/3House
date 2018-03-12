@@ -8,13 +8,14 @@ import treehou.se.habit.BaseActivity
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.module.HasActivitySubcomponentBuilders
 
-abstract class BaseDaggerActivity<out T : BasePresenter> : BaseActivity(), BaseView<T> {
+abstract class BaseDaggerActivity<out T : BasePresenter>(val useSettingsTheme: Boolean = false) : BaseActivity(), BaseView<T> {
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupActivityComponent()
         getPresenter()?.load(intent.extras, savedInstanceState)
+        if(useSettingsTheme) setTheme(settings.themeResourse)
     }
 
     @CallSuper

@@ -22,7 +22,7 @@ import treehou.se.habit.util.ConnectionFactory
 import javax.inject.Inject
 
 
-class MainActivity : BaseDaggerActivity<MainContract.Presenter>(), NavigationDrawerFragment.NavigationDrawerCallbacks, MainContract.View {
+class MainActivity : BaseDaggerActivity<MainContract.Presenter>(useSettingsTheme = true), NavigationDrawerFragment.NavigationDrawerCallbacks, MainContract.View {
 
     @Inject lateinit var mainPresenter: MainPresenter
     @Inject lateinit var connectionFactory: ConnectionFactory
@@ -31,7 +31,6 @@ class MainActivity : BaseDaggerActivity<MainContract.Presenter>(), NavigationDra
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(settings.themeResourse)
 
         setContentView(R.layout.activity_main)
 
