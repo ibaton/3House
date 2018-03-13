@@ -186,6 +186,6 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
      * Opens translation site for project.
      */
     private void openTranslationSite(){
-        startActivity(IntentHelper.helpTranslateIntent());
+        startActivity(IntentHelper.INSTANCE.helpTranslateIntent());
     }
 }

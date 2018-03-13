@@ -3,12 +3,6 @@ package treehou.se.habit.ui.sitemaps.page
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-
-import java.util.ArrayList
-
-import javax.inject.Inject
-import javax.inject.Named
-
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
@@ -24,9 +18,15 @@ import treehou.se.habit.ui.widgets.WidgetFactory
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.RxUtil
 import treehou.se.habit.util.logging.Logger
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Named
 
 class PagePresenter @Inject
 constructor(private val view: PageContract.View, private val fragment: PageFragment, private val context: Context, @param:Named("arguments") private val args: Bundle, private val log: Logger, private val widgetFactory: WidgetFactory, private val serverLoaderFactory: ServerLoaderFactory, private val connectionFactory: ConnectionFactory, private val realm: Realm) : RxPresenter(), PageContract.Presenter {
+
+    @Inject
+    lateinit var logger: Logger
 
     private val widgets = ArrayList<OHWidget>()
     private val widgetHolders = ArrayList<WidgetFactory.IWidgetHolder>()
@@ -101,10 +101,11 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
                 .compose(this.bindToLifecycle())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnError({ throwable -> logger.e(TAG, "Request Page Update", throwable) })
                 .subscribe(Consumer { ohLinkedPage ->
                     log.d(TAG, "Received update " + ohLinkedPage.getWidgets().size + " widgets from  " + page!!.link)
                     updatePage(ohLinkedPage)
-                 }, dataLoadError)
+                }, dataLoadError)
     }
 
     /**
@@ -120,6 +121,7 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
         return serverHandler.requestPageUpdatesRx(page)
                 .compose(this.bindToLifecycle())
                 .compose(RxUtil.newToMainSchedulers())
+                .doOnError({ throwable -> logger.e(TAG, "LongPoller page request", throwable) })
                 .subscribe(Consumer { this.updatePage(it) }, dataLoadError)
     }
 
@@ -132,7 +134,8 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
      * @param page the page to show.
      * @param force true to invalidate all widgets, false to do if needed.
      */
-    @Synchronized private fun updatePage(page: OHLinkedPage?, force: Boolean) {
+    @Synchronized
+    private fun updatePage(page: OHLinkedPage?, force: Boolean) {
         if (page == null || page.widgets == null) return
 
         this.page = page
@@ -154,7 +157,8 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
      *
      * @param page
      */
-    @Synchronized private fun updatePage(page: OHLinkedPage) {
+    @Synchronized
+    private fun updatePage(page: OHLinkedPage) {
         updatePage(page, false)
     }
 
