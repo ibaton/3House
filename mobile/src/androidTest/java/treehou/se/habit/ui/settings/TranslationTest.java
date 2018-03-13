@@ -44,7 +44,7 @@ public class TranslationTest {
         NavigationUtil.INSTANCE.navigateToSettings();
         onView(withText(R.string.help_translate)).perform(ViewActions.click());
 
-        Intent intent = IntentHelper.helpTranslateIntent();
+        Intent intent = IntentHelper.INSTANCE.helpTranslateIntent();
         Intents.intended(IntentMatchers.hasAction(intent.getAction()));
         Intents.intended(IntentMatchers.hasData(intent.getData()));
     }

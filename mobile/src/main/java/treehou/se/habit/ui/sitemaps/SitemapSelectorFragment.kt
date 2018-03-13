@@ -110,7 +110,10 @@ class SitemapSelectorFragment : BaseFragment() {
                         }
                     }
                     mSitemapAdapter!!.notifyDataSetChanged()
-                }) { mSitemapAdapter!!.setServerState(server, SitemapAdapter.SitemapItem.STATE_ERROR) }
+                }, {
+                    mSitemapAdapter!!.setServerState(server, SitemapAdapter.SitemapItem.STATE_ERROR)
+                    logger.e(TAG, "RequestSitemap failed" ,it)
+                })
     }
 
     companion object {
