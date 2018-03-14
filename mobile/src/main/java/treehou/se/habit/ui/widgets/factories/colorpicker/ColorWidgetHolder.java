@@ -48,14 +48,14 @@ public class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
             @Override
             public void onTick(int tick) {
                 if (tick > 0){
-                    serverHandler.sendCommand(itemName, Constants.COMMAND_INCREMENT);
+                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_INCREMENT());
                 }
             }
 
             @Override
             public void onRelease(int tick) {
                 if (tick <= 0){
-                    serverHandler.sendCommand(itemName, Constants.COMMAND_ON);
+                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_ON());
                 }
             }
         }));
@@ -65,14 +65,14 @@ public class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
             @Override
             public void onTick(int tick) {
                 if (tick > 0) {
-                    serverHandler.sendCommand(itemName, Constants.COMMAND_DECREMENT);
+                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_DECREMENT());
                 }
             }
 
             @Override
             public void onRelease(int tick) {
                 if (tick <= 0) {
-                    serverHandler.sendCommand(itemName, Constants.COMMAND_OFF);
+                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_OFF());
                 }
             }
         }));

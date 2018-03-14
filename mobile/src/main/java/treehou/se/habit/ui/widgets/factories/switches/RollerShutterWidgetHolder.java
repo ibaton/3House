@@ -46,21 +46,21 @@ public class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
         ImageButton btnUp = (ImageButton) itemView.findViewById(R.id.btn_up);
         btnUp.setOnClickListener(v -> {
             if (widget.getItem() != null) {
-                serverHandler.sendCommand(widget.getItem().getName(), Constants.COMMAND_UP);
+                serverHandler.sendCommand(widget.getItem().getName(), Constants.INSTANCE.getCOMMAND_UP());
             }
         });
 
         ImageButton btnCancel = (ImageButton) itemView.findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(v -> {
             if (widget.getItem() != null) {
-                serverHandler.sendCommand(item.getName(), Constants.COMMAND_STOP);
+                serverHandler.sendCommand(item.getName(), Constants.INSTANCE.getCOMMAND_STOP());
             }
         });
 
         ImageButton btnDown = (ImageButton) itemView.findViewById(R.id.btn_down);
         btnDown.setOnClickListener(v -> {
             if (widget.getItem() != null) {
-                serverHandler.sendCommand(item.getName(), Constants.COMMAND_DOWN);
+                serverHandler.sendCommand(item.getName(), Constants.INSTANCE.getCOMMAND_DOWN());
             }
         });
 

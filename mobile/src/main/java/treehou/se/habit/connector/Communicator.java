@@ -66,11 +66,11 @@ public class Communicator {
                 .subscribe(newItem -> {
                     String state = newItem.getState();
                     if (treehou.se.habit.util.Constants.INSTANCE.getSUPPORT_INC_DEC().contains(newItem.getType())) {
-                        if (Constants.COMMAND_OFF.equals(state) || Constants.COMMAND_UNINITIALIZED.equals(state)) {
+                        if (Constants.INSTANCE.getCOMMAND_OFF().equals(state) || Constants.INSTANCE.getCOMMAND_UNINITIALIZED().equals(state)) {
                             if (value > 0) {
                                 serverHandler.sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(min + value, min, max)));
                             }
-                        } else if (Constants.COMMAND_ON.equals(state)) {
+                        } else if (Constants.INSTANCE.getCOMMAND_ON().equals(state)) {
                             if (value < 0) {
                                 serverHandler.sendCommand(newItem.getName(), String.valueOf(scrubNumberValue(max + value, min, max)));
                             }
@@ -98,7 +98,7 @@ public class Communicator {
 
             Request.Builder newRequest = chain.request().newBuilder();
             if (server.requiresAuth()) {
-                newRequest.header(Constants.HEADER_AUTHENTICATION, ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
+                newRequest.header(Constants.INSTANCE.getHEADER_AUTHENTICATION(), ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
             }
 
             return chain.proceed(newRequest.build());

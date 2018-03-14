@@ -64,7 +64,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
             Log.d(TAG, widget.getLabel() + " " + newState);
             if (widget.getItem() != null && !widget.getItem().getStateDescription().isReadOnly()) {
                 swtSwitch.setChecked(newState);
-                serverHandler.sendCommand(widget.getItem().getName(), newState ? Constants.COMMAND_ON : Constants.COMMAND_OFF);
+                serverHandler.sendCommand(widget.getItem().getName(), newState ? Constants.INSTANCE.getCOMMAND_ON() : Constants.INSTANCE.getCOMMAND_OFF());
             }
         });
 
@@ -80,7 +80,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
             return;
         }
 
-        boolean isOn = widget.getItem().getState().equals(Constants.COMMAND_ON);
+        boolean isOn = widget.getItem().getState().equals(Constants.INSTANCE.getCOMMAND_ON());
         swtSwitch.setEnabled(widget.getItem().getStateDescription() == null || !widget.getItem().getStateDescription().isReadOnly());
         swtSwitch.setChecked(isOn);
         baseHolder.update(widget);

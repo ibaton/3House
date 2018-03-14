@@ -129,7 +129,7 @@ public class SwitchActionFragment extends RxFragment {
         ItemDB itemDb = ItemDB.Companion.createOrLoadFromGeneric(realm, item);
         realm.commitTransaction();
 
-        String command = tglOnOff.isChecked() ? Constants.COMMAND_ON : Constants.COMMAND_OFF;
+        String command = tglOnOff.isChecked() ? Constants.INSTANCE.getCOMMAND_ON() : Constants.INSTANCE.getCOMMAND_OFF();
         final Bundle resultBundle = CommandBoundleManager.Companion.generateCommandBundle(itemDb.getId(), command);
 
         resultIntent.putExtra(treehou.se.habit.tasker.locale.Intent.Companion.getEXTRA_STRING_BLURB(), item.getName() + " - " + command);
