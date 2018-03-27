@@ -26,7 +26,9 @@ buildscript {
 
 ext{
     supportLibraryVersion = '27.0.2'
-     firebaseVersion = '11.8.0'
+    firebaseVersion = '11.8.0'
+    daggerVersion = '2.15'
+    rxlifecycleVersion = '2.2.1'
 }
 
 allprojects {

@@ -21,11 +21,12 @@ import se.treehou.ng.ohcommunicator.services.Scanner
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback
 import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse
 import treehou.se.habit.R
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.ScanServersComponent
+import treehou.se.habit.dagger.fragment.ScanServersModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.servers.create.CreateServerActivity
 import treehou.se.habit.ui.servers.create.custom.ScanServersContract
-import treehou.se.habit.ui.servers.create.custom.ScanServersModule
 import java.util.*
 import javax.inject.Inject
 
@@ -67,7 +68,7 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
      */
     override fun closeWindow() {
         val currentActivity = activity
-        if(currentActivity is CreateServerActivity){
+        if (currentActivity is CreateServerActivity) {
             activity?.finish()
         } else {
             fragmentManager?.popBackStack()

@@ -20,13 +20,13 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import treehou.se.habit.core.db.OHRealm;
+import treehou.se.habit.dagger.ActivityComponentBuilder;
+import treehou.se.habit.dagger.AndroidModule;
+import treehou.se.habit.dagger.ApplicationComponent;
+import treehou.se.habit.dagger.DaggerApplicationComponent;
+import treehou.se.habit.dagger.FragmentComponentBuilder;
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders;
 import treehou.se.habit.gcm.GoogleCloudMessageConnector;
-import treehou.se.habit.module.ActivityComponentBuilder;
-import treehou.se.habit.module.AndroidModule;
-import treehou.se.habit.module.ApplicationComponent;
-import treehou.se.habit.module.DaggerApplicationComponent;
-import treehou.se.habit.module.FragmentComponentBuilder;
-import treehou.se.habit.module.HasActivitySubcomponentBuilders;
 import treehou.se.habit.ui.control.ControllerHandler;
 import treehou.se.habit.util.NotificationUtil;
 import treehou.se.habit.util.Settings;
@@ -37,13 +37,20 @@ public class HabitApplication extends Application implements HasActivitySubcompo
 
     protected ApplicationComponent component;
 
-    @Inject Map<Class<? extends Activity>, ActivityComponentBuilder> activityComponentBuilders;
-    @Inject Map<Class<? extends Fragment>, FragmentComponentBuilder> fragmentComponentBuilders;
-    @Inject OHRealm ohRealm;
-    @Inject Settings settings;
-    @Inject ControllerHandler controllHandler;
-    @Inject NotificationUtil notificationUtil;
-    @Inject GoogleCloudMessageConnector googleCloudMessageConnector;
+    @Inject
+    Map<Class<? extends Activity>, ActivityComponentBuilder> activityComponentBuilders;
+    @Inject
+    Map<Class<? extends Fragment>, FragmentComponentBuilder> fragmentComponentBuilders;
+    @Inject
+    OHRealm ohRealm;
+    @Inject
+    Settings settings;
+    @Inject
+    ControllerHandler controllHandler;
+    @Inject
+    NotificationUtil notificationUtil;
+    @Inject
+    GoogleCloudMessageConnector googleCloudMessageConnector;
 
     @Override
     public void onCreate() {
@@ -61,7 +68,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     /**
      * Setup and initialize dagger.
      */
-    private void setupDagger(){
+    private void setupDagger() {
         if (component == null) component = createComponent();
         component().inject(this);
     }
@@ -69,7 +76,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     /**
      * Setup notification channels and controller notifications.
      */
-    private void setupNotifications(){
+    private void setupNotifications() {
         notificationUtil.setup();
         controllHandler.init();
     }
@@ -77,14 +84,14 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     /**
      * Make it somewhat easier to find the rxjava sources that cased exceptions.
      */
-    private void setupSimplifiedRxjavaDebugging(){
+    private void setupSimplifiedRxjavaDebugging() {
         RxJava2Debug.enableRxJava2AssemblyTracking(new String[]{"treehou.se.habit", "se.treehou.ng"});
     }
 
     /**
      * Setup firebase components
      */
-    private void setupFirebase(){
+    private void setupFirebase() {
         FirebaseApp.initializeApp(this);
         FirebaseCrash.setCrashCollectionEnabled(!BuildConfig.DEBUG);
     }
@@ -92,7 +99,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
     /**
      * Setup connections to my openhab
      */
-    private void setupMyOpenhab(){
+    private void setupMyOpenhab() {
         googleCloudMessageConnector.registerGcm(this);
     }
 

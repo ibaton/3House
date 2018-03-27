@@ -11,9 +11,9 @@ import io.realm.RealmConfiguration;
 import treehou.se.habit.core.db.OHRealm;
 import treehou.se.habit.core.db.OHRealmModule;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.module.AndroidModule;
-import treehou.se.habit.module.ForApplication;
-import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.dagger.AndroidModule;
+import treehou.se.habit.dagger.ForApplication;
+import treehou.se.habit.dagger.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 
 @Module

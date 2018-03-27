@@ -12,8 +12,8 @@ import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.RxPresenter
-import treehou.se.habit.module.ServerLoaderFactory
+import treehou.se.habit.dagger.RxPresenter
+import treehou.se.habit.dagger.ServerLoaderFactory
 import treehou.se.habit.ui.widgets.WidgetFactory
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.RxUtil

@@ -14,7 +14,9 @@ import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.LightComponent
+import treehou.se.habit.dagger.fragment.LightModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.colorpicker.LightContract.Presenter
 import treehou.se.habit.util.ConnectionFactory

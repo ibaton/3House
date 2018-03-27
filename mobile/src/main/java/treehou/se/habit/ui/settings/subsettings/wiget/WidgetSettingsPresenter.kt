@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import io.realm.Realm
 import treehou.se.habit.core.db.settings.WidgetSettingsDB
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 
 class WidgetSettingsPresenter @Inject
 constructor(private val view: WidgetSettingsContract.View, private val realm: Realm) : RxPresenter(), WidgetSettingsContract.Presenter {

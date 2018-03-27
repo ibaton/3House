@@ -3,7 +3,7 @@ package treehou.se.habit.ui.servers.create.custom
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 import javax.inject.Inject
 
 class ScanServersPresenter

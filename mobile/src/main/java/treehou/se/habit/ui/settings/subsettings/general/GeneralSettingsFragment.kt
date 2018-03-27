@@ -9,18 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 
 import javax.inject.Inject
 
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_settings_general.*
 import treehou.se.habit.R
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.GeneralSettingsComponent
+import treehou.se.habit.dagger.fragment.GeneralSettingsModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.util.Settings
 

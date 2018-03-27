@@ -16,7 +16,7 @@ import treehou.se.habit.core.db.DBHelper;
 import treehou.se.habit.core.db.model.ServerDB;
 import treehou.se.habit.core.db.model.SitemapDB;
 import treehou.se.habit.core.db.model.SitemapSettingsDB;
-import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.dagger.ServerLoaderFactory;
 
 public class RxUtil {
 

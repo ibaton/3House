@@ -22,7 +22,9 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.SitemapComponent
+import treehou.se.habit.dagger.fragment.SitemapModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.homescreen.VoiceService
 import treehou.se.habit.ui.sitemaps.page.PageFragment

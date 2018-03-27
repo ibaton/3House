@@ -4,7 +4,7 @@ import android.app.Activity
 import android.support.test.InstrumentationRegistry
 import android.support.test.rule.ActivityTestRule
 
-import treehou.se.habit.module.ApplicationComponent
+import treehou.se.habit.dagger.ApplicationComponent
 
 /**
  * [ActivityTestRule] which provides hook for

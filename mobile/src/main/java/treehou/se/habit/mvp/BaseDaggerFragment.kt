@@ -4,7 +4,7 @@ package treehou.se.habit.mvp
 import android.os.Bundle
 import treehou.se.habit.HabitApplication
 
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
 import treehou.se.habit.ui.BaseFragment
 
 abstract class BaseDaggerFragment<out T : BasePresenter> : BaseFragment(), BaseView<T> {

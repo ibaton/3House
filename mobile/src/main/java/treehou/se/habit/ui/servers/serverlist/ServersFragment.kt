@@ -15,13 +15,14 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Predicate
 import io.realm.RealmResults
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.ApplicationComponent
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.ApplicationComponent
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.ServersComponent
+import treehou.se.habit.dagger.fragment.ServersModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.ServersAdapter
 import treehou.se.habit.ui.servers.ServerMenuFragment
