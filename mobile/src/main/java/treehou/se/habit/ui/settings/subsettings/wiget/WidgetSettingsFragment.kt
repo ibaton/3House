@@ -14,7 +14,9 @@ import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import treehou.se.habit.R
 import treehou.se.habit.core.db.settings.WidgetSettingsDB
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.WidgetSettingsComponent
+import treehou.se.habit.dagger.fragment.WidgetSettingsModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.widgets.DummyWidgetFactory
 import treehou.se.habit.util.Constants

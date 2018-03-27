@@ -2,7 +2,7 @@ package treehou.se.habit.ui.servers
 
 import io.realm.Realm
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 import javax.inject.Inject
 
 class ServerMenuPresenter @Inject

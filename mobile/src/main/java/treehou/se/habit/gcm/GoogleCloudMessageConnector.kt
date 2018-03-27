@@ -10,7 +10,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import treehou.se.habit.module.ServerLoaderFactory
+import treehou.se.habit.dagger.ServerLoaderFactory
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Constants
 import treehou.se.habit.util.RxUtil

@@ -16,13 +16,12 @@ import treehou.se.habit.HabitApplication;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
 import treehou.se.habit.ViewActions.SliderActions;
+import treehou.se.habit.dagger.ApplicationComponent;
+import treehou.se.habit.dagger.DaggerApplicationComponent;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.ui.main.MainActivity;
-import treehou.se.habit.module.ApplicationComponent;
-import treehou.se.habit.module.DaggerApplicationComponent;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -42,7 +41,7 @@ public class WidgetSettingsTest {
     };
 
     @Before
-    public void moveToWidget(){
+    public void moveToWidget() {
         NavigationUtil.INSTANCE.navigateToSettings();
         onView(withText(R.string.settings_widgets)).perform(ViewActions.click());
     }
@@ -90,9 +89,10 @@ public class WidgetSettingsTest {
         onView(withId(R.id.swt_compressed_slider)).perform(scrollTo(), ViewActions.click());
     }
 
-        private ApplicationComponent createComponent(HabitApplication application){
+    private ApplicationComponent createComponent(HabitApplication application) {
         ApplicationComponent component = DaggerApplicationComponent.builder()
-                .androidModule(new TestAndroidModule(application){}).build();
+                .androidModule(new TestAndroidModule(application) {
+                }).build();
 
         return component;
     }

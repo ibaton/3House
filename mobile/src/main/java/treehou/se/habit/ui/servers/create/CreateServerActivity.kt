@@ -8,7 +8,9 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import treehou.se.habit.R
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.activity.CreateServerActivityComponent
+import treehou.se.habit.dagger.activity.CreateServerModule
 import treehou.se.habit.mvp.BaseDaggerActivity
 import javax.inject.Inject
 

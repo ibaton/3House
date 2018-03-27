@@ -1,10 +1,8 @@
 package treehou.se.habit.ui.settings
 
-import android.os.Bundle
-
 import javax.inject.Inject
 
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 
 class SettingsPresenter @Inject
 constructor(private val view: SettingsContract.View) : RxPresenter(), SettingsContract.Presenter {

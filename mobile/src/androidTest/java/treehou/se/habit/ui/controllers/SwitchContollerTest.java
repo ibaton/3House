@@ -13,10 +13,10 @@ import treehou.se.habit.DaggerActivityTestRule;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.NavigationUtil;
 import treehou.se.habit.R;
+import treehou.se.habit.dagger.ApplicationComponent;
+import treehou.se.habit.dagger.DaggerApplicationComponent;
 import treehou.se.habit.data.TestAndroidModule;
 import treehou.se.habit.ui.main.MainActivity;
-import treehou.se.habit.module.ApplicationComponent;
-import treehou.se.habit.module.DaggerApplicationComponent;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -26,7 +26,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.core.AnyOf.anyOf;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest

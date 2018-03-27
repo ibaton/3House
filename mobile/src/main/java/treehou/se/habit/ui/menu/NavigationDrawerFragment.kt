@@ -21,8 +21,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 
-import com.f2prateek.rx.preferences2.Preference
-
 import java.util.ArrayList
 
 import javax.inject.Inject
@@ -34,9 +32,9 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
-import treehou.se.habit.module.ApplicationComponent
-import treehou.se.habit.module.ServerLoaderFactory
-import treehou.se.habit.module.ServerLoaderFactory.ServerSitemapsResponse
+import treehou.se.habit.dagger.ApplicationComponent
+import treehou.se.habit.dagger.ServerLoaderFactory
+import treehou.se.habit.dagger.ServerLoaderFactory.ServerSitemapsResponse
 import treehou.se.habit.ui.BaseFragment
 import treehou.se.habit.util.Settings
 

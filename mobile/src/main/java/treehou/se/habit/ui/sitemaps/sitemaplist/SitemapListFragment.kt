@@ -20,7 +20,9 @@ import butterknife.Unbinder
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.R
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.SitemapListComponent
+import treehou.se.habit.dagger.fragment.SitemapListModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.SitemapListAdapter
 import treehou.se.habit.ui.adapter.SitemapListAdapter.ServerState

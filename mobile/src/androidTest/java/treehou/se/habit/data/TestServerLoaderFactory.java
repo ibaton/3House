@@ -14,7 +14,7 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer;
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap;
 import se.treehou.ng.ohcommunicator.services.IServerHandler;
 import treehou.se.habit.core.db.model.ServerDB;
-import treehou.se.habit.module.ServerLoaderFactory;
+import treehou.se.habit.dagger.ServerLoaderFactory;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.RxUtil;
 

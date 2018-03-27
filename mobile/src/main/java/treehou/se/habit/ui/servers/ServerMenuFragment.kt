@@ -15,8 +15,10 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
-import treehou.se.habit.module.ApplicationComponent
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.ApplicationComponent
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.ServerMenuComponent
+import treehou.se.habit.dagger.fragment.ServerMenuModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.ImageItem
 import treehou.se.habit.ui.adapter.ImageItemAdapter

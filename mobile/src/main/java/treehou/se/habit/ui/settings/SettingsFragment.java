@@ -24,7 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import treehou.se.habit.R;
-import treehou.se.habit.module.HasActivitySubcomponentBuilders;
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders;
+import treehou.se.habit.dagger.fragment.SettingsComponent;
+import treehou.se.habit.dagger.fragment.SettingsModule;
 import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
@@ -37,12 +39,12 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
     private Unbinder unbinder;
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef ({
-        SettingsItems.ITEM_WIDGETS,
-        SettingsItems.ITEM_GENERAL,
-        SettingsItems.ITEM_CUSTOM_WIDGETS,
-        SettingsItems.ITEM_LICENSES,
-        SettingsItems.ITEM_TRANSLATE})
+    @IntDef({
+            SettingsItems.ITEM_WIDGETS,
+            SettingsItems.ITEM_GENERAL,
+            SettingsItems.ITEM_CUSTOM_WIDGETS,
+            SettingsItems.ITEM_LICENSES,
+            SettingsItems.ITEM_TRANSLATE})
     public @interface SettingsItems {
         int ITEM_WIDGETS = 1;
         int ITEM_GENERAL = 2;
@@ -56,9 +58,11 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
     /**
      * The fragment's ListView/GridView.
      */
-    @BindView(android.R.id.list) AbsListView mListView;
+    @BindView(android.R.id.list)
+    AbsListView mListView;
 
-    @Inject SettingsContract.Presenter presenter;
+    @Inject
+    SettingsContract.Presenter presenter;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -131,7 +135,7 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
         mListView.setOnItemClickListener(optionsSelectListener);
 
         actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null) actionBar.setTitle(R.string.settings);
+        if (actionBar != null) actionBar.setTitle(R.string.settings);
 
         return view;
     }
@@ -152,17 +156,17 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
             case SettingsItems.ITEM_GENERAL:
                 presenter.openGeneralSettings();
                 break;
-            case SettingsItems.ITEM_LICENSES :
+            case SettingsItems.ITEM_LICENSES:
                 presenter.openLicense();
                 break;
-            case SettingsItems.ITEM_TRANSLATE :
+            case SettingsItems.ITEM_TRANSLATE:
                 presenter.openTranslatePage();
                 break;
         }
     };
 
-    private void openPage(Fragment fragment){
-        if(fragment != null){
+    private void openPage(Fragment fragment) {
+        if (fragment != null) {
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.page_container, fragment)
                     .addToBackStack(null)
@@ -185,7 +189,7 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
     /**
      * Opens translation site for project.
      */
-    private void openTranslationSite(){
+    private void openTranslationSite() {
         startActivity(IntentHelper.INSTANCE.helpTranslateIntent());
     }
 }

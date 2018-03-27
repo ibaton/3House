@@ -35,7 +35,7 @@ import java.util.Map;
 import treehou.se.habit.HabitApplication;
 import treehou.se.habit.R;
 import treehou.se.habit.core.db.settings.WidgetSettingsDB;
-import treehou.se.habit.module.ApplicationComponent;
+import treehou.se.habit.dagger.ApplicationComponent;
 import treehou.se.habit.ui.adapter.IconAdapter;
 
 public class Util {

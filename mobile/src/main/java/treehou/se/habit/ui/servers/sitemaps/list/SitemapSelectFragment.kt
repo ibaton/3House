@@ -20,8 +20,10 @@ import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.core.db.model.SitemapDB
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
-import treehou.se.habit.module.ServerLoaderFactory
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.ServerLoaderFactory
+import treehou.se.habit.dagger.fragment.SitemapSelectComponent
+import treehou.se.habit.dagger.fragment.SitemapSelectModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.SitemapListAdapter
 import treehou.se.habit.ui.servers.sitemaps.sitemapsettings.SitemapSettingsFragment

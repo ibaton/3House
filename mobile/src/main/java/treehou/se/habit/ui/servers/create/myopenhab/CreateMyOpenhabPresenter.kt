@@ -9,8 +9,7 @@ import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.gcm.GoogleCloudMessageConnector
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Constants
 import javax.inject.Inject

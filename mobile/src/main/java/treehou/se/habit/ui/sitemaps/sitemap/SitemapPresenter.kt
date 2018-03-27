@@ -10,7 +10,7 @@ import org.greenrobot.eventbus.Subscribe
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject

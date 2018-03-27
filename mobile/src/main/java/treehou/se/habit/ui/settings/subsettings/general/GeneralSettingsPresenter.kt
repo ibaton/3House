@@ -1,7 +1,7 @@
 package treehou.se.habit.ui.settings.subsettings.general
 
 import io.reactivex.android.schedulers.AndroidSchedulers
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 import treehou.se.habit.util.Settings
 import javax.inject.Inject
 

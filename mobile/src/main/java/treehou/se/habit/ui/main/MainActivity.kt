@@ -8,8 +8,10 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.R
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
-import treehou.se.habit.module.ServerLoaderFactory
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.ServerLoaderFactory
+import treehou.se.habit.dagger.activity.MainActivityComponent
+import treehou.se.habit.dagger.activity.MainActivityModule
 import treehou.se.habit.mvp.BaseDaggerActivity
 import treehou.se.habit.ui.control.ControllerUtil
 import treehou.se.habit.ui.control.ControllsFragment

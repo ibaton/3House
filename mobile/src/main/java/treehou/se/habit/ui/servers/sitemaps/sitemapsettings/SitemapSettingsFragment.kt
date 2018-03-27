@@ -17,12 +17,13 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.SitemapDB
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.SitemapSettingsComponent
+import treehou.se.habit.dagger.fragment.SitemapSettingsModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 
 /**

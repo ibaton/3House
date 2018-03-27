@@ -9,7 +9,9 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_create_my_openhab.*
 import treehou.se.habit.R
-import treehou.se.habit.module.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
+import treehou.se.habit.dagger.fragment.CreateMyOpenhabComponent
+import treehou.se.habit.dagger.fragment.CreateMyOpenhabModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.servers.create.CreateServerActivity
 import javax.inject.Inject

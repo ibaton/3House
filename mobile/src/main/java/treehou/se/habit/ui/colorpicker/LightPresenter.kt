@@ -15,7 +15,7 @@ import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import treehou.se.habit.connector.Constants
 import treehou.se.habit.core.db.model.ServerDB
-import treehou.se.habit.module.RxPresenter
+import treehou.se.habit.dagger.RxPresenter
 import treehou.se.habit.ui.sitemaps.page.PageContract
 import treehou.se.habit.util.ConnectionFactory
 

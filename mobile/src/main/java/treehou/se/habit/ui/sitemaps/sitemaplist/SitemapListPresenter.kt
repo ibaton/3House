@@ -11,9 +11,9 @@ import io.reactivex.subjects.BehaviorSubject
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
-import treehou.se.habit.module.RxPresenter
-import treehou.se.habit.module.ServerLoaderFactory
-import treehou.se.habit.module.ServerLoaderFactory.ServerSitemapsResponse
+import treehou.se.habit.dagger.RxPresenter
+import treehou.se.habit.dagger.ServerLoaderFactory
+import treehou.se.habit.dagger.ServerLoaderFactory.ServerSitemapsResponse
 import treehou.se.habit.util.Settings
 import javax.inject.Inject
 import javax.inject.Named

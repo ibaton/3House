@@ -91,10 +91,10 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-components-preference:2.2.1'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-kotlin:2.2.1'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:2.2.1'
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.ext.rxlifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components-preference:$rootProject.ext.rxlifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.mikepenz:iconics-core:3.0.0@aar'
@@ -130,9 +130,9 @@ dependencies {
     }
     implementation "com.google.android.gms:play-services-gcm:11.8.0"
 
-    implementation 'com.google.dagger:dagger:2.14.1'
-    kapt 'com.google.dagger:dagger-compiler:2.14.1'
-    implementation 'com.google.dagger:dagger-android-support:2.14.1'
+    implementation "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.ext.daggerVersion"
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
     testImplementation 'junit:junit:4.12'
