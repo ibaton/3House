@@ -34,7 +34,7 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
 
     @Override
     public ObservableTransformer<Realm, OHServer> loadServersRx() {
-        return RxUtil.loadServers();
+        return RxUtil.Companion.loadServers();
     }
 
     @Override
@@ -75,6 +75,6 @@ public class TestServerLoaderFactory implements ServerLoaderFactory {
             }
             return response;
         })
-        .doOnNext(RxUtil.saveSitemap());
+        .doOnNext(RxUtil.Companion.saveSitemap());
     }
 }
