@@ -86,18 +86,18 @@ dependencies {
 
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
     implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.ext.rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-components-preference:$rootProject.ext.rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
 
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.mikepenz:iconics-core:3.0.0@aar'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.mikepenz:iconics-core:3.0.2@aar'
     implementation 'com.mikepenz:octicons-typeface:3.2.0.2@aar'
     implementation 'com.github.matthewyork:ColoursLibrary:1.0.0@aar'
     implementation('com.wefika:flowlayout:0.4.1') {
@@ -106,14 +106,12 @@ dependencies {
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2'
 
     implementation 'com.jakewharton:butterknife:8.8.1'
-    implementation 'com.google.firebase:firebase-messaging:11.8.0'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.2@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
     implementation 'net.danlew:android.joda:2.9.9.1'
-    implementation "com.google.firebase:firebase-messaging:11.8.0"
     implementation('com.mikepenz:aboutlibraries:5.9.4@aar') {
         transitive = true
         exclude module: 'iconics-core'
@@ -122,13 +120,14 @@ dependencies {
     implementation 'com.github.ibaton:android-openhab-connect:2.0.5'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
+    implementation "com.google.firebase:firebase-messaging:$rootProject.ext.firebaseVersion"
     implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
     implementation "com.google.firebase:firebase-crash:$rootProject.ext.firebaseVersion"
     implementation "com.google.firebase:firebase-perf:$rootProject.ext.firebaseVersion"
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
-    implementation "com.google.android.gms:play-services-gcm:11.8.0"
+    implementation "com.google.android.gms:play-services-gcm:$rootProject.ext.gcmVersion"
 
     implementation "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
