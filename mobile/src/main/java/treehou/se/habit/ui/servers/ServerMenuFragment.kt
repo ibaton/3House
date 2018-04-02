@@ -202,7 +202,7 @@ class ServerMenuFragment : BaseDaggerFragment<ServerMenuContract.Presenter>(), S
 
         private val ARG_SERVER = "arg_server"
 
-        @IntDef(ITEM_EDIT.toLong(), ITEM_INBOX.toLong(), ITEM_LINKS.toLong(), ITEM_BINDINGS.toLong(), ITEM_SITEMAP_FILTER.toLong())
+        @IntDef(ITEM_EDIT, ITEM_INBOX, ITEM_LINKS, ITEM_BINDINGS, ITEM_SITEMAP_FILTER)
         @Retention(AnnotationRetention.SOURCE)
         annotation class ServerActions
 

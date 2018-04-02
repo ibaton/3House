@@ -47,7 +47,7 @@ class InboxAdapter(private val context: Context, private val server: ServerDB, p
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InboxHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InboxHolder {
         val type = ItemType.values()[viewType]
         val inflater = LayoutInflater.from(parent.context)
         var inboxHolder: InboxHolder? = null

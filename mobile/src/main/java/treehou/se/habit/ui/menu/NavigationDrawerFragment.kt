@@ -293,7 +293,7 @@ class NavigationDrawerFragment : BaseFragment() {
         private val STATE_SELECTED_POSITION = "selected_navigation_drawer_position"
         private val PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned"
 
-        @IntDef(ITEM_SITEMAPS.toLong(), ITEM_CONTROLLERS.toLong(), ITEM_SERVER.toLong(), ITEM_SETTINGS.toLong())
+        @IntDef(ITEM_SITEMAPS, ITEM_CONTROLLERS, ITEM_SERVER, ITEM_SETTINGS)
         @Retention(AnnotationRetention.SOURCE)
         annotation class NavigationItems
 

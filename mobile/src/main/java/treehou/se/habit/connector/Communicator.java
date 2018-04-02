@@ -141,7 +141,7 @@ public class Communicator {
             }
 
             @Override
-            public void onError() {
+            public void onError(Exception e) {
                 imageView.setVisibility(viewGoneOnFail ? View.GONE : View.INVISIBLE);
                 Log.d(TAG, "onBitmapLoaded image load failed " + imageUrl);
             }

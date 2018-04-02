@@ -136,7 +136,7 @@ open class AndroidModule(protected val application: Context) {
     @Provides
     @Singleton
     fun provideThemes(context: Context): Array<ThemeItem> {
-        return arrayOf(ThemeItem(Settings.Themes.THEME_DEFAULT, context.getString(R.string.treehouse)), ThemeItem(Settings.Themes.THEME_HABDROID_LIGHT, context.getString(R.string.habdroid)), ThemeItem(Settings.Themes.THEME_HABDROID_DARK, context.getString(R.string.dark)))
+        return arrayOf(ThemeItem(Settings.THEME_DEFAULT, context.getString(R.string.treehouse)), ThemeItem(Settings.THEME_HABDROID_LIGHT, context.getString(R.string.habdroid)), ThemeItem(Settings.THEME_HABDROID_DARK, context.getString(R.string.dark)))
     }
 
     @Provides

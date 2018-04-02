@@ -35,8 +35,8 @@ public class GeneralTest {
 
     @Before
     public void setup(){
-        Settings.instance(activityRule.getActivity()).setAutoloadSitemapRx(false);
-        Settings.instance(activityRule.getActivity()).getFullscreenPref().set(false);
+        Settings.Companion.instance(activityRule.getActivity()).setAutoloadSitemapRx(false);
+        Settings.Companion.instance(activityRule.getActivity()).getFullscreenPref().set(false);
     }
 
     /**
