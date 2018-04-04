@@ -122,7 +122,8 @@ class SliderActivity : BaseActivity() {
                     .compose<OHItem>(bindToLifecycle<OHItem>())
                     .subscribe({ ohItem ->
                         try {
-                            if (ohItem != null && ohItem.getState() != null) {
+                            val context = context
+                            if (ohItem?.state != null && context != null) {
                                 if (ohItem.getLabel() != null) {
                                     itemName!!.visibility = View.VISIBLE
                                     itemName!!.text = Util.createLabel(context, ohItem.getLabel())

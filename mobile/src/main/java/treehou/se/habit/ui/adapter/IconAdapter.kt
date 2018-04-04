@@ -34,7 +34,7 @@ class IconAdapter(private val context: Context) : RecyclerView.Adapter<IconAdapt
 
     init {
         icons = ArrayList()
-        icons.addAll(Util.getIcons())
+        icons.addAll(Util.icons)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconAdapter.IconHolder {

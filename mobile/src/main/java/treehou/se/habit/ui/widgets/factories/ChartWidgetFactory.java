@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,10 +71,10 @@ public class ChartWidgetFactory implements IWidgetFactory {
 
             try {
                 String url = Connector.ServerHandler.getUrl(context, server);
-                URL imageUrl = new URL(ConnectorUtil.buildChartRequestString(url, widget));
+                Uri imageUrl = Uri.parse(ConnectorUtil.buildChartRequestString(url, widget));
                 Communicator communicator = Communicator.instance(context);
                 communicator.loadImage(server, imageUrl, imgImage, false);
-            } catch (MalformedURLException e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Failed to update chart", e);
             }
 

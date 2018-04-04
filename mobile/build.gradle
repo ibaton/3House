@@ -96,7 +96,9 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
 
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+
     implementation 'com.mikepenz:iconics-core:3.0.2@aar'
     implementation 'com.mikepenz:octicons-typeface:3.2.0.2@aar'
     implementation 'com.github.matthewyork:ColoursLibrary:1.0.0@aar'
@@ -117,8 +119,8 @@ dependencies {
         exclude module: 'iconics-core'
     }
 
+    implementation 'androidx.core:core-ktx:0.3'
     implementation 'com.github.ibaton:android-openhab-connect:2.0.10'
-    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation "com.google.firebase:firebase-messaging:$rootProject.ext.firebaseVersion"
     implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"

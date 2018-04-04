@@ -45,7 +45,9 @@ class IconPickerFragment : BaseFragment() {
         return rootView
     }
 
-    private inner class IconAdapter(val icons: MutableList<IIcon>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private inner class IconAdapter(icons: List<IIcon>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        val icons = mutableListOf(*icons.toTypedArray())
 
         internal inner class IconHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

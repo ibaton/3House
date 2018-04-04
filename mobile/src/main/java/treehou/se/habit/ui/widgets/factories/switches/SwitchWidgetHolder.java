@@ -48,7 +48,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
                 .setParent(parent)
                 .build();
 
-        float percentage = Util.toPercentage(settings.getTextSize());
+        float percentage = Util.INSTANCE.toPercentage(settings.getTextSize());
         realm.close();
 
         Log.d(TAG, "Switch state " + widget.getItem().getState() + " : " + widget.getItem().getName());

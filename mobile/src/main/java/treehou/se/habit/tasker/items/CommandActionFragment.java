@@ -58,7 +58,7 @@ public class CommandActionFragment extends RxFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Util.getApplicationComponent(this).inject(this);
+        Util.INSTANCE.getApplicationComponent(this).inject(this);
         realm = Realm.getDefaultInstance();
     }
 

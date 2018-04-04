@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.widgets.factories;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,10 +60,10 @@ public class ImageWidgetFactory implements IWidgetFactory {
 
             try {
                 Log.d(TAG, "Image url " + widget.getUrl());
-                URL imageUrl = new URL(widget.getUrl());
+                Uri imageUrl = Uri.parse(widget.getUrl());
                 Communicator communicator = Communicator.instance(context);
                 communicator.loadImage(server, imageUrl, imgImage, false);
-            } catch (MalformedURLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

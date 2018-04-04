@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.net.toUri
 import io.realm.Realm
 import org.greenrobot.eventbus.EventBus
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
@@ -200,7 +201,7 @@ class BaseWidgetFactory {
                 imgIcon.visibility = View.INVISIBLE
                 try {
                     Log.d(TAG, "widget.getIconPath " + widget.iconPath + " : " + page.baseUrl)
-                    val imageUrl = URL(page.baseUrl + widget.iconPath)
+                    val imageUrl = (page.baseUrl + widget.iconPath).toUri()
                     val communicator = Communicator.instance(context)
                     communicator.loadImage(server, imageUrl, imgIcon, false)
                     Log.d(TAG, "Loading image url " + imageUrl)

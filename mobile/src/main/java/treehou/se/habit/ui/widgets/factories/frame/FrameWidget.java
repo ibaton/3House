@@ -50,7 +50,7 @@ public class FrameWidget extends WidgetFactory.WidgetHolder {
         Log.d(TAG, "update " + widget.getLabel());
         Realm realm = Realm.getDefaultInstance();
         final WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-        float percentage = Util.toPercentage(settings.getTextSize());
+        float percentage = Util.INSTANCE.toPercentage(settings.getTextSize());
         realm.close();
         holder.lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX, holder.lblName.getTextSize() * percentage);
 

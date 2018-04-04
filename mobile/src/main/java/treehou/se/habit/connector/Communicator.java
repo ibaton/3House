@@ -3,11 +3,13 @@ package treehou.se.habit.connector;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Cache;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
@@ -87,7 +89,7 @@ public class Communicator {
                 }, throwable -> Log.d(TAG, "incDec onError"));
     }
 
-    public Picasso buildPicasso(Context context, final OHServer server){
+    private Picasso buildPicasso(Context context, final OHServer server){
 
         if(requestLoaders.containsKey(server)){
             return requestLoaders.get(server);
@@ -95,7 +97,6 @@ public class Communicator {
 
         OkHttpClient.Builder httpClient = TrustModifier.createAcceptAllClient();
         httpClient.interceptors().add(chain -> {
-
             Request.Builder newRequest = chain.request().newBuilder();
             if (server.requiresAuth()) {
                 newRequest.header(Constants.INSTANCE.getHEADER_AUTHENTICATION(), ConnectorUtil.createAuthValue(server.getUsername(), server.getPassword()));
@@ -105,6 +106,7 @@ public class Communicator {
         });
 
         final Picasso picasso = new Picasso.Builder(context)
+                .loggingEnabled(true)
                 .downloader(new OkHttp3Downloader(httpClient.build()))
                 .memoryCache(new LruCache(context))
                 .build();
@@ -122,7 +124,7 @@ public class Communicator {
      * @param imageView the view to put bitmap in.
      * @param viewGoneOnFail true to set view to gone if fail.
      */
-    public void loadImage(final OHServer server, final URL imageUrl, final ImageView imageView, boolean viewGoneOnFail){
+    public void loadImage(final OHServer server, final Uri imageUrl, final ImageView imageView, boolean viewGoneOnFail){
 
         Log.d(TAG, "onBitmapLoaded image start " + imageUrl.toString());
         final Callback callback = new Callback() {
@@ -134,14 +136,14 @@ public class Communicator {
                 Realm realm = Realm.getDefaultInstance();
                 WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
 
-                int imageBackground = Util.getBackground(context, bitmap, settings.getImageBackground());
+                int imageBackground = Util.INSTANCE.getBackground(context, bitmap, settings.getImageBackground());
                 realm.close();
 
                 imageView.setBackgroundColor(imageBackground);
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onError() {
                 imageView.setVisibility(viewGoneOnFail ? View.GONE : View.INVISIBLE);
                 Log.d(TAG, "onBitmapLoaded image load failed " + imageUrl);
             }

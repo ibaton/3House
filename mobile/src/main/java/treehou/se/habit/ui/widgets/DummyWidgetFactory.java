@@ -33,16 +33,16 @@ public class DummyWidgetFactory {
         Realm realm = Realm.getDefaultInstance();
         WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
         int backgroundType = settings.getImageBackground();
-        float percentage = Util.toPercentage(settings.getTextSize());
-        float imageSizePercentage = Util.toPercentage(settings.getIconSize());
+        float percentage = Util.INSTANCE.toPercentage(settings.getTextSize());
+        float imageSizePercentage = Util.INSTANCE.toPercentage(settings.getIconSize());
         realm.close();
 
         View holderView = inflater.inflate(R.layout.widget_container, null);
-        LinearLayout holder = (LinearLayout) holderView.findViewById(R.id.lou_widget_frame_holder);
+        LinearLayout holder = holderView.findViewById(R.id.lou_widget_frame_holder);
 
         View itemView = inflater.inflate(R.layout.item_widget_base, holder, false);
         View baseDataHolder = itemView.findViewById(R.id.lou_base_data_holder);
-        TextView lblName = (TextView) itemView.findViewById(R.id.lbl_widget_name);
+        TextView lblName = itemView.findViewById(R.id.lbl_widget_name);
 
         String label = widget.getLabel();
         lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX,lblName.getTextSize()*percentage);
@@ -71,7 +71,7 @@ public class DummyWidgetFactory {
     public void setBackgroundColor(ImageView imgIcon, Bitmap bitmap, int type){
         imgIcon.setVisibility(View.VISIBLE);
         imgIcon.setImageBitmap(bitmap);
-        int imageBackground = Util.getBackground(context, bitmap,type);
+        int imageBackground = Util.INSTANCE.getBackground(context, bitmap,type);
         imgIcon.setBackgroundColor(imageBackground);
     }
 }

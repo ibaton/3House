@@ -68,7 +68,7 @@ public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         Realm realm = Realm.getDefaultInstance();
         WidgetSettingsDB settings = WidgetSettingsDB.loadGlobal(realm);
-        float percentage = Util.toPercentage(settings.getTextSize());
+        float percentage = Util.INSTANCE.toPercentage(settings.getTextSize());
         realm.close();
 
         //TODO do this smother
