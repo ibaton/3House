@@ -162,7 +162,7 @@ object Util {
      */
     @JvmOverloads
     fun createLabel(context: Context, name: String, valueColor: String? = null): Spanned {
-        val nameSpaned = name.replace("([)(.*)(])".toRegex(), "<font color='" + String.format("#%06X", 0xFFFFFF and getValueColor(context, valueColor)) + "'>$2</font>")
+        val nameSpaned = name.replace("(\\[)(.*)(\\])".toRegex(), "<font color='" + String.format("#%06X", 0xFFFFFF and getValueColor(context, valueColor)) + "'>$2</font>")
         return Html.fromHtml(nameSpaned)
     }
 

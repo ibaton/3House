@@ -30,11 +30,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    dexOptions {
-        maxProcessCount 4
-        javaMaxHeapSize "4g"
-        preDexLibraries true
-    }
     buildTypes {
         debug {
             useProguard true
@@ -71,11 +66,8 @@ kapt {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-
     implementation 'com.android.support:multidex:1.0.3'
-
     implementation 'com.akaita.java:rxjava2-debug:1.2.2'
-
     implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:cardview-v7:$rootProject.ext.supportLibraryVersion"
@@ -83,9 +75,7 @@ dependencies {
     implementation "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
     implementation "com.android.support:support-v4:$rootProject.ext.supportLibraryVersion"
-
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0'
@@ -95,10 +85,8 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-components-preference:$rootProject.ext.rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
-
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-
     implementation 'com.mikepenz:iconics-core:3.0.2@aar'
     implementation 'com.mikepenz:octicons-typeface:3.2.0.2@aar'
     implementation 'com.github.matthewyork:ColoursLibrary:1.0.0@aar'
@@ -106,10 +94,8 @@ dependencies {
         exclude group: 'com.intellij', module: 'annotations'
     }
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2'
-
     implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
-
     implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.2@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
@@ -118,7 +104,6 @@ dependencies {
         transitive = true
         exclude module: 'iconics-core'
     }
-
     implementation 'androidx.core:core-ktx:0.3'
     implementation 'com.github.ibaton:android-openhab-connect:2.0.10'
     implementation 'org.greenrobot:eventbus:3.0.0'
@@ -130,12 +115,10 @@ dependencies {
         transitive = true
     }
     implementation "com.google.android.gms:play-services-gcm:$rootProject.ext.gcmVersion"
-
     implementation "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$rootProject.ext.daggerVersion"
     compileOnly 'javax.annotation:jsr250-api:1.0'
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
