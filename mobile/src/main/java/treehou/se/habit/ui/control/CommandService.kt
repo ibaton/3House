@@ -3,6 +3,7 @@ package treehou.se.habit.ui.control
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
+import android.support.v4.app.JobIntentService
 import android.util.Log
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
@@ -20,7 +21,7 @@ import javax.inject.Inject
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-class CommandService : IntentService("CommandService") {
+class CommandService : JobIntentService() {
 
     @Inject lateinit var connectionFactory: ConnectionFactory
 
@@ -29,26 +30,24 @@ class CommandService : IntentService("CommandService") {
         Util.getApplicationComponent(this).inject(this)
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onHandleWork(intent: Intent) {
         Log.d(TAG, "onHandleIntent")
         val realm = Realm.getDefaultInstance()
-        if (intent != null) {
-            val itemId = intent.getLongExtra(ARG_ITEM, -1)
-            val action = intent.action
-            if (ACTION_COMMAND == action && itemId > 0) {
-                val command = intent.getStringExtra(ARG_COMMAND)
-                val item = ItemDB.load(realm, itemId)
-                handleActionCommand(command, item!!.toGeneric())
-            } else if (ACTION_INC_DEC == action && itemId > 0) {
-                val min = intent.getIntExtra(ARG_MIN, 0)
-                val max = intent.getIntExtra(ARG_MAX, 0)
-                val value = intent.getIntExtra(ARG_VALUE, 0)
-                val item = ItemDB.load(realm, itemId)
+        val itemId = intent.getLongExtra(ARG_ITEM, -1)
+        val action = intent.action
+        if (ACTION_COMMAND == action && itemId > 0) {
+            val command = intent.getStringExtra(ARG_COMMAND)
+            val item = ItemDB.load(realm, itemId)
+            handleActionCommand(command, item!!.toGeneric())
+        } else if (ACTION_INC_DEC == action && itemId > 0) {
+            val min = intent.getIntExtra(ARG_MIN, 0)
+            val max = intent.getIntExtra(ARG_MAX, 0)
+            val value = intent.getIntExtra(ARG_VALUE, 0)
+            val item = ItemDB.load(realm, itemId)
 
-                val communicator = Communicator.instance(this)
-                val server = item!!.server!!.toGeneric()
-                communicator.incDec(server, item.name, value, min, max)
-            }
+            val communicator = Communicator.instance(this)
+            val server = item!!.server!!.toGeneric()
+            communicator.incDec(server, item.name, value, min, max)
         }
         realm.close()
     }

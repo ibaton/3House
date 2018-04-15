@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
+import android.support.v4.app.JobIntentService
 import android.util.Log
 
 import javax.inject.Inject
@@ -13,7 +14,7 @@ import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Util
 
-class VoiceService : IntentService("VoiceService") {
+class VoiceService : JobIntentService() {
 
     @Inject lateinit var connectionFactory: ConnectionFactory
 
@@ -22,10 +23,10 @@ class VoiceService : IntentService("VoiceService") {
         Util.getApplicationComponent(this).inject(this)
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onHandleWork(intent: Intent) {
         Log.w(TAG, "onHandleIntent.")
 
-        val serverId = intent!!.getLongExtra(EXTRA_SERVER, NULL_SERVER.toLong())
+        val serverId = intent.getLongExtra(EXTRA_SERVER, NULL_SERVER.toLong())
         if (NULL_SERVER.toLong() == serverId) {
             Log.w(TAG, "No server specified.")
             return

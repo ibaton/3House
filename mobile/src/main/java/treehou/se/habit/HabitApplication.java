@@ -8,9 +8,9 @@ import android.support.multidex.MultiDex;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.akaita.java.rxjava2debug.RxJava2Debug;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crash.FirebaseCrash;
+import com.tspoon.traceur.Traceur;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -85,7 +85,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
      * Make it somewhat easier to find the rxjava sources that cased exceptions.
      */
     private void setupSimplifiedRxjavaDebugging() {
-        RxJava2Debug.enableRxJava2AssemblyTracking(new String[]{"treehou.se.habit", "se.treehou.ng"});
+        Traceur.enableLogging();
     }
 
     /**
