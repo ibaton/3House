@@ -26,7 +26,7 @@ buildscript {
 
 ext{
     supportLibraryVersion = '27.1.1'
-    firebaseVersion = '12.0.1'
+    firebaseVersion = '15.0.0'
     gcmVersion = firebaseVersion
     daggerVersion = '2.15'
     rxlifecycleVersion = '2.2.1'
