@@ -29,27 +29,25 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text=""
-        app:layout_constraintEnd_toStartOf="@+id/widgetSwitch"
+        app:layout_constraintEnd_toStartOf="@+id/nextPageButton"
         app:layout_constraintHorizontal_bias="0.42"
         app:layout_constraintStart_toEndOf="@+id/img_widget_icon_holder"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Widget Name" />
 
-    <Switch xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/widgetSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/widgetButtons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:checked="false"
-        android:clickable="false"
-        android:focusable="false"
-        android:text=""
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/nextPageButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/img_widget_icon_holder"
+        app:layout_constraintTop_toBottomOf="@+id/widgetName" />
 
     <ImageButton
         android:id="@+id/nextPageButton"

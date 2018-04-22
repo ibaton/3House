@@ -79,7 +79,7 @@ class BaseWidgetFactory {
             iconHolder = rootView!!.findViewById(R.id.img_widget_icon_holder)
             lblName = rootView!!.findViewById(R.id.widgetName)
             imgIcon = rootView!!.findViewById(R.id.widgetIcon)
-            btnNextPage = rootView!!.findViewById(R.id.btn_next_page)
+            btnNextPage = rootView!!.findViewById(R.id.nextPageButton)
             subView = rootView!!.findViewById(R.id.lou_widget_holder)
 
             labelColor = lblName.textColors

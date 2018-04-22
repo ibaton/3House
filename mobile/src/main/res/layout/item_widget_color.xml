@@ -96,7 +96,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/btn_next_page"
+            android:id="@+id/nextPageButton"
             android:paddingLeft="@dimen/large_spacing"
             android:paddingRight="@dimen/large_spacing"
             android:paddingTop="@dimen/medium_spacing"

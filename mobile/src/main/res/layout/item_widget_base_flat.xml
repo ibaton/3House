@@ -69,7 +69,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/btn_next_page"
+            android:id="@+id/nextPageButton"
             style="?attr/menu_item_style"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

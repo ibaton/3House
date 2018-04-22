@@ -1,23 +1,29 @@
 package treehou.se.habit.ui.widget
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Switch
+import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.connector.Constants
+import treehou.se.habit.core.db.settings.WidgetSettingsDB
 import treehou.se.habit.ui.adapter.WidgetAdapter
 import treehou.se.habit.ui.view.WidgetTextView
+import treehou.se.habit.util.Util
 import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject
 
-class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
+class WidgetMultiSwitchFactory @Inject constructor() : WidgetFactory {
 
     @Inject lateinit var logger: Logger
     @Inject lateinit var context: Context
@@ -26,40 +32,37 @@ class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
     @Inject lateinit var serverHandler: IServerHandler
 
     override fun createViewHolder(parent: ViewGroup): WidgetAdapter.WidgetViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.widget_switch, parent, false)
-        return SwitchWidgetViewHolder(view)
+        val view = LayoutInflater.from(context).inflate(R.layout.widget_multi_switch, parent, false)
+        return MultiSwitchWidgetViewHolder(view)
     }
 
-    inner class SwitchWidgetViewHolder(view: View) : WidgetAdapter.WidgetViewHolder(view) {
+    inner class MultiSwitchWidgetViewHolder(view: View) : WidgetAdapter.WidgetViewHolder(view) {
 
         private val name: WidgetTextView = view.findViewById(R.id.widgetName)
-        private val switchView: Switch = view.findViewById(R.id.widgetSwitch)
+        private val widgetButtons: RadioGroup = view.findViewById(R.id.widgetButtons)
         private val imgIcon: ImageView = view.findViewById(R.id.widgetIcon)
         private lateinit var widget: OHWidget
-
-        init {
-            setupClickListener()
-        }
-
-        private fun setupClickListener() {
-            itemView.setOnClickListener({
-                val newState = !switchView.isChecked
-                logger.d(TAG, "${widget.label} $newState")
-                if (widget.item?.stateDescription?.isReadOnly != true) {
-                    switchView.isChecked = newState
-                    serverHandler.sendCommand(widget.item.name, if (newState) Constants.COMMAND_ON else Constants.COMMAND_OFF)
-                }
-            })
-        }
 
         override fun bind(widget: OHWidget) {
             this.widget = widget
             name.setText(widget.label, widget.labelColor)
             loadIcon(imgIcon, server, page, widget)
 
-            val isOn = widget.item.state == Constants.COMMAND_ON
-            switchView.isEnabled = widget.item.stateDescription?.isReadOnly == false
-            switchView.isChecked = isOn
+            widgetButtons.removeAllViews()
+            val layoutInflater = LayoutInflater.from(context)
+            for (mapping in widget.mapping) {
+                val button= layoutInflater.inflate(R.layout.radio_button, widgetButtons, false) as RadioButton
+                button.text = mapping.label
+                button.id = button.hashCode()
+                if (widget.item.state == mapping.command) {
+                    button.isChecked = true
+                }
+
+                button.setOnClickListener { v ->
+                    serverHandler.sendCommand(widget.item.name, mapping.command)
+                }
+                widgetButtons.addView(button)
+            }
         }
     }
 
