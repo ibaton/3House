@@ -29,7 +29,7 @@
                 style="@style/FrameHeader"
                 android:paddingTop="@dimen/item_spacing_half"
                 android:paddingBottom="@dimen/item_spacing_half"
-                android:id="@+id/lbl_widget_name"
+                android:id="@+id/widgetName"
                 android:layout_gravity="center_horizontal" />
         </FrameLayout>
 

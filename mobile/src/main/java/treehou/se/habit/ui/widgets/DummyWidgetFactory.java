@@ -42,7 +42,7 @@ public class DummyWidgetFactory {
 
         View itemView = inflater.inflate(R.layout.item_widget_base, holder, false);
         View baseDataHolder = itemView.findViewById(R.id.lou_base_data_holder);
-        TextView lblName = itemView.findViewById(R.id.lbl_widget_name);
+        TextView lblName = itemView.findViewById(R.id.widgetName);
 
         String label = widget.getLabel();
         lblName.setTextSize(TypedValue.COMPLEX_UNIT_PX,lblName.getTextSize()*percentage);
@@ -52,7 +52,7 @@ public class DummyWidgetFactory {
         }
 
         View iconHolder = itemView.findViewById(R.id.img_widget_icon_holder);
-        ImageView imgIcon = itemView.findViewById(R.id.img_widget_icon);
+        ImageView imgIcon = itemView.findViewById(R.id.widgetIcon);
 
         ViewGroup.LayoutParams layoutParams = imgIcon.getLayoutParams();
         layoutParams.width = (int) (((float)layoutParams.width) * imageSizePercentage);

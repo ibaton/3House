@@ -55,7 +55,7 @@ public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 
         View itemView = LayoutInflater.from(context).inflate(R.layout.item_widget_switch, null);
 
-        swtSwitch = (Switch) itemView.findViewById(R.id.swt_switch);
+        swtSwitch = (Switch) itemView.findViewById(R.id.widgetSwitch);
         swtSwitch.setTextSize(TypedValue.COMPLEX_UNIT_PX, percentage * swtSwitch.getTextSize());
 
         IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);

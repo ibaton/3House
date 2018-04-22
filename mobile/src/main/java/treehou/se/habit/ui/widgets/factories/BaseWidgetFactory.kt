@@ -22,7 +22,6 @@ import treehou.se.habit.core.db.settings.WidgetSettingsDB
 import treehou.se.habit.ui.widgets.WidgetFactory
 import treehou.se.habit.util.Util
 import java.net.MalformedURLException
-import java.net.URL
 import java.util.*
 
 class BaseWidgetFactory {
@@ -78,8 +77,8 @@ class BaseWidgetFactory {
             this.widget = widget
             baseDataHolder = rootView!!.findViewById(R.id.lou_base_data_holder)
             iconHolder = rootView!!.findViewById(R.id.img_widget_icon_holder)
-            lblName = rootView!!.findViewById(R.id.lbl_widget_name)
-            imgIcon = rootView!!.findViewById(R.id.img_widget_icon)
+            lblName = rootView!!.findViewById(R.id.widgetName)
+            imgIcon = rootView!!.findViewById(R.id.widgetIcon)
             btnNextPage = rootView!!.findViewById(R.id.btn_next_page)
             subView = rootView!!.findViewById(R.id.lou_widget_holder)
 

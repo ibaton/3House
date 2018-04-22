@@ -23,7 +23,7 @@
                 android:layout_height="50dp"
                 android:padding="@dimen/short_space"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/img_widget_icon"/>
+                android:id="@+id/widgetIcon"/>
         </FrameLayout>
         <View
             android:layout_width="@dimen/color_spacer"
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     style="@style/WidgetText"
                     android:text=""
-                    android:id="@+id/lbl_widget_name" />
+                    android:id="@+id/widgetName" />
 
                 <TextView
                     android:layout_width="0dp"

@@ -1,26 +1,31 @@
 package treehou.se.habit.ui.widget
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
-import androidx.core.net.toUri
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
+import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
-import treehou.se.habit.connector.Communicator
+import treehou.se.habit.connector.Constants
 import treehou.se.habit.ui.adapter.WidgetAdapter
-import java.net.MalformedURLException
+import treehou.se.habit.ui.view.WidgetTextView
+import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject
 
 class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
 
+    @Inject lateinit var logger: Logger
     @Inject lateinit var context: Context
     @Inject lateinit var server: OHServer
     @Inject lateinit var page: OHLinkedPage
+    @Inject lateinit var serverHandler: IServerHandler
 
     override fun createViewHolder(parent: ViewGroup): WidgetAdapter.WidgetViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.widget_switch, parent, false)
@@ -29,36 +34,38 @@ class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
 
     inner class SwitchWidgetViewHolder(view: View) : WidgetAdapter.WidgetViewHolder(view) {
 
-        val name: TextView = view.findViewById(R.id.lbl_widget_name)
-        val iconHolder: View = view.findViewById(R.id.img_widget_icon_holder)
-        val imgIcon: ImageView = view.findViewById(R.id.img_widget_icon)
+        private val name: WidgetTextView = view.findViewById(R.id.widgetName)
+        private val switchView: Switch = view.findViewById(R.id.widgetSwitch)
+        private val imgIcon: ImageView = view.findViewById(R.id.widgetIcon)
+        private lateinit var widget: OHWidget
+
+        init {
+            setupClickListener()
+        }
+
+        private fun setupClickListener(){
+            itemView.setOnClickListener({
+                val newState = !switchView.isChecked
+                logger.d(TAG, "${widget.label} $newState")
+                if (widget.item?.stateDescription?.isReadOnly == true) {
+                    switchView.isChecked = newState
+                    serverHandler.sendCommand(widget.item.name, if (newState) Constants.COMMAND_ON else Constants.COMMAND_OFF)
+                }
+            })
+        }
 
         override fun bind(widget: OHWidget) {
-            name.text = widget.label
-            loadIcon(widget)
+            this.widget = widget
+            name.setText(widget.label, widget.labelColor)
+            loadIcon(imgIcon, server, page, widget)
+
+            val isOn = widget.item.state == Constants.COMMAND_ON
+            switchView.isEnabled = widget.item.stateDescription?.isReadOnly == false
+            switchView.isChecked = isOn
         }
+    }
 
-        /**
-         * Load icon and populate image view with it.
-         * @param widget the widget to load icon for.
-         */
-        private fun loadIcon(widget: OHWidget) {
-
-            // TODO text is default value. Remove when fixed on server
-            val ignoreDefault = "text".equals(widget.icon, ignoreCase = true)
-            if (widget.iconPath != null && !ignoreDefault) {
-                imgIcon.visibility = View.INVISIBLE
-                try {
-                    val imageUrl = (page.baseUrl + widget.iconPath).toUri()
-                    val communicator = Communicator.instance(context)
-                    communicator.loadImage(server, imageUrl, imgIcon, false)
-                } catch (e: MalformedURLException) {
-                    e.printStackTrace()
-                }
-
-            } else {
-                imgIcon.visibility = View.INVISIBLE
-            }
-        }
+    companion object {
+        const val TAG =  "WidgetSwitchFactory"
     }
 }

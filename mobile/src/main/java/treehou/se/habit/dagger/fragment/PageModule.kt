@@ -1,18 +1,23 @@
 package treehou.se.habit.dagger.fragment
 
 
+import android.content.Context
 import android.os.Bundle
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
+import se.treehou.ng.ohcommunicator.services.Connector
+import se.treehou.ng.ohcommunicator.services.IServerHandler
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.dagger.ViewModule
 import treehou.se.habit.ui.sitemaps.page.PageContract
 import treehou.se.habit.ui.sitemaps.page.PageFragment
 import treehou.se.habit.ui.sitemaps.page.PagePresenter
+import treehou.se.habit.util.ConnectionFactory
+import javax.inject.Inject
 import javax.inject.Named
 
 @Module
@@ -41,6 +46,11 @@ class PageModule(fragment: PageFragment, private val args: Bundle) : ViewModule<
         val serverId = args.getLong(PageContract.ARG_SERVER)
 
         return ServerDB.load(realm, serverId)?.toGeneric() ?: OHServer()
+    }
+
+    @Provides
+    fun provideServerHandler(connectionFactory: ConnectionFactory, context: Context, server: OHServer): IServerHandler {
+        return connectionFactory.createServerHandler(server, context)
     }
 
     @Provides

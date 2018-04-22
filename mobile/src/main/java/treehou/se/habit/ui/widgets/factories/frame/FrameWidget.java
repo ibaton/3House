@@ -41,7 +41,7 @@ public class FrameWidget extends WidgetFactory.WidgetHolder {
     public static FrameWidget create(Context context, WidgetFactory factory, OHServer server, OHLinkedPage page, OHWidget widget){
 
         View rootView = LayoutInflater.from(context).inflate(R.layout.widget_frame, null);
-        TextView lblTitle = (TextView) rootView.findViewById(R.id.lbl_widget_name);
+        TextView lblTitle = (TextView) rootView.findViewById(R.id.widgetName);
         View lblTitleHolder = rootView.findViewById(R.id.lbl_widget_name_holder);
         LinearLayout louWidgetHolder = (LinearLayout) rootView.findViewById(R.id.lou_widget_frame_holder);
 

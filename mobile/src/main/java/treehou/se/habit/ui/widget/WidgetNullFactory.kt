@@ -14,7 +14,7 @@ class WidgetNullFactory @Inject constructor() : WidgetFactory {
     @Inject lateinit var context: Context
 
     override fun createViewHolder(parent: ViewGroup): WidgetAdapter.WidgetViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.widget_switch, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.widget_null, parent, false)
         return SwitchWidgetViewHolder(view)
     }
 
