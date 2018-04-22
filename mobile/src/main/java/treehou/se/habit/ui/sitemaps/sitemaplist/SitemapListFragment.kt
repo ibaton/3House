@@ -4,19 +4,11 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-
-import javax.inject.Inject
-import javax.net.ssl.SSLPeerUnverifiedException
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
+import kotlinx.android.synthetic.main.fragment_sitemaplist_list.*
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.R
@@ -27,6 +19,8 @@ import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.SitemapListAdapter
 import treehou.se.habit.ui.adapter.SitemapListAdapter.ServerState
 import treehou.se.habit.ui.sitemaps.sitemap.SitemapFragment
+import javax.inject.Inject
+import javax.net.ssl.SSLPeerUnverifiedException
 
 /**
  * Mandatory empty constructor for the fragment manager to instantiate the
@@ -36,18 +30,14 @@ class SitemapListFragment : BaseDaggerFragment<SitemapListContract.Presenter>(),
 
     @Inject lateinit var sitemapListPresenter: SitemapListContract.Presenter
 
-    @BindView(R.id.list) lateinit var listView: RecyclerView
-    @BindView(R.id.empty) lateinit var emptyView: TextView
-
     private var sitemapAdapter: SitemapListAdapter? = null
-    private var unbinder: Unbinder? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_sitemaplist_list, container, false)
-        unbinder = ButterKnife.bind(this, view)
+        return inflater.inflate(R.layout.fragment_sitemaplist_list, container, false)
+    }
 
-        setupActionBar()
+    private fun setupSitemapListAdapter() {
         val gridLayoutManager = GridLayoutManager(activity, 1)
         listView.layoutManager = gridLayoutManager
         listView.itemAnimator = DefaultItemAnimator()
@@ -69,8 +59,13 @@ class SitemapListFragment : BaseDaggerFragment<SitemapListContract.Presenter>(),
             }
         })
         listView.adapter = sitemapAdapter
+    }
 
-        return view
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupActionBar()
+        setupSitemapListAdapter()
     }
 
     /**
@@ -105,11 +100,6 @@ class SitemapListFragment : BaseDaggerFragment<SitemapListContract.Presenter>(),
     override fun clearList() {
         emptyView.visibility = View.VISIBLE
         sitemapAdapter!!.clear()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun showServerError(server: OHServer, error: Throwable) {

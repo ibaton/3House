@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -56,7 +57,7 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
 
         RxAdapterView.itemSelections<SpinnerAdapter>(sprControllers)
                 .map { index -> index != AdapterView.INVALID_POSITION }
-                .subscribe(RxView.enabled(addButton))
+                .subscribe({RxView.enabled(addButton)}, { Log.e(TAG, "sprControllers update failed", it) })
 
         // Find the widget id from the intent.
         val intent = intent
@@ -110,6 +111,7 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
     }
 
     companion object {
+        val TAG = "ControllerWidgetConfigureActivity"
         private val PREFS_NAME = "treehou.se.habit.ui.homescreen.ControllerWidget"
         private val PREF_PREFIX_KEY = "appwidget_"
         private val PREF_POSTFIX_SHOW_TITLE = "_show_title"

@@ -98,7 +98,7 @@ public class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
                     context.startActivity(intent);
                 } else {
                     Toast.makeText(context, context.getString(R.string.item_missing), Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Widget doesn't contain item");
+                    Log.d(TAG, "WidgetFactory doesn't contain item");
                 }
             }
         });

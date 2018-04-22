@@ -66,8 +66,8 @@ constructor(private val view: CreateMyOpenhabContract.View) : RxPresenter(), Cre
                     Log.d(TAG, "Login succeded")
                     saveServer(server)
                     view.closeWindow()
-                }, { _ ->
-                    Log.d(TAG, "Login Failed")
+                }, {
+                    Log.e(TAG, "Login Failed", it)
                     val error = context?.getString(R.string.error_username_password)
                     if(error != null) {
                         view.showError(error)

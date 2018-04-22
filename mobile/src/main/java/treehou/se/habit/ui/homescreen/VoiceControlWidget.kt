@@ -14,8 +14,8 @@ import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 
 /**
- * Implementation of App Widget functionality.
- * App Widget Configuration implemented in [VoiceControlWidgetConfigureActivity]
+ * Implementation of App WidgetFactory functionality.
+ * App WidgetFactory Configuration implemented in [VoiceControlWidgetConfigureActivity]
  */
 class VoiceControlWidget : AppWidgetProvider() {
 

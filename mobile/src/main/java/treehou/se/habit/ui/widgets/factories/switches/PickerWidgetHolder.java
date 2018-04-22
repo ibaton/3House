@@ -24,7 +24,7 @@ import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 
 /**
- * Widget with single button
+ * WidgetFactory with single button
  */
 public class PickerWidgetHolder implements WidgetFactory.IWidgetHolder {
 

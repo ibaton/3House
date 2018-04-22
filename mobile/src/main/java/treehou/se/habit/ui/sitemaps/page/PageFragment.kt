@@ -3,15 +3,16 @@ package treehou.se.habit.ui.sitemaps.page
 import android.os.Bundle
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
+import kotlinx.android.synthetic.main.fragment_widget_list.*
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
@@ -19,16 +20,13 @@ import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
 import treehou.se.habit.dagger.fragment.PageComponent
 import treehou.se.habit.dagger.fragment.PageModule
 import treehou.se.habit.mvp.BaseDaggerFragment
-import treehou.se.habit.ui.widgets.WidgetFactory
+import treehou.se.habit.ui.adapter.WidgetAdapter
 import javax.inject.Inject
 
 class PageFragment : BaseDaggerFragment<PageContract.Presenter>(), PageContract.View {
 
-    @BindView(R.id.lou_widgets) lateinit var louWidgets: LinearLayout
-
     @Inject lateinit var pageFragmentPresenter: PageContract.Presenter
-
-    private var unbinder: Unbinder? = null
+    @Inject lateinit var adapter: WidgetAdapter
 
     override fun showLostServerConnectionMessage() {
         Toast.makeText(activity, R.string.lost_server_connection, Toast.LENGTH_LONG).show()
@@ -52,16 +50,8 @@ class PageFragment : BaseDaggerFragment<PageContract.Presenter>(), PageContract.
         setupActionbar(page)
     }
 
-    private fun removeAllWidgets() {
-        louWidgets.removeAllViews()
-    }
-
-    override fun setWidgets(widgets: List<WidgetFactory.IWidgetHolder>) {
-        removeAllWidgets()
-
-        for (widget in widgets) {
-            louWidgets.addView(widget.view)
-        }
+    override fun setWidgets(widgets: List<OHWidget>) {
+        adapter.setWidgets(widgets)
     }
 
     /**
@@ -84,15 +74,15 @@ class PageFragment : BaseDaggerFragment<PageContract.Presenter>(), PageContract.
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_widget, container, false)
-        unbinder = ButterKnife.bind(this, view)
-
-        return view
+        return inflater.inflate(R.layout.fragment_widget, container, false)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        widgetList.layoutManager = LinearLayoutManager(context)
+        widgetList.itemAnimator = DefaultItemAnimator()
+        widgetList.adapter = adapter
     }
 
     companion object {

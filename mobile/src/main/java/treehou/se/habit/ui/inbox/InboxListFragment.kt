@@ -237,9 +237,9 @@ class InboxListFragment : BaseFragment() {
                 .subscribe({ ohInboxItems ->
                     showErrorView(false)
                     setItems(ohInboxItems, showIgnored)
-                }) { throwable ->
+                }) {
+                    logger.w(TAG, "Failed to load inbox items", it)
                     showErrorView(true)
-                    logger.w(TAG, "Failed to load inbox items", throwable)
                 }
     }
 

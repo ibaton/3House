@@ -1,6 +1,8 @@
 package treehou.se.habit.ui.main
 
 import android.os.Bundle
+import android.support.v4.text.TextUtilsCompat
+import android.text.TextUtils
 
 import javax.inject.Inject
 
@@ -23,7 +25,6 @@ constructor(private val mainView: MainContract.View, private val realm: Realm, p
     override fun unsubscribe() {}
 
     override fun unload() {
-        realm.close()
     }
 
     /**
@@ -42,7 +43,7 @@ constructor(private val mainView: MainContract.View, private val realm: Realm, p
                 // Load default sitemap if any
                 val defaultSitemap = settings.defaultSitemap
                 val autoloadLast = settings.autoloadSitemapRx.blockingFirst()
-                if (savedInstanceState == null && defaultSitemap != null && autoloadLast) {
+                if (savedInstanceState == null && !TextUtils.isEmpty(defaultSitemap) && autoloadLast) {
                     mainView.openSitemaps(defaultSitemap)
                 } else {
                     mainView.openSitemaps()

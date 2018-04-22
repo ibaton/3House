@@ -14,6 +14,7 @@ import treehou.se.habit.dagger.ServerLoaderFactory
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Constants
 import treehou.se.habit.util.RxUtil
+import treehou.se.habit.util.logging.Logger
 import java.net.URLEncoder
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ constructor() {
     @Inject lateinit var serverLoaderFactory: ServerLoaderFactory
     @Inject lateinit var realm: Realm
     @Inject lateinit var connectionFactory: ConnectionFactory
+    @Inject lateinit var logger: Logger
 
     fun registerGcm(context: Context) {
         Observable.combineLatest(
@@ -34,7 +36,7 @@ constructor() {
                 .flatMap({ (deviceId, ohServer) ->
                     registerGcmForClient(context, deviceId, ohServer);
                 })
-                .subscribe()
+                .subscribe({},{ logger.e(TAG, "Failed to register GCM", it) })
     }
 
     /**

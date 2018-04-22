@@ -136,7 +136,7 @@ class WidgetSettingsFragment : BaseDaggerFragment<WidgetSettingsContract.Present
         WidgetSettingsDB.loadGlobalRx(realm)
                 .map { widgetSettingsDBs -> widgetSettingsDBs.first()!!.imageBackground >= 0 }
                 .compose(bindToLifecycle())
-                .subscribe { useBackground ->
+                .subscribe ({ useBackground ->
                     cbxEnableImageBackground.setOnCheckedChangeListener(null)
                     cbxEnableImageBackground.isChecked = useBackground!!
                     cbxEnableImageBackground.setOnCheckedChangeListener { _, checked ->
@@ -146,7 +146,7 @@ class WidgetSettingsFragment : BaseDaggerFragment<WidgetSettingsContract.Present
                     }
 
                     louIconBackground.visibility = if (useBackground) View.VISIBLE else View.GONE
-                }
+                }, {logger.e(TAG, "Widget settings load failed", it)})
     }
 
     override fun onDestroyView() {

@@ -32,7 +32,7 @@
     <color name="button_background">#ffffffff</color>
     <color name="button_background_active">#ffaaaaaa</color>
 
-    <color name="image_background">#00c6c6c6</color>
+    <color name="image_background">#00000000</color>
 
     <color name="settings_drawer">@color/drawer</color>
     <color name="drawer">#ffffffff</color>

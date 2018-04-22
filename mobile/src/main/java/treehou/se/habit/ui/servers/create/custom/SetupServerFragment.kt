@@ -50,11 +50,13 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
 
         RxTextView.textChanges(remoteUrlText)
                 .compose(bindToLifecycle())
-                .subscribe { text -> errorRemoteUrlText.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE }
+                .subscribe ({ text -> errorRemoteUrlText.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE },
+                        {logger.e(TAG, "Update text remoteUrlText failed", it)})
 
         RxTextView.textChanges(localUrlText)
                 .compose(bindToLifecycle())
-                .subscribe { text -> errorLocalUrlText.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE }
+                .subscribe ({ text -> errorLocalUrlText.visibility = if (text.length <= 0 || Patterns.WEB_URL.matcher(text).matches()) View.GONE else View.VISIBLE },
+                    {logger.e(TAG, "Update text localUrlText failed", it)})
     }
 
     override fun loadServer(server: ServerDB) {
@@ -96,6 +98,8 @@ class SetupServerFragment : BaseDaggerFragment<SetupServerContract.Presenter>(),
     }
 
     companion object {
+
+        val TAG = "SetupServerFragment"
 
         fun newInstance(): SetupServerFragment {
             val fragment = SetupServerFragment()

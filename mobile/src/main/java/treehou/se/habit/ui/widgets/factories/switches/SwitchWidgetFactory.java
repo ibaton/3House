@@ -15,7 +15,7 @@ import treehou.se.habit.util.ConnectionFactory;
 
 public class SwitchWidgetFactory implements IWidgetFactory {
 
-    private static final String TAG = "SwitchWidgetFactory";
+    private static final String TAG = "WidgetSwitchFactory";
 
     private ConnectionFactory connectionFactory;
 

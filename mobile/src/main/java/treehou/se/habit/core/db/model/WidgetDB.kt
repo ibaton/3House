@@ -45,7 +45,7 @@ class WidgetDB /*extends RealmObject*/ {
 
     companion object {
 
-        val TAG = "Widget"
+        val TAG = "WidgetFactory"
 
         // TODO convert to enum
         val TYPE_DUMMY = "Dummy"

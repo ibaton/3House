@@ -25,6 +25,7 @@ import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.ui.adapter.BindingAdapter
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Util
+import treehou.se.habit.util.logging.Logger
 import java.util.*
 import javax.inject.Inject
 
@@ -33,6 +34,7 @@ class BindingsFragment : RxFragment() {
     @BindView(R.id.lst_bindings) lateinit var lstBinding: RecyclerView
 
     @Inject lateinit var connectionFactory: ConnectionFactory
+    @Inject lateinit var logger: Logger
 
     private var bindingAdapter: BindingAdapter? = null
     private var server: ServerDB? = null
@@ -116,10 +118,10 @@ class BindingsFragment : RxFragment() {
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { bindings ->
+                .subscribe ({ bindings ->
                     Log.d(TAG, "onUpdate " + bindings)
                     bindingAdapter!!.setBindings(bindings)
-                }
+                }, {logger.e(TAG, "request bindings failed", it)})
     }
 
     override fun onDestroy() {

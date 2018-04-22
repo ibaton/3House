@@ -63,7 +63,7 @@ constructor(@param:Named("arguments") var arguments: Bundle) : RxPresenter(), Si
                 .compose<ServerSitemapsResponse>(serverLoaderFactory.filterDisplaySitemaps())
                 .subscribe(
                         { this.populateSitemap(it) },
-                        { throwable -> Log.e(TAG, "Request sitemap failed", throwable) }
+                        { Log.e(TAG, "Request sitemap failed", it) }
                 )
     }
 

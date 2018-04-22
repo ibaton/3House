@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/img_widget_icon_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/image_background">
+
+        <ImageView
+            android:id="@+id/img_widget_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:padding="@dimen/short_space" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/lbl_widget_name"
+        style="@style/WidgetText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintEnd_toStartOf="@+id/swt_switch"
+        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintStart_toEndOf="@+id/img_widget_icon_holder"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Widget Name" />
+
+    <Switch xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swt_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_next_page"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_next_page"
+        style="?attr/menu_item_style"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:clickable="false"
+        android:paddingBottom="@dimen/medium_spacing"
+        android:paddingLeft="@dimen/large_spacing"
+        android:paddingRight="@dimen/large_spacing"
+        android:paddingTop="@dimen/medium_spacing"
+        android:selectable="false"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/next_page_icon" />
+</android.support.constraint.ConstraintLayout>

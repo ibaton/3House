@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.control
 
 
+import android.util.Log
 import java.util.HashSet
 
 import io.reactivex.Observable
@@ -31,7 +32,7 @@ class ControllerHandler(realm: Realm, private val controllerUtil: ControllerUtil
 
     private fun handleControllerUpdates(controllerDBS: RealmResults<ControllerDB>) {
         val updateNotificationIds = HashSet<Long>()
-        Observable.fromIterable(controllerDBS).map<Long>({ it.id }).subscribe({ updateNotificationIds.add(it) })
+        Observable.fromIterable(controllerDBS).map<Long>({ it.id }).subscribe({ updateNotificationIds.add(it) }, {Log.e(TAG, "Failed to load inbox items", it)})
 
         val notificationsDeleted = HashSet(notificationIds)
         notificationsDeleted.removeAll(updateNotificationIds)
@@ -56,5 +57,9 @@ class ControllerHandler(realm: Realm, private val controllerUtil: ControllerUtil
                 controllerUtil.hideNotification(controllerDB.id.toInt())
             }
         }
+    }
+
+    companion object {
+        val TAG = "ControllerHandler"
     }
 }

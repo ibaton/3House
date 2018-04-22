@@ -104,7 +104,7 @@ class LinksListFragment : BaseFragment() {
                 .subscribe({
                     adapter!!.addItem(link)
                     Toast.makeText(context, R.string.failed_delete_link, Toast.LENGTH_SHORT).show()
-                }) { throwable -> logger.e(TAG, "removeLink Failed", throwable) }
+                }) { logger.e(TAG, "removeLink Failed", it) }
     }
 
     /**
@@ -148,7 +148,7 @@ class LinksListFragment : BaseFragment() {
                     clearList()
                     emptyView.visibility = View.GONE
                     adapter!!.addAll(ohLinks)
-                }) { throwable -> logger.w(TAG, "Failed to load link items", throwable) }
+                }) { logger.w(TAG, "Failed to load link items", it) }
     }
 
     companion object {

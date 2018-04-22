@@ -198,7 +198,7 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
 
                 // TODO check if widget needs updating
                 if (!canBeUpdated(currentWidget, newWidget)) {
-                    log.d(TAG, "Widget " + currentWidget.type + " " + currentWidget.label + " needs update")
+                    log.d(TAG, "WidgetFactory " + currentWidget.type + " " + currentWidget.label + " needs update")
                     return false
                 }
             }
@@ -213,7 +213,8 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
      */
     private fun invalidateWidgets(pageWidgets: List<OHWidget>) {
         log.d(TAG, "Invalidate widgets")
-        widgetHolders.clear()
+        view.setWidgets(pageWidgets)
+        /*widgetHolders.clear()
 
         for (widget in pageWidgets) {
             try {
@@ -227,7 +228,7 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
         view.setWidgets(widgetHolders)
 
         widgets.clear()
-        widgets.addAll(pageWidgets)
+        widgets.addAll(pageWidgets)*/
     }
 
     /**

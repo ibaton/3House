@@ -139,7 +139,7 @@ class SliderActivity : BaseActivity() {
                         } catch (e: Exception) {
                             logger.e(TAG, "Failed to update progress", e)
                         }
-                    }) { e -> logger.e(TAG, "Error getting slider data", e) }
+                    }) { logger.e(TAG, "Error getting slider data", it) }
         }
 
         companion object {

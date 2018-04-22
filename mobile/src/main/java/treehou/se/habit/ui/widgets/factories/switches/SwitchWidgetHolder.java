@@ -22,7 +22,7 @@ import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Util;
 
 /**
- * Widget with switch
+ * WidgetFactory with switch
  */
 public class SwitchWidgetHolder implements WidgetFactory.IWidgetHolder {
 

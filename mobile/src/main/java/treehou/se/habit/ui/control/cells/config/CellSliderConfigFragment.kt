@@ -113,10 +113,10 @@ class CellSliderConfigFragment : BaseFragment() {
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { items ->
+                    .subscribe ({ items ->
                         this.items.addAll(items)
                         mItemAdapter!!.notifyDataSetChanged()
-                    }
+                    }, {logger.e(TAG, "Failed to load items", it)})
         }
 
         updateIconImage()

@@ -162,7 +162,7 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
                             }
                         }
                     }
-                }) { throwable -> logger.e(TAG, "Request sitemap failed", throwable) }
+                }) { logger.e(TAG, "Request sitemap failed", it) }
     }
 
     companion object {

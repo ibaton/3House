@@ -18,7 +18,7 @@ import treehou.se.habit.ui.widgets.factories.BaseWidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 
 /**
- * Widget rollershutters
+ * WidgetFactory rollershutters
  */
 public class RollerShutterWidgetHolder implements WidgetFactory.IWidgetHolder {
 

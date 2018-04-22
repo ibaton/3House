@@ -21,7 +21,7 @@ import treehou.se.habit.ui.widgets.factories.BaseWidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
 
 /**
- * Widget with single button
+ * WidgetFactory with single button
  */
 public class SingleButtonWidgetHolder implements WidgetFactory.IWidgetHolder {
 

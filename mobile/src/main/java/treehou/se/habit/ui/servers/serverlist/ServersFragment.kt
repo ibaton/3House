@@ -142,11 +142,11 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter({ it.isLoaded })
                 .firstElement()
-                .subscribe({ servers1 ->
-                    if (servers1.size == 0) {
+                .subscribe({
+                    if (it.size == 0) {
                         showScanServerFlow()
                     }
-                })
+                }, {logger.e(TAG, "launchScanDialogIfNoServers", it)})
     }
 
     /**
@@ -157,13 +157,13 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                 .filter({ it.isLoaded && it.isValid })
                 .compose(this.bindToLifecycle<RealmResults<ServerDB>>())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ servers1 ->
-                    Log.d(TAG, "Loaded " + servers1.size + " servers")
+                .subscribe({
+                    Log.d(TAG, "Loaded " + it.size + " servers")
 
-                    this@ServersFragment.servers = servers1
-                    updateEmptyView(servers1.size)
-                    serversAdapter.setItems(servers1.createSnapshot())
-                })
+                    this@ServersFragment.servers = it
+                    updateEmptyView(it.size)
+                    serversAdapter.setItems(it.createSnapshot())
+                }, {logger.e(TAG, "Failed to load servers", it)})
     }
 
     /**

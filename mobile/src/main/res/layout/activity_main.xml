@@ -10,7 +10,7 @@
     tools:context=".ui.main.MainActivity">
 
     <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+        android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -35,7 +35,7 @@
         </LinearLayout>
 
         <fragment
-            android:id="@+id/navigation_drawer"
+            android:id="@+id/navigationDrawer"
             android:name="treehou.se.habit.ui.menu.NavigationDrawerFragment"
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent"

@@ -121,7 +121,8 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         scanner.registerRx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { server -> serversAdapter.addItem(server) }
+                .subscribe ({ server -> serversAdapter.addItem(server) },
+                        {logger.e(TAG, "Scanner registerRx failed", it)})
     }
 
     override fun onDestroyView() {

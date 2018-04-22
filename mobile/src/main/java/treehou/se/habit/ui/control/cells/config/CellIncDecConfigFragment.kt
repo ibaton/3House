@@ -34,6 +34,7 @@ import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Constants
 import treehou.se.habit.util.Util
 import treehou.se.habit.ui.util.IconPickerActivity
+import treehou.se.habit.util.logging.Logger
 
 class CellIncDecConfigFragment : RxFragment() {
 
@@ -44,6 +45,7 @@ class CellIncDecConfigFragment : RxFragment() {
     @BindView(R.id.btn_set_icon) lateinit var btnSetIcon: ImageButton
 
     @Inject lateinit var connectionFactory: ConnectionFactory
+    @Inject lateinit var logger: Logger
     lateinit var realm: Realm
 
     private var itemAdapter: ArrayAdapter<OHItem>? = null
@@ -127,10 +129,10 @@ class CellIncDecConfigFragment : RxFragment() {
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { newItems ->
+                    .subscribe ({ newItems ->
                         this.items.addAll(newItems)
                         itemAdapter!!.notifyDataSetChanged()
-                    }
+                    }, { logger.e(TAG, "Failed to load items", it) })
         }
 
         updateIconImage()

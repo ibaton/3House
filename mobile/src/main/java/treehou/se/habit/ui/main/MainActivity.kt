@@ -6,6 +6,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
 import android.view.Menu
+import kotlinx.android.synthetic.main.activity_main.*
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.R
 import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
@@ -35,14 +36,13 @@ class MainActivity : BaseDaggerActivity<MainContract.Presenter>(useSettingsTheme
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
-        setSupportActionBar(findViewById(R.id.toolbar) as Toolbar)
+        setSupportActionBar(toolbar)
 
         // Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-        val navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigation_drawer) as NavigationDrawerFragment
+        val navigationDrawerFragment = supportFragmentManager.findFragmentById(R.id.navigationDrawer) as NavigationDrawerFragment
 
         // Set up the drawer.
-        navigationDrawerFragment.setUp(R.id.navigation_drawer, findViewById(R.id.drawer_layout) as DrawerLayout)
+        navigationDrawerFragment.setUp(R.id.navigationDrawer, drawerLayout)
     }
 
     override fun getPresenter(): MainContract.Presenter? {
@@ -116,7 +116,7 @@ class MainActivity : BaseDaggerActivity<MainContract.Presenter>(useSettingsTheme
     }
 
     override fun onBackPressed() {
-        val mDrawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
+        val mDrawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START)
             return

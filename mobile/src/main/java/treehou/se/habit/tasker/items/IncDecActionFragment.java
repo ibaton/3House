@@ -21,6 +21,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -33,6 +34,7 @@ import treehou.se.habit.tasker.boundle.IncDecBoundleManager;
 import treehou.se.habit.util.ConnectionFactory;
 import treehou.se.habit.util.Constants;
 import treehou.se.habit.util.Util;
+import treehou.se.habit.util.logging.Logger;
 
 public class IncDecActionFragment extends RxFragment {
 
@@ -47,6 +49,7 @@ public class IncDecActionFragment extends RxFragment {
     private List<OHItem> filteredItems = new ArrayList<>();
 
     @Inject ConnectionFactory connectionFactory;
+    @Inject Logger logger;
 
     private Realm realm;
 
@@ -74,17 +77,17 @@ public class IncDecActionFragment extends RxFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_tasker_inc_dec_action, container, false);
 
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
-        txtValue = (TextView) rootView.findViewById(R.id.txtValue);
-        txtMin = (TextView) rootView.findViewById(R.id.txtMin);
-        txtMax = (TextView) rootView.findViewById(R.id.txtMax);
+        sprItems = rootView.findViewById(R.id.spr_items);
+        txtValue = rootView.findViewById(R.id.txtValue);
+        txtMin = rootView.findViewById(R.id.txtMin);
+        txtMax = rootView.findViewById(R.id.txtMax);
 
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, filteredItems);
         sprItems.post(() -> sprItems.setAdapter(itemAdapter));
         RealmResults<ServerDB> servers = realm.where(ServerDB.class).findAll();
         filteredItems.clear();
 
-        for(final ServerDB server : servers) {
+        for (final ServerDB server : servers) {
             IServerHandler serverHandler = connectionFactory.createServerHandler(server.toGeneric(), getActivity());
             serverHandler.requestItemsRx()
                     .map(this::filterItems)
@@ -94,10 +97,10 @@ public class IncDecActionFragment extends RxFragment {
                     .subscribe(items -> {
                         filteredItems.addAll(items);
                         itemAdapter.notifyDataSetChanged();
-                    });
+                    }, throwable -> logger.e(TAG, "requestItemsRx failed", throwable));
         }
 
-        Button btnSave = (Button) rootView.findViewById(R.id.btn_save);
+        Button btnSave = rootView.findViewById(R.id.btn_save);
         btnSave.setOnClickListener(v -> {
             save();
             getActivity().finish();
@@ -112,11 +115,11 @@ public class IncDecActionFragment extends RxFragment {
         realm.close();
     }
 
-    private List<OHItem> filterItems(List<OHItem> items){
+    private List<OHItem> filterItems(List<OHItem> items) {
 
         List<OHItem> tempItems = new ArrayList<>();
-        for(OHItem item : items){
-            if(Constants.INSTANCE.getSUPPORT_INC_DEC().contains(item.getType())){
+        for (OHItem item : items) {
+            if (Constants.INSTANCE.getSUPPORT_INC_DEC().contains(item.getType())) {
                 tempItems.add(item);
             }
         }
@@ -148,7 +151,7 @@ public class IncDecActionFragment extends RxFragment {
 
             getActivity().setResult(Activity.RESULT_OK, resultIntent);
 
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             Log.e(TAG, "saveServer", e);
         }
     }
