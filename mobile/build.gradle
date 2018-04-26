@@ -63,6 +63,7 @@ kapt {
         //Support longer error messages
         option("-Xmaxerrs", 500)
     }
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -117,19 +118,25 @@ dependencies {
         transitive = true
     }
     implementation "com.google.android.gms:play-services-gcm:$rootProject.ext.gcmVersion"
+
+//    Dagger
     implementation "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$rootProject.ext.daggerVersion"
+//    Dagger Test
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
+
+
     compileOnly 'javax.annotation:jsr250-api:1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation "com.android.support.test:runner:$rootProject.ext.testRunnerVersion"
+    androidTestImplementation "com.android.support.test:rules:$rootProject.ext.testRunnerVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
     androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.2.2') {
         exclude module: 'support-annotations'
         exclude module: 'design'
     }
-    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

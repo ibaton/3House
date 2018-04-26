@@ -8,8 +8,8 @@ import androidx.core.net.toUri
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
-import se.treehou.ng.ohcommunicator.util.OpenhabUtil
 import treehou.se.habit.connector.Communicator
+import treehou.se.habit.ui.widget.WidgetFrameFactory
 import treehou.se.habit.ui.widget.WidgetMultiSwitchFactory
 import treehou.se.habit.ui.widget.WidgetNullFactory
 import treehou.se.habit.ui.widget.WidgetSwitchFactory
@@ -21,6 +21,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var nullWidgetFactory: WidgetNullFactory
     @Inject lateinit var switchWidgetFactory: WidgetSwitchFactory
     @Inject lateinit var multiSwitchWidgetFactory: WidgetMultiSwitchFactory
+    @Inject lateinit var frameWidgetFactory: WidgetFrameFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(widget: OHWidget)
@@ -56,6 +57,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         return when (viewType) {
             ITEM_TYPE_SWITCH -> switchWidgetFactory.createViewHolder(parent)
             ITEM_TYPE_SWITCH_PICKER -> multiSwitchWidgetFactory.createViewHolder(parent)
+            ITEM_TYPE_FRAME -> frameWidgetFactory.createViewHolder(parent)
             else -> nullWidgetFactory.createViewHolder(parent)
         }
     }
@@ -71,8 +73,11 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
         return when (item.type) {
+            OHWidget.WIDGET_TYPE_FRAME -> {
+                ITEM_TYPE_FRAME
+            }
             OHWidget.WIDGET_TYPE_SWITCH -> {
-                if(item.mapping.isEmpty()){
+                if (item.mapping.isEmpty()) {
                     ITEM_TYPE_SWITCH
                 } else {
                     ITEM_TYPE_SWITCH_PICKER
@@ -103,5 +108,6 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         val ITEM_TYPE_NULL = 0
         val ITEM_TYPE_SWITCH = 1
         val ITEM_TYPE_SWITCH_PICKER = 2
+        val ITEM_TYPE_FRAME = 3
     }
 }

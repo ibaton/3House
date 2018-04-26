@@ -12,22 +12,22 @@ import org.hamcrest.Matchers.allOf
 object NavigationUtil {
 
     fun navigateToSettings() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open())
         onView(allOf<View>(withId(R.id.lbl_name), withText(R.string.settings))).perform(ViewActions.click())
     }
 
     fun navigateToServer() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open())
         onView(allOf<View>(withId(R.id.lbl_name), withText(R.string.servers))).perform(ViewActions.click())
     }
 
     fun navigateToSitemap() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open())
         onView(allOf<View>(withId(R.id.lbl_name), withText(R.string.sitemaps))).perform(ViewActions.click())
     }
 
     fun navigateToController() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open())
         onView(allOf<View>(withId(R.id.lbl_name), withText(R.string.controllers))).perform(ViewActions.click())
     }
 }

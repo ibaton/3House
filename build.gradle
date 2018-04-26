@@ -11,7 +11,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath "io.realm:realm-gradle-plugin:5.0.1"
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.google.gms:google-services:3.1.2'
@@ -30,6 +30,8 @@ ext{
     gcmVersion = firebaseVersion
     daggerVersion = '2.15'
     rxlifecycleVersion = '2.2.1'
+    espressoVersion = '3.0.1'
+    testRunnerVersion = '1.0.1'
 }
 
 allprojects {

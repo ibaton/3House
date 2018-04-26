@@ -12,7 +12,7 @@ import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.util.Settings
 
 
-class MainPresenter @Inject
+open class MainPresenter @Inject
 constructor(private val mainView: MainContract.View, private val realm: Realm, private val settings: Settings) : MainContract.Presenter {
 
     override fun load(launchData: Bundle?, savedData: Bundle?) {
