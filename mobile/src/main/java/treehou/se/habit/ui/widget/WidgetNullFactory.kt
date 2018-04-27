@@ -1,6 +1,8 @@
 package treehou.se.habit.ui.widget
 
 import android.content.Context
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +26,11 @@ class WidgetNullFactory @Inject constructor() : WidgetFactory {
         val widgetName = view.findViewById<TextView>(R.id.widgetName)
 
         override fun bind(widget: OHWidget) {
-            widgetName.text = context.getString(R.string.missing_widget, widget.type, widget.item?.type ?: "")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                widgetName.text = Html.fromHtml(context.getString(R.string.missing_widget, widget.type, widget.item?.type ?: ""), Html.FROM_HTML_MODE_COMPACT)
+            } else {
+                widgetName.text = Html.fromHtml(context.getString(R.string.missing_widget, widget.type, widget.item?.type ?: ""))
+            }
         }
     }
 }

@@ -160,5 +160,5 @@
     <string name="channel_name_certificates">Self signed certificate</string>
     <string name="user">User</string>
     <string name="demo">Demo</string>
-    <string name="missing_widget">Missing widget</string>
+    <string name="missing_widget"><![CDATA[Missing widget <font color=#FF0000>%s</font> <font color=#AA0000>%s</font>]]></string>
 </resources>
