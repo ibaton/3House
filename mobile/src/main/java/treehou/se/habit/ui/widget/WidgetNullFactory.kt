@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import treehou.se.habit.R
 import treehou.se.habit.ui.adapter.WidgetAdapter
@@ -20,6 +21,10 @@ class WidgetNullFactory @Inject constructor() : WidgetFactory {
 
     inner class SwitchWidgetViewHolder(view: View) : WidgetAdapter.WidgetViewHolder(view) {
 
-        override fun bind(widget: OHWidget) {}
+        val widgetName = view.findViewById<TextView>(R.id.widgetName)
+
+        override fun bind(widget: OHWidget) {
+            widgetName.text = context.getString(R.string.missing_widget, widget.type, widget.item?.type ?: "")
+        }
     }
 }
