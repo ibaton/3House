@@ -20,6 +20,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var multiSwitchWidgetFactory: WidgetMultiSwitchFactory
     @Inject lateinit var frameWidgetFactory: WidgetFrameFactory
     @Inject lateinit var textWidgetFactory: WidgetTextFactory
+    @Inject lateinit var colorPickerWidgetFactory: WidgetColorpickerFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(widget: OHWidget)
@@ -57,6 +58,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             ITEM_TYPE_SWITCH_PICKER -> multiSwitchWidgetFactory.createViewHolder(parent)
             ITEM_TYPE_FRAME -> frameWidgetFactory.createViewHolder(parent)
             ITEM_TYPE_TEXT -> textWidgetFactory.createViewHolder(parent)
+            ITEM_TYPE_COLORPICKER -> colorPickerWidgetFactory.createViewHolder(parent)
             else -> nullWidgetFactory.createViewHolder(parent)
         }
     }
@@ -74,6 +76,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         return when (item.type) {
             OHWidget.WIDGET_TYPE_FRAME -> ITEM_TYPE_FRAME
             OHWidget.WIDGET_TYPE_TEXT -> ITEM_TYPE_TEXT
+            OHWidget.WIDGET_TYPE_COLORPICKER -> ITEM_TYPE_COLORPICKER
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 if (item.mapping.isEmpty()) {
                     ITEM_TYPE_SWITCH
@@ -108,5 +111,6 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         val ITEM_TYPE_SWITCH_PICKER = 2
         val ITEM_TYPE_FRAME = 3
         val ITEM_TYPE_TEXT = 4
+        val ITEM_TYPE_COLORPICKER = 5
     }
 }

@@ -35,9 +35,6 @@ class WidgetTextFactory @Inject constructor() : WidgetFactory {
 
     inner class SwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private val name: WidgetTextView = view.findViewById(R.id.widgetName)
-        private val imgIcon: ImageView = view.findViewById(R.id.widgetIcon)
-        private val nextPageButton: ImageButton? = view.findViewById(R.id.nextPageButton)
         private lateinit var widget: OHWidget
 
         override fun bind(widget: OHWidget) {

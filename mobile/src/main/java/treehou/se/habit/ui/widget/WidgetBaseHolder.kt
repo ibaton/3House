@@ -28,15 +28,18 @@ abstract class WidgetBaseHolder constructor(view: View, val server: OHServer, va
             loadIcon(imgIcon, server, page, widget)
         }
         setupNextPage()
+        nextPageButton?.visibility = if(widget.linkedPage != null) View.VISIBLE else View.GONE
+    }
+
+    init {
+        setupNextPage()
     }
 
     private fun setupNextPage() {
-        if (widget.linkedPage != null) {
-            nextPageButton?.visibility = View.VISIBLE
-            nextPageButton?.setOnClickListener { EventBus.getDefault().post(widget.linkedPage) }
-        } else {
-            nextPageButton?.visibility = View.GONE
-            nextPageButton?.setOnClickListener {}
+        nextPageButton?.setOnClickListener {
+            if(widget.linkedPage != null) {
+                EventBus.getDefault().post(widget.linkedPage)
+            }
         }
     }
 }

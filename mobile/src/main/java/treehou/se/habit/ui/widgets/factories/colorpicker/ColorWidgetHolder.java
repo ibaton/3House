@@ -19,6 +19,7 @@ import se.treehou.ng.ohcommunicator.util.GsonHelper;
 import treehou.se.habit.R;
 import treehou.se.habit.connector.Constants;
 import treehou.se.habit.ui.colorpicker.ColorpickerActivity;
+import treehou.se.habit.ui.widget.HoldListener;
 import treehou.se.habit.ui.widgets.WidgetFactory;
 import treehou.se.habit.ui.widgets.factories.BaseWidgetFactory;
 import treehou.se.habit.util.ConnectionFactory;
@@ -40,40 +41,29 @@ public class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
         View itemView = inflater.inflate(R.layout.item_widget_color, null);
         clrView = itemView.findViewById(R.id.clr_color);
 
-        View btnIncrement = itemView.findViewById(R.id.btn_increment);
+        View btnIncrement = itemView.findViewById(R.id.incrementButton);
         final String itemName = widget.getItem().getName();
 
         IServerHandler serverHandler = connectionFactory.createServerHandler(server, context);
-        btnIncrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
-            @Override
-            public void onTick(int tick) {
-                if (tick > 0){
-                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_INCREMENT());
-                }
-            }
-
-            @Override
-            public void onRelease(int tick) {
-                if (tick <= 0){
-                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_ON());
-                }
+        btnIncrement.setOnTouchListener(new HoldListener(
+                tick -> {
+                    if (tick > 0) {
+                        serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_INCREMENT());
+                    }
+                }, tick -> {
+            if (tick <= 0) {
+                serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_ON());
             }
         }));
 
-        View btnDecrement = itemView.findViewById(R.id.btn_decrement);
-        btnDecrement.setOnTouchListener(new HoldListener(new HoldListener.OnHoldListener() {
-            @Override
-            public void onTick(int tick) {
-                if (tick > 0) {
-                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_DECREMENT());
-                }
+        View btnDecrement = itemView.findViewById(R.id.decrementButton);
+        btnDecrement.setOnTouchListener(new HoldListener(tick -> {
+            if (tick > 0) {
+                serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_DECREMENT());
             }
-
-            @Override
-            public void onRelease(int tick) {
-                if (tick <= 0) {
-                    serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_OFF());
-                }
+        }, tick -> {
+            if (tick <= 0) {
+                serverHandler.sendCommand(itemName, Constants.INSTANCE.getCOMMAND_OFF());
             }
         }));
 
@@ -106,7 +96,7 @@ public class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
         update(widget);
     }
 
-    private void setColor(int color){
+    private void setColor(int color) {
         clrView.setBackgroundColor(color);
         clrView.setVisibility(View.GONE);
     }
@@ -120,7 +110,7 @@ public class ColorWidgetHolder implements WidgetFactory.IWidgetHolder {
         }
 
         color = Color.TRANSPARENT;
-        if(widget.getItem() != null && widget.getItem().getState() != null) {
+        if (widget.getItem() != null && widget.getItem().getState() != null) {
             String[] sHSV = widget.getItem().getState().split(",");
             if (sHSV.length == 3) {
                 float[] hSV = {

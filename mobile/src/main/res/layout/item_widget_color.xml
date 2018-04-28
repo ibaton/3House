@@ -80,14 +80,14 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/btn_decrement"
+                    android:id="@+id/decrementButton"
                     android:visibility="visible"
                     app:srcCompat="@drawable/cell_down_action"/>
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/btn_increment"
+                    android:id="@+id/incrementButton"
                     android:visibility="visible"
                     app:srcCompat="@drawable/cell_up_action"/>
             </LinearLayout>
