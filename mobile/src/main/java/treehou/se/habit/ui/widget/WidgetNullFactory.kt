@@ -14,9 +14,8 @@ import javax.inject.Inject
 
 class WidgetNullFactory @Inject constructor() : WidgetFactory {
 
-    @Inject lateinit var context: Context
-
     override fun createViewHolder(parent: ViewGroup): WidgetAdapter.WidgetViewHolder {
+        val context = parent.context
         val view = LayoutInflater.from(context).inflate(R.layout.widget_null, parent, false)
         return SwitchWidgetViewHolder(view)
     }
@@ -26,6 +25,7 @@ class WidgetNullFactory @Inject constructor() : WidgetFactory {
         val widgetName = view.findViewById<TextView>(R.id.widgetName)
 
         override fun bind(widget: OHWidget) {
+            val context = itemView.context
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 widgetName.text = Html.fromHtml(context.getString(R.string.missing_widget, widget.type, widget.item?.type ?: ""), Html.FROM_HTML_MODE_COMPACT)
             } else {

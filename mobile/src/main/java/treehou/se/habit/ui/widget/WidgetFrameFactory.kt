@@ -12,10 +12,8 @@ import javax.inject.Inject
 
 class WidgetFrameFactory @Inject constructor() : WidgetFactory {
 
-    @Inject lateinit var context: Context
-
     override fun createViewHolder(parent: ViewGroup): WidgetAdapter.WidgetViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.widget_frame, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.widget_frame, parent, false)
         return SwitchWidgetViewHolder(view)
     }
 

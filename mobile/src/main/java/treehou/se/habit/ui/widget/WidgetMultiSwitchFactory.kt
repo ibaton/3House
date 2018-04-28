@@ -26,13 +26,12 @@ import javax.inject.Inject
 class WidgetMultiSwitchFactory @Inject constructor() : WidgetFactory {
 
     @Inject lateinit var logger: Logger
-    @Inject lateinit var context: Context
     @Inject lateinit var server: OHServer
     @Inject lateinit var page: OHLinkedPage
     @Inject lateinit var serverHandler: IServerHandler
 
     override fun createViewHolder(parent: ViewGroup): WidgetAdapter.WidgetViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.widget_multi_switch, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.widget_multi_switch, parent, false)
         return MultiSwitchWidgetViewHolder(view)
     }
 
@@ -49,7 +48,7 @@ class WidgetMultiSwitchFactory @Inject constructor() : WidgetFactory {
             loadIcon(imgIcon, server, page, widget)
 
             widgetButtons.removeAllViews()
-            val layoutInflater = LayoutInflater.from(context)
+            val layoutInflater = LayoutInflater.from(itemView.context)
             for (mapping in widget.mapping) {
                 val button= layoutInflater.inflate(R.layout.radio_button, widgetButtons, false) as RadioButton
                 button.text = mapping.label

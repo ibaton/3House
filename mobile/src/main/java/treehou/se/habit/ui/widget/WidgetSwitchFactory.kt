@@ -20,12 +20,12 @@ import javax.inject.Inject
 class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
 
     @Inject lateinit var logger: Logger
-    @Inject lateinit var context: Context
     @Inject lateinit var server: OHServer
     @Inject lateinit var page: OHLinkedPage
     @Inject lateinit var serverHandler: IServerHandler
 
     override fun createViewHolder(parent: ViewGroup): WidgetAdapter.WidgetViewHolder {
+        val context = parent.context
         val view = LayoutInflater.from(context).inflate(R.layout.widget_switch, parent, false)
         return SwitchWidgetViewHolder(view)
     }
