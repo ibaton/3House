@@ -33,10 +33,10 @@ abstract class WidgetBaseHolder constructor(view: View, val server: OHServer, va
     private fun setupNextPage() {
         if (widget.linkedPage != null) {
             nextPageButton?.visibility = View.VISIBLE
-            itemView.setOnClickListener { EventBus.getDefault().post(widget.linkedPage) }
+            nextPageButton?.setOnClickListener { EventBus.getDefault().post(widget.linkedPage) }
         } else {
             nextPageButton?.visibility = View.GONE
-            itemView.setOnClickListener {}
+            nextPageButton?.setOnClickListener {}
         }
     }
 }
