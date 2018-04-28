@@ -30,11 +30,9 @@ class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
         return SwitchWidgetViewHolder(view)
     }
 
-    inner class SwitchWidgetViewHolder(view: View) : WidgetAdapter.WidgetViewHolder(view) {
+    inner class SwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private val name: WidgetTextView = view.findViewById(R.id.widgetName)
         private val switchView: Switch = view.findViewById(R.id.widgetSwitch)
-        private val imgIcon: ImageView = view.findViewById(R.id.widgetIcon)
         private lateinit var widget: OHWidget
 
         init {
@@ -53,9 +51,8 @@ class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
         }
 
         override fun bind(widget: OHWidget) {
+            super.bind(widget)
             this.widget = widget
-            name.setText(widget.label, widget.labelColor)
-            loadIcon(imgIcon, server, page, widget)
 
             val isOn = widget.item.state == Constants.COMMAND_ON
             switchView.isEnabled = widget.item.stateDescription?.isReadOnly == false

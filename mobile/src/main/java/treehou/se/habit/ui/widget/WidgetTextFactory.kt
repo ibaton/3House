@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
+import org.greenrobot.eventbus.EventBus
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
@@ -31,16 +33,16 @@ class WidgetTextFactory @Inject constructor() : WidgetFactory {
         return SwitchWidgetViewHolder(view)
     }
 
-    inner class SwitchWidgetViewHolder(view: View) : WidgetAdapter.WidgetViewHolder(view) {
+    inner class SwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
         private val name: WidgetTextView = view.findViewById(R.id.widgetName)
         private val imgIcon: ImageView = view.findViewById(R.id.widgetIcon)
+        private val nextPageButton: ImageButton? = view.findViewById(R.id.nextPageButton)
         private lateinit var widget: OHWidget
 
         override fun bind(widget: OHWidget) {
+            super.bind(widget)
             this.widget = widget
-            name.setText(widget.label, widget.labelColor)
-            loadIcon(imgIcon, server, page, widget)
 
             val item: OHItem? = widget.item
             if (item?.type == OHItem.TYPE_STRING && item.stateDescription?.isReadOnly != true) {
