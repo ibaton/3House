@@ -161,4 +161,6 @@
     <string name="user">User</string>
     <string name="demo">Demo</string>
     <string name="missing_widget"><![CDATA[Missing widget <font color=#FF0000>%s</font> <font color=#AA0000>%s</font>]]></string>
+    <string name="next_page">Next page</string>
+    <string name="widget_icon">Widget icon</string>
 </resources>

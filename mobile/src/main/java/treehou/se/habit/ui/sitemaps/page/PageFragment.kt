@@ -22,6 +22,9 @@ import treehou.se.habit.dagger.fragment.PageModule
 import treehou.se.habit.mvp.BaseDaggerFragment
 import treehou.se.habit.ui.adapter.WidgetAdapter
 import javax.inject.Inject
+import android.support.v7.widget.DividerItemDecoration
+
+
 
 class PageFragment : BaseDaggerFragment<PageContract.Presenter>(), PageContract.View {
 
@@ -80,8 +83,11 @@ class PageFragment : BaseDaggerFragment<PageContract.Presenter>(), PageContract.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        widgetList.layoutManager = LinearLayoutManager(context)
+        val linearLayoutManager = LinearLayoutManager(context)
+        widgetList.layoutManager = linearLayoutManager
         widgetList.itemAnimator = DefaultItemAnimator()
+        val dividerItemDecoration = DividerItemDecoration(widgetList.context, linearLayoutManager.orientation)
+        widgetList.addItemDecoration(dividerItemDecoration)
         widgetList.adapter = adapter
     }
 

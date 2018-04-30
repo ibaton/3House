@@ -9,8 +9,10 @@
     <FrameLayout
         android:id="@+id/img_widget_icon_holder"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@color/image_background">
+        android:layout_height="0dp"
+        android:background="@color/image_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/widgetIcon"
@@ -25,10 +27,12 @@
         style="@style/WidgetText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/widgetSwitch"
         app:layout_constraintHorizontal_bias="0.42"
         app:layout_constraintStart_toEndOf="@+id/img_widget_icon_holder"
@@ -56,6 +60,8 @@
         style="?attr/menu_item_style"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@null"
         android:clickable="false"
         android:paddingBottom="@dimen/medium_spacing"
@@ -64,9 +70,9 @@
         android:paddingTop="@dimen/medium_spacing"
         android:selectable="false"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/next_page_icon" />
+        app:srcCompat="@drawable/next_page_icon"
+        tools:visibility="visible" />
 </android.support.constraint.ConstraintLayout>
