@@ -19,24 +19,54 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:padding="@dimen/short_space" />
+            android:padding="@dimen/short_space"
+            android:contentDescription="@string/widget_icon" />
     </FrameLayout>
 
     <treehou.se.habit.ui.view.WidgetTextView
         android:id="@+id/widgetName"
         style="@style/WidgetText"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="21dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nextPageButton"
+        app:layout_constraintEnd_toStartOf="@+id/widgetValueHolder"
         app:layout_constraintStart_toEndOf="@+id/img_widget_icon_holder"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Widget Name" />
+
+    <LinearLayout
+        android:id="@+id/widgetValueHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/nextPageButton"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <treehou.se.habit.ui.view.WidgetTextView
+            android:id="@+id/widgetValue"
+            style="@style/WidgetText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/nan"
+            tools:text="0.0" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/next_page"
+            app:srcCompat="@drawable/drop_down_arrow"
+            tools:visibility="visible" />
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/nextPageButton"
@@ -57,5 +87,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/next_page_icon"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:contentDescription="@string/next_page" />
 </android.support.constraint.ConstraintLayout>

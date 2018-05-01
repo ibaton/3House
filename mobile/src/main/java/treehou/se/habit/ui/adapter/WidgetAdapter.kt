@@ -15,13 +15,14 @@ import javax.inject.Inject
 
 class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.WidgetViewHolder>() {
 
-    @Inject lateinit var nullWidgetFactory: WidgetNullFactory
-    @Inject lateinit var switchWidgetFactory: WidgetSwitchFactory
-    @Inject lateinit var multiSwitchWidgetFactory: WidgetMultiSwitchFactory
-    @Inject lateinit var frameWidgetFactory: WidgetFrameFactory
-    @Inject lateinit var textWidgetFactory: WidgetTextFactory
-    @Inject lateinit var colorPickerWidgetFactory: WidgetColorpickerFactory
-    @Inject lateinit var sliderWidgetFactory: WidgetSliderFactory
+    @Inject lateinit var widgetNullFactory: WidgetNullFactory
+    @Inject lateinit var widgetSwitchFactory: WidgetSwitchFactory
+    @Inject lateinit var widgetMultiSwitchFactory: WidgetMultiSwitchFactory
+    @Inject lateinit var widgetFrameFactory: WidgetFrameFactory
+    @Inject lateinit var widgetTextFactory: WidgetTextFactory
+    @Inject lateinit var widgetColorpickerFactory: WidgetColorpickerFactory
+    @Inject lateinit var widgetSliderFactory: WidgetSliderFactory
+    @Inject lateinit var widgetSetpointFactory: WidgetSetpointFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(widget: OHWidget)
@@ -55,13 +56,14 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
 
         return when (viewType) {
-            ITEM_TYPE_SWITCH -> switchWidgetFactory.createViewHolder(parent)
-            ITEM_TYPE_SWITCH_PICKER -> multiSwitchWidgetFactory.createViewHolder(parent)
-            ITEM_TYPE_FRAME -> frameWidgetFactory.createViewHolder(parent)
-            ITEM_TYPE_TEXT -> textWidgetFactory.createViewHolder(parent)
-            ITEM_TYPE_COLORPICKER -> colorPickerWidgetFactory.createViewHolder(parent)
-            ITEM_TYPE_SLIDER -> sliderWidgetFactory.createViewHolder(parent)
-            else -> nullWidgetFactory.createViewHolder(parent)
+            ITEM_TYPE_SWITCH -> widgetSwitchFactory.createViewHolder(parent)
+            ITEM_TYPE_SWITCH_PICKER -> widgetMultiSwitchFactory.createViewHolder(parent)
+            ITEM_TYPE_FRAME -> widgetFrameFactory.createViewHolder(parent)
+            ITEM_TYPE_TEXT -> widgetTextFactory.createViewHolder(parent)
+            ITEM_TYPE_COLORPICKER -> widgetColorpickerFactory.createViewHolder(parent)
+            ITEM_TYPE_SLIDER -> widgetSliderFactory.createViewHolder(parent)
+            ITEM_TYPE_SETPOINT -> widgetSetpointFactory.createViewHolder(parent)
+            else -> widgetNullFactory.createViewHolder(parent)
         }
     }
 
@@ -80,6 +82,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             OHWidget.WIDGET_TYPE_TEXT -> ITEM_TYPE_TEXT
             OHWidget.WIDGET_TYPE_COLORPICKER -> ITEM_TYPE_COLORPICKER
             OHWidget.WIDGET_TYPE_SLIDER -> ITEM_TYPE_SLIDER
+            OHWidget.WIDGET_TYPE_SETPOINT -> ITEM_TYPE_SETPOINT
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 if (item.mapping.isEmpty()) {
                     ITEM_TYPE_SWITCH
@@ -116,5 +119,6 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         val ITEM_TYPE_TEXT = 4
         val ITEM_TYPE_COLORPICKER = 5
         val ITEM_TYPE_SLIDER = 6
+        val ITEM_TYPE_SETPOINT = 7
     }
 }
