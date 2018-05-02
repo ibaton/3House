@@ -18,6 +18,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var widgetNullFactory: WidgetNullFactory
     @Inject lateinit var widgetSwitchFactory: WidgetSwitchFactory
     @Inject lateinit var widgetMultiSwitchFactory: WidgetMultiSwitchFactory
+    @Inject lateinit var widgetButtonFactory: WidgetButtonFactory
     @Inject lateinit var widgetFrameFactory: WidgetFrameFactory
     @Inject lateinit var widgetTextFactory: WidgetTextFactory
     @Inject lateinit var widgetColorpickerFactory: WidgetColorpickerFactory
@@ -58,6 +59,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         return when (viewType) {
             ITEM_TYPE_SWITCH -> widgetSwitchFactory.createViewHolder(parent)
             ITEM_TYPE_SWITCH_PICKER -> widgetMultiSwitchFactory.createViewHolder(parent)
+            ITEM_TYPE_SWITCH_BUTTON -> widgetButtonFactory.createViewHolder(parent)
             ITEM_TYPE_FRAME -> widgetFrameFactory.createViewHolder(parent)
             ITEM_TYPE_TEXT -> widgetTextFactory.createViewHolder(parent)
             ITEM_TYPE_COLORPICKER -> widgetColorpickerFactory.createViewHolder(parent)
@@ -86,6 +88,8 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 if (item.mapping.isEmpty()) {
                     ITEM_TYPE_SWITCH
+                } else if(item.mapping.size == 1) {
+                    ITEM_TYPE_SWITCH_BUTTON
                 } else {
                     ITEM_TYPE_SWITCH_PICKER
                 }
@@ -115,10 +119,11 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         val ITEM_TYPE_NULL = 0
         val ITEM_TYPE_SWITCH = 1
         val ITEM_TYPE_SWITCH_PICKER = 2
-        val ITEM_TYPE_FRAME = 3
-        val ITEM_TYPE_TEXT = 4
-        val ITEM_TYPE_COLORPICKER = 5
-        val ITEM_TYPE_SLIDER = 6
-        val ITEM_TYPE_SETPOINT = 7
+        val ITEM_TYPE_SWITCH_BUTTON = 3
+        val ITEM_TYPE_FRAME = 4
+        val ITEM_TYPE_TEXT = 5
+        val ITEM_TYPE_COLORPICKER = 6
+        val ITEM_TYPE_SLIDER = 7
+        val ITEM_TYPE_SETPOINT = 8
     }
 }
