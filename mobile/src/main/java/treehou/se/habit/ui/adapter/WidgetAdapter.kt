@@ -1,6 +1,7 @@
 package treehou.se.habit.ui.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -8,8 +9,11 @@ import androidx.core.net.toUri
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
+import se.treehou.ng.ohcommunicator.util.OpenhabUtil
 import treehou.se.habit.connector.Communicator
 import treehou.se.habit.ui.widget.*
+import treehou.se.habit.util.getName
+import treehou.se.habit.util.isRollerShutter
 import java.net.MalformedURLException
 import javax.inject.Inject
 
@@ -24,6 +28,8 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var widgetColorpickerFactory: WidgetColorpickerFactory
     @Inject lateinit var widgetSliderFactory: WidgetSliderFactory
     @Inject lateinit var widgetSetpointFactory: WidgetSetpointFactory
+    @Inject lateinit var widgetRollerShutterFactory: WidgetRollerShutterFactory
+    @Inject lateinit var widgetGroupFactory: WidgetGroupFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(widget: OHWidget)
@@ -60,11 +66,13 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             ITEM_TYPE_SWITCH -> widgetSwitchFactory.createViewHolder(parent)
             ITEM_TYPE_SWITCH_PICKER -> widgetMultiSwitchFactory.createViewHolder(parent)
             ITEM_TYPE_SWITCH_BUTTON -> widgetButtonFactory.createViewHolder(parent)
+            ITEM_TYPE_ROLLERSHUTTER -> widgetRollerShutterFactory.createViewHolder(parent)
             ITEM_TYPE_FRAME -> widgetFrameFactory.createViewHolder(parent)
             ITEM_TYPE_TEXT -> widgetTextFactory.createViewHolder(parent)
             ITEM_TYPE_COLORPICKER -> widgetColorpickerFactory.createViewHolder(parent)
             ITEM_TYPE_SLIDER -> widgetSliderFactory.createViewHolder(parent)
             ITEM_TYPE_SETPOINT -> widgetSetpointFactory.createViewHolder(parent)
+            ITEM_TYPE_GROUP -> widgetGroupFactory.createViewHolder(parent)
             else -> widgetNullFactory.createViewHolder(parent)
         }
     }
@@ -79,19 +87,20 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
 
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
+        Log.d("YOLO", "${item.getName()} Rollershutter ${item.isRollerShutter()}")
         return when (item.type) {
             OHWidget.WIDGET_TYPE_FRAME -> ITEM_TYPE_FRAME
             OHWidget.WIDGET_TYPE_TEXT -> ITEM_TYPE_TEXT
             OHWidget.WIDGET_TYPE_COLORPICKER -> ITEM_TYPE_COLORPICKER
             OHWidget.WIDGET_TYPE_SLIDER -> ITEM_TYPE_SLIDER
             OHWidget.WIDGET_TYPE_SETPOINT -> ITEM_TYPE_SETPOINT
+            OHWidget.WIDGET_TYPE_GROUP -> ITEM_TYPE_GROUP
             OHWidget.WIDGET_TYPE_SWITCH -> {
-                if (item.mapping.isEmpty()) {
-                    ITEM_TYPE_SWITCH
-                } else if(item.mapping.size == 1) {
-                    ITEM_TYPE_SWITCH_BUTTON
-                } else {
-                    ITEM_TYPE_SWITCH_PICKER
+                when {
+                    item.isRollerShutter() -> ITEM_TYPE_ROLLERSHUTTER
+                    item.mapping.isEmpty() -> ITEM_TYPE_SWITCH
+                    item.mapping.size == 1 -> ITEM_TYPE_SWITCH_BUTTON
+                    else -> ITEM_TYPE_SWITCH_PICKER
                 }
             }
             else -> ITEM_TYPE_NULL
@@ -116,14 +125,16 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     }
 
     companion object {
-        val ITEM_TYPE_NULL = 0
-        val ITEM_TYPE_SWITCH = 1
-        val ITEM_TYPE_SWITCH_PICKER = 2
-        val ITEM_TYPE_SWITCH_BUTTON = 3
-        val ITEM_TYPE_FRAME = 4
-        val ITEM_TYPE_TEXT = 5
-        val ITEM_TYPE_COLORPICKER = 6
-        val ITEM_TYPE_SLIDER = 7
-        val ITEM_TYPE_SETPOINT = 8
+        const val ITEM_TYPE_NULL = 0
+        const val ITEM_TYPE_SWITCH = 1
+        const val ITEM_TYPE_SWITCH_PICKER = 2
+        const val ITEM_TYPE_SWITCH_BUTTON = 3
+        const val ITEM_TYPE_FRAME = 4
+        const val ITEM_TYPE_TEXT = 5
+        const val ITEM_TYPE_COLORPICKER = 6
+        const val ITEM_TYPE_SLIDER = 7
+        const val ITEM_TYPE_SETPOINT = 8
+        const val ITEM_TYPE_ROLLERSHUTTER = 9
+        const val ITEM_TYPE_GROUP = 10
     }
 }
