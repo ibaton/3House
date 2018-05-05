@@ -16,7 +16,7 @@ import treehou.se.habit.util.getName
 
 abstract class WidgetBaseHolder constructor(view: View, val server: OHServer, val page: OHLinkedPage) : WidgetAdapter.WidgetViewHolder(view) {
 
-    private val name: WidgetTextView = view.findViewById(R.id.widgetName)
+    private val name: WidgetTextView? = view.findViewById(R.id.widgetName)
     private val value: WidgetTextView? = view.findViewById(R.id.widgetValue)
     private val imgIcon: ImageView? = view.findViewById(R.id.widgetIcon)
     private val nextPageButton: ImageButton? = view.findViewById(R.id.nextPageButton)
@@ -28,7 +28,7 @@ abstract class WidgetBaseHolder constructor(view: View, val server: OHServer, va
 
         val nameText = if(value != null) widget.getName() else widget.label
         val valueText = widget.item?.formatedValue ?: ""
-        name.setText(nameText, widget.labelColor)
+        name?.setText(nameText, widget.labelColor)
         value?.setText("[$valueText]", widget.labelColor)
 
         if(imgIcon != null) {
