@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import org.greenrobot.eventbus.EventBus
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
@@ -36,6 +37,8 @@ class WidgetImageFactory @Inject constructor() : WidgetFactory {
             super.bind(widget)
             this.widget = widget
 
+            setupNextPage()
+
             try {
                 val imageUrl = Uri.parse(widget.url)
                 val communicator = Communicator.instance(context)
@@ -43,7 +46,14 @@ class WidgetImageFactory @Inject constructor() : WidgetFactory {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
 
+        private fun setupNextPage() {
+            itemView.setOnClickListener {
+                if(widget.linkedPage != null) {
+                    EventBus.getDefault().post(widget.linkedPage)
+                }
+            }
         }
     }
 

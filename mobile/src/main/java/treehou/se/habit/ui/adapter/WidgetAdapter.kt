@@ -9,7 +9,6 @@ import androidx.core.net.toUri
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
-import se.treehou.ng.ohcommunicator.util.OpenhabUtil
 import treehou.se.habit.connector.Communicator
 import treehou.se.habit.ui.widget.*
 import treehou.se.habit.util.getName
@@ -32,6 +31,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var widgetGroupFactory: WidgetGroupFactory
     @Inject lateinit var widgetSelectionFactory: WidgetSelectionFactory
     @Inject lateinit var widgetImageFactory: WidgetImageFactory
+    @Inject lateinit var widgetVideoFactory: WidgetVideoFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(widget: OHWidget)
@@ -77,6 +77,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             ITEM_TYPE_GROUP -> widgetGroupFactory.createViewHolder(parent)
             ITEM_TYPE_SELECTION -> widgetSelectionFactory.createViewHolder(parent)
             ITEM_TYPE_IMAGE -> widgetImageFactory.createViewHolder(parent)
+            ITEM_TYPE_VIDEO -> widgetVideoFactory.createViewHolder(parent)
             else -> widgetNullFactory.createViewHolder(parent)
         }
     }
@@ -101,6 +102,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             OHWidget.WIDGET_TYPE_GROUP -> ITEM_TYPE_GROUP
             OHWidget.WIDGET_TYPE_SELECTION -> ITEM_TYPE_SELECTION
             OHWidget.WIDGET_TYPE_IMAGE -> ITEM_TYPE_IMAGE
+            OHWidget.WIDGET_TYPE_VIDEO -> ITEM_TYPE_VIDEO
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 when {
                     item.isRollerShutter() -> ITEM_TYPE_ROLLERSHUTTER
@@ -144,5 +146,6 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         const val ITEM_TYPE_GROUP = 10
         const val ITEM_TYPE_SELECTION = 11
         const val ITEM_TYPE_IMAGE = 12
+        const val ITEM_TYPE_VIDEO = 13
     }
 }
