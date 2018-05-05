@@ -30,6 +30,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var widgetSetpointFactory: WidgetSetpointFactory
     @Inject lateinit var widgetRollerShutterFactory: WidgetRollerShutterFactory
     @Inject lateinit var widgetGroupFactory: WidgetGroupFactory
+    @Inject lateinit var widgetSelectionFactory: WidgetSelectionFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(widget: OHWidget)
@@ -73,6 +74,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             ITEM_TYPE_SLIDER -> widgetSliderFactory.createViewHolder(parent)
             ITEM_TYPE_SETPOINT -> widgetSetpointFactory.createViewHolder(parent)
             ITEM_TYPE_GROUP -> widgetGroupFactory.createViewHolder(parent)
+            ITEM_TYPE_SELECTION -> widgetSelectionFactory.createViewHolder(parent)
             else -> widgetNullFactory.createViewHolder(parent)
         }
     }
@@ -95,6 +97,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             OHWidget.WIDGET_TYPE_SLIDER -> ITEM_TYPE_SLIDER
             OHWidget.WIDGET_TYPE_SETPOINT -> ITEM_TYPE_SETPOINT
             OHWidget.WIDGET_TYPE_GROUP -> ITEM_TYPE_GROUP
+            OHWidget.WIDGET_TYPE_SELECTION -> ITEM_TYPE_SELECTION
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 when {
                     item.isRollerShutter() -> ITEM_TYPE_ROLLERSHUTTER
@@ -136,5 +139,6 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         const val ITEM_TYPE_SETPOINT = 8
         const val ITEM_TYPE_ROLLERSHUTTER = 9
         const val ITEM_TYPE_GROUP = 10
+        const val ITEM_TYPE_SELECTION = 11
     }
 }
