@@ -33,6 +33,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var widgetImageFactory: WidgetImageFactory
     @Inject lateinit var widgetVideoFactory: WidgetVideoFactory
     @Inject lateinit var widgetWebViewFactory: WidgetWebViewFactory
+    @Inject lateinit var widgetChartFactory: WidgetChartFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(widget: OHWidget)
@@ -79,6 +80,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             ITEM_TYPE_SELECTION -> widgetSelectionFactory.createViewHolder(parent)
             ITEM_TYPE_IMAGE -> widgetImageFactory.createViewHolder(parent)
             ITEM_TYPE_VIDEO -> widgetVideoFactory.createViewHolder(parent)
+            ITEM_TYPE_CHART -> widgetChartFactory.createViewHolder(parent)
             ITEM_TYPE_WEB_VIEW -> widgetWebViewFactory.createViewHolder(parent)
             else -> widgetNullFactory.createViewHolder(parent)
         }
@@ -106,6 +108,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             OHWidget.WIDGET_TYPE_IMAGE -> ITEM_TYPE_IMAGE
             OHWidget.WIDGET_TYPE_VIDEO -> ITEM_TYPE_VIDEO
             OHWidget.WIDGET_TYPE_WEB -> ITEM_TYPE_WEB_VIEW
+            OHWidget.WIDGET_TYPE_CHART -> ITEM_TYPE_CHART
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 when {
                     item.isRollerShutter() -> ITEM_TYPE_ROLLERSHUTTER
@@ -151,5 +154,6 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         const val ITEM_TYPE_IMAGE = 12
         const val ITEM_TYPE_VIDEO = 13
         const val ITEM_TYPE_WEB_VIEW = 14
+        const val ITEM_TYPE_CHART = 15
     }
 }
