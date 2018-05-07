@@ -11,6 +11,7 @@
         <item name="android:textColorSecondary">@color/text_secondary</item>
 
         <item name="android:itemBackground">@color/background</item>
+        <item name="itemBackgroundColor">@color/colorPrimary</item>
         <item name="inputBox">@drawable/input_box_light</item>
         <item name="itemDivider">@drawable/item_divider</item>
         <item name="card_style">@style/item_card</item>
@@ -38,6 +39,7 @@
 
         <item name="android:windowBackground">@color/background_dark</item>
         <item name="android:itemBackground">@color/background_dark</item>
+        <item name="itemBackgroundColor">@color/background_card_dark</item>
 
         <item name="itemDivider">@drawable/item_divider_dark</item>
         <item name="card_style">@style/item_card_dark</item>

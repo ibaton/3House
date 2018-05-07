@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.ui.adapter.WidgetAdapter
@@ -29,13 +28,10 @@ class WidgetSetpointFactory @Inject constructor() : WidgetFactory {
     }
 
     inner class SwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
-
-        private lateinit var widget: OHWidget
         private val valueView: View = view.findViewById(R.id.widgetValueHolder)
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
             valueView.setOnClickListener { createPickerDialog() }
         }
 

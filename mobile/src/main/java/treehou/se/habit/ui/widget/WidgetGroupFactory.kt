@@ -22,15 +22,7 @@ class WidgetGroupFactory @Inject constructor() : WidgetFactory {
         return GroupWidgetViewHolder(view)
     }
 
-    inner class GroupWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
-
-        private lateinit var widget: OHWidget
-
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
-        }
-    }
+    inner class GroupWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page)
 
     companion object {
         const val TAG = "WidgetSwitchFactory"

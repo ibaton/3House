@@ -140,6 +140,14 @@
         <item name="android:padding">@dimen/item_spacing</item>
     </style>
 
+    <style name="widget_with_parent">
+        <item name="android:background">?itemBackground</item>
+    </style>
+
+    <style name="widget_without_parent">
+        <item name="elevation">0dp</item>
+    </style>
+
     <style name="TextInputLabel">
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingStart">10dp</item>

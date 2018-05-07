@@ -1,23 +1,17 @@
 package treehou.se.habit.ui.widget
 
-import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import org.greenrobot.eventbus.EventBus
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.ui.adapter.WidgetAdapter
-import treehou.se.habit.ui.view.WidgetTextView
 import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject
 
@@ -35,16 +29,13 @@ class WidgetTextFactory @Inject constructor() : WidgetFactory {
 
     inner class SwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private lateinit var widget: OHWidget
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
-
-            val item: OHItem? = widget.item
-            if (item?.type == OHItem.TYPE_STRING && item.stateDescription?.isReadOnly != true) {
+            val widgetItem = widget.item
+            if (widgetItem?.type == OHItem.TYPE_STRING && widgetItem.stateDescription?.isReadOnly != true) {
                 itemView.setOnLongClickListener({
-                    showInputDialog(item)
+                    showInputDialog(widgetItem)
                     true
                 })
             } else {

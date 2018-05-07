@@ -1,7 +1,6 @@
 package treehou.se.habit.ui.adapter
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -11,7 +10,6 @@ import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import treehou.se.habit.connector.Communicator
 import treehou.se.habit.ui.widget.*
-import treehou.se.habit.util.getName
 import treehou.se.habit.util.isRollerShutter
 import java.net.MalformedURLException
 import javax.inject.Inject
@@ -36,7 +34,8 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
     @Inject lateinit var widgetChartFactory: WidgetChartFactory
 
     abstract class WidgetViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        abstract fun bind(widget: OHWidget)
+
+        abstract fun bind(widgetItem: WidgetItem)
 
         /**
          * Load icon and populate image view with it.
@@ -52,7 +51,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
                     val imageUrl = (page.baseUrl + widget.iconPath).toUri()
                     val communicator = Communicator.instance(itemView.context)
                     communicator.loadImage(server, imageUrl, imgIcon, false)
-                } catch (e: MalformedURLException) {
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
 
@@ -62,7 +61,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         }
     }
 
-    private var items: List<OHWidget> = listOf()
+    private var items: List<WidgetItem> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WidgetViewHolder {
 
@@ -96,8 +95,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
 
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
-        Log.d("YOLO", "${item.getName()} Rollershutter ${item.isRollerShutter()}")
-        return when (item.type) {
+        return when (item.widget.type) {
             OHWidget.WIDGET_TYPE_FRAME -> ITEM_TYPE_FRAME
             OHWidget.WIDGET_TYPE_TEXT -> ITEM_TYPE_TEXT
             OHWidget.WIDGET_TYPE_COLORPICKER -> ITEM_TYPE_COLORPICKER
@@ -111,9 +109,9 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             OHWidget.WIDGET_TYPE_CHART -> ITEM_TYPE_CHART
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 when {
-                    item.isRollerShutter() -> ITEM_TYPE_ROLLERSHUTTER
-                    item.mapping.isEmpty() -> ITEM_TYPE_SWITCH
-                    item.mapping.size == 1 -> ITEM_TYPE_SWITCH_BUTTON
+                    item.widget.isRollerShutter() -> ITEM_TYPE_ROLLERSHUTTER
+                    item.widget.mapping.isEmpty() -> ITEM_TYPE_SWITCH
+                    item.widget.mapping.size == 1 -> ITEM_TYPE_SWITCH_BUTTON
                     else -> ITEM_TYPE_SWITCH_PICKER
                 }
             }
@@ -126,16 +124,23 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
         notifyDataSetChanged()
     }
 
-    fun flatternWidgets(widgets: List<OHWidget>): List<OHWidget> {
-        return widgets.flatMap {
-            val childWidgets = if (it.widget != null) it.widget.toList() else emptyList()
-            listOf(it, *childWidgets.toTypedArray())
+    private fun flatternWidgets(widgets: List<OHWidget>): List<WidgetItem> {
+        return widgets.flatMap { parent ->
+            val childWidgets = parent.widget?.toList() ?: emptyList()
+            listOf(parent, *childWidgets.toTypedArray())
+                    .map { WidgetItem(it, parent) }
         }
     }
 
     fun removeAllWidgets() {
         items = listOf()
         notifyDataSetChanged()
+    }
+
+    data class WidgetItem(val widget: OHWidget, val parent: OHWidget? = null){
+        fun hasParent() : Boolean {
+            return parent != null
+        }
     }
 
     companion object {

@@ -30,12 +30,10 @@ class WidgetImageFactory @Inject constructor() : WidgetFactory {
 
     inner class ImageWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private lateinit var widget: OHWidget
         private val image: ImageView = view as ImageView
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
 
             setupNextPage()
 

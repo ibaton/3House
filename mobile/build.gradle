@@ -96,6 +96,11 @@ dependencies {
     implementation('com.wefika:flowlayout:0.4.1') {
         exclude group: 'com.intellij', module: 'annotations'
     }
+
+    implementation 'com.airbnb.android:paris:1.0.0'
+    implementation 'com.airbnb.android:paris-annotations:1.0.0'
+    annotationProcessor 'com.airbnb.android:paris-processor:1.0.0'
+
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0-RC2'
     implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'

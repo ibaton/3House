@@ -9,7 +9,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.ui.adapter.WidgetAdapter
@@ -30,16 +29,14 @@ class WidgetWebViewFactory @Inject constructor() : WidgetFactory {
 
     inner class WebWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private lateinit var widget: OHWidget
         private var webView: WebView = view as WebView
 
         init {
             setupWebView()
         }
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
 
             if (widget.url != null) {
                 webView.loadUrl(widget.url)

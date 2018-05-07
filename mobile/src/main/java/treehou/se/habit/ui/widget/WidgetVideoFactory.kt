@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.widget
 
-import android.media.MediaPlayer
 import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
@@ -11,7 +10,6 @@ import android.widget.MediaController
 import android.widget.VideoView
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.ui.adapter.WidgetAdapter
@@ -32,12 +30,10 @@ class WidgetVideoFactory @Inject constructor() : WidgetFactory {
 
     inner class VideoWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private lateinit var widget: OHWidget
         private val video: VideoView = view.findViewById(R.id.video)
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
 
             if (this.widget.url != widget.url) {
                 setVideoUri(widget.url)

@@ -1,7 +1,9 @@
 package treehou.se.habit.ui.widget
 
 import android.content.Context
+import android.os.Build
 import android.support.annotation.CallSuper
+import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -12,7 +14,11 @@ import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import treehou.se.habit.R
 import treehou.se.habit.ui.adapter.WidgetAdapter
 import treehou.se.habit.ui.view.WidgetTextView
+import treehou.se.habit.util.getColorAttr
 import treehou.se.habit.util.getName
+import android.content.res.Resources.NotFoundException
+import treehou.se.habit.util.dpToPixels
+
 
 abstract class WidgetBaseHolder constructor(view: View, val server: OHServer, val page: OHLinkedPage) : WidgetAdapter.WidgetViewHolder(view) {
 
@@ -20,11 +26,11 @@ abstract class WidgetBaseHolder constructor(view: View, val server: OHServer, va
     private val value: WidgetTextView? = view.findViewById(R.id.widgetValue)
     private val imgIcon: ImageView? = view.findViewById(R.id.widgetIcon)
     private val nextPageButton: ImageButton? = view.findViewById(R.id.nextPageButton)
-    private lateinit var widget: OHWidget
+    private lateinit var itemWidget: WidgetAdapter.WidgetItem
 
     @CallSuper
-    override fun bind(widget: OHWidget) {
-        this.widget = widget
+    override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+        this.itemWidget = itemWidget
 
         val nameText = if(value != null) widget.getName() else widget.label
         val valueText = widget.item?.formatedValue ?: ""
@@ -36,7 +42,25 @@ abstract class WidgetBaseHolder constructor(view: View, val server: OHServer, va
         }
         setupNextPage()
         nextPageButton?.visibility = if(widget.linkedPage != null) View.VISIBLE else View.GONE
+
+        if(itemWidget.hasParent()){
+            itemView.setBackgroundColor(context.resources.getColorAttr(R.attr.itemBackgroundColor, context.theme))
+            setElevation(7f)
+        } else {
+            itemView.background = null
+            setElevation(0f)
+        }
     }
+
+    fun setElevation(elevationInDp: Float){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            itemView.elevation = context.resources.dpToPixels(elevationInDp)
+            itemView.invalidate()
+        }
+    }
+
+    val widget: OHWidget
+        get() = itemWidget.widget
 
     val context: Context
         get() = itemView.context

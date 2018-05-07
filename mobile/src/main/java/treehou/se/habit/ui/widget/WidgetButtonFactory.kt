@@ -31,7 +31,6 @@ class WidgetButtonFactory @Inject constructor() : WidgetFactory {
     inner class SwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
         private val buttonView: Button = view.findViewById(R.id.widgetButton)
-        private lateinit var widget: OHWidget
 
         init {
             setupClickListener()
@@ -47,10 +46,8 @@ class WidgetButtonFactory @Inject constructor() : WidgetFactory {
             })
         }
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
-
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
             buttonView.text = widget.mapping[0].label
         }
     }

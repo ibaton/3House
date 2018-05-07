@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="widget_with_parent">
+        <item name="android:elevation">7dp</item>
+        <item name="android:background">?itemBackground</item>
+    </style>
+</resources>

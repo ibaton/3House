@@ -29,7 +29,6 @@ class WidgetRollerShutterFactory @Inject constructor() : WidgetFactory {
 
     inner class RollerShutterWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private lateinit var widget: OHWidget
         val rollershutterButtonUp: ImageView = itemView.findViewById(R.id.rollerShutterButtonUp)
         val rollershutterButtonStop: ImageView = itemView.findViewById(R.id.rollerShutterButtonStop)
         val rollershutterButtonDown: ImageView = itemView.findViewById(R.id.rollerShutterButtonDown)
@@ -56,11 +55,6 @@ class WidgetRollerShutterFactory @Inject constructor() : WidgetFactory {
                     serverHandler.sendCommand(widget.item.getName(), Constants.COMMAND_DOWN)
                 }
             }
-        }
-
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
         }
     }
 

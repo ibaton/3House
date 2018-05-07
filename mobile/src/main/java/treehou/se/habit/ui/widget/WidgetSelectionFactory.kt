@@ -9,7 +9,6 @@ import android.widget.Spinner
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHMapping
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.R
 import treehou.se.habit.ui.adapter.WidgetAdapter
@@ -31,17 +30,14 @@ class WidgetSelectionFactory @Inject constructor() : WidgetFactory {
     inner class SelectionWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
         private var lastPosition = -1
-        private lateinit var widget: OHWidget
         private val selectorSpinner: Spinner = view.findViewById(R.id.selectorSpinner)
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
-
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
             updateSpinner()
         }
 
-        private fun updateSpinner(){
+        private fun updateSpinner() {
             selectorSpinner.onItemSelectedListener = null
             val mappings = widget.mapping
             val mappingAdapter = ArrayAdapter<OHMapping>(context, R.layout.item_text, mappings)

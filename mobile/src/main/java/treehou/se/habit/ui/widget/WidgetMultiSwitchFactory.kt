@@ -38,11 +38,9 @@ class WidgetMultiSwitchFactory @Inject constructor() : WidgetFactory {
     inner class MultiSwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
         private val widgetButtons: RadioGroup = view.findViewById(R.id.widgetButtons)
-        private lateinit var widget: OHWidget
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
 
             widgetButtons.removeAllViews()
             val layoutInflater = LayoutInflater.from(itemView.context)

@@ -36,7 +36,6 @@ class WidgetColorpickerFactory @Inject constructor() : WidgetFactory {
 
     inner class ColorPickerWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
 
-        private lateinit var widget: OHWidget
         val incrementButton: ImageButton = view.findViewById(R.id.incrementButton)
         val decrementButton: ImageButton = view.findViewById(R.id.decrementButton)
 
@@ -44,9 +43,8 @@ class WidgetColorpickerFactory @Inject constructor() : WidgetFactory {
             setupOpenColorPickerListener()
         }
 
-        override fun bind(widget: OHWidget) {
-            super.bind(widget)
-            this.widget = widget
+        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
+            super.bind(itemWidget)
             setupIncrementDecrementButtons()
         }
 
