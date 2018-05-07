@@ -15,19 +15,7 @@ fun Resources.getColorAttr(@AttrRes colorAttribute: Int, theme: Theme): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(colorAttribute, typedValue, true)
 
-    val colorRes = typedValue.resourceId
-    var color = -1
-    try {
-        color = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getColor(colorRes, theme)
-        } else {
-            getColor(colorRes)
-        }
-    } catch (e: Resources.NotFoundException) {
-        Log.w("Resources", "Not found color resource by id: $colorRes")
-    }
-
-    return color
+    return typedValue.data
 }
 
 
