@@ -8,14 +8,17 @@ import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.util.Log
 import android.util.TypedValue
+import android.content.res.TypedArray
 
 
-@ColorInt
+
+
+@ColorRes
 fun Resources.getColorAttr(@AttrRes colorAttribute: Int, theme: Theme): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(colorAttribute, typedValue, true)
 
-    return typedValue.data
+    return typedValue.resourceId
 }
 
 

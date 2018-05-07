@@ -11,6 +11,7 @@
 
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="widgetItemBackground">@color/background_card</item>
 
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
@@ -44,6 +45,7 @@
         <item name="android:textColorSecondary">@color/text_secondary_dark</item>
 
         <item name="android:windowBackground">@color/background_dark</item>
+        <item name="widgetItemBackground">@color/background_card_dark</item>
 
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
