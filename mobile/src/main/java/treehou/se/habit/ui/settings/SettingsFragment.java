@@ -31,7 +31,6 @@ import treehou.se.habit.mvp.BaseDaggerFragment;
 import treehou.se.habit.ui.adapter.ImageAdapter;
 import treehou.se.habit.ui.adapter.ImageItem;
 import treehou.se.habit.ui.settings.subsettings.general.GeneralSettingsFragment;
-import treehou.se.habit.ui.settings.subsettings.wiget.WidgetSettingsFragment;
 import treehou.se.habit.util.IntentHelper;
 
 public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presenter> implements SettingsContract.View {
@@ -89,18 +88,11 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
         super.onCreate(savedInstanceState);
 
         ArrayList<ImageItem> items = new ArrayList<>();
-        items.add(new ImageItem(SettingsItems.ITEM_WIDGETS, getString(R.string.settings_widgets), R.drawable.ic_item_settings_widget));
         items.add(new ImageItem(SettingsItems.ITEM_GENERAL, getString(R.string.settings_general), R.drawable.ic_item_notification));
         items.add(new ImageItem(SettingsItems.ITEM_LICENSES, getString(R.string.open_source_libraries), R.drawable.ic_license));
         items.add(new ImageItem(SettingsItems.ITEM_TRANSLATE, getString(R.string.help_translate), R.drawable.ic_language));
 
         mAdapter = new ImageAdapter(getActivity(), items);
-    }
-
-    @Override
-    public void showWidgetSettings() {
-        Fragment fragment = WidgetSettingsFragment.Companion.newInstance();
-        openPage(fragment);
     }
 
     @Override
@@ -150,9 +142,6 @@ public class SettingsFragment extends BaseDaggerFragment<SettingsContract.Presen
         ImageItem item = (ImageItem) parent.getItemAtPosition(position);
 
         switch (item.getId()) {
-            case SettingsItems.ITEM_WIDGETS:
-                presenter.openWidgetSettings();
-                break;
             case SettingsItems.ITEM_GENERAL:
                 presenter.openGeneralSettings();
                 break;

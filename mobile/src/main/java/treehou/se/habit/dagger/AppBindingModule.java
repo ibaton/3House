@@ -21,7 +21,6 @@ import treehou.se.habit.dagger.fragment.SitemapComponent;
 import treehou.se.habit.dagger.fragment.SitemapListComponent;
 import treehou.se.habit.dagger.fragment.SitemapSelectComponent;
 import treehou.se.habit.dagger.fragment.SitemapSettingsComponent;
-import treehou.se.habit.dagger.fragment.WidgetSettingsComponent;
 import treehou.se.habit.ui.colorpicker.LightFragment;
 import treehou.se.habit.ui.main.MainActivity;
 import treehou.se.habit.ui.servers.ServerMenuFragment;
@@ -34,7 +33,6 @@ import treehou.se.habit.ui.servers.sitemaps.list.SitemapSelectFragment;
 import treehou.se.habit.ui.servers.sitemaps.sitemapsettings.SitemapSettingsFragment;
 import treehou.se.habit.ui.settings.SettingsFragment;
 import treehou.se.habit.ui.settings.subsettings.general.GeneralSettingsFragment;
-import treehou.se.habit.ui.settings.subsettings.wiget.WidgetSettingsFragment;
 import treehou.se.habit.ui.sitemaps.page.PageFragment;
 import treehou.se.habit.ui.sitemaps.sitemap.SitemapFragment;
 import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
@@ -48,7 +46,6 @@ import treehou.se.habit.ui.sitemaps.sitemaplist.SitemapListFragment;
                 SettingsComponent.class,
                 ServerMenuComponent.class,
                 GeneralSettingsComponent.class,
-                WidgetSettingsComponent.class,
                 SitemapComponent.class,
                 ServersComponent.class,
                 SitemapSettingsComponent.class,
@@ -134,9 +131,4 @@ public abstract class AppBindingModule {
     @IntoMap
     @FragmentKey(PageFragment.class)
     public abstract FragmentComponentBuilder pageComponentBuilder(PageComponent.Builder impl);
-
-    @Binds
-    @IntoMap
-    @FragmentKey(WidgetSettingsFragment.class)
-    public abstract FragmentComponentBuilder widgetSettingsComponentBuilder(WidgetSettingsComponent.Builder impl);
 }

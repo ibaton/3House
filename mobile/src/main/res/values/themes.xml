@@ -12,8 +12,9 @@
 
         <item name="android:itemBackground">@color/background</item>
         <item name="widgetItemBackground">@color/background_card</item>
+        <item name="colorBackgroundAccent">@color/colorBackgroundAccent</item>
+
         <item name="inputBox">@drawable/input_box_light</item>
-        <item name="itemDivider">@drawable/item_divider</item>
         <item name="card_style">@style/item_card</item>
         <item name="menu_item_style">@style/menu_item_icon</item>
         <item name="actionbar_style">@style/actionbar_primary</item>
@@ -33,6 +34,7 @@
         <item name="inputBox">@drawable/input_box_dark</item>
 
         <item name="windowActionModeOverlay">false</item>
+        <item name="colorBackgroundAccent">@color/colorBackgroundAccentDark</item>
 
         <item name="android:textColorPrimary">@color/text_primary_dark</item>
         <item name="android:textColorSecondary">@color/text_secondary_dark</item>
@@ -41,7 +43,6 @@
         <item name="android:itemBackground">@color/background_dark</item>
         <item name="widgetItemBackground">@color/background_card_dark</item>
 
-        <item name="itemDivider">@drawable/item_divider_dark</item>
         <item name="card_style">@style/item_card_dark</item>
         <item name="menu_item_style">@style/menu_item_icon_dark</item>
         <item name="actionbar_style">@style/actionbar_dark</item>

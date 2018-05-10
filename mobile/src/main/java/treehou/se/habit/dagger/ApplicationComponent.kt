@@ -25,7 +25,6 @@ import treehou.se.habit.ui.homescreen.VoiceService
 import treehou.se.habit.ui.links.LinksListFragment
 import treehou.se.habit.ui.menu.NavigationDrawerFragment
 import treehou.se.habit.ui.util.IconPickerActivity
-import treehou.se.habit.ui.widgets.factories.switches.RollerShutterWidgetHolder
 import javax.inject.Singleton
 
 /**
@@ -67,8 +66,6 @@ interface ApplicationComponent {
     fun inject(fragment: CellIncDecConfigFragment)
 
     fun inject(fragment: CellSliderConfigFragment)
-
-    fun inject(holder: RollerShutterWidgetHolder)
 
     fun inject(activity: SliderActivity)
 

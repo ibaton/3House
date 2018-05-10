@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:divider="?attr/itemDivider"
+            android:divider="@drawable/item_divider"
             android:showDividers="beginning|middle"
             android:id="@+id/lou_widget_frame_holder"/>
     </android.support.v7.widget.CardView>

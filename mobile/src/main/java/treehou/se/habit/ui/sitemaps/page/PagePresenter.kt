@@ -14,7 +14,6 @@ import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.dagger.RxPresenter
 import treehou.se.habit.dagger.ServerLoaderFactory
-import treehou.se.habit.ui.widgets.WidgetFactory
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.RxUtil
 import treehou.se.habit.util.logging.Logger
@@ -23,13 +22,12 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class PagePresenter @Inject
-constructor(private val view: PageContract.View, private val fragment: PageFragment, private val context: Context, @param:Named("arguments") private val args: Bundle, private val log: Logger, private val widgetFactory: WidgetFactory, private val serverLoaderFactory: ServerLoaderFactory, private val connectionFactory: ConnectionFactory, private val realm: Realm) : RxPresenter(), PageContract.Presenter {
+constructor(private val view: PageContract.View, private val fragment: PageFragment, private val context: Context, @param:Named("arguments") private val args: Bundle, private val log: Logger, private val serverLoaderFactory: ServerLoaderFactory, private val connectionFactory: ConnectionFactory, private val realm: Realm) : RxPresenter(), PageContract.Presenter {
 
     @Inject
     lateinit var logger: Logger
 
     private val widgets = ArrayList<OHWidget>()
-    private val widgetHolders = ArrayList<WidgetFactory.IWidgetHolder>()
     private var initialized = false
 
     private var server: ServerDB? = null
@@ -140,13 +138,8 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
 
         this.page = page
         val pageWidgets = page.widgets
-        val invalidate = !canBeUpdated(widgets, pageWidgets) || force
 
-        if (invalidate) {
-            invalidateWidgets(pageWidgets)
-        } else {
-            updateWidgets(pageWidgets)
-        }
+        invalidateWidgets(pageWidgets)
 
         view.updatePage(page)
     }
@@ -214,42 +207,6 @@ constructor(private val view: PageContract.View, private val fragment: PageFragm
     private fun invalidateWidgets(pageWidgets: List<OHWidget>) {
         log.d(TAG, "Invalidate widgets")
         view.setWidgets(pageWidgets)
-        /*widgetHolders.clear()
-
-        for (widget in pageWidgets) {
-            try {
-                val widgetView = widgetFactory.createWidget(fragment.context, server!!.toGeneric(), page, widget, null)
-                widgetHolders.add(widgetView)
-            } catch (e: Exception) {
-                log.w(TAG, "Create widget failed", e)
-            }
-
-        }
-        view.setWidgets(widgetHolders)
-
-        widgets.clear()
-        widgets.addAll(pageWidgets)*/
-    }
-
-    /**
-     * Update widgets in page.
-     * @param pageWidgets the data to update widgets with.
-     */
-    private fun updateWidgets(pageWidgets: List<OHWidget>) {
-        for (i in widgetHolders.indices) {
-
-            try {
-                val holder = widgetHolders[i]
-
-                log.d(TAG, "updating widget " + holder.javaClass.simpleName)
-                val newWidget = pageWidgets[i]
-
-                holder.update(newWidget)
-            } catch (e: Exception) {
-                log.w(TAG, "Updating widget failed", e)
-            }
-
-        }
     }
 
     companion object {

@@ -50,4 +50,6 @@
 
     <dimen name="cell_border">0.25dp</dimen>
     <dimen name="fab_margin">20dp</dimen>
+
+    <dimen name="webview_row_height">36dp</dimen>
 </resources>

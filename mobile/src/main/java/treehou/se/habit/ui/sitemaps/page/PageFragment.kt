@@ -1,6 +1,9 @@
 package treehou.se.habit.ui.sitemaps.page
 
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
@@ -83,10 +86,16 @@ class PageFragment : BaseDaggerFragment<PageContract.Presenter>(), PageContract.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val context = context
+
         val linearLayoutManager = LinearLayoutManager(context)
         widgetList.layoutManager = linearLayoutManager
         widgetList.itemAnimator = DefaultItemAnimator()
         val dividerItemDecoration = DividerItemDecoration(widgetList.context, linearLayoutManager.orientation)
+        if(context != null) {
+            val divider = ResourcesCompat.getDrawable(context.resources, R.drawable.item_divider, context.theme)
+            divider?.let { dividerItemDecoration.setDrawable(it) }
+        }
         widgetList.addItemDecoration(dividerItemDecoration)
         widgetList.adapter = adapter
     }

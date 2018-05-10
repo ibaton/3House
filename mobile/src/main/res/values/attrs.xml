@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="itemDivider" format="reference" />
+    <attr name="colorBackgroundAccent" format="reference" />
     <attr name="inputBox" format="reference" />
     <attr name="actionbar_style" format="reference" />
     <attr name="widgetItemBackground" format="reference" />
