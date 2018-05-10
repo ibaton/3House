@@ -3,7 +3,6 @@
     <string name="app_name">3Hou.se</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="account">Account</string>
     <string name="title_activity_colorpicker">ColorpickerActivity</string>
     <string name="sitemap">Sitemap</string>
     <string name="servers">Servers</string>
@@ -11,13 +10,9 @@
     <string name="controllers">Controllers</string>
     <string name="sitemaps">Sitemaps</string>
     <string name="add_widget">Add widget</string>
-    <string name="notification_title">3Hou.se</string>
-    <string name="notification_to_speech_detail">Notification to speech</string>
-    <string name="action_add_controller">Add Controller</string>
     <string name="voice_command_title">At your command</string>
     <string name="controller_name">Name</string>
     <string name="voice_command">Voice command</string>
-    <string name="add_server">Add server</string>
     <string name="scan_for_server">Scan for server</string>
     <string name="openhab_server">Openhab Server</string>
     <string name="server_local">Local - http://host:port</string>
@@ -32,14 +27,8 @@
     <string name="command">Command</string>
     <string name="image">Image</string>
     <string name="settings_widgets">Widgets</string>
-    <string name="settings_notification">Notifications</string>
     <string name="settings_general">General</string>
     <string name="settings_widget">Widget</string>
-    <string name="label_widget_text">Widget text</string>
-    <string name="hdr_text">Text</string>
-    <string name="hdr_text_size">Size</string>
-    <string name="hdr_image">Image</string>
-    <string name="hdr_background">Background</string>
     <string name="loading">Loading</string>
     <string name="title_activity_slider">Slider</string>
     <string name="max">Max</string>
@@ -49,7 +38,6 @@
     <string name="label_switch">Switch</string>
     <string name="item">Item</string>
     <string name="button">Button</string>
-    <string name="compressed">Compressed</string>
     <string name="slider">Slider</string>
     <string name="about">About</string>
     <string name="feedback">Feedback</string>
@@ -104,7 +92,6 @@
     <string name="inbox">Inbox</string>
     <string name="inbox_property" translatable="false">%1$s:%2$s</string>
     <string name="ignore">Ignore</string>
-    <string name="ignore_item">Don\'t show this item in the list again. Don\'t worry you\'ll be able to find them later.</string>
     <string name="approve_item">Approve</string>
     <string name="approve_this_item">Add this item to your item list.</string>
     <string name="undo">UNDO</string>
@@ -143,7 +130,6 @@
     <string name="mtm_connect_anyway">Do you want to connect anyway?</string>
     <string name="mtm_cert_details">Certificate details:</string>
     <string name="mtm_decision_always">Always</string>
-    <string name="mtm_decision_once">Once</string>
     <string name="mtm_decision_abort">Abort</string>
     <string name="mtm_notification">Certificate Verification</string>
     <string name="unknown_certificate_accept_in_notification">Unknown certificate. Accept in notification.</string>

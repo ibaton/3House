@@ -27,7 +27,7 @@ class ControllerAdapter(private val context: Context) : RecyclerView.Adapter<Con
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ControllerHolder {
 
         val inflater = LayoutInflater.from(context)
-        val itemView = inflater.inflate(R.layout.item_controller, null)
+        val itemView = inflater.inflate(R.layout.item_controller, viewGroup, false)
 
         return ControllerHolder(itemView)
     }

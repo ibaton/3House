@@ -20,12 +20,6 @@
         <item name="actionbar_style">@style/actionbar_primary</item>
     </style>
 
-    <style name="AppTheme.Base.Transparent">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-    </style>
-
     <style name="AppTheme.Base.Dark" parent="Theme.AppCompat.NoActionBar">
 
         <item name="colorPrimary">@color/colorPrimary</item>

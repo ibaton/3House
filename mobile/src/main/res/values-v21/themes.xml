@@ -85,13 +85,4 @@
         <item name="inputBox">@drawable/input_box_dark</item>
     </style>
 
-    <style name="AppTheme.Base.Transparent">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/explode</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/explode</item>
-    </style>
-
 </resources>

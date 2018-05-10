@@ -12,12 +12,8 @@
     <dimen name="navigation_drawer_width">280dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
 
-    <dimen name="button_size">64dp</dimen>
-    <dimen name="button_size_small">45dp</dimen>
-    <dimen name="widget_default_padding_vertical">10dp</dimen>
     <dimen name="default_item_padding">10dp</dimen>
     <dimen name="item_margin">10dp</dimen>
-    <dimen name="item_margin_half">5dp</dimen>
 
     <dimen name="dialog_padding">30dp</dimen>
 
@@ -27,12 +23,10 @@
 
     <dimen name="item_spacing_vertical">0.5dp</dimen>
     <dimen name="item_spacing">6dp</dimen>
-    <dimen name="item_spacing_half">3dp</dimen>
 
     <dimen name="larger_spacing">20dp</dimen>
     <dimen name="large_spacing">14dp</dimen>
     <dimen name="medium_spacing">7dp</dimen>
-    <dimen name="small_spacing">3dp</dimen>
 
     <dimen name="item_elevation">3dp</dimen>
 
@@ -41,7 +35,6 @@
     <dimen name="controller_config_icon_height">80dp</dimen>
     <dimen name="menu_item_image_size">80dp</dimen>
     <dimen name="menu_item_image_size_small">40dp</dimen>
-    <dimen name="color_spacer">5dp</dimen>
     <dimen name="full_page_empty_padding">10dp</dimen>
     <dimen name="dialog_margin">50dp</dimen>
     <dimen name="space_separator">10dp</dimen>

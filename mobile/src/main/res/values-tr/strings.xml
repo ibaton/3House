@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">3E.v</string>
-    <string name="account">Hesap</string>
     <string name="title_activity_colorpicker">Renkseçimaktivitesi</string>
     <string name="sitemap">Siteharitası</string>
     <string name="servers">Ana Makinalar</string>
@@ -9,7 +8,6 @@
     <string name="controllers">Kontrolediciler</string>
     <string name="sitemaps">Siteharitaları</string>
     <string name="add_widget">widget ekle</string>
-    <string name="notification_title">3E.v</string>
     <string name="server_local">Yerel - http://anamakine:port</string>
     <string name="server_remote">Uzak - http://anamakine:port</string>
     <string name="password">Şifre</string>
@@ -21,14 +19,8 @@
     <string name="item_type">Öğe Türü</string>
     <string name="command">Komut</string>
     <string name="image">Resim</string>
-    <string name="settings_notification">Bildirimler</string>
     <string name="settings_general">Genel</string>
     <string name="settings_widget">Arabirim Öğesi</string>
-    <string name="label_widget_text">Arabirim Öğesi Yazısı</string>
-    <string name="hdr_text">Yazı</string>
-    <string name="hdr_text_size">Boyut</string>
-    <string name="hdr_image">Resim</string>
-    <string name="hdr_background">Arkaplan</string>
     <string name="loading">Yükleniyor</string>
     <string name="title_activity_slider">Slayt</string>
     <string name="max">En fazla</string>
@@ -38,7 +30,6 @@
     <string name="label_switch">Anahtar</string>
     <string name="item">Öğe</string>
     <string name="button">düğme</string>
-    <string name="compressed">Sıkıştırılmış</string>
     <string name="slider">Kayan Düğme</string>
     <string name="about">Hakkında</string>
     <string name="feedback">Geribildirim</string>

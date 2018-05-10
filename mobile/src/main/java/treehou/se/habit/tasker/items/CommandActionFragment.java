@@ -107,8 +107,7 @@ public class CommandActionFragment extends RxFragment {
 
     private List<OHItem> filterItems(List<OHItem> items){
 
-        List<OHItem> tempItems = new ArrayList<>();
-        tempItems.addAll(items);
+        List<OHItem> tempItems = new ArrayList<>(items);
         items.clear();
         items.addAll(tempItems);
 

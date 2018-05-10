@@ -73,7 +73,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="@dimen/controller_button_space"
                     android:id="@+id/btn_add_row"
                     android:padding="10dp"
@@ -83,7 +83,7 @@
                     android:layout_marginRight="@dimen/margin_controller_cell"
                     android:layout_marginLeft="@dimen/margin_controller_cell"/>
 
-                <FrameLayout
+                <View
                     android:layout_width="@dimen/controller_button_space"
                     android:layout_height="@dimen/controller_button_space"/>
             </LinearLayout>

@@ -1,25 +1,7 @@
 <resources>
 
-    <style name="DarkActionbar" parent="Theme.AppCompat">
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
-        <item name="actionMenuTextColor">@color/abc_primary_text_material_light</item>
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
-    </style>
-
-    <style name="DarkText" parent="TextAppearance.AppCompat.Button">
-        <item name="android:textColor">@color/text_dark</item>
-    </style>
-
-    <style name="Label.Color" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
-
     <style name="CreateServerText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/text_dark</item>
-    </style>
-
-    <style name="CreateServerText.Large">
-        <item name="android:textSize">30sp</item>
     </style>
 
     <style name="CreateServerText.Error">
@@ -42,11 +24,6 @@
         <item name="android:lines">1</item>
     </style>
 
-    <style name="DiscreteHeader" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">20sp</item>
-        <item name="android:lines">1</item>
-    </style>
-
     <style name="DescriptionText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">16sp</item>
     </style>
@@ -56,25 +33,9 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="WidgetHeading" parent="TextAppearance.AppCompat.Large">
-        <item name="android:textSize">16sp</item>
-    </style>
-
     <style name="WidgetText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">16sp</item>
         <item name="android:autoLink">none</item>
-    </style>
-
-    <style name="WidgetSubText" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/colorValueItem</item>
-        <item name="android:autoLink">none</item>
-    </style>
-
-    <style name="FrameHeader" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/frame_header</item>
     </style>
 
     <style name="TransparentTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -94,10 +55,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">left|center_vertical</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="inbox_item_button" parent="Widget.AppCompat.ImageButton">
-        <item name="android:padding">10dp</item>
     </style>
 
     <style name="item_card" parent="CardView">
@@ -140,14 +97,6 @@
         <item name="android:padding">@dimen/item_spacing</item>
     </style>
 
-    <style name="widget_with_parent">
-        <item name="android:background">?itemBackground</item>
-    </style>
-
-    <style name="widget_without_parent">
-        <item name="elevation">0dp</item>
-    </style>
-
     <style name="TextInputLabel">
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingStart">10dp</item>
@@ -175,8 +124,4 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_margin">@dimen/large_spacing</item>
     </style>
-
-    <style name="AppTheme.Base.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.Base.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

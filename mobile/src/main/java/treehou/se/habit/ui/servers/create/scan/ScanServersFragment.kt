@@ -157,7 +157,7 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ServerHolder {
 
             val inflater = LayoutInflater.from(context)
-            val itemView = inflater.inflate(R.layout.item_scan_server, null)
+            val itemView = inflater.inflate(R.layout.item_scan_server, viewGroup, false)
 
             return ServerHolder(itemView)
         }

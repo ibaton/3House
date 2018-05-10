@@ -63,13 +63,13 @@ class SitemapAdapter : RecyclerView.Adapter<SitemapAdapter.SitemapBaseHolder>() 
 
         val inflater = LayoutInflater.from(parent.context)
         if (SitemapItem.STATE_SUCCESS == type) {
-            val itemView = inflater.inflate(R.layout.item_sitemap, null)
+            val itemView = inflater.inflate(R.layout.item_sitemap, parent, false)
             return SitemapHolder(itemView)
         } else if (SitemapItem.STATE_LOADING == type) {
-            val itemView = inflater.inflate(R.layout.item_sitemap_load, null)
+            val itemView = inflater.inflate(R.layout.item_sitemap_load, parent, false)
             return SitemapLoadHolder(itemView)
         } else {
-            val serverLoadFail = inflater.inflate(R.layout.item_sitemap_failed, null)
+            val serverLoadFail = inflater.inflate(R.layout.item_sitemap_failed, parent, false)
             return SitemapErrorHolder(serverLoadFail)
         }
     }

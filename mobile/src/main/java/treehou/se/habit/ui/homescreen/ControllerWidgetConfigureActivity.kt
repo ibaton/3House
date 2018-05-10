@@ -111,7 +111,7 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
     }
 
     companion object {
-        val TAG = "ControllerWidgetConfigureActivity"
+        const val TAG = "ControllerWidgetConfi"
         private val PREFS_NAME = "treehou.se.habit.ui.homescreen.ControllerWidget"
         private val PREF_PREFIX_KEY = "appwidget_"
         private val PREF_POSTFIX_SHOW_TITLE = "_show_title"

@@ -3,7 +3,6 @@
     <string name="app_name">3Hou.se</string>
     <string name="navigation_drawer_open">Otwórz nawigację</string>
     <string name="navigation_drawer_close">Zamknij nawigację</string>
-    <string name="account">Konto</string>
     <string name="title_activity_colorpicker">Pobierz kolor</string>
     <string name="sitemap">Mapa</string>
     <string name="servers">Serwery</string>
@@ -11,13 +10,9 @@
     <string name="controllers">Kontrolery</string>
     <string name="sitemaps">Mapa</string>
     <string name="add_widget">Dodaj widget</string>
-    <string name="notification_title">3Hou.se</string>
-    <string name="notification_to_speech_detail">Powiadomienie głosowe</string>
-    <string name="action_add_controller">Dodaj kontroler</string>
     <string name="voice_command_title">Na Twoją komendę</string>
     <string name="controller_name">Nazwa</string>
     <string name="voice_command">Komenda głosowa</string>
-    <string name="add_server">Dodaj serwer</string>
     <string name="scan_for_server">Szukaj serwera</string>
     <string name="openhab_server">Serwer Openhab</string>
     <string name="server_local">Lokalny - http://host:port</string>
@@ -32,14 +27,8 @@
     <string name="command">Komenda</string>
     <string name="image">Obraz</string>
     <string name="settings_widgets">Widget</string>
-    <string name="settings_notification">Powiadomienie</string>
     <string name="settings_general">Głowne</string>
     <string name="settings_widget">Widget</string>
-    <string name="label_widget_text">Tekst Widget</string>
-    <string name="hdr_text">Tekst</string>
-    <string name="hdr_text_size">Rozmiar</string>
-    <string name="hdr_image">Obraz</string>
-    <string name="hdr_background">Tło</string>
     <string name="loading">Ładowanie</string>
     <string name="title_activity_slider">Suwak</string>
     <string name="max">Maks</string>
@@ -49,7 +38,6 @@
     <string name="label_switch">Przełącznik</string>
     <string name="item">Element</string>
     <string name="button">Przycisk</string>
-    <string name="compressed">Skompresowane</string>
     <string name="slider">Suwak</string>
     <string name="about">O programie</string>
     <string name="feedback">Uwagi</string>

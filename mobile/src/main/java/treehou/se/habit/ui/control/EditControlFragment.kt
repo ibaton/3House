@@ -139,7 +139,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
         val inflater = LayoutInflater.from(getActivity())
         Log.d(TAG, "Drawing controller " + controller!!.cellRows.size)
         for (row in controller!!.cellRows) {
-            val louRow = inflater.inflate(R.layout.controller_row_edit, null) as LinearLayout
+            val louRow = inflater.inflate(R.layout.controller_row_edit, louController, false) as LinearLayout
 
             val rowParam = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
