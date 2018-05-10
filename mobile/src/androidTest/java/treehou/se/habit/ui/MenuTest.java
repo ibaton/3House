@@ -39,28 +39,28 @@ public class MenuTest {
 
     @Test
     public void testOpenSitemaps() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.lbl_name), withText(R.string.sitemaps))).perform(ViewActions.click());
         Assert.assertTrue(activityRule.getActivity().getSupportFragmentManager().findFragmentById(R.id.page_container) instanceof SitemapListFragment);
     }
 
     @Test
     public void testOpenControllers() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.lbl_name), withText(R.string.controllers))).perform(ViewActions.click());
         Assert.assertTrue(activityRule.getActivity().getSupportFragmentManager().findFragmentById(R.id.page_container) instanceof ControllsFragment);
     }
 
     @Test
     public void testOpenServers() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.lbl_name), withText(R.string.servers))).perform(ViewActions.click());
         Assert.assertTrue(activityRule.getActivity().getSupportFragmentManager().findFragmentById(R.id.page_container) instanceof ServersFragment);
     }
 
     @Test
     public void testOpenSettings() {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open());
         onView(allOf(withId(R.id.lbl_name), withText(R.string.settings))).perform(ViewActions.click());
         Assert.assertTrue(activityRule.getActivity().getSupportFragmentManager().findFragmentById(R.id.page_container) instanceof SettingsFragment);
     }

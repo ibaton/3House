@@ -11,8 +11,8 @@ import treehou.se.habit.R
 import treehou.se.habit.ui.main.MainActivity
 
 /**
- * Implementation of App Widget functionality.
- * App Widget Configuration implemented in [SitemapWidgetConfigureActivity]
+ * Implementation of App WidgetFactory functionality.
+ * App WidgetFactory Configuration implemented in [SitemapWidgetConfigureActivity]
  */
 class SitemapWidget : AppWidgetProvider() {
 

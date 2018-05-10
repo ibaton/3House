@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="account">Compte</string>
     <string name="sitemap">Plan du site</string>
     <string name="servers">Serveurs</string>
     <string name="settings">Paramètres</string>
     <string name="controllers">Contrôleurs</string>
     <string name="sitemaps">Plans de site</string>
     <string name="add_widget">Ajouter un widget</string>
-    <string name="notification_to_speech_detail">Notifications vocales</string>
-    <string name="action_add_controller">Ajouter un contrôleur</string>
     <string name="controller_name">Nom</string>
     <string name="voice_command">Commande vocale</string>
-    <string name="add_server">Ajouter un serveur</string>
     <string name="scan_for_server">Rechercher des serveurs</string>
     <string name="openhab_server">Serveur Openhab</string>
     <string name="server_local">Local - http://host:port</string>
@@ -26,14 +22,8 @@
     <string name="command">Commande</string>
     <string name="image">Image</string>
     <string name="settings_widgets">Widgets</string>
-    <string name="settings_notification">Notifications</string>
     <string name="settings_general">Général</string>
     <string name="settings_widget">Widget</string>
-    <string name="label_widget_text">Texte de widget</string>
-    <string name="hdr_text">Texte</string>
-    <string name="hdr_text_size">Taille</string>
-    <string name="hdr_image">Image</string>
-    <string name="hdr_background">Arrière plan</string>
     <string name="loading">Chargement en cours</string>
     <string name="cancel">Annuler</string>
     <string name="pick_color">Sélectionner une couleur</string>
@@ -41,7 +31,6 @@
     <string name="label_switch">Interrupteur</string>
     <string name="item">Elément</string>
     <string name="button">Bouton</string>
-    <string name="compressed">Compressé</string>
     <string name="about">A propos</string>
     <string name="feedback">Retour utilisateur</string>
     <string name="google_plus_community">Communauté G+</string>

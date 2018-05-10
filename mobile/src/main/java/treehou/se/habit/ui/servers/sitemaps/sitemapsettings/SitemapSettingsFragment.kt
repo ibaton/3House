@@ -69,19 +69,19 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
 
         sitemapObservable.map { sitemapDB -> sitemapDB.settingsDB!!.display }
                 .compose(bindToLifecycle())
-                .subscribe(RxCompoundButton.checked(cbxShowSitemaps))
+                .subscribe({RxCompoundButton.checked(cbxShowSitemaps)}, {logger.e(TAG, "Sitemap observable failed", it)})
 
         Flowable.combineLatest<SitemapDB, Boolean, Pair<SitemapDB, Boolean>>(sitemapObservable,
                 RxCompoundButton.checkedChanges(cbxShowSitemaps).toFlowable(BackpressureStrategy.LATEST),
                 BiFunction<SitemapDB, Boolean, Pair<SitemapDB, Boolean>> { first, second -> Pair(first, second) })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { sitemapDBBooleanPair ->
-                    val sitemapDB = sitemapDBBooleanPair.first
-                    val showSitemap = sitemapDBBooleanPair.second!!
+                .subscribe ({
+                    val sitemapDB = it.first
+                    val showSitemap = it.second!!
                     realm.beginTransaction()
                     sitemapDB!!.settingsDB!!.display = showSitemap
                     realm.commitTransaction()
-                }
+                }, {logger.e(TAG, "Sitemap db observable failed", it)})
 
         return view
     }

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer-array name="custom_theme" translatable="false">
-        <item>@color/colorPrimaryDarker</item>
-        <item>@color/colorPrimaryDark</item>
-        <item>@color/colorPrimary</item>
-        <item>@color/colorPrimaryLighter</item>
-    </integer-array>
-
     <array name="cell_colors" translatable="false">
         <item>#00000000</item>
         <item>#33000000</item>

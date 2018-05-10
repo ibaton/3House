@@ -47,7 +47,7 @@ open class BaseActivity : RxAppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ fullscreen ->
                     showFullscreen(fullscreen)
-                }) { throwable -> logger.e(TAG, "Failed to set fullscreen mode", throwable) }
+                }) { logger.e(TAG, "Failed to set fullscreen mode", it) }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

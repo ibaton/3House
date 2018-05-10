@@ -3,7 +3,6 @@
     <string name="app_name">3Hou.se</string>
     <string name="navigation_drawer_open">Открыть панель навигации</string>
     <string name="navigation_drawer_close">Закрыть панель навигации</string>
-    <string name="account">Аккаунт</string>
     <string name="title_activity_colorpicker">Выбор цвета</string>
     <string name="sitemap">Sitemap</string>
     <string name="servers">Серверы</string>
@@ -11,13 +10,9 @@
     <string name="controllers">Контроллеры</string>
     <string name="sitemaps">Карты сайтов</string>
     <string name="add_widget">Добавить виджет</string>
-    <string name="notification_title">3Hou.se</string>
-    <string name="notification_to_speech_detail">Речевое уведомление</string>
-    <string name="action_add_controller">Добавить контроллер</string>
     <string name="voice_command_title">В вашей команде</string>
     <string name="controller_name">Имя</string>
     <string name="voice_command">Голосовая команда</string>
-    <string name="add_server">Добавить сервер</string>
     <string name="scan_for_server">Искать серверы</string>
     <string name="openhab_server">Сервер Openhab</string>
     <string name="server_local">Локальный сервер - http://host:port</string>
@@ -32,14 +27,8 @@
     <string name="command">КомандаЫ</string>
     <string name="image">Изображение</string>
     <string name="settings_widgets">Виджеты</string>
-    <string name="settings_notification">Уведомления</string>
     <string name="settings_general">Основное</string>
     <string name="settings_widget">Виджет</string>
-    <string name="label_widget_text">Текст виджета</string>
-    <string name="hdr_text">Текст</string>
-    <string name="hdr_text_size">Размер</string>
-    <string name="hdr_image">Изображение</string>
-    <string name="hdr_background">Фон</string>
     <string name="loading">Загрузка</string>
     <string name="title_activity_slider">Слайдер</string>
     <string name="max">Максимум</string>
@@ -49,7 +38,6 @@
     <string name="label_switch">Переключатель</string>
     <string name="item">Пункт</string>
     <string name="button">Кнопка</string>
-    <string name="compressed">Сжато</string>
     <string name="slider">Слайдер</string>
     <string name="about">О приложении</string>
     <string name="feedback">Обратная связь</string>
@@ -101,7 +89,6 @@
     <string name="start_scan_question">Ни один сервер не настроен. Вы хотите поискать один в вашей локальной сети?</string>
     <string name="inbox">Входящие</string>
     <string name="ignore">Игнорировать</string>
-    <string name="ignore_item">Не показывать этот пункт в списке снова. Не волнуйтесь, вы сможете найти его позже.</string>
     <string name="approve_item">Одобрить</string>
     <string name="approve_this_item">Добавить этот элемент в список элементов.</string>
     <string name="undo">вернуть</string>

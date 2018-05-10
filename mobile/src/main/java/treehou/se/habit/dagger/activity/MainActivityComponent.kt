@@ -8,7 +8,7 @@ import treehou.se.habit.dagger.scopes.ActivityScope
 import treehou.se.habit.ui.main.MainActivity
 
 @ActivityScope
-@Subcomponent(modules = arrayOf(MainActivityModule::class))
+@Subcomponent(modules = [(MainActivityModule::class)])
 interface MainActivityComponent : ActivityComponent<MainActivity> {
 
     @Subcomponent.Builder

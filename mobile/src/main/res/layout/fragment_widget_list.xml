@@ -5,17 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.sitemaps.page.PageFragment">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView5" >
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lou_widgets">
-        </LinearLayout>
-    </ScrollView>
+    <android.support.v7.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/widgetList" />
 
 </FrameLayout>

@@ -2,9 +2,9 @@ package treehou.se.habit.ui.sitemaps.page
 
 
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
+import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import treehou.se.habit.mvp.BasePresenter
 import treehou.se.habit.mvp.BaseView
-import treehou.se.habit.ui.widgets.WidgetFactory
 
 interface PageContract {
 
@@ -12,7 +12,7 @@ interface PageContract {
         fun showLostServerConnectionMessage()
         fun closeView()
         fun updatePage(page: OHLinkedPage)
-        fun setWidgets(widgets: List<WidgetFactory.IWidgetHolder>)
+        fun setWidgets(widgets: List<OHWidget>)
     }
 
     interface Presenter : BasePresenter

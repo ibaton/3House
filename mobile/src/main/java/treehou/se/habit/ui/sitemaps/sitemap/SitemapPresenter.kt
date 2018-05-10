@@ -48,7 +48,7 @@ constructor() : RxPresenter(), SitemapContract.Presenter {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             { this.showPage(it) },
-                            { e -> log.w(TAG, "Received page failed", e) }
+                            { log.e(TAG, "Received page failed", it) }
                     )
         }
 

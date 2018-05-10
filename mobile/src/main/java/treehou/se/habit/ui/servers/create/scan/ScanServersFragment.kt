@@ -121,7 +121,8 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         scanner.registerRx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { server -> serversAdapter.addItem(server) }
+                .subscribe ({ server -> serversAdapter.addItem(server) },
+                        {logger.e(TAG, "Scanner registerRx failed", it)})
     }
 
     override fun onDestroyView() {
@@ -156,7 +157,7 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ServerHolder {
 
             val inflater = LayoutInflater.from(context)
-            val itemView = inflater.inflate(R.layout.item_scan_server, null)
+            val itemView = inflater.inflate(R.layout.item_scan_server, viewGroup, false)
 
             return ServerHolder(itemView)
         }

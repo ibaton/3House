@@ -105,7 +105,7 @@ class ControlFragment : Fragment() {
         val inflater = LayoutInflater.from(getActivity())
 
         for (row in controller!!.cellRows) {
-            val louRow = inflater.inflate(R.layout.controller_row, null) as LinearLayout
+            val louRow = inflater.inflate(R.layout.controller_row, louController, false) as LinearLayout
             val rowParam = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
             rowParam.weight = 1f

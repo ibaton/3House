@@ -97,7 +97,7 @@ class SliderActivity : BaseActivity() {
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
             try {
-                val rootView = inflater.inflate(R.layout.fragment_slider, null, false)
+                val rootView = inflater.inflate(R.layout.fragment_slider, container, false)
 
                 itemName = rootView.findViewById(R.id.item_name)
                 sbrNumber = rootView.findViewById(R.id.sbrNumber)
@@ -106,7 +106,7 @@ class SliderActivity : BaseActivity() {
                 return rootView
             } catch (e: Exception) {
                 logger.e(TAG, "Slider adapter inflater fail", e)
-                return inflater.inflate(R.layout.item_widget_null, null, false)
+                return inflater.inflate(R.layout.item_widget_null, container, false)
             }
 
         }
@@ -139,7 +139,7 @@ class SliderActivity : BaseActivity() {
                         } catch (e: Exception) {
                             logger.e(TAG, "Failed to update progress", e)
                         }
-                    }) { e -> logger.e(TAG, "Error getting slider data", e) }
+                    }) { logger.e(TAG, "Error getting slider data", it) }
         }
 
         companion object {

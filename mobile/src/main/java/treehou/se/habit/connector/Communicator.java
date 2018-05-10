@@ -41,7 +41,7 @@ public class Communicator {
     private static Communicator mInstance;
     private Context context;
     private Map<OHServer, Picasso> requestLoaders = new HashMap<>();
-    private X509TrustManager trustManager = null;
+    private X509TrustManager trustManager;
 
     public static synchronized Communicator instance(Context context){
         if (mInstance == null) {

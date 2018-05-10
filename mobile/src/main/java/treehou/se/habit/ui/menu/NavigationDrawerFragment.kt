@@ -149,7 +149,7 @@ class NavigationDrawerFragment : BaseFragment() {
                 }
                 .compose(bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { serverSitemapsResponses ->
+                .subscribe ({ serverSitemapsResponses ->
 
                     val sitemaps = ArrayList<OHSitemap>()
                     for (response in serverSitemapsResponses) {
@@ -161,7 +161,7 @@ class NavigationDrawerFragment : BaseFragment() {
 
                     menuAdapter.clearSitemaps()
                     menuAdapter.addSitemaps(sitemaps)
-                }
+                }, { logger.e(TAG, "Failed to setupSitemapLoader", it) })
     }
 
     /**

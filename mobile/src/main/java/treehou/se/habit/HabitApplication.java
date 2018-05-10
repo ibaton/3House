@@ -37,20 +37,13 @@ public class HabitApplication extends Application implements HasActivitySubcompo
 
     protected ApplicationComponent component;
 
-    @Inject
-    Map<Class<? extends Activity>, ActivityComponentBuilder> activityComponentBuilders;
-    @Inject
-    Map<Class<? extends Fragment>, FragmentComponentBuilder> fragmentComponentBuilders;
-    @Inject
-    OHRealm ohRealm;
-    @Inject
-    Settings settings;
-    @Inject
-    ControllerHandler controllHandler;
-    @Inject
-    NotificationUtil notificationUtil;
-    @Inject
-    GoogleCloudMessageConnector googleCloudMessageConnector;
+    @Inject Map<Class<? extends Activity>, ActivityComponentBuilder> activityComponentBuilders;
+    @Inject Map<Class<? extends Fragment>, FragmentComponentBuilder> fragmentComponentBuilders;
+    @Inject OHRealm ohRealm;
+    @Inject Settings settings;
+    @Inject ControllerHandler controllHandler;
+    @Inject NotificationUtil notificationUtil;
+    @Inject GoogleCloudMessageConnector googleCloudMessageConnector;
 
     @Override
     public void onCreate() {

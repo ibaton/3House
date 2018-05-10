@@ -3,12 +3,14 @@ package treehou.se.habit.ui.settings.subsettings.general
 import io.reactivex.android.schedulers.AndroidSchedulers
 import treehou.se.habit.dagger.RxPresenter
 import treehou.se.habit.util.Settings
+import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject
 
 class GeneralSettingsPresenter @Inject
 constructor(private val view: GeneralSettingsContract.View) : RxPresenter(), GeneralSettingsContract.Presenter {
 
     @Inject lateinit var settings: Settings
+    @Inject lateinit var logger: Logger
 
 
     override fun subscribe() {
@@ -18,19 +20,22 @@ constructor(private val view: GeneralSettingsContract.View) : RxPresenter(), Gen
         settingsAutoloadSitemapRx
                 .compose(bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { show -> view.showAutoLoadSitemap(show!!) }
+                .subscribe({ show -> view.showAutoLoadSitemap(show!!) }
+                        , { logger.e(TAG, "settingsAutoloadSitemapRx update failed", it) })
 
         val settingsShowSitemapInMenuRx = settings.showSitemapsInMenuRx
         settingsShowSitemapInMenuRx.asObservable()
                 .compose(bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { show -> view.showSitemapsInMenu(show) }
+                .subscribe ({ show -> view.showSitemapsInMenu(show) }
+                        , { logger.e(TAG, "settingsShowSitemapInMenuRx update failed", it) })
 
         val settingsFullscreenRx = settings.fullscreenPref
         settingsFullscreenRx.asObservable()
                 .compose(bindToLifecycle())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { show -> view.setFullscreen(show!!) }
+                .subscribe ({ show -> view.setFullscreen(show!!) }
+                        , { logger.e(TAG, "settingsFullscreenRx update failed", it) })
     }
 
     override fun themeSelected(theme: Int) {
@@ -57,5 +62,9 @@ constructor(private val view: GeneralSettingsContract.View) : RxPresenter(), Gen
         if (fullscreen != fullscreenPrefRx.get()) {
             fullscreenPrefRx.set(fullscreen)
         }
+    }
+
+    companion object {
+        val TAG = "GeneralSettingsPresenter"
     }
 }

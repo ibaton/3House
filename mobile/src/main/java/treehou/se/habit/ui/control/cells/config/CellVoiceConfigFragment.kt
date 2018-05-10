@@ -32,6 +32,7 @@ import treehou.se.habit.core.db.model.controller.VoiceCellDB
 import treehou.se.habit.ui.util.IconPickerActivity
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Util
+import treehou.se.habit.util.logging.Logger
 
 class CellVoiceConfigFragment : RxFragment() {
 
@@ -39,6 +40,7 @@ class CellVoiceConfigFragment : RxFragment() {
     @BindView(R.id.btn_set_icon) lateinit var btnSetIcon: ImageButton
 
     @Inject lateinit var connectionFactory: ConnectionFactory
+    @Inject lateinit var logger: Logger
 
     private var voiceCell: VoiceCellDB? = null
     private var cell: CellDB? = null
@@ -87,7 +89,7 @@ class CellVoiceConfigFragment : RxFragment() {
 
         sprItems.adapter = itemAdapter
 
-        val servers = realm!!.where(ServerDB::class.java).findAll()
+        val servers = realm.where(ServerDB::class.java).findAll()
         items.clear()
 
         for (serverDB in servers) {
@@ -98,21 +100,19 @@ class CellVoiceConfigFragment : RxFragment() {
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { items ->
+                    .subscribe ({ items ->
                         this.items.addAll(items)
                         itemAdapter!!.notifyDataSetChanged()
-                    }
+                    }, {logger.e(TAG, "Failed to load items", it)})
         }
 
         sprItems.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val item = items[position]
-                if (item != null) {
-                    realm!!.beginTransaction()
-                    val itemDB = ItemDB.createOrLoadFromGeneric(realm!!, item)
-                    voiceCell!!.item = itemDB
-                    realm!!.commitTransaction()
-                }
+                realm.beginTransaction()
+                val itemDB = ItemDB.createOrLoadFromGeneric(realm, item)
+                voiceCell!!.item = itemDB
+                realm.commitTransaction()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -156,7 +156,7 @@ class CellVoiceConfigFragment : RxFragment() {
     override fun onDestroy() {
         super.onDestroy()
 
-        realm!!.close()
+        realm.close()
     }
 
     private fun updateIconImage() {
@@ -168,11 +168,11 @@ class CellVoiceConfigFragment : RxFragment() {
                 resultCode == Activity.RESULT_OK &&
                 data!!.hasExtra(IconPickerActivity.RESULT_ICON)) {
 
-            realm!!.beginTransaction()
+            realm.beginTransaction()
             val iconName = data.getStringExtra(IconPickerActivity.RESULT_ICON)
             voiceCell!!.icon = if (iconName == "") null else iconName
             updateIconImage()
-            realm!!.commitTransaction()
+            realm.commitTransaction()
         }
     }
 

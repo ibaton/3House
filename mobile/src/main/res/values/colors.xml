@@ -10,11 +10,6 @@
 
     //Used for flat ui
     <color name="colorPrimaryLighter">#FFAED581</color>
-    <color name="colorPrimaryDarker">#FF33691E</color>
-
-    <color name="colorValueItem">@color/colorAccent</color>
-
-    <color name="semi_transparent_dark">#44000000</color>
 
     <!--<color name="background">#ff515151</color>-->
     <color name="background">#ffdcdcdc</color>
@@ -23,7 +18,6 @@
     <color name="background_card">#ffffff</color>
     <color name="background_card_dark">#454545</color>
 
-    <color name="item_background">#ffffffff</color>
     <color name="item_background_border">#8c8c8c</color>
     
     <color name="colorBackgroundAccent">#ececec</color>
@@ -32,11 +26,7 @@
     <color name="button_background">#ffffffff</color>
     <color name="button_background_active">#ffaaaaaa</color>
 
-    <color name="image_background">#00c6c6c6</color>
-
-    <color name="settings_drawer">@color/drawer</color>
-    <color name="drawer">#ffffffff</color>
-    <color name="drawer_text">@color/text_dark</color>
+    <color name="image_background">#00000000</color>
 
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#727272</color>
@@ -46,10 +36,7 @@
 
     <color name="text_dark">#ff222222</color>
 
-    <color name="frame_header">#ff686868</color>
-
     <color name="transparent_dark">#44000000</color>
-    <color name="semi_transparent_light">#44FFFFFF</color>
     <color name="colorError">#c9000a</color>
 
     <color name="load">#cacac5</color>

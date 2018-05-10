@@ -3,17 +3,11 @@ package treehou.se.habit.dagger
 
 import android.content.Context
 import android.preference.PreferenceManager
-
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
-
-import javax.inject.Named
-import javax.inject.Singleton
-
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
-import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.R
 import treehou.se.habit.connector.Analytics
@@ -23,26 +17,16 @@ import treehou.se.habit.core.db.model.controller.CellDB
 import treehou.se.habit.ui.control.CellFactory
 import treehou.se.habit.ui.control.ControllerHandler
 import treehou.se.habit.ui.control.ControllerUtil
-import treehou.se.habit.ui.control.cells.builders.ButtonCellBuilder
-import treehou.se.habit.ui.control.cells.builders.EmptyCellBuilder
-import treehou.se.habit.ui.control.cells.builders.IncDecCellBuilder
-import treehou.se.habit.ui.control.cells.builders.SliderCellBuilder
-import treehou.se.habit.ui.control.cells.builders.VoiceCellBuilder
-import treehou.se.habit.ui.control.cells.config.cells.ButtonConfigCellBuilder
-import treehou.se.habit.ui.control.cells.config.cells.DefaultConfigCellBuilder
-import treehou.se.habit.ui.control.cells.config.cells.IncDecConfigCellBuilder
-import treehou.se.habit.ui.control.cells.config.cells.SliderConfigCellBuilder
-import treehou.se.habit.ui.control.cells.config.cells.VoiceConfigCellBuilder
+import treehou.se.habit.ui.control.cells.builders.*
+import treehou.se.habit.ui.control.cells.config.cells.*
 import treehou.se.habit.ui.settings.subsettings.general.ThemeItem
-import treehou.se.habit.ui.widgets.WidgetFactory
-import treehou.se.habit.ui.widgets.factories.SliderWidgetFactory
-import treehou.se.habit.ui.widgets.factories.colorpicker.ColorpickerWidgetFactory
-import treehou.se.habit.ui.widgets.factories.switches.SwitchWidgetFactory
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.DatabaseServerLoaderFactory
 import treehou.se.habit.util.Settings
 import treehou.se.habit.util.logging.FirebaseLogger
 import treehou.se.habit.util.logging.Logger
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 open class AndroidModule(protected val application: Context) {
@@ -102,35 +86,6 @@ open class AndroidModule(protected val application: Context) {
     @Provides
     fun provideLogger(): Logger {
         return FirebaseLogger()
-    }
-
-    @Provides
-    fun provideWidgetFactory(connectionFactory: ConnectionFactory, sliderWidgetFactory: SliderWidgetFactory,
-                             switchWidgetFactory: SwitchWidgetFactory, provideColorWidgetFactory: ColorpickerWidgetFactory): WidgetFactory {
-
-        val factory = WidgetFactory(connectionFactory)
-        factory.addWidgetFactory(OHWidget.WIDGET_TYPE_SLIDER, sliderWidgetFactory)
-        factory.addWidgetFactory(OHWidget.WIDGET_TYPE_COLORPICKER, provideColorWidgetFactory)
-        factory.addWidgetFactory(OHWidget.WIDGET_TYPE_SWITCH, switchWidgetFactory)
-
-        return factory
-    }
-
-    @Provides
-    fun provideSliderWidgetFactory(connectionFactory: ConnectionFactory): SliderWidgetFactory {
-
-        return SliderWidgetFactory(connectionFactory)
-    }
-
-    @Provides
-    fun provideColorWidgetFactory(connectionFactory: ConnectionFactory): ColorpickerWidgetFactory {
-
-        return ColorpickerWidgetFactory(connectionFactory)
-    }
-
-    @Provides
-    fun provideSwitchWidgetFactory(connectionFactory: ConnectionFactory): SwitchWidgetFactory {
-        return SwitchWidgetFactory(connectionFactory)
     }
 
     @Provides

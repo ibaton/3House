@@ -2,16 +2,12 @@
 <resources>
     <string name="navigation_drawer_open">Navigationspanel öffnen</string>
     <string name="navigation_drawer_close">Navigationspanel schließen</string>
-    <string name="account">Konto</string>
     <string name="servers">Server</string>
     <string name="settings">Einstellungen</string>
     <string name="controllers">Controller</string>
     <string name="add_widget">Widget hinzufügen</string>
-    <string name="notification_to_speech_detail">Benachrichtigungen als Sprachausgabe</string>
-    <string name="action_add_controller">Controller hinzufügen</string>
     <string name="voice_command_title">Erwarte Ihre Befehle</string>
     <string name="voice_command">Sprachbefehl</string>
-    <string name="add_server">Server hinzufügen</string>
     <string name="scan_for_server">Scan für Server</string>
     <string name="server_local">Lokal - http://host:port</string>
     <string name="password">Passwort</string>
@@ -23,17 +19,11 @@
     <string name="item_type">Itemtyp</string>
     <string name="command">Befehl</string>
     <string name="image">Bild</string>
-    <string name="settings_notification">Benachrichtigungen</string>
-    <string name="label_widget_text">Widgettext</string>
-    <string name="hdr_text_size">Größe</string>
-    <string name="hdr_image">Bild</string>
-    <string name="hdr_background">Hintergrund</string>
     <string name="loading">Laden</string>
     <string name="title_activity_slider">Schieberegler</string>
     <string name="cancel">Abbrechen</string>
     <string name="pick_color">Farbe auswählen</string>
     <string name="label_switch">Schalter</string>
-    <string name="compressed">komprimiert</string>
     <string name="slider">Schieberegler</string>
     <string name="about">Über</string>
     <string name="send_text_command">Sende Textbefehl</string>
@@ -71,7 +61,6 @@
     <string name="no_sitemaps_found">Keine Sitemaps gefunden</string>
     <string name="start_scan_question">Kein Server konfiguriert ist. Wollen Sie für eine auf Ihrem lokalen Netzwerk zu suchen ?</string>
     <string name="ignore">Ignorieren</string>
-    <string name="ignore_item">Sie zeigen diesen Artikel nicht mehr in der Liste. Mach dir keine Sorgen Sie , sie zu finden später werden können.</string>
     <string name="approve_item">Genehmigen</string>
     <string name="approve_this_item">Fügen Sie diesen Artikel Ihren Artikel Liste.</string>
     <string name="hide_item">Artikel ist jetzt versteckt</string>

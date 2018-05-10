@@ -66,7 +66,7 @@ class GeneralSettingsFragment : BaseDaggerFragment<GeneralSettingsContract.Prese
         settings.themeRx
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
-                .subscribe {
+                .subscribe ({
                     for (i in themes.indices) {
                         if (themes[i].theme == settings.theme) {
                             spinnerThemes.onItemSelectedListener = null
@@ -75,22 +75,25 @@ class GeneralSettingsFragment : BaseDaggerFragment<GeneralSettingsContract.Prese
                         }
                     }
                     spinnerThemes.onItemSelectedListener = themeListener
-                }
+                }, {logger.e(TAG, "Failed to load theme", it)})
 
         RxCompoundButton.checkedChanges(cbxShowSitemapInMenu)
                 .compose(bindToLifecycle())
                 .skip(1)
-                .subscribe { show -> settingsPresenter.setShowSitemapsInMenu(show) }
+                .subscribe ({ show -> settingsPresenter.setShowSitemapsInMenu(show) }
+                        , {logger.e(TAG, "cbxShowSitemapInMenu update failed", it)})
 
         RxCompoundButton.checkedChanges(cbxAutoLoadSitemap)
                 .compose(bindToLifecycle())
                 .skip(1)
-                .subscribe { show -> settingsPresenter.setAutoLoadSitemap(show!!) }
+                .subscribe ({ show -> settingsPresenter.setAutoLoadSitemap(show!!) }
+                        , {logger.e(TAG, "cbxAutoLoadSitemap update failed", it)})
 
         RxCompoundButton.checkedChanges(cbxFullscreen)
                 .compose(bindToLifecycle())
                 .skip(1)
-                .subscribe { show -> settingsPresenter.setFullscreen(show!!) }
+                .subscribe ({ show -> settingsPresenter.setFullscreen(show!!) }
+                        , {logger.e(TAG, "cbxFullscreen update failed", it)})
     }
 
     override fun updateTheme() {

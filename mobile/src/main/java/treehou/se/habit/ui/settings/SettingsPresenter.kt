@@ -7,10 +7,6 @@ import treehou.se.habit.dagger.RxPresenter
 class SettingsPresenter @Inject
 constructor(private val view: SettingsContract.View) : RxPresenter(), SettingsContract.Presenter {
 
-    override fun openWidgetSettings() {
-        view.showWidgetSettings()
-    }
-
     override fun openGeneralSettings() {
         view.showGeneralSettings()
     }

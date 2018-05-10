@@ -30,7 +30,7 @@ class IconPickerFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_icon_picker, null)
+        val rootView = inflater.inflate(R.layout.fragment_icon_picker, container, false)
         lstIcons = rootView.findViewById(R.id.lst_categories)
         lstIcons!!.itemAnimator = DefaultItemAnimator()
         lstIcons!!.layoutManager = GridLayoutManager(activity, 4)
