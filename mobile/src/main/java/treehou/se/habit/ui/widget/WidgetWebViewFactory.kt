@@ -38,6 +38,15 @@ class WidgetWebViewFactory @Inject constructor() : WidgetFactory {
         override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
             super.bind(itemWidget)
 
+            val lp = webView.layoutParams
+            val heightInRows = widget.height
+            val desiredHeightPixels = if (heightInRows is Int && heightInRows > 0) (heightInRows * context.resources.getDimension(R.dimen.webview_row_height)).toInt() else ViewGroup.LayoutParams.WRAP_CONTENT
+
+            if (lp.height != desiredHeightPixels) {
+                lp.height = desiredHeightPixels
+                webView.layoutParams = lp
+            }
+
             if (widget.url != null) {
                 webView.loadUrl(widget.url)
             }

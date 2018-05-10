@@ -113,7 +113,7 @@ dependencies {
         exclude module: 'iconics-core'
     }
     implementation 'androidx.core:core-ktx:0.3'
-    implementation 'com.github.ibaton:android-openhab-connect:2.0.10'
+    implementation 'com.github.ibaton:android-openhab-connect:2.0.12'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation "com.google.firebase:firebase-messaging:$rootProject.ext.firebaseVersion"
     implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
