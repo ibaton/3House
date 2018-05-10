@@ -169,6 +169,13 @@
         <item name="cardBackgroundColor">@color/white</item>
     </style>
 
+    <style name="WidgetImage">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">@dimen/large_spacing</item>
+    </style>
+
     <style name="AppTheme.Base.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.Base.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
