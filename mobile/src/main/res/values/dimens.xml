@@ -45,4 +45,5 @@
     <dimen name="fab_margin">20dp</dimen>
 
     <dimen name="webview_row_height">36dp</dimen>
+    <dimen name="icon_image_padding">16dp</dimen>
 </resources>
