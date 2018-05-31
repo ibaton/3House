@@ -16,7 +16,7 @@ class ImageAdapter(context: Context, objects: List<ImageItem>) : ArrayAdapter<Im
         val inflater = LayoutInflater.from(context)
         val imageItem = getItem(position)
 
-        val item = inflater.inflate(R.layout.item_menu_image, parent, false)
+        val item = convertView ?: inflater.inflate(R.layout.item_menu_image, parent, false)
 
         val imageView = item.findViewById<View>(R.id.img_item) as ImageView
         imageView.setImageResource(imageItem!!.image)
