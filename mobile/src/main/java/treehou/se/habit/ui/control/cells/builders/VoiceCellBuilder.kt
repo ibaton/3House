@@ -43,8 +43,7 @@ class VoiceCellBuilder : CellFactory.CellBuilder {
 
             val server = voiceCell.item!!.server
 
-            val callbackIntent = VoiceService.createVoiceCommand(context, server!!)
-            val openhabPendingIntent = PendingIntent.getService(context, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val openhabPendingIntent = VoiceService.createPendingVoiceCommand(context, server!!, 9)
 
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             // Specify the calling package to identify your application
@@ -80,9 +79,7 @@ class VoiceCellBuilder : CellFactory.CellBuilder {
         }
 
         val server = voiceCell.item!!.server
-
-        val callbackIntent = VoiceService.createVoiceCommand(context, server!!)
-        val openhabPendingIntent = PendingIntent.getService(context.applicationContext, (Math.random() * Integer.MAX_VALUE).toInt(), callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val openhabPendingIntent = VoiceService.createPendingVoiceCommand(context.applicationContext, server!!, (Math.random() * Integer.MAX_VALUE).toInt())
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         // Specify the calling package to identify your application

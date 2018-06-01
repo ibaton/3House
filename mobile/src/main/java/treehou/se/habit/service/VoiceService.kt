@@ -1,6 +1,7 @@
 package treehou.se.habit.service
 
 import android.app.IntentService
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -72,6 +73,11 @@ class VoiceService : JobIntentService() {
             intent.action = ACTION_COMMAND
             intent.putExtra(EXTRA_SERVER, server.id)
             return intent
+        }
+
+        fun createPendingVoiceCommand(context: Context, server: ServerDB, requestCode: Int): PendingIntent {
+            val callbackIntent = createVoiceCommand(context, server)
+            return PendingIntent.getBroadcast(context.applicationContext, requestCode, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         }
     }
 }

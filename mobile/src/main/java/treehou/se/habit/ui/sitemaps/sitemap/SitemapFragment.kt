@@ -106,8 +106,7 @@ class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
      * @return intent used to fire voice command
      */
     private fun createVoiceCommandIntent(server: ServerDB?): Intent {
-        val callbackIntent = VoiceService.createVoiceCommand(activity!!, server!!)
-        val openhabPendingIntent = PendingIntent.getBroadcast(activity, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val openhabPendingIntent = VoiceService.createPendingVoiceCommand(activity!!, server!!, 9)
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         // Specify the calling package to identify your application
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, VoiceService::class.java.`package`.name)
