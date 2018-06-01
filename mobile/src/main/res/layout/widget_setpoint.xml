@@ -63,11 +63,10 @@
         android:id="@+id/nextPageButton"
         style="?attr/menu_item_style"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
         android:background="@null"
         android:clickable="false"
+        android:contentDescription="@string/next_page"
         android:paddingBottom="@dimen/medium_spacing"
         android:paddingLeft="@dimen/large_spacing"
         android:paddingRight="@dimen/large_spacing"
@@ -78,6 +77,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/next_page_icon"
-        tools:visibility="visible"
-        android:contentDescription="@string/next_page" />
+        tools:visibility="visible" />
 </android.support.constraint.ConstraintLayout>
