@@ -6,15 +6,7 @@ import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-
-import javax.inject.Inject
-
+import android.view.*
 import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
@@ -26,9 +18,10 @@ import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
 import treehou.se.habit.dagger.fragment.SitemapComponent
 import treehou.se.habit.dagger.fragment.SitemapModule
 import treehou.se.habit.mvp.BaseDaggerFragment
-import treehou.se.habit.ui.homescreen.VoiceService
+import treehou.se.habit.service.VoiceService
 import treehou.se.habit.ui.sitemaps.page.PageFragment
 import treehou.se.habit.ui.sitemaps.sitemap.SitemapContract.Presenter
+import javax.inject.Inject
 
 class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
 
@@ -114,7 +107,7 @@ class SitemapFragment : BaseDaggerFragment<Presenter>(), SitemapContract.View {
      */
     private fun createVoiceCommandIntent(server: ServerDB?): Intent {
         val callbackIntent = VoiceService.createVoiceCommand(activity!!, server!!)
-        val openhabPendingIntent = PendingIntent.getService(activity, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val openhabPendingIntent = PendingIntent.getBroadcast(activity, 9, callbackIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         // Specify the calling package to identify your application
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, VoiceService::class.java.`package`.name)

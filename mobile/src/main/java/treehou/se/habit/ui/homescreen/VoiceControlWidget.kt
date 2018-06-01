@@ -12,6 +12,7 @@ import android.widget.RemoteViews
 import io.realm.Realm
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
+import treehou.se.habit.service.VoiceService
 
 /**
  * Implementation of App WidgetFactory functionality.

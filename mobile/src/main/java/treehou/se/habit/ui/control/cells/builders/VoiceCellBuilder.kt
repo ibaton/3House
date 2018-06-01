@@ -14,9 +14,9 @@ import butterknife.ButterKnife
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
 import treehou.se.habit.core.db.model.controller.ControllerDB
+import treehou.se.habit.service.VoiceService
 import treehou.se.habit.ui.control.CellFactory
 import treehou.se.habit.ui.control.ControllerUtil
-import treehou.se.habit.ui.homescreen.VoiceService
 import treehou.se.habit.ui.util.ViewHelper
 import treehou.se.habit.util.Util
 

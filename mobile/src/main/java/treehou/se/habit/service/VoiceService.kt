@@ -1,6 +1,7 @@
-package treehou.se.habit.ui.homescreen
+package treehou.se.habit.service
 
 import android.app.IntentService
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
@@ -55,10 +56,19 @@ class VoiceService : JobIntentService() {
 
         val VOICE_ITEM = "VoiceCommand"
 
+        val JOB_ID = 5154
+
         private val NULL_SERVER = -1
 
+        /**
+         * Convenience method for enqueuing work in to this service.
+         */
+        fun enqueueWork(context: Context, work: Intent) {
+            enqueueWork(context, VoiceService::class.java, JOB_ID, work);
+        }
+
         fun createVoiceCommand(context: Context, server: ServerDB): Intent {
-            val intent = Intent(context, VoiceService::class.java)
+            val intent = Intent(context, VoiceReceiver::class.java)
             intent.action = ACTION_COMMAND
             intent.putExtra(EXTRA_SERVER, server.id)
             return intent

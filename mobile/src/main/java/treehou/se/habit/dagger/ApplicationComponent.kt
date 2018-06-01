@@ -4,6 +4,7 @@ import dagger.Component
 import treehou.se.habit.BaseActivity
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.RestartBroadcastReceiver
+import treehou.se.habit.service.VoiceService
 import treehou.se.habit.service.wear.VoiceActionService
 import treehou.se.habit.tasker.items.CommandActionFragment
 import treehou.se.habit.tasker.items.IncDecActionFragment
@@ -21,7 +22,6 @@ import treehou.se.habit.ui.control.cells.config.CellSliderConfigFragment
 import treehou.se.habit.ui.control.cells.config.CellVoiceConfigFragment
 import treehou.se.habit.ui.homescreen.ControllerWidget
 import treehou.se.habit.ui.homescreen.ControllerWidgetConfigureActivity
-import treehou.se.habit.ui.homescreen.VoiceService
 import treehou.se.habit.ui.links.LinksListFragment
 import treehou.se.habit.ui.menu.NavigationDrawerFragment
 import treehou.se.habit.ui.util.IconPickerActivity

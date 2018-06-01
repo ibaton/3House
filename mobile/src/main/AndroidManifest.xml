@@ -65,9 +65,13 @@
         <activity android:name="de.duenndns.ssl.MemorizingActivity" />
 
         <service
-            android:name=".ui.homescreen.VoiceService"
+            android:name=".service.VoiceService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"/>
+
+        <receiver
+            android:name=".service.VoiceReceiver"
+            android:exported="false" />
 
         <receiver
             android:name=".ui.homescreen.VoiceControlWidget"
