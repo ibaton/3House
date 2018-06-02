@@ -1,6 +1,6 @@
 package treehou.se.habit.ui.control
 
-import android.app.IntentService
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.JobIntentService
@@ -9,18 +9,11 @@ import io.realm.Realm
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import treehou.se.habit.connector.Communicator
 import treehou.se.habit.core.db.model.ItemDB
+import treehou.se.habit.service.CommandReceiver
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Util
 import javax.inject.Inject
 
-/**
- * An [IntentService] subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- *
- *
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
 class CommandService : JobIntentService() {
 
     @Inject lateinit var connectionFactory: ConnectionFactory
@@ -73,16 +66,10 @@ class CommandService : JobIntentService() {
         private val ARG_MIN = "ARG_MIN"
         private val ARG_VALUE = "ARG_VALUE"
 
-        fun startActionCommand(context: Context, command: String, item: OHItem) {
-            val intent = Intent(context, CommandService::class.java)
-            intent.action = ACTION_COMMAND
-            intent.putExtra(ARG_COMMAND, command)
-            intent.putExtra(ARG_ITEM, item.id)
-            context.startService(intent)
-        }
+        private val JOB_ID = 5153
 
         fun getActionCommand(context: Context, command: String, itemId: Long): Intent {
-            val intent = Intent(context, CommandService::class.java)
+            val intent = Intent(context, CommandReceiver::class.java)
             intent.action = ACTION_COMMAND
             intent.putExtra(ARG_COMMAND, command)
             intent.putExtra(ARG_ITEM, itemId)
@@ -90,13 +77,24 @@ class CommandService : JobIntentService() {
         }
 
         fun getActionIncDec(context: Context, min: Int, max: Int, value: Int, itemId: Long): Intent {
-            val intent = Intent(context, CommandService::class.java)
+            val intent = Intent(context, CommandReceiver::class.java)
             intent.action = ACTION_INC_DEC
             intent.putExtra(ARG_MIN, min)
             intent.putExtra(ARG_MAX, max)
             intent.putExtra(ARG_VALUE, value)
             intent.putExtra(ARG_ITEM, itemId)
             return intent
+        }
+
+        /**
+         * Convenience method for enqueuing work in to this service.
+         */
+        fun enqueueWork(context: Context, work: Intent) {
+            enqueueWork(context, CommandService::class.java, JOB_ID, work);
+        }
+
+        fun createCommand(context: Context, requestCode: Int, intent: Intent): PendingIntent {
+            return PendingIntent.getBroadcast(context.applicationContext, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         }
     }
 }

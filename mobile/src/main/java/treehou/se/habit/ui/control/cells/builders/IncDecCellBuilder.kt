@@ -64,7 +64,7 @@ class IncDecCellBuilder(private val communicator: Communicator) : CellFactory.Ce
             cellView.setImageViewBitmap(R.id.img_icon_button, icon)
         }
         val intent = CommandService.getActionIncDec(context, buttonCell!!.min, buttonCell.max, buttonCell.value, buttonCell.item!!.id)
-        val pendingIntent = PendingIntent.getService(context, (Math.random() * Integer.MAX_VALUE).toInt(), intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = CommandService.createCommand(context, (Math.random() * Integer.MAX_VALUE).toInt(), intent)
         cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent)
         realm.close()
 

@@ -71,7 +71,7 @@ class ButtonCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
         val intent = CommandService.getActionCommand(context, buttonCell.command!!, buttonCell.item!!.id)
 
         //TODO give intent unique id
-        val pendingIntent = PendingIntent.getService(context, (Math.random() * Integer.MAX_VALUE).toInt(), intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = CommandService.createCommand(context, (Math.random() * Integer.MAX_VALUE).toInt(), intent)
         cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent)
         realm.close()
 

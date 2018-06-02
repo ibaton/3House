@@ -90,7 +90,7 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle-kotlin:$rootProject.ext.rxlifecycleVersion"
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-    implementation 'com.mikepenz:iconics-core:3.0.2@aar'
+    implementation 'com.mikepenz:iconics-core:3.0.3@aar'
     implementation 'com.mikepenz:octicons-typeface:3.2.0.2@aar'
     implementation 'com.github.matthewyork:ColoursLibrary:1.0.0@aar'
     implementation('com.wefika:flowlayout:0.4.1') {

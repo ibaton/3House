@@ -26,7 +26,7 @@ import javax.inject.Inject
  */
 class ControllerWidgetConfigureActivity : BaseActivity() {
 
-    internal var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
+    private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     @BindView(R.id.spr_controller) lateinit var sprControllers: Spinner
     @BindView(R.id.cbx_show_title) lateinit var cbxShowTitle: CheckBox
@@ -57,18 +57,18 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
 
         RxAdapterView.itemSelections<SpinnerAdapter>(sprControllers)
                 .map { index -> index != AdapterView.INVALID_POSITION }
-                .subscribe({RxView.enabled(addButton)}, { Log.e(TAG, "sprControllers update failed", it) })
+                .subscribe({ addButton.isEnabled = true }, { Log.e(TAG, "sprControllers update failed", it) })
 
         // Find the widget id from the intent.
         val intent = intent
         val extras = intent.extras
         if (extras != null) {
-            mAppWidgetId = extras.getInt(
+            appWidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         }
 
         // If this view was started with an intent without an app widget ID, finish with an error.
-        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish()
         }
     }
@@ -89,7 +89,7 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
     fun onAddClick() {
         val context = this@ControllerWidgetConfigureActivity
 
-        val controller = (sprControllers.selectedItem as ControllerItem).controllerDB
+        val controller: ControllerDB? = (sprControllers.selectedItem as ControllerItem).controllerDB
         if (controller == null) {
             Toast.makeText(this@ControllerWidgetConfigureActivity, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show()
             setResult(Activity.RESULT_CANCELED)
@@ -97,15 +97,15 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
             return
         }
 
-        saveControllerIdPref(context, mAppWidgetId, controller, cbxShowTitle.isChecked)
+        saveControllerIdPref(context, appWidgetId, controller, cbxShowTitle.isChecked)
 
         // It is the responsibility of the configuration view to update the app widget
         val appWidgetManager = AppWidgetManager.getInstance(context)
-        controllerUtil.updateWidget(mAppWidgetId)
+        controllerUtil.updateWidget(appWidgetId)
 
         // Make sure we pass back the original appWidgetId
         val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         setResult(Activity.RESULT_OK, resultValue)
         finish()
     }
