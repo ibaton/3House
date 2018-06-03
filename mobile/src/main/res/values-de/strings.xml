@@ -57,7 +57,6 @@
     <string name="empty_servers">Keine Server gefunden . Drücken Sie hier, um Ihren ersten Server hinzuzufügen.</string>
     <string name="scan_for_servers">Die Suche nach Servern. Die Server werden hier angezeigt , wenn gefunden</string>
     <string name="delete_cell">Löschen Zelle ?</string>
-    <string name="empty">Leer</string>
     <string name="no_sitemaps_found">Keine Sitemaps gefunden</string>
     <string name="start_scan_question">Kein Server konfiguriert ist. Wollen Sie für eine auf Ihrem lokalen Netzwerk zu suchen ?</string>
     <string name="ignore">Ignorieren</string>
