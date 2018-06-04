@@ -3,20 +3,18 @@ package treehou.se.habit.ui.servers.sitemaps.sitemapsettings
 import android.os.Bundle
 import android.support.v4.util.Pair
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Switch
+import androidx.core.view.isVisible
 
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 
 import javax.inject.Inject
 
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.fragment_sitemap_settings.*
@@ -60,6 +58,7 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar()
+
         val sitemapObservable = realm.where(SitemapDB::class.java).equalTo("id", sitemapId).findAll()
                 .asFlowable()
                 .flatMap { Flowable.fromIterable(it) }
@@ -67,13 +66,25 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
                 .distinctUntilChanged()
 
         sitemapObservable.map { sitemapDB -> sitemapDB.settingsDB!!.display }
+                .first(true)
                 .compose(bindToLifecycle())
-                .subscribe({RxCompoundButton.checked(cbxShowSitemaps)}, {logger.e(TAG, "Sitemap observable failed", it)})
+                .subscribe({
+                    cbxShowSitemaps.isChecked = it
+                    cbxShowSitemaps.isVisible = true
+                    setupListener(sitemapObservable)
+                }, {logger.e(TAG, "Sitemap observable failed", it)})
+    }
 
-        Flowable.combineLatest<SitemapDB, Boolean, Pair<SitemapDB, Boolean>>(sitemapObservable,
-                RxCompoundButton.checkedChanges(cbxShowSitemaps).toFlowable(BackpressureStrategy.LATEST),
-                BiFunction<SitemapDB, Boolean, Pair<SitemapDB, Boolean>> { first, second -> Pair(first, second) })
+    private fun setupListener(sitemapObservable: Flowable<SitemapDB>) {
+        Observable.combineLatest<SitemapDB, Boolean, Pair<SitemapDB, Boolean>>(sitemapObservable.toObservable(),
+                RxCompoundButton.checkedChanges(cbxShowSitemaps)
+                        .doOnNext { Log.d("Yolo", "Here3 " + it) },
+                BiFunction<SitemapDB, Boolean, Pair<SitemapDB, Boolean>> { first, second ->
+                    Log.d("Yolo", "Here3.5 " + second)
+                    Pair(first, second)
+                })
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext { Log.d("Yolo", "Here4 " + it.second) }
                 .subscribe ({
                     val sitemapDB = it.first
                     val showSitemap = it.second!!
