@@ -13,10 +13,10 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_edit_control.*
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.ControllerDB
@@ -27,11 +27,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
-
-    @BindView(R.id.lou_btn_holder)
-    lateinit var louController: LinearLayout
-    @BindView(R.id.viw_background)
-    lateinit var viwBackground: View
 
     @Inject
     lateinit var controllerUtil: ControllerUtil
@@ -45,7 +40,6 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
     private lateinit var activity: AppCompatActivity
 
     private lateinit var realm: Realm
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (context!!.applicationContext as HabitApplication).component().inject(this)
@@ -65,14 +59,16 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_edit_control, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+        return inflater.inflate(R.layout.fragment_edit_control, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         actionBar = activity.supportActionBar!!
 
         updateColorPalette(controller!!.color)
 
-        val btnAddRow = rootView.findViewById<View>(R.id.btn_add_row) as ImageButton
         btnAddRow.setOnClickListener {
             controller!!.addRow(realm)
             Log.d("Controller", "Added controller, currently " + controller?.cellRows?.size + " rows")
@@ -82,8 +78,6 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
         val i = Intent("treehou.se.UPDATE_WIDGET")
         getActivity()!!.sendBroadcast(i)
-
-        return rootView
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -135,18 +129,18 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
     }
 
     fun redrawController() {
-        louController.removeAllViews()
+        buttonHolderLayout.removeAllViews()
         val inflater = LayoutInflater.from(getActivity())
         Log.d(TAG, "Drawing controller " + controller!!.cellRows.size)
         for (row in controller!!.cellRows) {
-            val louRow = inflater.inflate(R.layout.controller_row_edit, louController, false) as LinearLayout
+            val louRow = inflater.inflate(R.layout.controller_row_edit, buttonHolderLayout, false) as LinearLayout
 
             val rowParam = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
             rowParam.weight = 1f
             louRow.layoutParams = rowParam
 
-            val louColumnHolder = louRow.findViewById<View>(R.id.lou_btn_holder) as LinearLayout
+            val louColumnHolder = louRow.findViewById<View>(R.id.buttonHolderLayout) as LinearLayout
             val btnAddCell = louRow.findViewById<View>(R.id.btn_add_column) as ImageButton
 
             for (cell in row.cells) {
@@ -186,7 +180,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
                 row.addCell(realm)
                 redrawController()
             }
-            louController.addView(louRow)
+            buttonHolderLayout.addView(louRow)
         }
     }
 
@@ -221,7 +215,6 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
     }
 
     override fun onDestroyView() {
-        unbinder!!.unbind()
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity.window.statusBarColor = activity.resources.getColor(R.color.colorPrimaryDark)
             activity.window.navigationBarColor = activity.resources.getColor(R.color.navigationBarColor)

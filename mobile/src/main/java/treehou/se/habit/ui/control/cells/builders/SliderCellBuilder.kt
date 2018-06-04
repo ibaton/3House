@@ -26,7 +26,7 @@ class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
 
     @BindView(R.id.img_icon_button) lateinit var imgIcon: ImageView
     @BindView(R.id.sbrNumber) lateinit var sbrNumber: SeekBar
-    @BindView(R.id.viw_background) lateinit var viwBackground: View
+    @BindView(R.id.backgroundView) lateinit var viwBackground: View
 
     override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
         val inflater = LayoutInflater.from(context)

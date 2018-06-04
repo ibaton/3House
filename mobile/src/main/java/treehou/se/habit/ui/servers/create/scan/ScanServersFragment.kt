@@ -35,7 +35,7 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
     @Inject
     lateinit var scanPresenter: ScanServersContract.Presenter
 
-    @BindView(R.id.empty)
+    @BindView(R.id.emptyView)
     lateinit var viwEmpty: View
     @BindView(R.id.list)
     lateinit var lstServer: RecyclerView

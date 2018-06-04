@@ -42,7 +42,7 @@ public class ServersTest {
     public void setup(){}
 
     private void createServer(String testServerName){
-        onView(anyOf(allOf(withId(R.id.fab_add), isDisplayed()), allOf(withText(R.string.new_server), isDisplayed()))).perform(click());
+        onView(anyOf(allOf(withId(R.id.addFab), isDisplayed()), allOf(withText(R.string.new_server), isDisplayed()))).perform(click());
 //        onView(withId(R.id.btnSave)).perform(click());
         onView(withText(R.string.new_server)).perform(click());
         onView(withId(R.id.serverNameText)).perform(ViewActions.typeText(testServerName));

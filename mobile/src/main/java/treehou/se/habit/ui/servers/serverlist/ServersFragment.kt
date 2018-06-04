@@ -16,6 +16,7 @@ import butterknife.OnClick
 import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.RealmResults
+import kotlinx.android.synthetic.main.fragment_servers_universal.*
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
@@ -32,16 +33,12 @@ import javax.inject.Inject
 
 class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), ServersContract.View {
 
-    @BindView(R.id.list) lateinit var lstServer: RecyclerView
-    @BindView(R.id.empty) lateinit var viwEmpty: View
-
     @Inject lateinit var settings: Settings
 
     @Inject lateinit var serverPresenter: ServersContract.Presenter
 
     private lateinit var serversAdapter: ServersAdapter
     private var servers: RealmResults<ServerDB>? = null
-    private var unbinder: Unbinder? = null
 
     protected val applicationComponent: ApplicationComponent
         get() = (context!!.applicationContext as HabitApplication).component()
@@ -92,35 +89,30 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                 .build().injectMembers(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        return inflater.inflate(R.layout.fragment_servers, container, false)
+        return inflater.inflate(R.layout.fragment_servers_universal, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        unbinder = ButterKnife.bind(this, view)
-
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        lstServer.layoutManager = layoutManager
-        lstServer.itemAnimator = DefaultItemAnimator()
+        serverList.layoutManager = layoutManager
+        serverList.itemAnimator = DefaultItemAnimator()
         serversAdapter = ServersAdapter()
         serversAdapter.setItemListener(serverListener)
-        lstServer.adapter = serversAdapter
+        serverList.adapter = serversAdapter
 
         setupActionbar()
+
+        addFab.setOnClickListener { startNewServerFlow() }
+        emptyText.setOnClickListener { startNewServerFlow() }
     }
 
     override fun onResume() {
         super.onResume()
         setupAdapter()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun onDestroy() {
@@ -180,7 +172,6 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
     /**
      * Launch flow for creating new server.
      */
-    @OnClick(R.id.empty, R.id.fab_add)
     fun startNewServerFlow() {
         startNewServerReveal()
     }
@@ -223,7 +214,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
      * Show empty view if no controllers exist
      */
     private fun updateEmptyView(itemCount: Int) {
-        viwEmpty.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
+        emptyText.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
     }
 
     companion object {

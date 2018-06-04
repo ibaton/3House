@@ -10,23 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.ToggleButton
-
 import com.trello.rxlifecycle2.components.support.RxFragment
-
-import java.util.ArrayList
-
-import javax.inject.Inject
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_cell_button_config.*
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
@@ -35,16 +23,13 @@ import treehou.se.habit.core.db.model.ItemDB
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.core.db.model.controller.ButtonCellDB
 import treehou.se.habit.core.db.model.controller.CellDB
+import treehou.se.habit.ui.util.IconPickerActivity
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Util
-import treehou.se.habit.ui.util.IconPickerActivity
+import java.util.*
+import javax.inject.Inject
 
 class CellButtonConfigFragment : RxFragment() {
-
-    @BindView(R.id.spr_items) lateinit var sprItems: Spinner
-    @BindView(R.id.tgl_on_off) lateinit var tglOnOff: ToggleButton
-    @BindView(R.id.txt_command) lateinit var txtCommand: TextView
-    @BindView(R.id.btn_set_icon) lateinit var btnSetIcon: ImageView
 
     @Inject lateinit var connectionFactory: ConnectionFactory
 
@@ -54,7 +39,6 @@ class CellButtonConfigFragment : RxFragment() {
     private var buttonCell: ButtonCellDB? = null
     private var cell: CellDB? = null
     private lateinit var realm: Realm
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,10 +72,13 @@ class CellButtonConfigFragment : RxFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_cell_button_config, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+        return inflater.inflate(R.layout.fragment_cell_button_config, container, false)
+    }
 
-        sprItems.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        itemsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 realm!!.beginTransaction()
                 val item = items[position]
@@ -100,22 +87,22 @@ class CellButtonConfigFragment : RxFragment() {
                     buttonCell!!.item = itemDB
                     when (item.type) {
                         OHItem.TYPE_STRING -> {
-                            txtCommand.visibility = View.VISIBLE
-                            txtCommand.inputType = InputType.TYPE_CLASS_TEXT
-                            tglOnOff.visibility = View.GONE
+                            commandText.visibility = View.VISIBLE
+                            commandText.inputType = InputType.TYPE_CLASS_TEXT
+                            toggleOnOff.visibility = View.GONE
                         }
                         OHItem.TYPE_NUMBER -> {
-                            txtCommand.visibility = View.VISIBLE
-                            txtCommand.inputType = InputType.TYPE_CLASS_NUMBER
-                            tglOnOff.visibility = View.GONE
+                            commandText.visibility = View.VISIBLE
+                            commandText.inputType = InputType.TYPE_CLASS_NUMBER
+                            toggleOnOff.visibility = View.GONE
                         }
                         OHItem.TYPE_CONTACT -> {
-                            txtCommand.visibility = View.GONE
-                            tglOnOff.visibility = View.VISIBLE
+                            commandText.visibility = View.GONE
+                            toggleOnOff.visibility = View.VISIBLE
                         }
                         else -> {
-                            txtCommand.visibility = View.GONE
-                            tglOnOff.visibility = View.VISIBLE
+                            commandText.visibility = View.GONE
+                            toggleOnOff.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -125,7 +112,7 @@ class CellButtonConfigFragment : RxFragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
         itemAdapter = ArrayAdapter(activity!!, android.R.layout.simple_spinner_dropdown_item, items)
-        sprItems.adapter = itemAdapter
+        itemsSpinner.adapter = itemAdapter
         val servers = realm!!.where(ServerDB::class.java).findAll()
         items.clear()
 
@@ -153,20 +140,18 @@ class CellButtonConfigFragment : RxFragment() {
                     }) { Log.e(TAG, "Error fetching switch items") }
         }
 
-        tglOnOff.isChecked = Constants.COMMAND_ON == buttonCell!!.command || Constants.COMMAND_OPEN == buttonCell!!.command
-        txtCommand.text = buttonCell!!.command
+        toggleOnOff.isChecked = Constants.COMMAND_ON == buttonCell!!.command || Constants.COMMAND_OPEN == buttonCell!!.command
+        commandText.setText(buttonCell!!.command)
 
         updateIconImage()
-        btnSetIcon.setOnClickListener {
+        setIconButton.setOnClickListener {
             val intent = Intent(activity, IconPickerActivity::class.java)
             startActivityForResult(intent, REQUEST_ICON)
         }
-
-        return rootView
     }
 
     private fun updateIconImage() {
-        btnSetIcon.setImageDrawable(Util.getIconDrawable(activity, buttonCell!!.icon))
+        setIconButton.setImageDrawable(Util.getIconDrawable(activity, buttonCell!!.icon))
     }
 
     private fun filterItems(items: MutableList<OHItem>): List<OHItem> {
@@ -195,18 +180,13 @@ class CellButtonConfigFragment : RxFragment() {
         if (buttonCell!!.item == null) {
             buttonCell!!.command = ""
         } else if (buttonCell!!.item!!.type == OHItem.TYPE_STRING || buttonCell!!.item!!.type == OHItem.TYPE_NUMBER) {
-            buttonCell!!.command = txtCommand.text.toString()
+            buttonCell!!.command = commandText.text.toString()
         } else if (buttonCell!!.item!!.type == OHItem.TYPE_CONTACT) {
-            buttonCell!!.command = if (tglOnOff.isChecked) Constants.COMMAND_OPEN else Constants.COMMAND_CLOSE
+            buttonCell!!.command = if (toggleOnOff.isChecked) Constants.COMMAND_OPEN else Constants.COMMAND_CLOSE
         } else {
-            buttonCell!!.command = if (tglOnOff.isChecked) Constants.COMMAND_ON else Constants.COMMAND_OFF
+            buttonCell!!.command = if (toggleOnOff.isChecked) Constants.COMMAND_ON else Constants.COMMAND_OFF
         }
         realm!!.commitTransaction()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

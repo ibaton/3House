@@ -22,9 +22,9 @@ import treehou.se.habit.ui.control.ControllerUtil
 
 class SliderConfigCellBuilder : CellFactory.CellBuilder {
 
-    @BindView(R.id.viw_background) lateinit var viwBackground: View
-    @BindView(R.id.sbr_value) lateinit var sbrValue: SeekBar
-    @BindView(R.id.img_icon) lateinit var imgIcon: ImageView
+    @BindView(R.id.backgroundView) lateinit var viwBackground: View
+    @BindView(R.id.seekbarValue) lateinit var seekbarValue: SeekBar
+    @BindView(R.id.imgIcon) lateinit var imgIcon: ImageView
 
     override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
         val inflater = LayoutInflater.from(context)

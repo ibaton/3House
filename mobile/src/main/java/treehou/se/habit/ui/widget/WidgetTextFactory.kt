@@ -45,7 +45,7 @@ class WidgetTextFactory @Inject constructor() : WidgetFactory {
 
         private fun showInputDialog(item: OHItem) {
             val inputView = LayoutInflater.from(itemView.context).inflate(R.layout.dialog_input_text, null)
-            val input = inputView.findViewById<EditText>(R.id.txt_command)
+            val input = inputView.findViewById<EditText>(R.id.commandText)
             input.setText(item.state)
 
             if (item.type == OHItem.TYPE_STRING) {

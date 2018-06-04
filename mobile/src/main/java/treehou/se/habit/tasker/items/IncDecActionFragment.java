@@ -77,10 +77,10 @@ public class IncDecActionFragment extends RxFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_tasker_inc_dec_action, container, false);
 
-        sprItems = rootView.findViewById(R.id.spr_items);
-        txtValue = rootView.findViewById(R.id.txtValue);
-        txtMin = rootView.findViewById(R.id.txtMin);
-        txtMax = rootView.findViewById(R.id.txtMax);
+        sprItems = rootView.findViewById(R.id.itemsSpinner);
+        txtValue = rootView.findViewById(R.id.valueText);
+        txtMin = rootView.findViewById(R.id.minText);
+        txtMax = rootView.findViewById(R.id.maxText);
 
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, filteredItems);
         sprItems.post(() -> sprItems.setAdapter(itemAdapter));

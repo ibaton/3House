@@ -59,7 +59,7 @@ class ControlFragment : Fragment() {
         // Inflate the layout for this fragment
         val rootView = inflater.inflate(R.layout.fragment_contoll, container, false)
 
-        val viwBackground = rootView.findViewById<View>(R.id.viw_background)
+        val viwBackground = rootView.findViewById<View>(R.id.backgroundView)
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             activity!!.window.statusBarColor = pallete[0]
@@ -111,7 +111,7 @@ class ControlFragment : Fragment() {
             rowParam.weight = 1f
             louRow.layoutParams = rowParam
 
-            val louColumnHolder = louRow.findViewById<View>(R.id.lou_btn_holder) as LinearLayout
+            val louColumnHolder = louRow.findViewById<View>(R.id.buttonHolderLayout) as LinearLayout
             for (cell in row.cells) {
                 val activity = getActivity()
                 val controller = controller

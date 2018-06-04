@@ -17,19 +17,17 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_controll_cell.*
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
 import treehou.se.habit.ui.colorpicker.ColorDialog
 
 class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
-    @BindView(R.id.btn_color_picker) lateinit var btnPicker: Button
-    @BindView(R.id.spr_items) lateinit var sprItems: Spinner
     private var mTypeAdapter: ArrayAdapter<*>? = null
     private var cell: CellDB? = null
 
     private lateinit var realm: Realm
-    private var unbinder: Unbinder? = null
 
     private val itemSelectListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -98,14 +96,18 @@ class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater.inflate(R.layout.fragment_controll_cell, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+        return inflater.inflate(R.layout.fragment_controll_cell, container, false)
+    }
 
-        sprItems.adapter = mTypeAdapter
-        sprItems.onItemSelectedListener = itemSelectListener
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        itemsSpinner.adapter = mTypeAdapter
+        itemsSpinner.onItemSelectedListener = itemSelectListener
 
         updateColorButton(cell!!.color)
-        btnPicker.setOnClickListener {
+        colorPickerButton.setOnClickListener {
             val dialog = ColorDialog.instance()
             dialog.setTargetFragment(this@ControllCellFragment, REQUEST_COLOR)
             activity!!.supportFragmentManager.beginTransaction()
@@ -122,14 +124,7 @@ class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
                 break
             }
         }
-        sprItems.setSelection(index)
-
-        return rootView
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
+        itemsSpinner.setSelection(index)
     }
 
     override fun onDestroy() {
@@ -143,7 +138,7 @@ class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
      * @param color the color to set
      */
     fun updateColorButton(@ColorInt color: Int) {
-        btnPicker.setBackgroundColor(color)
+        colorPickerButton.setBackgroundColor(color)
     }
 
     override fun setColor(color: Int) {

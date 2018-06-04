@@ -89,7 +89,7 @@ class IconAdapter(private val context: Context) : RecyclerView.Adapter<IconAdapt
 
         init {
 
-            imgView = view.findViewById<View>(R.id.img_icon) as ImageView
+            imgView = view.findViewById<View>(R.id.imgIcon) as ImageView
         }
 
         fun setDrawable(drawable: Drawable) {

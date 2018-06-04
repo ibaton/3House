@@ -69,7 +69,7 @@ public class SwitchActionFragment extends RxFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_tasker_switch_action, container, false);
 
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
+        sprItems = (Spinner) rootView.findViewById(R.id.itemsSpinner);
 
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, filteredItems);
         sprItems.post(() -> sprItems.setAdapter(itemAdapter));
@@ -89,7 +89,7 @@ public class SwitchActionFragment extends RxFragment {
                     });
         }
 
-        tglOnOff = (ToggleButton) rootView.findViewById(R.id.tgl_on_off);
+        tglOnOff = (ToggleButton) rootView.findViewById(R.id.toggleOnOff);
 
         Button btnSave = (Button) rootView.findViewById(R.id.btn_save);
         btnSave.setOnClickListener(v -> {

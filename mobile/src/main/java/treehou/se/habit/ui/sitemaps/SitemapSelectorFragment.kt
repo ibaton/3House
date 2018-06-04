@@ -1,28 +1,19 @@
 package treehou.se.habit.ui.sitemaps
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import javax.inject.Inject
 
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_sitemap_selector.*
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
-import se.treehou.ng.ohcommunicator.services.Connector
-import se.treehou.ng.ohcommunicator.services.IServerHandler
-import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback
-import se.treehou.ng.ohcommunicator.services.callbacks.OHResponse
 import treehou.se.habit.R
 import treehou.se.habit.ui.BaseFragment
 import treehou.se.habit.ui.adapter.SitemapAdapter
@@ -31,12 +22,9 @@ import treehou.se.habit.util.Util
 
 class SitemapSelectorFragment : BaseFragment() {
 
-    @BindView(R.id.list) lateinit var mListView: RecyclerView
-
     @Inject lateinit var connectionFactory: ConnectionFactory
 
-    private var mSitemapAdapter: SitemapAdapter? = null
-    private var unbinder: Unbinder? = null
+    private var sitemapAdapter: SitemapAdapter? = null
 
     private val sitemapSelectListener = object : SitemapAdapter.OnSitemapSelectListener {
         override fun onSitemapSelect(sitemap: OHSitemap) {
@@ -57,34 +45,30 @@ class SitemapSelectorFragment : BaseFragment() {
 
         Util.getApplicationComponent(this).inject(this)
 
-        mSitemapAdapter = SitemapAdapter()
-        mSitemapAdapter!!.setSelectorListener(sitemapSelectListener)
+        sitemapAdapter = SitemapAdapter()
+        sitemapAdapter!!.setSelectorListener(sitemapSelectListener)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater.inflate(R.layout.fragment_sitemap_selector, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+        return inflater.inflate(R.layout.fragment_sitemap_selector, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val gridLayoutManager = GridLayoutManager(activity, 1)
 
-        mListView.layoutManager = gridLayoutManager
-        mListView.itemAnimator = DefaultItemAnimator()
-        mListView.adapter = mSitemapAdapter
-
-        return rootView
+        list.layoutManager = gridLayoutManager
+        list.itemAnimator = DefaultItemAnimator()
+        list.adapter = sitemapAdapter
     }
 
     override fun onResume() {
         super.onResume()
 
-        mSitemapAdapter!!.clear()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
+        sitemapAdapter!!.clear()
     }
 
     /**
@@ -92,7 +76,7 @@ class SitemapSelectorFragment : BaseFragment() {
      * @param server the server to request sitemap for.
      */
     private fun requestSitemap(server: OHServer) {
-        mSitemapAdapter!!.setServerState(server, SitemapAdapter.SitemapItem.STATE_LOADING)
+        sitemapAdapter!!.setServerState(server, SitemapAdapter.SitemapItem.STATE_LOADING)
         val serverHandler = connectionFactory.createServerHandler(server, context)
 
         serverHandler.requestSitemapRx()
@@ -102,16 +86,16 @@ class SitemapSelectorFragment : BaseFragment() {
                 .subscribe({ sitemaps ->
                     for (sitemap in sitemaps) {
                         sitemap.server = server
-                        if (!mSitemapAdapter!!.contains(sitemap)) {
-                            mSitemapAdapter!!.add(sitemap)
+                        if (!sitemapAdapter!!.contains(sitemap)) {
+                            sitemapAdapter!!.add(sitemap)
                         } else if (OHSitemap.isLocal(sitemap)) {
-                            mSitemapAdapter!!.remove(sitemap)
-                            mSitemapAdapter!!.add(sitemap)
+                            sitemapAdapter!!.remove(sitemap)
+                            sitemapAdapter!!.add(sitemap)
                         }
                     }
-                    mSitemapAdapter!!.notifyDataSetChanged()
+                    sitemapAdapter!!.notifyDataSetChanged()
                 }, {
-                    mSitemapAdapter!!.setServerState(server, SitemapAdapter.SitemapItem.STATE_ERROR)
+                    sitemapAdapter!!.setServerState(server, SitemapAdapter.SitemapItem.STATE_ERROR)
                     logger.e(TAG, "RequestSitemap failed" ,it)
                 })
     }

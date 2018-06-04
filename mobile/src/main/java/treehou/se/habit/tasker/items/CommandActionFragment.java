@@ -68,7 +68,7 @@ public class CommandActionFragment extends RxFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_tasker_command_action, container, false);
 
-        sprItems = (Spinner) rootView.findViewById(R.id.spr_items);
+        sprItems = (Spinner) rootView.findViewById(R.id.itemsSpinner);
 
         itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, filteredItems);
         sprItems.post(() -> sprItems.setAdapter(itemAdapter));
@@ -88,7 +88,7 @@ public class CommandActionFragment extends RxFragment {
                     });
         }
 
-        txtCommand = (TextView) rootView.findViewById(R.id.txt_command);
+        txtCommand = (TextView) rootView.findViewById(R.id.commandText);
 
         Button btnSave = (Button) rootView.findViewById(R.id.btn_save);
         btnSave.setOnClickListener(v -> {

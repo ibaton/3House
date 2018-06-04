@@ -23,6 +23,7 @@ import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_cell_voice_config.*
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ItemDB
@@ -36,9 +37,6 @@ import treehou.se.habit.util.logging.Logger
 
 class CellVoiceConfigFragment : RxFragment() {
 
-    @BindView(R.id.spr_items) lateinit var sprItems: Spinner
-    @BindView(R.id.btn_set_icon) lateinit var btnSetIcon: ImageButton
-
     @Inject lateinit var connectionFactory: ConnectionFactory
     @Inject lateinit var logger: Logger
 
@@ -51,7 +49,6 @@ class CellVoiceConfigFragment : RxFragment() {
     private val items = ArrayList<OHItem>()
 
     private lateinit var realm: Realm
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,13 +78,14 @@ class CellVoiceConfigFragment : RxFragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_cell_voice_config, container, false)
+    }
 
-        val rootView = inflater.inflate(R.layout.fragment_cell_voice_config, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        sprItems.adapter = itemAdapter
+        itemsSpinner.adapter = itemAdapter
 
         val servers = realm.where(ServerDB::class.java).findAll()
         items.clear()
@@ -106,7 +104,7 @@ class CellVoiceConfigFragment : RxFragment() {
                     }, {logger.e(TAG, "Failed to load items", it)})
         }
 
-        sprItems.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        itemsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val item = items[position]
                 realm.beginTransaction()
@@ -126,12 +124,10 @@ class CellVoiceConfigFragment : RxFragment() {
         }
 
         updateIconImage()
-        btnSetIcon.setOnClickListener {
+        setIconButton.setOnClickListener {
             val intent = Intent(activity, IconPickerActivity::class.java)
             startActivityForResult(intent, REQUEST_ICON)
         }
-
-        return rootView
     }
 
     private fun filterItems(items: MutableList<OHItem>): List<OHItem> {
@@ -148,11 +144,6 @@ class CellVoiceConfigFragment : RxFragment() {
         return items
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -160,7 +151,7 @@ class CellVoiceConfigFragment : RxFragment() {
     }
 
     private fun updateIconImage() {
-        btnSetIcon.setImageDrawable(Util.getIconDrawable(activity, voiceCell!!.icon))
+        setIconButton.setImageDrawable(Util.getIconDrawable(activity, voiceCell!!.icon))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

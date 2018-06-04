@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import kotlinx.android.synthetic.main.fragment_servers_settings.*
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
 import treehou.se.habit.dagger.ApplicationComponent
@@ -39,16 +40,9 @@ class ServerMenuFragment : BaseDaggerFragment<ServerMenuContract.Presenter>(), S
 
     @Inject lateinit var serverPresenter: ServerMenuContract.Presenter
 
-    private var unbinder: Unbinder? = null
     private var serverId: Long = 0
 
     private var container: ViewGroup? = null
-
-    /**
-     * The fragment's ListView/GridView.
-     */
-    @BindView(R.id.list)
-    lateinit var listView: RecyclerView
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -122,9 +116,11 @@ class ServerMenuFragment : BaseDaggerFragment<ServerMenuContract.Presenter>(), S
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         this.container = container
-        val view = inflater.inflate(R.layout.fragment_servers_settings, container, false)
+        return inflater.inflate(R.layout.fragment_servers_settings, container, false)
+    }
 
-        unbinder = ButterKnife.bind(this, view)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val items = ArrayList<ImageItem>()
         items.add(ImageItem(ITEM_EDIT, getString(R.string.edit), R.drawable.ic_edit))
@@ -145,13 +141,6 @@ class ServerMenuFragment : BaseDaggerFragment<ServerMenuContract.Presenter>(), S
 
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.settings)
-
-        return view
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     /**

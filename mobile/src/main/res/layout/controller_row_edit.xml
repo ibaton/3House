@@ -10,7 +10,7 @@
         android:orientation="horizontal"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:id="@+id/lou_btn_holder"
+        android:id="@+id/buttonHolderLayout"
         android:layout_weight="1"
         android:layout_marginRight="@dimen/margin_controller_cell"
         android:layout_marginTop="@dimen/margin_controller_row"

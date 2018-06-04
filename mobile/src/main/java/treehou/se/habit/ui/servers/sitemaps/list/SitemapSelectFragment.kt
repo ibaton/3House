@@ -38,7 +38,6 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
     @Inject lateinit var sitemapPresenter: SitemapSelectContract.Presenter
 
     private var sitemapAdapter: SitemapListAdapter? = null
-    private var unbinder: Unbinder? = null
     private val serverBehaviorSubject = BehaviorSubject.create<OHServer>()
     private var serverId: Long = -1
 
@@ -60,14 +59,13 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_sitemaplist_list, container, false)
-        unbinder = ButterKnife.bind(this, view)
-        setupActionBar()
-        return view
+        return inflater.inflate(R.layout.fragment_sitemaplist_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupActionBar()
 
         val gridLayoutManager = GridLayoutManager(activity, 1)
         listView.layoutManager = gridLayoutManager
@@ -132,11 +130,6 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
 
         clearList()
         loadSitemapsFromServers()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     /**

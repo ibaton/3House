@@ -6,7 +6,7 @@
     tools:context=".ui.servers.serverlist.ServersFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </FrameLayout>

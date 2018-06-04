@@ -47,12 +47,12 @@ public class SwitchContollerTest {
     public void testIconSet() {
         NavigationUtil.INSTANCE.navigateToController();
 
-        onView(withId(R.id.fab_add)).perform(click());
+        onView(withId(R.id.addFab)).perform(click());
         onView(withId(R.id.btn_add_column)).perform(click());
         onView(withId(R.id.img_icon_button)).perform(click());
         onView(withText(R.string.empty)).perform(click());
         onView(withText(R.string.label_switch)).perform(click());
-        onView(withId(R.id.btn_set_icon)).perform(click());
+        onView(withId(R.id.setIconButton)).perform(click());
 
         onView(allOf(withId(R.id.img_menu), hasSibling(withText(R.string.media)))).check(matches(isDisplayed()));
     }

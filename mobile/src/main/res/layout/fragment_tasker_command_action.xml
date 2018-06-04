@@ -39,7 +39,7 @@
                     <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/spr_items"
+                        android:id="@+id/itemsSpinner"
                         android:spinnerMode="dropdown"
                         android:entries="@array/empty"
                         android:layout_gravity="center_horizontal" />
@@ -52,7 +52,7 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/txt_command" />
+                        android:id="@+id/commandText" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>

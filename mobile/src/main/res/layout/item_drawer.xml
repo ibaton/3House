@@ -13,7 +13,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginRight="10dp"
-        android:id="@+id/img_icon" />
+        android:id="@+id/imgIcon" />
 
     <TextView
         android:text="@string/menu_item"

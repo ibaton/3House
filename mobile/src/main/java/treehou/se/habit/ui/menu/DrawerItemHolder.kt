@@ -14,7 +14,7 @@ internal class DrawerItemHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
     private val lblName: TextView
 
     init {
-        imgIcon = itemView.findViewById<View>(R.id.img_icon) as ImageView
+        imgIcon = itemView.findViewById<View>(R.id.imgIcon) as ImageView
         lblName = itemView.findViewById<View>(R.id.lbl_name) as TextView
     }
 

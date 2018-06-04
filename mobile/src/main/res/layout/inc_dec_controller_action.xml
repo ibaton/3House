@@ -34,7 +34,7 @@
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/spr_items"
+                    android:id="@+id/itemsSpinner"
                     android:spinnerMode="dialog"
                     android:entries="@array/empty"
                     android:layout_gravity="center_horizontal"/>
@@ -47,7 +47,7 @@
                 <ImageButton
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/controller_config_icon_height"
-                    android:id="@+id/btn_set_icon"/>
+                    android:id="@+id/setIconButton"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
                     android:inputType="numberDecimal|numberSigned"
                     android:ems="10"
                     android:hint="@string/value"
-                    android:id="@+id/txtValue"
+                    android:id="@+id/valueText"
                     android:layout_gravity="center_horizontal" />
 
                 <LinearLayout
@@ -86,7 +86,7 @@
                             android:ems="10"
                             android:text="0"
                             android:hint="@string/min"
-                            android:id="@+id/txtMin"
+                            android:id="@+id/minText"
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1" />
 
@@ -109,7 +109,7 @@
                             android:ems="10"
                             android:text="100"
                             android:hint="@string/max"
-                            android:id="@+id/txtMax"
+                            android:id="@+id/maxText"
                             android:layout_gravity="center_horizontal"
                             android:layout_weight="1" />
                     </LinearLayout>

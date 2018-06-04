@@ -38,7 +38,7 @@ class LinksListFragment : BaseFragment() {
     @Inject lateinit var connectionFactory: ConnectionFactory
 
     @BindView(R.id.list) lateinit var listView: RecyclerView
-    @BindView(R.id.empty) lateinit var emptyView: TextView
+    @BindView(R.id.emptyView) lateinit var emptyView: TextView
 
     private var adapter: LinkAdapter? = null
     private var server: ServerDB? = null

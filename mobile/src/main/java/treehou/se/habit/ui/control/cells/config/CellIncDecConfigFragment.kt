@@ -24,6 +24,7 @@ import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import kotlinx.android.synthetic.main.inc_dec_controller_action.*
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ItemDB
@@ -38,12 +39,6 @@ import treehou.se.habit.util.logging.Logger
 
 class CellIncDecConfigFragment : RxFragment() {
 
-    @BindView(R.id.spr_items) lateinit var sprItems: Spinner
-    @BindView(R.id.txtMax) lateinit var txtMax: EditText
-    @BindView(R.id.txtMin) lateinit var txtMin: EditText
-    @BindView(R.id.txtValue) lateinit var txtValue: EditText
-    @BindView(R.id.btn_set_icon) lateinit var btnSetIcon: ImageButton
-
     @Inject lateinit var connectionFactory: ConnectionFactory
     @Inject lateinit var logger: Logger
     lateinit var realm: Realm
@@ -54,7 +49,6 @@ class CellIncDecConfigFragment : RxFragment() {
     private var incDecCell: IncDecCellDB? = null
     private var cell: CellDB? = null
     private var item: OHItem? = null
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,14 +80,17 @@ class CellIncDecConfigFragment : RxFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val rootView = inflater.inflate(R.layout.inc_dec_controller_action, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+        return inflater.inflate(R.layout.inc_dec_controller_action, container, false)
+    }
 
-        txtMax.setText("" + incDecCell!!.max)
-        txtMin.setText("" + incDecCell!!.min)
-        txtValue.setText("" + incDecCell!!.value)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        sprItems.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        maxText.setText("" + incDecCell!!.max)
+        minText.setText("" + incDecCell!!.min)
+        valueText.setText("" + incDecCell!!.value)
+
+        itemsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 realm.beginTransaction()
                 val item = items[position]
@@ -107,7 +104,7 @@ class CellIncDecConfigFragment : RxFragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
         itemAdapter = ArrayAdapter(activity!!, android.R.layout.simple_spinner_dropdown_item, items)
-        sprItems.adapter = itemAdapter
+        itemsSpinner.adapter = itemAdapter
         val servers = realm.where(ServerDB::class.java).findAll()
         items.clear()
 
@@ -136,16 +133,14 @@ class CellIncDecConfigFragment : RxFragment() {
         }
 
         updateIconImage()
-        btnSetIcon.setOnClickListener {
+        setIconButton.setOnClickListener {
             val intent = Intent(activity, IconPickerActivity::class.java)
             startActivityForResult(intent, REQUEST_ICON)
         }
-
-        return rootView
     }
 
     private fun updateIconImage() {
-        btnSetIcon.setImageDrawable(Util.getIconDrawable(activity, incDecCell!!.icon))
+        setIconButton.setImageDrawable(Util.getIconDrawable(activity, incDecCell!!.icon))
     }
 
     private fun filterItems(items: MutableList<OHItem>): List<OHItem> {
@@ -167,29 +162,24 @@ class CellIncDecConfigFragment : RxFragment() {
 
         realm.beginTransaction()
         try {
-            incDecCell!!.max = Integer.parseInt(txtMax.text.toString())
+            incDecCell!!.max = Integer.parseInt(maxText.text.toString())
         } catch (e: NumberFormatException) {
             incDecCell!!.max = 100
         }
 
         try {
-            incDecCell!!.min = Integer.parseInt(txtMin.text.toString())
+            incDecCell!!.min = Integer.parseInt(minText.text.toString())
         } catch (e: NumberFormatException) {
             incDecCell!!.min = 0
         }
 
         try {
-            incDecCell!!.value = Integer.parseInt(txtValue.text.toString())
+            incDecCell!!.value = Integer.parseInt(valueText.text.toString())
         } catch (e: NumberFormatException) {
             incDecCell!!.value = 1
         }
 
         realm.commitTransaction()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun onDestroy() {

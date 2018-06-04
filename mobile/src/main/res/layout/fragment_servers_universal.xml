@@ -7,12 +7,12 @@
     tools:context=".ui.servers.serverlist.ServersFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
+        android:id="@+id/serverList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <TextView
-        android:id="@+id/empty"
+        android:id="@+id/emptyText"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/empty_servers"
@@ -22,7 +22,7 @@
         android:layout_gravity="center"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add"
+        android:id="@+id/addFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

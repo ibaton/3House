@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:id="@+id/viw_background"
+        android:id="@+id/backgroundView"
         android:background="@drawable/cell_passive_conf"
         android:orientation="vertical">
 
@@ -17,13 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="center"
-            android:id="@+id/img_icon" />
+            android:id="@+id/imgIcon" />
 
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:progress="50"
-            android:id="@+id/sbr_value" />
+            android:id="@+id/seekbarValue" />
 
     </LinearLayout>
 </LinearLayout>

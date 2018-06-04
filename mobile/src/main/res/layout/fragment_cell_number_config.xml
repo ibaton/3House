@@ -36,7 +36,7 @@
                     <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/spr_items"
+                        android:id="@+id/itemsSpinner"
                         android:spinnerMode="dialog"
                         android:entries="@array/empty"
                         android:layout_gravity="center_horizontal" />
@@ -49,14 +49,14 @@
                     <ImageButton
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/controller_config_icon_height"
-                        android:id="@+id/btn_set_icon"/>
+                        android:id="@+id/setIconButton"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:visibility="gone"
-                        android:id="@+id/lou_range">
+                        android:id="@+id/rangeLayout">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/txt_max"
+                            android:id="@+id/maxText"
                             android:inputType="number"/>
                     </LinearLayout>
                 </LinearLayout>

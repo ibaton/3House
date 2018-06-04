@@ -40,7 +40,7 @@
                     <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/spr_items"
+                        android:id="@+id/itemsSpinner"
                         android:spinnerMode="dropdown"
                         android:entries="@array/empty"
                         android:layout_gravity="center_horizontal" />
@@ -48,7 +48,7 @@
                     <ToggleButton
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
-                        android:id="@+id/tgl_on_off"
+                        android:id="@+id/toggleOnOff"
                         android:layout_gravity="center_horizontal"
                         android:checked="false" />
 

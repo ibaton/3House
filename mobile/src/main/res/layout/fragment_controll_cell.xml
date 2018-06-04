@@ -35,7 +35,7 @@
                         <Spinner
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/spr_items"
+                            android:id="@+id/itemsSpinner"
                             android:spinnerMode="dropdown"
                             android:entries="@array/cell_types"
                             android:layout_gravity="center_horizontal" />
@@ -55,7 +55,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/pick_color"
-                                android:id="@+id/btn_color_picker" />
+                                android:id="@+id/colorPickerButton" />
 
                             <!--<TextView
                                 android:layout_width="wrap_content"

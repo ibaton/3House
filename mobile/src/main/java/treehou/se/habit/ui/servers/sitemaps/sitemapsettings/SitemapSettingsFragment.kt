@@ -19,6 +19,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
+import kotlinx.android.synthetic.main.fragment_sitemap_settings.*
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.SitemapDB
 import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
@@ -32,16 +33,12 @@ import treehou.se.habit.mvp.BaseDaggerFragment
  */
 class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Presenter>(), SitemapSettingsContract.View {
 
-    @BindView(R.id.show_in_sitemap) lateinit var cbxShowSitemaps: Switch
-
     @Inject lateinit var settingsPresenter: SitemapSettingsContract.Presenter
 
-    private var unbinder: Unbinder? = null
     private var sitemapId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         sitemapId = arguments!!.getLong(ARG_SITEMAP)
     }
 
@@ -57,10 +54,12 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_sitemap_settings, container, false)
-        unbinder = ButterKnife.bind(this, view)
-        setupActionBar()
+        return inflater.inflate(R.layout.fragment_sitemap_settings, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupActionBar()
         val sitemapObservable = realm.where(SitemapDB::class.java).equalTo("id", sitemapId).findAll()
                 .asFlowable()
                 .flatMap { Flowable.fromIterable(it) }
@@ -83,7 +82,6 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
                     realm.commitTransaction()
                 }, {logger.e(TAG, "Sitemap db observable failed", it)})
 
-        return view
     }
 
     /**
@@ -92,11 +90,6 @@ class SitemapSettingsFragment : BaseDaggerFragment<SitemapSettingsContract.Prese
     private fun setupActionBar() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.sitemaps)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     companion object {

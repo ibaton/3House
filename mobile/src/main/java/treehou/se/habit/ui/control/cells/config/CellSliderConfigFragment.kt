@@ -12,6 +12,7 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_cell_number_config.*
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ItemDB
@@ -27,11 +28,6 @@ import javax.inject.Inject
 
 class CellSliderConfigFragment : BaseFragment() {
 
-    @BindView(R.id.spr_items) lateinit var sprItems: Spinner
-    @BindView(R.id.txt_max) lateinit var txtMax: TextView
-    @BindView(R.id.btn_set_icon) lateinit var btnSetIcon: ImageButton
-    @BindView(R.id.lou_range) lateinit var louRange: View
-
     @Inject lateinit var connectionFactory: ConnectionFactory
 
     private var mItemAdapter: ArrayAdapter<OHItem>? = null
@@ -39,7 +35,6 @@ class CellSliderConfigFragment : BaseFragment() {
     private var sliderCell: SliderCellDB? = null
     private var cell: CellDB? = null
     private var item: OHItem? = null
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,22 +63,24 @@ class CellSliderConfigFragment : BaseFragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_cell_number_config, container, false)
+    }
 
-        val rootView = inflater.inflate(R.layout.fragment_cell_number_config, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        sprItems.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+        itemsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (items.count() > position) {
                     val item = items[position]
                     realm.beginTransaction()
                     val itemDB = ItemDB.createOrLoadFromGeneric(realm, item)
                     if (item.type == OHItem.TYPE_NUMBER || item.type == OHItem.TYPE_GROUP) {
-                        louRange.visibility = View.VISIBLE
+                        rangeLayout.visibility = View.VISIBLE
                     } else {
-                        louRange.visibility = View.GONE
+                        rangeLayout.visibility = View.GONE
                     }
 
                     sliderCell!!.item = itemDB
@@ -94,7 +91,7 @@ class CellSliderConfigFragment : BaseFragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
         mItemAdapter = ArrayAdapter(activity!!, android.R.layout.simple_spinner_dropdown_item, items)
-        sprItems.post { sprItems.adapter = mItemAdapter }
+        itemsSpinner.post { itemsSpinner.adapter = mItemAdapter }
         val servers = realm.where(ServerDB::class.java).findAll()
         items.clear()
 
@@ -120,22 +117,20 @@ class CellSliderConfigFragment : BaseFragment() {
         }
 
         updateIconImage()
-        btnSetIcon.setOnClickListener { v ->
+        setIconButton.setOnClickListener { v ->
             val intent = Intent(activity, IconPickerActivity::class.java)
             startActivityForResult(intent, REQUEST_ICON)
         }
 
         if (sliderCell != null) {
-            txtMax.text = "" + sliderCell!!.max
+            maxText.setText("" + sliderCell!!.max)
         } else {
-            txtMax.text = 100.toString()
+            maxText.setText(100.toString())
         }
-
-        return rootView
     }
 
     private fun updateIconImage() {
-        btnSetIcon.setImageDrawable(Util.getIconDrawable(activity, sliderCell!!.icon))
+        setIconButton.setImageDrawable(Util.getIconDrawable(activity, sliderCell!!.icon))
     }
 
     private fun filterItems(items: MutableList<OHItem>): List<OHItem> {
@@ -168,17 +163,12 @@ class CellSliderConfigFragment : BaseFragment() {
         realm.beginTransaction()
         if (sliderCell!!.item!!.type == OHItem.TYPE_NUMBER || sliderCell!!.item!!.type == OHItem.TYPE_GROUP) {
             sliderCell!!.min = 0
-            sliderCell!!.max = Integer.parseInt(txtMax.text.toString())
+            sliderCell!!.max = Integer.parseInt(maxText.text.toString())
         } else {
             sliderCell!!.min = 0
             sliderCell!!.max = 100
         }
         realm.commitTransaction()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
