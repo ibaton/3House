@@ -25,17 +25,19 @@ class WidgetNullFactory @Inject constructor() : WidgetFactory {
         return SwitchWidgetViewHolder(view)
     }
 
-    inner class SwitchWidgetViewHolder(view: View) : WidgetBaseHolder(view, server, page) {
+    inner class SwitchWidgetViewHolder(view: View) : WidgetAdapter.WidgetViewHolder(view) {
 
         val widgetName = view.findViewById<TextView>(R.id.widgetName)
 
-        override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
-            super.bind(itemWidget)
+        override fun bind(widgetItem: WidgetAdapter.WidgetItem) {
             val context = itemView.context
+            val widget = widgetItem.widget
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                widgetName.text = Html.fromHtml(context.getString(R.string.missing_widget, widget.type, widget.item?.type ?: ""), Html.FROM_HTML_MODE_COMPACT)
+                widgetName.text = Html.fromHtml(context.getString(R.string.missing_widget, widget.type, widget.item?.type
+                        ?: ""), Html.FROM_HTML_MODE_COMPACT)
             } else {
-                widgetName.text = Html.fromHtml(context.getString(R.string.missing_widget, widget.type, widget.item?.type ?: ""))
+                widgetName.text = Html.fromHtml(context.getString(R.string.missing_widget, widget.type, widget.item?.type
+                        ?: ""))
             }
         }
     }

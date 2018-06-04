@@ -56,7 +56,7 @@ class WidgetSetpointFactory @Inject constructor() : WidgetFactory {
 
             val stateString = widget.item.state
             var stepIndex = stepValues.binarySearch(stateString, Comparator { t1: String, t2: String ->
-                t1.toFloat().compareTo(t2.toFloat())
+                convertStringValueToFloat(t1).compareTo(convertStringValueToFloat(t2))
             })
 
             // Create wrap around
@@ -76,6 +76,10 @@ class WidgetSetpointFactory @Inject constructor() : WidgetFactory {
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
+        }
+
+        private fun convertStringValueToFloat(value: String): Float {
+            return value.replace(",", ".").toFloatOrNull() ?: 0f
         }
     }
 

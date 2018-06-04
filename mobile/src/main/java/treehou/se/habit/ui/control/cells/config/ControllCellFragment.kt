@@ -38,7 +38,8 @@ class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
             Log.d(TAG, "item selected $cellType $position")
 
-            val fragmentManager = activity!!.supportFragmentManager
+            val fragmentManager = activity?.supportFragmentManager ?: return
+
             var fragment: Fragment? = null
             val cell = cell
             if(cell != null) {

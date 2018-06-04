@@ -15,6 +15,7 @@ import butterknife.Unbinder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.fragment_sitemaplist_list.*
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHSitemap
 import treehou.se.habit.R
@@ -35,9 +36,6 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
     @Inject lateinit var settings: Settings
     @Inject lateinit var serverLoader: ServerLoaderFactory
     @Inject lateinit var sitemapPresenter: SitemapSelectContract.Presenter
-
-    @BindView(R.id.list) lateinit var listView: RecyclerView
-    @BindView(R.id.empty) lateinit var emptyView: TextView
 
     private var sitemapAdapter: SitemapListAdapter? = null
     private var unbinder: Unbinder? = null
@@ -65,6 +63,12 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
         val view = inflater.inflate(R.layout.fragment_sitemaplist_list, container, false)
         unbinder = ButterKnife.bind(this, view)
         setupActionBar()
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val gridLayoutManager = GridLayoutManager(activity, 1)
         listView.layoutManager = gridLayoutManager
         listView.itemAnimator = DefaultItemAnimator()
@@ -91,7 +95,6 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
         })
         listView.adapter = sitemapAdapter
 
-        return view
     }
 
     /**

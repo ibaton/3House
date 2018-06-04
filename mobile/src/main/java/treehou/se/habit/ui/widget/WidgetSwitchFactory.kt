@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Switch
+import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
@@ -52,9 +53,13 @@ class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
         override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
             super.bind(itemWidget)
 
-            val isOn = widget.item.state == Constants.COMMAND_ON
-            switchView.isEnabled = widget.item.stateDescription?.isReadOnly == false
-            switchView.isChecked = isOn
+            val item: OHItem? = widget.item
+
+            if(item != null) {
+                val isOn = item.state == Constants.COMMAND_ON
+                switchView.isEnabled = item.stateDescription?.isReadOnly == false
+                switchView.isChecked = isOn
+            }
         }
     }
 

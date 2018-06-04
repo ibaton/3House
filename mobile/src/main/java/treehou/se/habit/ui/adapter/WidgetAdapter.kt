@@ -110,6 +110,7 @@ class WidgetAdapter @Inject constructor() : RecyclerView.Adapter<WidgetAdapter.W
             OHWidget.WIDGET_TYPE_SWITCH -> {
                 when {
                     item.widget.isRollerShutter() -> ITEM_TYPE_ROLLERSHUTTER
+                    item.widget.mapping == null -> ITEM_TYPE_SWITCH
                     item.widget.mapping.isEmpty() -> ITEM_TYPE_SWITCH
                     item.widget.mapping.size == 1 -> ITEM_TYPE_SWITCH_BUTTON
                     else -> ITEM_TYPE_SWITCH_PICKER
