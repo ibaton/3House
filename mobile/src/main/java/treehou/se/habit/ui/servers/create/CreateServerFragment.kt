@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.*
+import kotlinx.android.synthetic.main.fragment_create_server.*
 
 import treehou.se.habit.R
 import treehou.se.habit.ui.servers.create.custom.SetupServerFragment
@@ -16,15 +17,7 @@ import treehou.se.habit.ui.servers.create.scan.ScanServersFragment
 
 class CreateServerFragment : Fragment() {
 
-    lateinit var unbinder: Unbinder
-
-    @BindView(R.id.create_server_options) lateinit var createServerOptions: View
-
     var introFinished = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,12 +27,15 @@ class CreateServerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        unbinder = ButterKnife.bind(this, view)
 
         introFinished = true
+
+        addMyOpenhab.setOnClickListener { startCreateMyOpenhabServerFlow() }
+        addNewServer.setOnClickListener { startCreateServerFlow() }
+        scanForServers.setOnClickListener { startScanServerFlow() }
+        addDemoServerButton.setOnClickListener { addDemoServer() }
     }
 
-    @OnClick(R.id.add_my_openhab)
     fun startCreateMyOpenhabServerFlow(){
         val fragmentManager = fragmentManager
         if(fragmentManager != null) {
@@ -51,7 +47,6 @@ class CreateServerFragment : Fragment() {
         }
     }
 
-    @OnClick(R.id.add_new_server)
     fun startCreateServerFlow(){
         val fragmentManager = fragmentManager
         if(fragmentManager != null) {
@@ -63,7 +58,6 @@ class CreateServerFragment : Fragment() {
         }
     }
 
-    @OnClick(R.id.scan_for_servers)
     fun startScanServerFlow(){
         val fragmentManager = fragmentManager
         if(fragmentManager != null) {
@@ -75,7 +69,6 @@ class CreateServerFragment : Fragment() {
         }
     }
 
-    @OnClick(R.id.addDemoServerButton)
     fun addDemoServer(){
         val activity = activity
         if(activity is CreateServerContract.View){
@@ -89,25 +82,6 @@ class CreateServerFragment : Fragment() {
      */
     fun close() {
         fragmentManager?.popBackStack();
-    }
-
-    /**
-     * Show item options
-     */
-    fun showOptions() {
-        createServerOptions.visibility = View.VISIBLE
-    }
-
-    /**
-     * Hide item options
-     */
-    fun hideOptions() {
-        createServerOptions.visibility = View.GONE
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unbinder.unbind()
     }
 
     companion object {
