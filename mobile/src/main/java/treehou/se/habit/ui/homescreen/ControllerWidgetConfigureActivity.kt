@@ -6,13 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Unbinder
-import com.jakewharton.rxbinding2.view.RxView
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.SpinnerAdapter
+import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxAdapterView
+import kotlinx.android.synthetic.main.controller_widget_configure.*
 import treehou.se.habit.BaseActivity
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
@@ -28,21 +27,13 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
 
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
-    @BindView(R.id.spr_controller) lateinit var sprControllers: Spinner
-    @BindView(R.id.cbx_show_title) lateinit var cbxShowTitle: CheckBox
-    @BindView(R.id.add_button) lateinit var addButton: Button
-
     @Inject lateinit var controllerUtil: ControllerUtil
-
-    private var unbinder: Unbinder? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         (applicationContext as HabitApplication).component().inject(this)
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.controller_widget_configure)
-
-        unbinder = ButterKnife.bind(this)
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
@@ -71,11 +62,10 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish()
         }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unbinder!!.unbind()
+        addButton.setOnClickListener {
+            saveWidget()
+        }
     }
 
     internal inner class ControllerItem(val controllerDB: ControllerDB) {
@@ -85,8 +75,7 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.add_button)
-    fun onAddClick() {
+    private fun saveWidget() {
         val context = this@ControllerWidgetConfigureActivity
 
         val controller: ControllerDB? = (sprControllers.selectedItem as ControllerItem).controllerDB

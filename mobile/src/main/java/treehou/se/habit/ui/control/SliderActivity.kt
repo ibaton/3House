@@ -6,16 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
-
-import javax.inject.Inject
-
-import butterknife.ButterKnife
-import butterknife.OnClick
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_slider.*
 import se.treehou.ng.ohcommunicator.connector.models.OHItem
-import se.treehou.ng.ohcommunicator.connector.models.OHServer
-import se.treehou.ng.ohcommunicator.services.IServerHandler
 import treehou.se.habit.BaseActivity
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R
@@ -24,6 +18,7 @@ import treehou.se.habit.core.db.model.controller.SliderCellDB
 import treehou.se.habit.ui.BaseFragment
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Util
+import javax.inject.Inject
 
 class SliderActivity : BaseActivity() {
 
@@ -33,7 +28,7 @@ class SliderActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         Util.getApplicationComponent(this).inject(this)
         setContentView(R.layout.activity_slider)
-        ButterKnife.bind(this)
+
         val id = intent.extras!!.getLong(ARG_CELL)
         val sliderFragment = SliderFragment.newInstance(id)
         if (savedInstanceState == null) {
@@ -41,6 +36,8 @@ class SliderActivity : BaseActivity() {
                     .add(R.id.container, sliderFragment, SLIDER_TAG)
                     .commit()
         }
+
+        container.setOnClickListener { closeClick() }
     }
 
     override fun onPause() {
@@ -53,7 +50,6 @@ class SliderActivity : BaseActivity() {
         overridePendingTransition(0, 0)
     }
 
-    @OnClick(R.id.container)
     internal fun closeClick() {
         finish()
     }

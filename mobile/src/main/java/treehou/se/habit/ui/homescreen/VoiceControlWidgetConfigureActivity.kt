@@ -6,13 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.CheckBox
-import android.widget.Spinner
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.realm.Realm
+import kotlinx.android.synthetic.main.voice_control_widget_configure.*
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.ui.adapter.ServerArrayAdapter
@@ -22,11 +17,7 @@ import treehou.se.habit.ui.adapter.ServerArrayAdapter
  */
 class VoiceControlWidgetConfigureActivity : Activity() {
 
-    internal var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
-
-    @BindView(R.id.spr_server) lateinit var sprServers: Spinner
-    @BindView(R.id.cbx_show_title) lateinit var cbxShowTitle: CheckBox
-    private var unbinder: Unbinder? = null
+    internal var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     internal var mOnClickListener: View.OnClickListener = View.OnClickListener {
         val context = this@VoiceControlWidgetConfigureActivity
@@ -35,13 +26,13 @@ class VoiceControlWidgetConfigureActivity : Activity() {
         val appWidgetManager = AppWidgetManager.getInstance(context)
 
         //TODO check that server is selected
-        saveServerPref(this@VoiceControlWidgetConfigureActivity, mAppWidgetId, sprServers.selectedItem as ServerDB, cbxShowTitle.isChecked)
+        saveServerPref(this, appWidgetId, sprServers.selectedItem as ServerDB, cbxShowTitle.isChecked)
 
-        VoiceControlWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId)
+        VoiceControlWidget.updateAppWidget(context, appWidgetManager, appWidgetId)
 
         // Make sure we pass back the original appWidgetId
         val resultValue = Intent()
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
         setResult(Activity.RESULT_OK, resultValue)
         finish()
     }
@@ -54,7 +45,6 @@ class VoiceControlWidgetConfigureActivity : Activity() {
         setResult(Activity.RESULT_CANCELED)
 
         setContentView(R.layout.voice_control_widget_configure)
-        unbinder = ButterKnife.bind(this)
 
         val realm = Realm.getDefaultInstance()
         val servers = realm.where(ServerDB::class.java).findAll()
@@ -69,19 +59,14 @@ class VoiceControlWidgetConfigureActivity : Activity() {
         val intent = intent
         val extras = intent.extras
         if (extras != null) {
-            mAppWidgetId = extras.getInt(
+            appWidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         }
 
         // If this view was started with an intent without an app widget ID, finish with an error.
-        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish()
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unbinder!!.unbind()
     }
 
     companion object {

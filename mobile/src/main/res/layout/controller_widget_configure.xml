@@ -21,14 +21,14 @@
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spr_controller"
+                android:id="@+id/sprControllers"
                 android:spinnerMode="dropdown" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/show_name"
-                android:id="@+id/cbx_show_title"
+                android:id="@+id/cbxShowTitle"
                 android:checked="false" />
 
         </LinearLayout>
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:padding="30dp"
         android:text="@string/add_widget"
-        android:id="@+id/add_button"
+        android:id="@+id/addButton"
         android:enabled="false"
         android:layout_weight="1" />
 </LinearLayout>

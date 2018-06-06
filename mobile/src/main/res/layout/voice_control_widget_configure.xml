@@ -22,7 +22,7 @@
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/spr_server"
+                android:id="@+id/sprServers"
                 android:spinnerMode="dropdown"
                 android:layout_gravity="center_horizontal" />
 
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/show_name"
-                android:id="@+id/cbx_show_title"
+                android:id="@+id/cbxShowTitle"
                 android:checked="false" />
         </LinearLayout>
     </ScrollView>
