@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RemoteViews
 import butterknife.BindView
@@ -23,12 +24,10 @@ import treehou.se.habit.util.Util
 
 class IncDecCellBuilder(private val communicator: Communicator) : CellFactory.CellBuilder {
 
-    @BindView(R.id.img_icon_button) lateinit var imgIcon: ImageButton
-
-    override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
+    override fun build(context: Context, container: ViewGroup, controller: ControllerDB, cell: CellDB): View {
         val inflater = LayoutInflater.from(context)
-        val cellView = inflater.inflate(R.layout.cell_button, null)
-        ButterKnife.bind(this, cellView)
+        val cellView = inflater.inflate(R.layout.cell_button, container, false)
+        val imgIcon = cellView.findViewById<ImageButton>(R.id.imgIcon)
 
         val realm = Realm.getDefaultInstance()
         val buttonCell = cell.getCellIncDec()
@@ -58,14 +57,14 @@ class IncDecCellBuilder(private val communicator: Communicator) : CellFactory.Ce
         val cellView = RemoteViews(context.packageName, R.layout.cell_button)
 
         val pallete = ControllerUtil.generateColor(controller, cell)
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON])
+        ViewHelper.colorRemoteDrawable(cellView, R.id.imgIcon, pallete[ControllerUtil.INDEX_BUTTON])
         val icon = Util.getIconBitmap(context, buttonCell!!.icon)
         if (icon != null) {
-            cellView.setImageViewBitmap(R.id.img_icon_button, icon)
+            cellView.setImageViewBitmap(R.id.imgIcon, icon)
         }
         val intent = CommandService.getActionIncDec(context, buttonCell!!.min, buttonCell.max, buttonCell.value, buttonCell.item!!.id)
         val pendingIntent = CommandService.createCommand(context, (Math.random() * Integer.MAX_VALUE).toInt(), intent)
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent)
+        cellView.setOnClickPendingIntent(R.id.imgIcon, pendingIntent)
         realm.close()
 
         return cellView

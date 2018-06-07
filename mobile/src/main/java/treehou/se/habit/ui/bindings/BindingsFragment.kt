@@ -17,6 +17,7 @@ import com.trello.rxlifecycle2.components.support.RxFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_bindings_list.*
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.R
@@ -31,8 +32,6 @@ import javax.inject.Inject
 
 class BindingsFragment : RxFragment() {
 
-    @BindView(R.id.lst_bindings) lateinit var lstBinding: RecyclerView
-
     @Inject lateinit var connectionFactory: ConnectionFactory
     @Inject lateinit var logger: Logger
 
@@ -43,7 +42,6 @@ class BindingsFragment : RxFragment() {
     private var bindings: List<OHBinding> = ArrayList()
 
     private var realm: Realm? = null
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -72,7 +70,6 @@ class BindingsFragment : RxFragment() {
                               savedInstanceState: Bundle?): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_bindings_list, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
 
         this.container = container
 
@@ -127,11 +124,6 @@ class BindingsFragment : RxFragment() {
     override fun onDestroy() {
         super.onDestroy()
         realm!!.close()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

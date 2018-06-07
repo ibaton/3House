@@ -7,6 +7,7 @@ import android.graphics.PorterDuff
 import android.speech.RecognizerIntent
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RemoteViews
 import butterknife.BindView
@@ -22,13 +23,10 @@ import treehou.se.habit.util.Util
 
 class VoiceCellBuilder : CellFactory.CellBuilder {
 
-    @BindView(R.id.img_icon_button) lateinit var imgIcon: ImageButton
-
-    override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
+    override fun build(context: Context, container: ViewGroup, controller: ControllerDB, cell: CellDB): View {
         val inflater = LayoutInflater.from(context)
-        val cellView = inflater.inflate(R.layout.cell_button, null)
-        ButterKnife.bind(this, cellView)
-
+        val cellView = inflater.inflate(R.layout.cell_button, container, false)
+        val imgIcon = cellView.findViewById<ImageButton>(R.id.imgIcon)
         val voiceCell = cell.getCellVoice()
 
         val pallete = ControllerUtil.generateColor(controller, cell)
@@ -70,9 +68,9 @@ class VoiceCellBuilder : CellFactory.CellBuilder {
         val cellView = RemoteViews(context.packageName, R.layout.cell_button)
 
         val pallete = ControllerUtil.generateColor(controller, cell)
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON])
+        ViewHelper.colorRemoteDrawable(cellView, R.id.imgIcon, pallete[ControllerUtil.INDEX_BUTTON])
 
-        cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, voiceCell!!.icon))
+        cellView.setImageViewBitmap(R.id.imgIcon, Util.getIconBitmap(context, voiceCell!!.icon))
 
         if (voiceCell.item == null || voiceCell.item!!.server == null) {
             return cellView
@@ -94,7 +92,7 @@ class VoiceCellBuilder : CellFactory.CellBuilder {
 
         val pendingIntent = PendingIntent.getActivity(context, 9, intent, 0)
 
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent)
+        cellView.setOnClickPendingIntent(R.id.imgIcon, pendingIntent)
 
         return cellView
     }

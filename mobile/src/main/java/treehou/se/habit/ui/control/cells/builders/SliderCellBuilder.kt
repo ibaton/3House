@@ -6,11 +6,11 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RemoteViews
 import android.widget.SeekBar
-import butterknife.BindView
-import butterknife.ButterKnife
 import io.realm.Realm
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
@@ -24,14 +24,12 @@ import treehou.se.habit.util.Util
 
 class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : CellFactory.CellBuilder {
 
-    @BindView(R.id.img_icon_button) lateinit var imgIcon: ImageView
-    @BindView(R.id.sbrNumber) lateinit var sbrNumber: SeekBar
-    @BindView(R.id.backgroundView) lateinit var viwBackground: View
-
-    override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
+    override fun build(context: Context, container: ViewGroup, controller: ControllerDB, cell: CellDB): View {
         val inflater = LayoutInflater.from(context)
-        val cellView = inflater.inflate(R.layout.cell_slider, null)
-        ButterKnife.bind(this, cellView)
+        val cellView = inflater.inflate(R.layout.cell_slider, container, false)
+        val imgIcon = cellView.findViewById<ImageView>(R.id.imgIcon)
+        val sbrNumber = cellView.findViewById<SeekBar>(R.id.sbrNumber)
+        val viwBackground = cellView.findViewById<View>(R.id.backgroundView)
 
         val realm = Realm.getDefaultInstance()
         val sliderCell = cell.getCellSlider()
@@ -73,16 +71,16 @@ class SliderCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
         val cellView = RemoteViews(context.packageName, R.layout.cell_button)
 
         val pallete = ControllerUtil.generateColor(controller, cell)
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON])
+        ViewHelper.colorRemoteDrawable(cellView, R.id.imgIcon, pallete[ControllerUtil.INDEX_BUTTON])
 
         val icon = Util.getIconBitmap(context, numberCell!!.icon)
         if (icon != null) {
-            cellView.setImageViewBitmap(R.id.img_icon_button, icon)
+            cellView.setImageViewBitmap(R.id.imgIcon, icon)
         }
 
         //TODO give intent unique id
         val pendingIntent = PendingIntent.getActivity(context, (Math.random() * Integer.MAX_VALUE).toInt(), createSliderIntent(context, cell.id), PendingIntent.FLAG_UPDATE_CURRENT)
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent)
+        cellView.setOnClickPendingIntent(R.id.imgIcon, pendingIntent)
         realm.close()
 
         return cellView

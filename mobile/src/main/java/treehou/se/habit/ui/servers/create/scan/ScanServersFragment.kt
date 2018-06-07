@@ -11,11 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_scan_servers.*
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.services.Scanner
 import se.treehou.ng.ohcommunicator.services.callbacks.OHCallback
@@ -35,14 +33,8 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
     @Inject
     lateinit var scanPresenter: ScanServersContract.Presenter
 
-    @BindView(R.id.emptyView)
-    lateinit var viwEmpty: View
-    @BindView(R.id.list)
-    lateinit var lstServer: RecyclerView
-
     private lateinit var serversAdapter: ServersAdapter
     private var discoveryListener: OHCallback<List<OHServer>>? = null
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,17 +76,19 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         // Inflate the layout for this fragment
 
         val rootView = inflater.inflate(R.layout.fragment_scan_servers, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
-
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.scan_for_server)
 
-        lstServer.adapter = serversAdapter
-        val gridLayoutManager = GridLayoutManager(activity, 1)
-        lstServer.layoutManager = gridLayoutManager
-        lstServer.itemAnimator = DefaultItemAnimator()
-
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        serverList.adapter = serversAdapter
+        val gridLayoutManager = GridLayoutManager(activity, 1)
+        serverList.layoutManager = gridLayoutManager
+        serverList.itemAnimator = DefaultItemAnimator()
     }
 
     override fun onResume() {
@@ -121,21 +115,15 @@ class ScanServersFragment : BaseDaggerFragment<ScanServersContract.Presenter>(),
         scanner.registerRx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({ server -> serversAdapter.addItem(server) },
-                        {logger.e(TAG, "Scanner registerRx failed", it)})
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        unbinder!!.unbind()
+                .subscribe({ server -> serversAdapter.addItem(server) },
+                        { logger.e(TAG, "Scanner registerRx failed", it) })
     }
 
     /**
      * Show empty view if no controllers exist
      */
     private fun updateEmptyView(itemCount: Int) {
-        viwEmpty.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
+        emptyView.visibility = if (itemCount <= 0) View.VISIBLE else View.GONE
     }
 
     class ServersAdapter(private val context: Context) : RecyclerView.Adapter<ServersAdapter.ServerHolder>() {

@@ -148,7 +148,7 @@ class EditControlFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
                 val activity = getActivity()
                 if (activity != null) {
-                    val itemView = cellFactory.create(activity, controller!!, cell)
+                    val itemView = cellFactory.create(activity, buttonHolderLayout, controller!!, cell)
 
                     itemView.setOnClickListener {
                         getActivity()!!.supportFragmentManager.beginTransaction()

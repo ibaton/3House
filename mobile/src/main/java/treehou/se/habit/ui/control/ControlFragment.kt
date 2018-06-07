@@ -116,7 +116,7 @@ class ControlFragment : Fragment() {
                 val activity = getActivity()
                 val controller = controller
                 if (activity != null && controller != null) {
-                    val itemView = cellFactory.create(activity, controller, cell)
+                    val itemView = cellFactory.create(activity, louColumnHolder, controller, cell)
                     louColumnHolder.addView(itemView)
                 }
             }

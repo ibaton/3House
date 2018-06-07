@@ -122,13 +122,15 @@ class SliderActivity : BaseActivity() {
                             if (ohItem?.state != null && context != null) {
                                 if (ohItem.getLabel() != null) {
                                     itemName!!.visibility = View.VISIBLE
-                                    itemName!!.text = Util.createLabel(context, ohItem.getLabel())
+                                    itemName!!.text = Util.createLabel(context, ohItem.label)
                                 } else {
                                     itemName!!.visibility = View.GONE
                                 }
 
                                 sbrNumber!!.setOnSeekBarChangeListener(null)
-                                val progress = java.lang.Float.valueOf(ohItem.getState())!!
+
+                                val progress = ohItem.state.toFloatOrNull() ?: 0f
+
                                 sbrNumber!!.progress = progress.toInt()
                                 sbrNumber!!.setOnSeekBarChangeListener(sliderListener)
                             }

@@ -1,15 +1,13 @@
 package treehou.se.habit.ui.control.cells.builders
 
-import android.app.PendingIntent
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RemoteViews
-import butterknife.BindView
-import butterknife.ButterKnife
 import io.realm.Realm
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
@@ -23,12 +21,10 @@ import treehou.se.habit.util.Util
 
 class ButtonCellBuilder(private val connectionFactory: ConnectionFactory) : CellFactory.CellBuilder {
 
-    @BindView(R.id.img_icon_button) lateinit var imgIcon: ImageButton
-
-    override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
+    override fun build(context: Context, container: ViewGroup, controller: ControllerDB, cell: CellDB): View {
         val inflater = LayoutInflater.from(context)
-        val cellView = inflater.inflate(R.layout.cell_button, null)
-        ButterKnife.bind(this, cellView)
+        val cellView = inflater.inflate(R.layout.cell_button, container, false)
+        val imgIcon = cellView.findViewById<ImageButton>(R.id.imgIcon)
 
         Log.d(TAG, "Build: Button")
         val realm = Realm.getDefaultInstance()
@@ -65,14 +61,14 @@ class ButtonCellBuilder(private val connectionFactory: ConnectionFactory) : Cell
         val cellView = RemoteViews(context.packageName, R.layout.cell_button)
 
         val pallete = ControllerUtil.generateColor(controller, cell)
-        ViewHelper.colorRemoteDrawable(cellView, R.id.img_icon_button, pallete[ControllerUtil.INDEX_BUTTON])
+        ViewHelper.colorRemoteDrawable(cellView, R.id.imgIcon, pallete[ControllerUtil.INDEX_BUTTON])
 
-        cellView.setImageViewBitmap(R.id.img_icon_button, Util.getIconBitmap(context, buttonCell!!.icon))
+        cellView.setImageViewBitmap(R.id.imgIcon, Util.getIconBitmap(context, buttonCell!!.icon))
         val intent = CommandService.getActionCommand(context, buttonCell.command!!, buttonCell.item!!.id)
 
         //TODO give intent unique id
         val pendingIntent = CommandService.createCommand(context, (Math.random() * Integer.MAX_VALUE).toInt(), intent)
-        cellView.setOnClickPendingIntent(R.id.img_icon_button, pendingIntent)
+        cellView.setOnClickPendingIntent(R.id.imgIcon, pendingIntent)
         realm.close()
 
         return cellView

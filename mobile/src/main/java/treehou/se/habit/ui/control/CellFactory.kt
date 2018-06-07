@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RemoteViews
 
@@ -26,7 +27,7 @@ class CellFactory {
         defaultBuilder = builder
     }
 
-    fun create(context: Context, controller: ControllerDB, cell: CellDB): View {
+    fun create(context: Context, container: ViewGroup, controller: ControllerDB, cell: CellDB): View {
 
         Log.d(TAG, "cellBuilder cell type " + cell.type)
         var cellView: View
@@ -40,11 +41,11 @@ class CellFactory {
             } else {
                 Log.d(TAG, "cellBuilder using custom")
             }
-            cellView = cellBuilder.build(context, controller, cell)
+            cellView = cellBuilder.build(context, container, controller, cell)
         } catch (e: Exception) {
             Log.d(TAG, "Failed render $cell error $e")
             e.printStackTrace()
-            cellView = defaultBuilder.build(context, controller, cell)
+            cellView = defaultBuilder.build(context, container, controller, cell)
         }
 
         val lp = LinearLayout.LayoutParams(
@@ -80,16 +81,16 @@ class CellFactory {
 
     interface CellBuilder {
 
-        fun build(context: Context, controller: ControllerDB, cell: CellDB): View
+        fun build(context: Context, container: ViewGroup, controller: ControllerDB, cell: CellDB): View
         fun buildRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews?
     }
 
     class DefaultBuilder : CellBuilder {
 
-        override fun build(context: Context, controller: ControllerDB, cell: CellDB): View {
+        override fun build(context: Context, container: ViewGroup, controller: ControllerDB, cell: CellDB): View {
 
             val inflater = LayoutInflater.from(context)
-            return inflater.inflate(R.layout.cell_empty, null)
+            return inflater.inflate(R.layout.cell_empty, container, false)
         }
 
         override fun buildRemote(context: Context, controller: ControllerDB, cell: CellDB): RemoteViews {
