@@ -5,14 +5,9 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_binding.*
-import se.treehou.ng.ohcommunicator.util.GsonHelper
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding
+import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.R
 
 class BindingFragment : Fragment() {

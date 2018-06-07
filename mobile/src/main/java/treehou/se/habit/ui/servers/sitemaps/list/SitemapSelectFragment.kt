@@ -4,14 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -151,9 +146,9 @@ class SitemapSelectFragment : BaseDaggerFragment<SitemapSelectContract.Presenter
                     val server = serverSitemaps.server
                     val sitemaps = serverSitemaps.sitemaps
 
-                    if(sitemaps != null) {
+                    if (sitemaps != null) {
                         for (sitemap in sitemaps) {
-                            if(server != null) {
+                            if (server != null) {
                                 sitemapAdapter!!.add(server, sitemap)
                             }
                         }

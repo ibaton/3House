@@ -6,13 +6,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_servers_settings.*
 import treehou.se.habit.HabitApplication
 import treehou.se.habit.R

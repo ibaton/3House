@@ -3,19 +3,12 @@ package treehou.se.habit.ui.control.cells.config
 import android.os.Bundle
 import android.support.annotation.ColorInt
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.realm.Realm
 import kotlinx.android.synthetic.main.fragment_controll_cell.*
 import treehou.se.habit.R
@@ -40,7 +33,7 @@ class ControllCellFragment : Fragment(), ColorDialog.ColorDialogCallback {
 
             var fragment: Fragment? = null
             val cell = cell
-            if(cell != null) {
+            if (cell != null) {
                 when (cellType) {
                     CellDB.TYPE_BUTTON -> {
                         Log.d(TAG, "Loading button fragment.")

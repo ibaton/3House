@@ -5,15 +5,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.fragment_servers_universal.*
@@ -138,7 +133,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                     if (it.size == 0) {
                         showScanServerFlow()
                     }
-                }, {logger.e(TAG, "launchScanDialogIfNoServers", it)})
+                }, { logger.e(TAG, "launchScanDialogIfNoServers", it) })
     }
 
     /**
@@ -155,7 +150,7 @@ class ServersFragment : BaseDaggerFragment<ServersContract.Presenter>(), Servers
                     this@ServersFragment.servers = it
                     updateEmptyView(it.size)
                     serversAdapter.setItems(it.createSnapshot())
-                }, {logger.e(TAG, "Failed to load servers", it)})
+                }, { logger.e(TAG, "Failed to load servers", it) })
     }
 
     /**

@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.*
 import kotlinx.android.synthetic.main.fragment_create_server.*
-
 import treehou.se.habit.R
 import treehou.se.habit.ui.servers.create.custom.SetupServerFragment
 import treehou.se.habit.ui.servers.create.myopenhab.CreateMyOpenhabFragment
@@ -36,9 +34,9 @@ class CreateServerFragment : Fragment() {
         addDemoServerButton.setOnClickListener { addDemoServer() }
     }
 
-    fun startCreateMyOpenhabServerFlow(){
+    fun startCreateMyOpenhabServerFlow() {
         val fragmentManager = fragmentManager
-        if(fragmentManager != null) {
+        if (fragmentManager != null) {
             val createMyOpenhabFragment = CreateMyOpenhabFragment()
             fragmentManager.beginTransaction()
                     .replace((view!!.parent as ViewGroup).id, createMyOpenhabFragment)
@@ -47,9 +45,9 @@ class CreateServerFragment : Fragment() {
         }
     }
 
-    fun startCreateServerFlow(){
+    fun startCreateServerFlow() {
         val fragmentManager = fragmentManager
-        if(fragmentManager != null) {
+        if (fragmentManager != null) {
             val createMyOpenhabFragment = SetupServerFragment()
             fragmentManager.beginTransaction()
                     .replace((view!!.parent as ViewGroup).id, createMyOpenhabFragment)
@@ -58,9 +56,9 @@ class CreateServerFragment : Fragment() {
         }
     }
 
-    fun startScanServerFlow(){
+    fun startScanServerFlow() {
         val fragmentManager = fragmentManager
-        if(fragmentManager != null) {
+        if (fragmentManager != null) {
             val scanServersFragment = ScanServersFragment()
             fragmentManager.beginTransaction()
                     .replace((view!!.parent as ViewGroup).id, scanServersFragment)
@@ -69,9 +67,9 @@ class CreateServerFragment : Fragment() {
         }
     }
 
-    fun addDemoServer(){
+    fun addDemoServer() {
         val activity = activity
-        if(activity is CreateServerContract.View){
+        if (activity is CreateServerContract.View) {
             activity.getPresenter()?.saveDemoServer()
             activity.finish()
         }

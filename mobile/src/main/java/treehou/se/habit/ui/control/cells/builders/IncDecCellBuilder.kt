@@ -1,6 +1,5 @@
 package treehou.se.habit.ui.control.cells.builders
 
-import android.app.PendingIntent
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.Log
@@ -9,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RemoteViews
-import butterknife.BindView
-import butterknife.ButterKnife
 import io.realm.Realm
 import treehou.se.habit.R
 import treehou.se.habit.connector.Communicator

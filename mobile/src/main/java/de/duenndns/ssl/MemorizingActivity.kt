@@ -23,26 +23,17 @@
  */
 package de.duenndns.ssl
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.widget.TextView
-
-import java.io.ByteArrayInputStream
-import java.io.InputStream
-import java.security.cert.CertificateException
-import java.security.cert.CertificateFactory
-import java.security.cert.X509Certificate
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Unbinder
 import kotlinx.android.synthetic.main.activity_memorizing.*
 import treehou.se.habit.BaseActivity
 import treehou.se.habit.R
+import java.io.ByteArrayInputStream
+import java.security.cert.CertificateException
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 
 class MemorizingActivity : BaseActivity() {
 
@@ -62,8 +53,8 @@ class MemorizingActivity : BaseActivity() {
         titleText.setText(titleId)
         messageText.text = message
 
-        accept.setOnClickListener{ acceptAlways(hostname, cert, decisionId) }
-        abort.setOnClickListener{ abort(hostname, cert, decisionId) }
+        accept.setOnClickListener { acceptAlways(hostname, cert, decisionId) }
+        abort.setOnClickListener { abort(hostname, cert, decisionId) }
     }
 
     public override fun onResume() {

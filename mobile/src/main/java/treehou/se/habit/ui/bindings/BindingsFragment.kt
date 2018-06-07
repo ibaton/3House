@@ -4,14 +4,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.google.gson.reflect.TypeToken
 import com.trello.rxlifecycle2.components.support.RxFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -118,10 +114,10 @@ class BindingsFragment : RxFragment() {
                 .compose(bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({ bindings ->
+                .subscribe({ bindings ->
                     Log.d(TAG, "onUpdate " + bindings)
                     bindingAdapter!!.setBindings(bindings)
-                }, {logger.e(TAG, "request bindings failed", it)})
+                }, { logger.e(TAG, "request bindings failed", it) })
     }
 
     override fun onDestroy() {

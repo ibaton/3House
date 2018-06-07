@@ -4,10 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.realm.Realm
 import kotlinx.android.synthetic.main.fragment_colorpicker.*
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
@@ -34,10 +30,9 @@ class LightFragment : BaseDaggerFragment<Presenter>(), LightContract.View {
     private var color: Int = 0
 
     private var timer = Timer()
-    private var unbinder: Unbinder? = null
 
-    private val colorChangeListener = object: ColorPicker.ColorChangeListener {
-        override fun onColorChange(hsv : FloatArray) {
+    private val colorChangeListener = object : ColorPicker.ColorChangeListener {
+        override fun onColorChange(hsv: FloatArray) {
             timer.cancel()
             timer.purge()
             timer = Timer()
@@ -77,13 +72,13 @@ class LightFragment : BaseDaggerFragment<Presenter>(), LightContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_colorpicker, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
+        return inflater.inflate(R.layout.fragment_colorpicker, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         nameLabel.text = widget!!.label
         pcrColor.color = color
-
-        return rootView
     }
 
     override fun onResume() {
@@ -100,12 +95,6 @@ class LightFragment : BaseDaggerFragment<Presenter>(), LightContract.View {
         super.onDestroy()
         realm.close()
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
-    }
-
 
     override fun injectMembers(hasActivitySubcomponentBuilders: HasActivitySubcomponentBuilders) {
         (hasActivitySubcomponentBuilders.getFragmentComponentBuilder(LightFragment::class.java) as LightComponent.Builder)

@@ -8,19 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Spinner
-
 import com.trello.rxlifecycle2.components.support.RxFragment
-
-import java.util.ArrayList
-
-import javax.inject.Inject
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
@@ -31,11 +19,13 @@ import treehou.se.habit.core.db.model.ItemDB
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.core.db.model.controller.CellDB
 import treehou.se.habit.core.db.model.controller.IncDecCellDB
+import treehou.se.habit.ui.util.IconPickerActivity
 import treehou.se.habit.util.ConnectionFactory
 import treehou.se.habit.util.Constants
 import treehou.se.habit.util.Util
-import treehou.se.habit.ui.util.IconPickerActivity
 import treehou.se.habit.util.logging.Logger
+import java.util.*
+import javax.inject.Inject
 
 class CellIncDecConfigFragment : RxFragment() {
 
@@ -126,7 +116,7 @@ class CellIncDecConfigFragment : RxFragment() {
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe ({ newItems ->
+                    .subscribe({ newItems ->
                         this.items.addAll(newItems)
                         itemAdapter!!.notifyDataSetChanged()
                     }, { logger.e(TAG, "Failed to load items", it) })

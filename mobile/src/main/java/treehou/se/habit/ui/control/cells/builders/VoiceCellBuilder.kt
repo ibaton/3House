@@ -10,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RemoteViews
-import butterknife.BindView
-import butterknife.ButterKnife
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.controller.CellDB
 import treehou.se.habit.core.db.model.controller.ControllerDB

@@ -13,8 +13,6 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.realm.Realm
 import kotlinx.android.synthetic.main.fragment_edit_control.*
 import treehou.se.habit.HabitApplication

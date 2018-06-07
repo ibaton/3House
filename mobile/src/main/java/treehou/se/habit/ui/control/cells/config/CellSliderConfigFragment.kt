@@ -6,10 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_cell_number_config.*
@@ -110,10 +108,10 @@ class CellSliderConfigFragment : BaseFragment() {
                     .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe ({ items ->
+                    .subscribe({ items ->
                         this.items.addAll(items)
                         mItemAdapter!!.notifyDataSetChanged()
-                    }, {logger.e(TAG, "Failed to load items", it)})
+                    }, { logger.e(TAG, "Failed to load items", it) })
         }
 
         updateIconImage()
