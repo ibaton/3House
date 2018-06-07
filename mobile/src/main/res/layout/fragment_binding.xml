@@ -35,7 +35,7 @@
                         android:layout_height="wrap_content"
                         style="@style/MenuItemText"
                         android:text="@string/binding"
-                        android:id="@+id/lbl_name"/>
+                        android:id="@+id/lblName"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -44,14 +44,14 @@
                         android:layout_marginBottom="@dimen/short_space"
                         android:lines="1"
                         android:text="@string/author"
-                        android:id="@+id/lbl_author"/>
+                        android:id="@+id/lblAuthor"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/DescriptionText"
                         android:text="@string/description"
-                        android:id="@+id/lbl_description"/>
+                        android:id="@+id/lblDescription"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>

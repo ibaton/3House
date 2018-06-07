@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     tools:context="treehou.se.habit.ui.settings.SettingsFragment">
 
-    <ListView android:id="@android:id/list" android:layout_width="match_parent"
+    <ListView android:id="@+id/listView" android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@drawable/null_divider"
         android:dividerHeight="0dp"/>
 
-    <TextView android:id="@+id/textView" android:layout_width="match_parent"
+    <TextView android:id="@+id/empty" android:layout_width="match_parent"
         android:layout_height="match_parent" android:gravity="center" />
 
 </FrameLayout>

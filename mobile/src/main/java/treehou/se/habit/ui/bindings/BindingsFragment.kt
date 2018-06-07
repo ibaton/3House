@@ -75,6 +75,13 @@ class BindingsFragment : RxFragment() {
 
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setTitle(R.string.bindings)
+        setHasOptionsMenu(true)
+
+        return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         bindingAdapter = BindingAdapter()
 
@@ -90,10 +97,6 @@ class BindingsFragment : RxFragment() {
         lstBinding.itemAnimator = DefaultItemAnimator()
         lstBinding.adapter = bindingAdapter
         bindingAdapter!!.setBindings(bindings)
-
-        setHasOptionsMenu(true)
-
-        return rootView
     }
 
     /**
@@ -103,7 +106,7 @@ class BindingsFragment : RxFragment() {
     private fun openBinding(binding: OHBinding) {
         val fragment = BindingFragment.newInstance(binding)
         activity!!.supportFragmentManager.beginTransaction()
-                .replace(this@BindingsFragment.container!!.id, fragment)
+                .replace(this.container!!.id, fragment)
                 .addToBackStack(null)
                 .commit()
     }

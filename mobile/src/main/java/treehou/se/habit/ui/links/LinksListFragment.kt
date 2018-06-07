@@ -4,21 +4,14 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-
-import javax.inject.Inject
-
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_links_list.*
 import okhttp3.ResponseBody
 import retrofit2.Response
 import se.treehou.ng.ohcommunicator.connector.models.OHLink
@@ -28,6 +21,7 @@ import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.ui.BaseFragment
 import treehou.se.habit.ui.adapter.LinkAdapter
 import treehou.se.habit.util.ConnectionFactory
+import javax.inject.Inject
 
 /**
  * Mandatory empty constructor for the fragment manager to instantiate the
@@ -37,12 +31,8 @@ class LinksListFragment : BaseFragment() {
 
     @Inject lateinit var connectionFactory: ConnectionFactory
 
-    @BindView(R.id.list) lateinit var listView: RecyclerView
-    @BindView(R.id.emptyView) lateinit var emptyView: TextView
-
-    private var adapter: LinkAdapter? = null
+    private var adapter: LinkAdapter = LinkAdapter()
     private var server: ServerDB? = null
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +47,17 @@ class LinksListFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_links_list, container, false)
-        unbinder = ButterKnife.bind(this, view)
         setupActionBar()
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        adapter.clear()
         listView.layoutManager = LinearLayoutManager(activity)
 
-        adapter = LinkAdapter()
-        adapter!!.setItemListener(object : LinkAdapter.ItemListener {
+        adapter.setItemListener(object : LinkAdapter.ItemListener {
             override fun onItemClickListener(item: OHLink) {
                 openRemoveLinkDialog(item)
             }
@@ -72,8 +67,6 @@ class LinksListFragment : BaseFragment() {
             }
         })
         listView.adapter = adapter
-
-        return view
     }
 
     /**
@@ -94,7 +87,7 @@ class LinksListFragment : BaseFragment() {
      * @param link the link to remove
      */
     private fun removeLink(link: OHLink) {
-        adapter!!.removeItem(link)
+        adapter.removeItem(link)
 
         connectionFactory.createServerHandler(server!!.toGeneric(), context)
                 .deleteLinkRx(link)
@@ -102,7 +95,7 @@ class LinksListFragment : BaseFragment() {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    adapter!!.addItem(link)
+                    adapter.addItem(link)
                     Toast.makeText(context, R.string.failed_delete_link, Toast.LENGTH_SHORT).show()
                 }) { logger.e(TAG, "removeLink Failed", it) }
     }
@@ -120,18 +113,13 @@ class LinksListFragment : BaseFragment() {
      */
     private fun clearList() {
         emptyView.visibility = View.VISIBLE
-        adapter!!.clear()
+        adapter.clear()
     }
 
     override fun onResume() {
         super.onResume()
 
         loadLinks()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     /**
@@ -147,7 +135,7 @@ class LinksListFragment : BaseFragment() {
                 .subscribe({ ohLinks ->
                     clearList()
                     emptyView.visibility = View.GONE
-                    adapter!!.addAll(ohLinks)
+                    adapter.addAll(ohLinks)
                 }) { logger.w(TAG, "Failed to load link items", it) }
     }
 

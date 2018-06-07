@@ -10,18 +10,14 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import kotlinx.android.synthetic.main.fragment_binding.*
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding
 import treehou.se.habit.R
 
 class BindingFragment : Fragment() {
 
-    @BindView(R.id.lbl_name) lateinit var lblName: TextView
-    @BindView(R.id.lbl_author) lateinit var lblAuthor: TextView
-    @BindView(R.id.lbl_description) lateinit var lblDescription: TextView
-
     private var binding: OHBinding? = null
-    private var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -39,18 +35,11 @@ class BindingFragment : Fragment() {
 
         // Inflate the layout for this fragment
         val rootView = inflater.inflate(R.layout.fragment_binding, container, false)
-        unbinder = ButterKnife.bind(this, rootView)
-
         lblName.text = binding!!.name
         lblAuthor.text = binding!!.author
         lblDescription.text = binding!!.description
 
         return rootView
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     companion object {

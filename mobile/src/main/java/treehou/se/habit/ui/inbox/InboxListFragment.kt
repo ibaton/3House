@@ -21,10 +21,8 @@ import java.util.Comparator
 
 import javax.inject.Inject
 
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_inbox.*
 import se.treehou.ng.ohcommunicator.connector.models.OHInboxItem
 import treehou.se.habit.R
 import treehou.se.habit.core.db.model.ServerDB
@@ -40,9 +38,6 @@ import treehou.se.habit.util.Util
  */
 class InboxListFragment : BaseFragment() {
 
-    @BindView(R.id.list) lateinit var listView: RecyclerView
-    @BindView(R.id.error_view) lateinit var empty: View
-
     @Inject lateinit var connectionFactory: ConnectionFactory
 
     private var relam: Realm? = null
@@ -56,8 +51,6 @@ class InboxListFragment : BaseFragment() {
     private var actionHide: MenuItem? = null
     private var actionShow: MenuItem? = null
 
-    private var unbinder: Unbinder? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,13 +62,16 @@ class InboxListFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_inbox, container, false)
-        unbinder = ButterKnife.bind(this, view)
-
         setupActionbar()
-        hookupInboxList()
         setHasOptionsMenu(true)
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        hookupInboxList()
     }
 
     /**
@@ -255,11 +251,6 @@ class InboxListFragment : BaseFragment() {
             empty.visibility = View.GONE
             listView.visibility = View.VISIBLE
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbinder!!.unbind()
     }
 
     override fun onDestroy() {
