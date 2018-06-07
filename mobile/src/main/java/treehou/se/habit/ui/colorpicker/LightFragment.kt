@@ -9,6 +9,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import io.realm.Realm
+import kotlinx.android.synthetic.main.fragment_colorpicker.*
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
 import se.treehou.ng.ohcommunicator.util.GsonHelper
@@ -24,9 +25,6 @@ import java.util.*
 import javax.inject.Inject
 
 class LightFragment : BaseDaggerFragment<Presenter>(), LightContract.View {
-
-    @BindView(R.id.lbl_name) lateinit var lblName: TextView
-    @BindView(R.id.pcr_color_h) lateinit var pcrColor: ColorPicker
 
     @Inject lateinit var connectionFactory: ConnectionFactory
     @Inject lateinit var lightPresenter: Presenter
@@ -82,7 +80,7 @@ class LightFragment : BaseDaggerFragment<Presenter>(), LightContract.View {
         val rootView = inflater.inflate(R.layout.fragment_colorpicker, container, false)
         unbinder = ButterKnife.bind(this, rootView)
 
-        lblName.text = widget!!.label
+        nameLabel.text = widget!!.label
         pcrColor.color = color
 
         return rootView

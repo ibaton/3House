@@ -10,7 +10,7 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
@@ -22,7 +22,7 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/message"
+            android:id="@+id/messageText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
