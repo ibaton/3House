@@ -41,12 +41,16 @@ class WidgetSelectionFactory @Inject constructor() : WidgetFactory {
             selectorSpinner.onItemSelectedListener = null
             val mappings = widget.mapping
             val mappingAdapter = ArrayAdapter<OHMapping>(context, R.layout.item_text, mappings)
+            val itemName = widget.item?.name
+            val itemState = widget.item?.state
             selectorSpinner.adapter = mappingAdapter
-            for (i in mappings.indices) {
-                if (mappings[i].command == widget.item.state) {
-                    selectorSpinner.setSelection(i)
-                    lastPosition = i
-                    break
+            if(itemState != null) {
+                for (i in mappings.indices) {
+                    if (mappings[i].command == itemState) {
+                        selectorSpinner.setSelection(i)
+                        lastPosition = i
+                        break
+                    }
                 }
             }
 
@@ -55,9 +59,9 @@ class WidgetSelectionFactory @Inject constructor() : WidgetFactory {
             selectorSpinner.post({
                 selectorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                        if (position != lastPosition) {
+                        if (itemName != null && position != lastPosition) {
                             val mapping = mappings[position]
-                            serverHandler.sendCommand(widget.item.name, mapping.command)
+                            serverHandler.sendCommand(itemName, mapping.command)
                             lastPosition = position
                         }
                     }

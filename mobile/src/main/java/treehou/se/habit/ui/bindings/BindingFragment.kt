@@ -29,12 +29,16 @@ class BindingFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         // Inflate the layout for this fragment
-        val rootView = inflater.inflate(R.layout.fragment_binding, container, false)
+        return inflater.inflate(R.layout.fragment_binding, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         lblName.text = binding!!.name
         lblAuthor.text = binding!!.author
         lblDescription.text = binding!!.description
 
-        return rootView
     }
 
     companion object {
