@@ -4,10 +4,12 @@ package treehou.se.habit
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import com.crashlytics.android.Crashlytics
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import treehou.se.habit.util.Constants
 import treehou.se.habit.util.Settings
 import treehou.se.habit.util.logging.Logger
 import javax.inject.Inject
@@ -23,6 +25,7 @@ open class BaseActivity : RxAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as HabitApplication).component().inject(this)
         super.onCreate(savedInstanceState)
+        Crashlytics.setString(Constants.FIREABASE_DEBUG_KEY_ACTIVITY, javaClass.name)
         realm = Realm.getDefaultInstance()
     }
 

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.crashlytics.android.Crashlytics
 import com.google.gson.reflect.TypeToken
 import com.trello.rxlifecycle2.components.support.RxFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,6 +22,7 @@ import treehou.se.habit.connector.models.Binding
 import treehou.se.habit.core.db.model.ServerDB
 import treehou.se.habit.ui.adapter.BindingAdapter
 import treehou.se.habit.util.ConnectionFactory
+import treehou.se.habit.util.Constants
 import treehou.se.habit.util.Util
 import treehou.se.habit.util.logging.Logger
 import java.util.*
@@ -40,8 +42,9 @@ class BindingsFragment : RxFragment() {
     private var realm: Realm? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         Util.getApplicationComponent(this).inject(this)
+        Crashlytics.setString(Constants.FIREABASE_DEBUG_KEY_FRAGMENT, javaClass.name)
+
         realm = Realm.getDefaultInstance()
 
         if (arguments != null) {

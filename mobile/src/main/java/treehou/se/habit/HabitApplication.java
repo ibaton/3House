@@ -53,7 +53,7 @@ public class HabitApplication extends Application implements HasActivitySubcompo
         super.onCreate();
         JodaTimeAndroid.init(this);
         setupNotifications();
-        setupMyOpenhab();
+        //setupMyOpenhab(); Setup my openhab gcm connection
     }
 
     /**

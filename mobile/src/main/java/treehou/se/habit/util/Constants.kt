@@ -14,6 +14,10 @@ object Constants {
 
     val GCM_SENDER_ID = "737820980945"
 
+
+    val FIREABASE_DEBUG_KEY_ACTIVITY = "Activity"
+    val FIREABASE_DEBUG_KEY_FRAGMENT = "Fragment"
+
     // NotificationDB to speech.
     val PREF_REGISTRATION_SERVER = "notification_to_speech"
 

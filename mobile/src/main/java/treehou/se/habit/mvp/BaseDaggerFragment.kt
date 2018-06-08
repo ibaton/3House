@@ -2,10 +2,12 @@ package treehou.se.habit.mvp
 
 
 import android.os.Bundle
+import com.crashlytics.android.Crashlytics
 import treehou.se.habit.HabitApplication
 
 import treehou.se.habit.dagger.HasActivitySubcomponentBuilders
 import treehou.se.habit.ui.BaseFragment
+import treehou.se.habit.util.Constants
 
 abstract class BaseDaggerFragment<out T : BasePresenter> : BaseFragment(), BaseView<T> {
 
@@ -13,6 +15,8 @@ abstract class BaseDaggerFragment<out T : BasePresenter> : BaseFragment(), BaseV
         super.onCreate(savedInstanceState)
         setupComponent()
         getPresenter()?.load(arguments, savedInstanceState)
+
+        Crashlytics.setString(Constants.FIREABASE_DEBUG_KEY_FRAGMENT, javaClass.name);
     }
 
     override fun onResume() {

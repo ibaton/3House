@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.fragment_binding.*
 import se.treehou.ng.ohcommunicator.connector.models.OHBinding
 import se.treehou.ng.ohcommunicator.util.GsonHelper
 import treehou.se.habit.R
+import treehou.se.habit.util.Constants
 
 class BindingFragment : Fragment() {
 
@@ -16,6 +18,7 @@ class BindingFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        Crashlytics.setString(Constants.FIREABASE_DEBUG_KEY_FRAGMENT, javaClass.name)
         if (arguments != null) {
             if (arguments!!.containsKey(ARG_BINDING)) {
                 binding = GsonHelper.createGsonBuilder().fromJson(arguments!!.getString(ARG_BINDING), OHBinding::class.java)
