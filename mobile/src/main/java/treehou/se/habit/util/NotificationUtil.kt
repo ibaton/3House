@@ -40,6 +40,7 @@ class NotificationUtil @Inject constructor() {
         val channelName = context.getString(R.string.channel_name_controllers)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val notificationChannel = NotificationChannel(channelId, channelName, importance)
+        notificationChannel.enableVibration(false)
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
