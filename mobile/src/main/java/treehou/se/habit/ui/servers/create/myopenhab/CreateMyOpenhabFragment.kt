@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_create_my_openhab.*
@@ -40,10 +41,13 @@ class CreateMyOpenhabFragment : BaseDaggerFragment<CreateMyOpenhabContract.Prese
     override fun showError(error: String) {
         Flowable.just(error)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ errorValue ->
-                    errorView.visibility = View.VISIBLE
-                    errorView.text = errorValue
-                })
+                .subscribe { errorValue ->
+                    val errorView: TextView? = errorView
+                    if(errorView != null) {
+                        errorView.visibility = View.VISIBLE
+                        errorView.text = errorValue
+                    }
+                }
     }
 
     override fun loadServerName(name: String) {

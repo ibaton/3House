@@ -77,8 +77,13 @@ class ControllerWidgetConfigureActivity : BaseActivity() {
 
     private fun saveWidget() {
         val context = this@ControllerWidgetConfigureActivity
+        val selectedItem: Any? = sprControllers.selectedItem
+        if(selectedItem == null){
+            Toast.makeText(context, "Failed to save widget", Toast.LENGTH_LONG).show()
+            return
+        }
 
-        val controller: ControllerDB? = (sprControllers.selectedItem as ControllerItem).controllerDB
+        val controller: ControllerDB? = (selectedItem as ControllerItem).controllerDB
         if (controller == null) {
             Toast.makeText(this@ControllerWidgetConfigureActivity, getString(R.string.failed_save_controller), Toast.LENGTH_SHORT).show()
             setResult(Activity.RESULT_CANCELED)
