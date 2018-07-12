@@ -32,12 +32,12 @@ class WidgetTextFactory @Inject constructor() : WidgetFactory {
         override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
             super.bind(itemWidget)
 
-            val widgetItem = widget.item
+            val widgetItem: OHItem? = widget.item
             if (widgetItem?.type == OHItem.TYPE_STRING && widgetItem.stateDescription?.isReadOnly != true) {
-                itemView.setOnLongClickListener({
+                itemView.setOnLongClickListener {
                     showInputDialog(widgetItem)
                     true
-                })
+                }
             } else {
                 itemView.setOnClickListener(null)
             }

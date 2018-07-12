@@ -10,6 +10,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Switch
 import io.realm.Realm
+import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
@@ -48,12 +49,15 @@ class WidgetMultiSwitchFactory @Inject constructor() : WidgetFactory {
                 val button= layoutInflater.inflate(R.layout.radio_button, widgetButtons, false) as RadioButton
                 button.text = mapping.label
                 button.id = button.hashCode()
-                if (widget.item.state == mapping.command) {
+                val item: OHItem? = widget.item
+                if (item?.state == mapping.command) {
                     button.isChecked = true
                 }
 
                 button.setOnClickListener { v ->
-                    serverHandler.sendCommand(widget.item.name, mapping.command)
+                    if(item != null) {
+                        serverHandler.sendCommand(item.name, mapping.command)
+                    }
                 }
                 widgetButtons.addView(button)
             }

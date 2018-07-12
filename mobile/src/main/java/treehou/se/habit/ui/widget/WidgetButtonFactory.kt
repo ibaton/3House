@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
+import se.treehou.ng.ohcommunicator.connector.models.OHItem
 import se.treehou.ng.ohcommunicator.connector.models.OHLinkedPage
 import se.treehou.ng.ohcommunicator.connector.models.OHServer
 import se.treehou.ng.ohcommunicator.connector.models.OHWidget
@@ -37,13 +38,14 @@ class WidgetButtonFactory @Inject constructor() : WidgetFactory {
         }
 
         private fun setupClickListener() {
-            buttonView.setOnClickListener({
+            buttonView.setOnClickListener {
                 val mapSingle = widget.mapping[0]
                 logger.d(TAG, "${widget.label} $mapSingle")
-                if (widget.item?.stateDescription?.isReadOnly != true) {
-                    serverHandler.sendCommand(widget.item.name, mapSingle.command)
+                val item: OHItem? = widget.item
+                if (item != null && item.stateDescription?.isReadOnly != true) {
+                    serverHandler.sendCommand(item.name, mapSingle.command)
                 }
-            })
+            }
         }
 
         override fun bind(itemWidget: WidgetAdapter.WidgetItem) {

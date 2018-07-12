@@ -40,14 +40,15 @@ class WidgetSwitchFactory @Inject constructor() : WidgetFactory {
         }
 
         private fun setupClickListener() {
-            itemView.setOnClickListener({
+            itemView.setOnClickListener {
                 val newState = !switchView.isChecked
                 logger.d(TAG, "${widget.label} $newState")
-                if (widget.item?.stateDescription?.isReadOnly != true) {
+                val item: OHItem? = widget.item
+                if (item != null && item.stateDescription?.isReadOnly != true) {
                     switchView.isChecked = newState
-                    serverHandler.sendCommand(widget.item.name, if (newState) Constants.COMMAND_ON else Constants.COMMAND_OFF)
+                    serverHandler.sendCommand(item.name, if (newState) Constants.COMMAND_ON else Constants.COMMAND_OFF)
                 }
-            })
+            }
         }
 
         override fun bind(itemWidget: WidgetAdapter.WidgetItem) {
